@@ -871,6 +871,14 @@ h1 {
   padding-top: 20px;
 }
 
+.nav-buttons-top {
+  margin-top: 0;
+  margin-bottom: 24px;
+  padding-top: 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--sand-medium);
+}
+
 .progress-dots {
   position: absolute;
   bottom: 30px;
