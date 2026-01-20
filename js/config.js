@@ -4,28 +4,23 @@
  * SETUP INSTRUCTIONS:
  * 1. Deploy the Google Apps Script (see docs/google-apps-script.js)
  * 2. Copy the Web App URL and paste it below as SCRIPT_URL
- * 3. Set DEV_MODE to false before deploying to production
- * 4. The script handles both authentication and data storage
+ * 3. The script handles both authentication and data storage
  *
- * IMPORTANT: Review all settings before production deployment
+ * NOTE: When SCRIPT_URL is not configured, the app runs in demo mode automatically.
  */
 
 const CONFIG = {
   /**
-   * Development mode toggle
-   * - true: Enables public access without login, shows dev banner, enables demo codes
-   * - false: Production mode, requires valid organization code
-   *
-   * WARNING: Set to false before deploying to production!
-   */
-  DEV_MODE: true,
-
-  /**
    * Google Apps Script Web App URL
    * Replace with your deployed script URL from Google Apps Script
    * Format: https://script.google.com/macros/s/XXXXXX/exec
+   *
+   * When not configured, the app runs in demo mode:
+   * - Public access without login is available
+   * - Demo codes (DEMO, ORG-2025-XXX) are accepted
+   * - Form submissions are simulated
    */
-  SCRIPT_URL: 'YOUR_GOOGLE_APPS_SCRIPT_URL',
+  SCRIPT_URL: '',
 
   /**
    * localStorage keys for session and form data persistence
@@ -71,35 +66,18 @@ const CONFIG = {
     rvb: ['heeft_rvb'],
     rvc: ['heeft_rvc'],
     rvt: ['heeft_rvt']
+  },
+
+  /**
+   * Check if the app is running in demo mode (no API configured)
+   * @returns {boolean}
+   */
+  isDemoMode: function() {
+    return !this.SCRIPT_URL || this.SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL';
   }
 };
 
 // Freeze configuration to prevent accidental modification at runtime
-Object.freeze(CONFIG);
 Object.freeze(CONFIG.STORAGE_KEYS);
 Object.freeze(CONFIG.STEP_FIELDS);
 Object.freeze(CONFIG.SECTION_FIELDS);
-
-/**
- * Validate configuration on load
- * Logs warnings for common misconfigurations
- */
-(function validateConfig() {
-  'use strict';
-
-  const warnings = [];
-
-  if (CONFIG.DEV_MODE) {
-    warnings.push('DEV_MODE is enabled. Disable before production deployment.');
-  }
-
-  if (!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
-    warnings.push('SCRIPT_URL is not configured. API calls will use demo mode.');
-  }
-
-  // Only log warnings in browser environment with console
-  if (typeof console !== 'undefined' && warnings.length > 0) {
-    console.warn('Configuration warnings:');
-    warnings.forEach(w => console.warn('  - ' + w));
-  }
-})();

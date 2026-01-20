@@ -512,21 +512,18 @@
     try {
       const formData = getFormData();
 
-      // If API is not configured, show demo success in dev mode
+      // If API is not configured, simulate successful submission
       if (!ApiClient.isConfigured()) {
-        if (CONFIG.DEV_MODE) {
-          // Simulate network delay for demo
-          await new Promise(resolve => setTimeout(resolve, 1000));
+        // Simulate network delay for demo
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-          // Show success
-          currentStep = CONFIG.TOTAL_STEPS;
-          showStep(currentStep);
+        // Show success
+        currentStep = CONFIG.TOTAL_STEPS;
+        showStep(currentStep);
 
-          // Clear saved form data
-          Storage.clearFormData();
-          return;
-        }
-        throw new Error(CONSTANTS.ERRORS.NETWORK_ERROR);
+        // Clear saved form data
+        Storage.clearFormData();
+        return;
       }
 
       // Submit to backend
