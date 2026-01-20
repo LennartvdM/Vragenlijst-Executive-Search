@@ -26,6 +26,11 @@
           Welkom bij de jaarlijkse monitoring. Voer uw organisatiecode in om toegang te krijgen tot het monitoringsformulier.
         </p>
 
+        <!-- Dev mode banner - shown when DEV_MODE is true -->
+        <div id="devBanner" class="dev-banner" style="display: none;">
+          Ontwikkelmodus actief
+        </div>
+
         <form id="loginForm" onsubmit="return handleLogin(event)">
           <div class="field">
             <label for="orgCode">Organisatiecode</label>
@@ -60,6 +65,14 @@
             </span>
           </button>
         </form>
+
+        <!-- Public access button - shown when DEV_MODE is true -->
+        <div id="publicAccess" class="public-access" style="display: none;">
+          <div class="divider"><span>of</span></div>
+          <button type="button" class="btn btn-secondary btn-full" onclick="publicLogin()">
+            Ga door zonder inloggen
+          </button>
+        </div>
 
         <div class="login-footer">
           <p>Nog geen toegangscode ontvangen?</p>
