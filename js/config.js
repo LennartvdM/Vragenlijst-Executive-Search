@@ -8,6 +8,11 @@
  */
 
 const CONFIG = {
+  // DEVELOPMENT MODE
+  // Set to true to enable public access without login
+  // Set to false for production
+  DEV_MODE: true,
+
   // Google Apps Script Web App URL
   // Replace this with your deployed script URL
   SCRIPT_URL: 'YOUR_GOOGLE_APPS_SCRIPT_URL',

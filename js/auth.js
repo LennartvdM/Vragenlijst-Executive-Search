@@ -8,8 +8,26 @@
 
   // Check if already logged in on page load
   document.addEventListener('DOMContentLoaded', function() {
+    initDevMode();
     checkExistingSession();
   });
+
+  /**
+   * Initialize dev mode UI elements
+   */
+  function initDevMode() {
+    if (CONFIG.DEV_MODE) {
+      const devBanner = document.getElementById('devBanner');
+      const publicAccess = document.getElementById('publicAccess');
+
+      if (devBanner) devBanner.style.display = 'block';
+      if (publicAccess) publicAccess.style.display = 'block';
+
+      // Make org code field not required in dev mode
+      const orgCodeInput = document.getElementById('orgCode');
+      if (orgCodeInput) orgCodeInput.required = false;
+    }
+  }
 
   /**
    * Check for existing valid session and redirect to survey if found
@@ -26,6 +44,27 @@
       clearSession();
     }
   }
+
+  /**
+   * Public login without organization code (dev mode only)
+   */
+  window.publicLogin = function() {
+    if (!CONFIG.DEV_MODE) {
+      console.warn('Public login is only available in dev mode');
+      return;
+    }
+
+    // Create a public session
+    saveSession({
+      orgCode: 'PUBLIC',
+      orgName: 'Openbare toegang',
+      timestamp: Date.now(),
+      isPublic: true
+    });
+
+    // Redirect to survey
+    window.location.href = 'survey.html';
+  };
 
   /**
    * Handle login form submission
