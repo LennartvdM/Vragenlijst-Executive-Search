@@ -3,13 +3,6 @@
 [build]
   publish = "."
 
-# Redirects - ensure single page app routing works
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin"]}
-
 # Headers for security and caching
 [[headers]]
   for = "/*"
