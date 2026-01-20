@@ -27,6 +27,7 @@
     setupInputListeners();
     setupAutoSave();
     loadSavedFormData();
+    updateIndexStatus(); // Initialize progress bar
     calculateStableCardDimensions();
     showStep(0);
 
@@ -101,6 +102,10 @@
 
       case 'logout':
         logout();
+        break;
+
+      case 'printForm':
+        printForm();
         break;
     }
   }
@@ -300,6 +305,51 @@
         statusEl.innerHTML = CONSTANTS.UI.STATUS_EMPTY;
       }
     });
+
+    // Also update the progress bar
+    updateProgressBar();
+  }
+
+  /**
+   * Update the progress bar based on total filled fields
+   */
+  function updateProgressBar() {
+    let totalFields = 0;
+    let filledFields = 0;
+
+    // Count all fields across all steps (excluding the success step)
+    Object.keys(CONFIG.STEP_FIELDS).forEach(step => {
+      const fields = CONFIG.STEP_FIELDS[step];
+      totalFields += fields.length;
+
+      fields.forEach(fieldName => {
+        const input = document.querySelector(`[name="${fieldName}"]`);
+        if (!input) return;
+
+        if (input.type === 'radio') {
+          const checked = document.querySelector(`[name="${fieldName}"]:checked`);
+          if (checked) filledFields++;
+        } else if (input.type === 'checkbox') {
+          if (input.checked) filledFields++;
+        } else if (input.value && input.value.trim() !== '') {
+          filledFields++;
+        }
+      });
+    });
+
+    // Calculate percentage
+    const percentage = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+
+    // Update progress bar UI
+    const progressBarFill = document.getElementById('progressBarFill');
+    const progressPercentage = document.getElementById('progressPercentage');
+
+    if (progressBarFill) {
+      progressBarFill.style.width = percentage + '%';
+    }
+    if (progressPercentage) {
+      progressPercentage.textContent = percentage + '%';
+    }
   }
 
   /**
@@ -658,6 +708,35 @@
         btnTop.textContent = originalText;
       }
     }
+  }
+
+  /**
+   * Print the complete form with all pages
+   */
+  function printForm() {
+    // Store current step to restore after printing
+    const originalStep = currentStep;
+
+    // Temporarily show all steps for printing
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+      // Don't show the success step
+      if (step.dataset.step !== '6') {
+        step.classList.add('active');
+      }
+    });
+
+    // Trigger browser print dialog
+    window.print();
+
+    // Restore original state after print dialog closes
+    // Use timeout to ensure print dialog has closed
+    setTimeout(() => {
+      steps.forEach(step => {
+        step.classList.remove('active');
+      });
+      showStep(originalStep);
+    }, 100);
   }
 
   /**
