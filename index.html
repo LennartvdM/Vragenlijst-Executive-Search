@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inloggen - Monitoring Cultureel Talent naar de Top 2025</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h1>Monitoring Cultureel Talent naar de Top</h1>
+        <p class="year-badge">2025</p>
+      </div>
+
+      <div class="login-body">
+        <p class="login-intro">
+          Welkom bij de jaarlijkse monitoring. Voer uw organisatiecode in om toegang te krijgen tot het monitoringsformulier.
+        </p>
+
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+          <div class="field">
+            <label for="orgCode">Organisatiecode</label>
+            <input
+              type="text"
+              id="orgCode"
+              name="orgCode"
+              required
+              placeholder="Bijv. ORG-2025-001"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <span class="field-hint">Deze code heeft u per e-mail ontvangen</span>
+          </div>
+
+          <div id="loginError" class="error-message" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>Ongeldige organisatiecode. Controleer uw code en probeer opnieuw.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+            <span class="btn-text">Inloggen</span>
+            <span class="btn-loading" style="display: none;">
+              <svg class="spinner" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4"/>
+              </svg>
+              Controleren...
+            </span>
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <p>Nog geen toegangscode ontvangen?</p>
+          <a href="mailto:monitoring@talentnaartop.nl">Neem contact op</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-info">
+      <h2>Over de monitoring</h2>
+      <p>De monitoring Cultureel Talent naar de Top brengt jaarlijks de culturele diversiteit in de top van Nederlandse organisaties in kaart.</p>
+      <ul>
+        <li>Vul uw organisatiegegevens in</li>
+        <li>Beantwoord vragen over diversiteitsbeleid</li>
+        <li>De CEO/directeur ondertekent digitaal</li>
+      </ul>
+      <p class="privacy-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Uw gegevens worden vertrouwelijk behandeld conform AVG.
+      </p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
