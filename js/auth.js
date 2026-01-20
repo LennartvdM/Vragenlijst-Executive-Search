@@ -10,7 +10,7 @@
 
   // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', function() {
-    initDevMode();
+    initDemoMode();
     setupEventListeners();
     checkExistingSession();
   });
@@ -25,7 +25,7 @@
       loginForm.addEventListener('submit', handleLogin);
     }
 
-    // Public login button (dev mode)
+    // Public login button (demo mode)
     const publicLoginBtn = document.getElementById('publicLoginBtn');
     if (publicLoginBtn) {
       publicLoginBtn.addEventListener('click', publicLogin);
@@ -33,17 +33,17 @@
   }
 
   /**
-   * Initialize dev mode UI elements
+   * Initialize demo mode UI elements when no API is configured
    */
-  function initDevMode() {
-    if (CONFIG.DEV_MODE) {
-      const devBanner = document.getElementById('devBanner');
+  function initDemoMode() {
+    if (CONFIG.isDemoMode()) {
+      const demoBanner = document.getElementById('demoBanner');
       const publicAccess = document.getElementById('publicAccess');
 
-      if (devBanner) devBanner.style.display = 'block';
+      if (demoBanner) demoBanner.style.display = 'block';
       if (publicAccess) publicAccess.style.display = 'block';
 
-      // Make org code field not required in dev mode
+      // Make org code field not required in demo mode
       const orgCodeInput = document.getElementById('orgCode');
       if (orgCodeInput) orgCodeInput.required = false;
     }
@@ -62,10 +62,10 @@
   }
 
   /**
-   * Public login without organization code (dev mode only)
+   * Public login without organization code (demo mode only)
    */
   function publicLogin() {
-    if (!CONFIG.DEV_MODE) {
+    if (!CONFIG.isDemoMode()) {
       return;
     }
 
@@ -146,28 +146,21 @@
 
   /**
    * Validate organization code against backend
-   * Falls back to demo validation in dev mode or when API is not configured
+   * Falls back to demo validation when API is not configured
    * @param {string} code - The organization code to validate
    * @returns {Promise<{success: boolean, organizationName?: string, message?: string}>}
    */
   async function validateOrganizationCode(code) {
     // Use demo validation if API is not configured
     if (!ApiClient.isConfigured()) {
-      if (CONFIG.DEV_MODE) {
-        return demoValidation(code);
-      }
-      // In production without API, reject all codes
-      return {
-        success: false,
-        message: CONSTANTS.ERRORS.NETWORK_ERROR
-      };
+      return demoValidation(code);
     }
 
     return ApiClient.validateCode(code);
   }
 
   /**
-   * Demo validation for testing without backend (dev mode only)
+   * Demo validation for testing without backend
    * Accepts codes in format: ORG-YYYY-XXX or DEMO
    * @param {string} code - The organization code to validate
    * @returns {{success: boolean, organizationName?: string, message?: string}}

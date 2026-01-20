@@ -36,7 +36,7 @@ const Storage = (function() {
       return JSON.parse(item);
     } catch (e) {
       // Log error in development, but don't expose to user
-      if (typeof console !== 'undefined' && CONFIG.DEV_MODE) {
+      if (typeof console !== 'undefined' && CONFIG.isDemoMode && CONFIG.isDemoMode()) {
         console.warn(`Storage.getJSON failed for key "${key}":`, e);
       }
       return defaultValue;
@@ -55,7 +55,7 @@ const Storage = (function() {
       return true;
     } catch (e) {
       // Could be quota exceeded or other storage error
-      if (typeof console !== 'undefined' && CONFIG.DEV_MODE) {
+      if (typeof console !== 'undefined' && CONFIG.isDemoMode && CONFIG.isDemoMode()) {
         console.warn(`Storage.setJSON failed for key "${key}":`, e);
       }
       return false;
