@@ -939,11 +939,16 @@ h1 {
   background: var(--salmon);
 }
 
-.progress-dots-top-container,
+.progress-dots-top-container {
+  display: flex;
+  justify-content: center;
+  margin: -42px 0 8px 0;
+}
+
 .progress-dots-bottom-container {
   display: flex;
   justify-content: center;
-  padding: 8px 0;
+  padding: 8px 0 0 0;
 }
 
 .progress-dots-top,
