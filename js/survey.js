@@ -223,18 +223,21 @@
   }
 
   /**
-   * Initialize progress dots
+   * Initialize progress dots (both top and bottom)
    */
   function initProgress() {
-    const dots = document.getElementById('progressDots');
-    if (!dots) return;
+    const dotsBottom = document.getElementById('progressDots');
+    const dotsTop = document.getElementById('progressDotsTop');
 
-    dots.innerHTML = '';
-    for (let i = 0; i < CONFIG.TOTAL_STEPS; i++) {
-      const span = document.createElement('span');
-      if (i === 0) span.classList.add(CONSTANTS.CSS.ACTIVE);
-      dots.appendChild(span);
-    }
+    [dotsBottom, dotsTop].forEach(dots => {
+      if (!dots) return;
+      dots.innerHTML = '';
+      for (let i = 0; i < CONFIG.TOTAL_STEPS; i++) {
+        const span = document.createElement('span');
+        if (i === 0) span.classList.add(CONSTANTS.CSS.ACTIVE);
+        dots.appendChild(span);
+      }
+    });
   }
 
   /**
@@ -250,23 +253,17 @@
   }
 
   /**
-   * Update sidebar index and top breadcrumbs highlighting
+   * Update sidebar index highlighting
    */
   function updateIndex() {
-    // Update sidebar index items
     document.querySelectorAll('.index-item').forEach(item => {
-      const step = parseInt(item.dataset.step);
-      item.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
-    });
-    // Update top breadcrumb items
-    document.querySelectorAll('.breadcrumb-item').forEach(item => {
       const step = parseInt(item.dataset.step);
       item.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
     });
   }
 
   /**
-   * Update index item and breadcrumb completion status
+   * Update index item completion status
    */
   function updateIndexStatus() {
     Object.keys(CONFIG.STEP_FIELDS).forEach(step => {
@@ -287,34 +284,20 @@
         }
       });
 
-      // Update sidebar index item
       const indexItem = document.querySelector(`.index-item[data-step="${step}"]`);
-      // Update top breadcrumb item
-      const breadcrumbItem = document.querySelector(`.breadcrumb-item[data-step="${step}"]`);
+      if (!indexItem) return;
 
-      // Determine status
-      const isComplete = filled === fields.length;
-      const isPartial = filled > 0 && !isComplete;
-      const statusText = isComplete ? CONSTANTS.UI.STATUS_COMPLETE :
-                         isPartial ? `${filled}/${fields.length}` :
-                         CONSTANTS.UI.STATUS_EMPTY;
+      const statusEl = indexItem.querySelector('.status');
+      indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
 
-      // Apply to sidebar index
-      if (indexItem) {
-        const statusEl = indexItem.querySelector('.status');
-        indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
-        if (isComplete) indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
-        else if (isPartial) indexItem.classList.add(CONSTANTS.CSS.PARTIAL);
-        if (statusEl) statusEl.innerHTML = statusText;
-      }
-
-      // Apply to top breadcrumb
-      if (breadcrumbItem) {
-        const statusEl = breadcrumbItem.querySelector('.status');
-        breadcrumbItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
-        if (isComplete) breadcrumbItem.classList.add(CONSTANTS.CSS.COMPLETE);
-        else if (isPartial) breadcrumbItem.classList.add(CONSTANTS.CSS.PARTIAL);
-        if (statusEl) statusEl.innerHTML = statusText;
+      if (filled === fields.length) {
+        indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
+        statusEl.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
+      } else if (filled > 0) {
+        indexItem.classList.add(CONSTANTS.CSS.PARTIAL);
+        statusEl.innerHTML = `${filled}/${fields.length}`;
+      } else {
+        statusEl.innerHTML = CONSTANTS.UI.STATUS_EMPTY;
       }
     });
   }
@@ -382,7 +365,7 @@
     const btnPrevTop = document.getElementById('btnPrevTop');
     const btnNextTop = document.getElementById('btnNextTop');
     const navButtonsTop = document.getElementById('navButtonsTop');
-    const breadcrumbsTop = document.getElementById('breadcrumbsTop');
+    const progressDotsTop = document.getElementById('progressDotsTop');
 
     // Update both prev buttons
     const showPrev = step > 0 && step < CONFIG.TOTAL_STEPS;
@@ -395,10 +378,10 @@
       if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
       if (btnNextTop) btnNextTop.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
     } else if (step === CONFIG.TOTAL_STEPS) {
-      // Success step - hide all navigation and breadcrumbs
+      // Success step - hide all navigation and progress dots
       if (navButtons) navButtons.style.display = 'none';
       if (navButtonsTop) navButtonsTop.style.display = 'none';
-      if (breadcrumbsTop) breadcrumbsTop.style.display = 'none';
+      if (progressDotsTop) progressDotsTop.style.display = 'none';
     } else {
       // Normal steps
       if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
