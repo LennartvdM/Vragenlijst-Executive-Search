@@ -355,22 +355,32 @@
     const stepEl = document.querySelector(`.step[data-step="${step}"]`);
     if (stepEl) stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
 
+    // Get both sets of navigation buttons (top and bottom)
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
     const navButtons = document.getElementById('navButtons');
+    const btnPrevTop = document.getElementById('btnPrevTop');
+    const btnNextTop = document.getElementById('btnNextTop');
+    const navButtonsTop = document.getElementById('navButtonsTop');
 
-    if (btnPrev) {
-      btnPrev.style.display = step > 0 && step < CONFIG.TOTAL_STEPS ? 'block' : 'none';
-    }
+    // Update both prev buttons
+    const showPrev = step > 0 && step < CONFIG.TOTAL_STEPS;
+    if (btnPrev) btnPrev.style.display = showPrev ? 'block' : 'none';
+    if (btnPrevTop) btnPrevTop.style.display = showPrev ? 'block' : 'none';
 
-    if (btnNext) {
-      if (step === CONFIG.TOTAL_STEPS - 1) {
-        btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
-      } else if (step === CONFIG.TOTAL_STEPS) {
-        if (navButtons) navButtons.style.display = 'none';
-      } else {
-        btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
-      }
+    // Update both next buttons and nav containers
+    if (step === CONFIG.TOTAL_STEPS - 1) {
+      // Last step before submit
+      if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
+      if (btnNextTop) btnNextTop.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
+    } else if (step === CONFIG.TOTAL_STEPS) {
+      // Success step - hide all navigation
+      if (navButtons) navButtons.style.display = 'none';
+      if (navButtonsTop) navButtonsTop.style.display = 'none';
+    } else {
+      // Normal steps
+      if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
+      if (btnNextTop) btnNextTop.textContent = CONSTANTS.UI.BUTTON_NEXT;
     }
 
     updateProgress();
@@ -579,9 +589,18 @@
    */
   async function submitForm() {
     const btn = document.getElementById('btnNext');
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = CONSTANTS.UI.BUTTON_SUBMITTING;
+    const btnTop = document.getElementById('btnNextTop');
+    const originalText = btn ? btn.textContent : CONSTANTS.UI.BUTTON_SUBMIT;
+
+    // Disable both buttons during submission
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = CONSTANTS.UI.BUTTON_SUBMITTING;
+    }
+    if (btnTop) {
+      btnTop.disabled = true;
+      btnTop.textContent = CONSTANTS.UI.BUTTON_SUBMITTING;
+    }
 
     try {
       const formData = getFormData();
@@ -624,8 +643,15 @@
       }
     } catch (e) {
       alert(CONSTANTS.ERRORS.SUBMIT_ERROR);
-      btn.disabled = false;
-      btn.textContent = originalText;
+      // Re-enable both buttons on error
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+      if (btnTop) {
+        btnTop.disabled = false;
+        btnTop.textContent = originalText;
+      }
     }
   }
 
