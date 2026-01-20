@@ -9,6 +9,7 @@
   'use strict';
 
   let currentStep = 0;
+  let previousStep = -1; // Track previous step for slide direction
   let session = null;
 
   // Initialize on DOM ready
@@ -407,9 +408,27 @@
    * @param {number} step - Step index to show
    */
   function showStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.classList.remove(CONSTANTS.CSS.ACTIVE));
+    // Remove active class and animation classes from all steps
+    document.querySelectorAll('.step').forEach(s => {
+      s.classList.remove(CONSTANTS.CSS.ACTIVE, 'slide-up', 'slide-down');
+    });
+
     const stepEl = document.querySelector(`.step[data-step="${step}"]`);
-    if (stepEl) stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
+    if (stepEl) {
+      stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
+
+      // Apply slide animation based on navigation direction
+      if (previousStep !== -1 && previousStep !== step) {
+        if (step > previousStep) {
+          stepEl.classList.add('slide-up');
+        } else {
+          stepEl.classList.add('slide-down');
+        }
+      }
+    }
+
+    // Update previous step tracker
+    previousStep = step;
 
     // Get both sets of navigation buttons (top and bottom)
     const btnPrev = document.getElementById('btnPrev');
