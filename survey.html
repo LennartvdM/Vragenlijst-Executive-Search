@@ -55,6 +55,16 @@
             <label>Naam organisatie (Charter)</label>
             <input type="text" name="organisatie" id="organisatieField" required placeholder="Voer de naam van uw organisatie in">
           </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" onclick="toggleComments(0)">
+              <span class="comments-icon">💬</span>
+              <span class="comments-label">Kom je ergens niet uit? Laat een opmerking achter</span>
+            </button>
+            <div class="comments-field" id="comments-field-0">
+              <textarea name="opmerkingen_stap_0" rows="2" placeholder="Typ hier je opmerking..."></textarea>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -119,6 +129,16 @@
               <div class="option-content"><h3>Weet niet</h3></div>
             </label>
           </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" onclick="toggleComments(1)">
+              <span class="comments-icon">💬</span>
+              <span class="comments-label">Kom je ergens niet uit? Laat een opmerking achter</span>
+            </button>
+            <div class="comments-field" id="comments-field-1">
+              <textarea name="opmerkingen_stap_1" rows="2" placeholder="Typ hier je opmerking..."></textarea>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -155,6 +175,16 @@
           <div class="field">
             <label>Aantal met herkomst Buiten-Europa in de subtop</label>
             <input type="number" name="subtop_buiten_europa" min="0" placeholder="0">
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" onclick="toggleComments(2)">
+              <span class="comments-icon">💬</span>
+              <span class="comments-label">Kom je ergens niet uit? Laat een opmerking achter</span>
+            </button>
+            <div class="comments-field" id="comments-field-2">
+              <textarea name="opmerkingen_stap_2" rows="2" placeholder="Typ hier je opmerking..."></textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -241,6 +271,16 @@
             <div class="option-radio"></div>
             <div class="option-content"><h3>Nee</h3></div>
           </label>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" onclick="toggleComments(3)">
+              <span class="comments-icon">💬</span>
+              <span class="comments-label">Kom je ergens niet uit? Laat een opmerking achter</span>
+            </button>
+            <div class="comments-field" id="comments-field-3">
+              <textarea name="opmerkingen_stap_3" rows="2" placeholder="Typ hier je opmerking..."></textarea>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -301,6 +341,16 @@
             <label>Toelichting (optioneel)</label>
             <textarea name="leiderschap_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
           </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" onclick="toggleComments(4)">
+              <span class="comments-icon">💬</span>
+              <span class="comments-label">Kom je ergens niet uit? Laat een opmerking achter</span>
+            </button>
+            <div class="comments-field" id="comments-field-4">
+              <textarea name="opmerkingen_stap_4" rows="2" placeholder="Typ hier je opmerking..."></textarea>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -325,6 +375,16 @@
               <input type="checkbox" name="bevestiging" required style="margin-top:3px;accent-color:var(--terracotta);width:18px;height:18px;">
               <span>Ik bevestig dat de bovenstaande gegevens naar waarheid zijn ingevuld.</span>
             </label>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" onclick="toggleComments(5)">
+              <span class="comments-icon">💬</span>
+              <span class="comments-label">Kom je ergens niet uit? Laat een opmerking achter</span>
+            </button>
+            <div class="comments-field" id="comments-field-5">
+              <textarea name="opmerkingen_stap_5" rows="2" placeholder="Typ hier je opmerking..."></textarea>
+            </div>
           </div>
         </div>
       </div>
