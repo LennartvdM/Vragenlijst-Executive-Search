@@ -4,34 +4,53 @@
  * SETUP INSTRUCTIONS:
  * 1. Deploy the Google Apps Script (see docs/google-apps-script.js)
  * 2. Copy the Web App URL and paste it below as SCRIPT_URL
- * 3. The script handles both authentication and data storage
+ * 3. Set DEV_MODE to false before deploying to production
+ * 4. The script handles both authentication and data storage
+ *
+ * IMPORTANT: Review all settings before production deployment
  */
 
 const CONFIG = {
-  // DEVELOPMENT MODE
-  // Set to true to enable public access without login
-  // Set to false for production
-  DEV_MODE: true,
+  /**
+   * Development mode toggle
+   * - true: Enables public access without login, shows dev banner, enables demo codes
+   * - false: Production mode, requires valid organization code
+   *
+   * WARNING: Set to false before deploying to production!
+   */
+  DEV_MODE: false,
 
-  // Google Apps Script Web App URL
-  // Replace this with your deployed script URL
+  /**
+   * Google Apps Script Web App URL
+   * Replace with your deployed script URL from Google Apps Script
+   * Format: https://script.google.com/macros/s/XXXXXX/exec
+   */
   SCRIPT_URL: 'YOUR_GOOGLE_APPS_SCRIPT_URL',
 
-  // Session storage keys
+  /**
+   * localStorage keys for session and form data persistence
+   * Prefixed with 'cttt_' to avoid collisions with other apps
+   */
   STORAGE_KEYS: {
     SESSION: 'cttt_session',
-    ORG_CODE: 'cttt_org_code',
-    ORG_NAME: 'cttt_org_name',
     FORM_DATA: 'cttt_form_data'
   },
 
-  // Session timeout in milliseconds (24 hours)
+  /**
+   * Session timeout in milliseconds
+   * Default: 24 hours (24 * 60 * 60 * 1000 = 86400000)
+   */
   SESSION_TIMEOUT: 24 * 60 * 60 * 1000,
 
-  // Survey configuration
+  /**
+   * Total number of steps in the survey wizard
+   */
   TOTAL_STEPS: 6,
 
-  // Field definitions for validation and progress tracking
+  /**
+   * Field definitions for validation and progress tracking
+   * Maps step index to array of field names that belong to that step
+   */
   STEP_FIELDS: {
     0: ['organisatie'],
     1: ['streefcijfer', 'streefcijfer_gehaald'],
@@ -41,7 +60,10 @@ const CONFIG = {
     5: ['datum', 'ondertekenaar', 'bevestiging']
   },
 
-  // Section field mappings for progress indicators
+  /**
+   * Section field mappings for progress indicators within steps
+   * Used to show completion status for grouped fields
+   */
   SECTION_FIELDS: {
     werknemers: ['aantal_werknemers', 'werknemers_buiten_europa'],
     top: ['aantal_top', 'top_buiten_europa'],
@@ -52,8 +74,32 @@ const CONFIG = {
   }
 };
 
-// Freeze configuration to prevent accidental modification
+// Freeze configuration to prevent accidental modification at runtime
 Object.freeze(CONFIG);
 Object.freeze(CONFIG.STORAGE_KEYS);
 Object.freeze(CONFIG.STEP_FIELDS);
 Object.freeze(CONFIG.SECTION_FIELDS);
+
+/**
+ * Validate configuration on load
+ * Logs warnings for common misconfigurations
+ */
+(function validateConfig() {
+  'use strict';
+
+  const warnings = [];
+
+  if (CONFIG.DEV_MODE) {
+    warnings.push('DEV_MODE is enabled. Disable before production deployment.');
+  }
+
+  if (!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
+    warnings.push('SCRIPT_URL is not configured. API calls will use demo mode.');
+  }
+
+  // Only log warnings in browser environment with console
+  if (typeof console !== 'undefined' && warnings.length > 0) {
+    console.warn('Configuration warnings:');
+    warnings.forEach(w => console.warn('  - ' + w));
+  }
+})();

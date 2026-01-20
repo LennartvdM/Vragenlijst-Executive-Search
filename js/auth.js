@@ -1,6 +1,8 @@
 /**
  * Authentication module for Monitoring Cultureel Talent naar de Top
  * Handles organization code validation and session management
+ *
+ * Dependencies: config.js, constants.js, storage.js, api.js
  */
 
 (function() {
@@ -33,16 +35,12 @@
    * Check for existing valid session and redirect to survey if found
    */
   function checkExistingSession() {
-    const session = getSession();
-    if (session && session.orgCode && session.orgName) {
-      // Verify session hasn't expired
-      if (session.timestamp && (Date.now() - session.timestamp) < CONFIG.SESSION_TIMEOUT) {
-        window.location.href = 'survey.html';
-        return;
-      }
-      // Clear expired session
-      clearSession();
+    if (Storage.isSessionValid()) {
+      window.location.href = 'survey.html';
+      return;
     }
+    // Clear any expired session data
+    Storage.clearSession();
   }
 
   /**
@@ -50,14 +48,13 @@
    */
   window.publicLogin = function() {
     if (!CONFIG.DEV_MODE) {
-      console.warn('Public login is only available in dev mode');
       return;
     }
 
     // Create a public session
-    saveSession({
-      orgCode: 'PUBLIC',
-      orgName: 'Openbare toegang',
+    Storage.saveSession({
+      orgCode: CONSTANTS.SESSION.PUBLIC_CODE,
+      orgName: CONSTANTS.SESSION.PUBLIC_NAME,
       timestamp: Date.now(),
       isPublic: true
     });
@@ -68,6 +65,8 @@
 
   /**
    * Handle login form submission
+   * @param {Event} event - Form submit event
+   * @returns {boolean} Always false to prevent form submission
    */
   window.handleLogin = async function(event) {
     event.preventDefault();
@@ -81,23 +80,21 @@
     const code = codeInput.value.trim().toUpperCase();
 
     if (!code) {
-      showError(errorDiv, 'Voer uw organisatiecode in.');
+      showError(errorDiv, CONSTANTS.ERRORS.ENTER_CODE);
       return false;
     }
 
     // Show loading state
-    btnText.style.display = 'none';
-    btnLoading.style.display = 'flex';
-    loginBtn.disabled = true;
+    setLoadingState(true, loginBtn, btnText, btnLoading);
     errorDiv.style.display = 'none';
-    codeInput.classList.remove('error');
+    codeInput.classList.remove(CONSTANTS.CSS.ERROR);
 
     try {
       const result = await validateOrganizationCode(code);
 
       if (result.success) {
         // Store session data
-        saveSession({
+        Storage.saveSession({
           orgCode: code,
           orgName: result.organizationName,
           timestamp: Date.now()
@@ -106,69 +103,66 @@
         // Redirect to survey
         window.location.href = 'survey.html';
       } else {
-        showError(errorDiv, result.message || 'Ongeldige organisatiecode. Controleer uw code en probeer opnieuw.');
-        codeInput.classList.add('error');
+        showError(errorDiv, result.message || CONSTANTS.ERRORS.INVALID_CODE);
+        codeInput.classList.add(CONSTANTS.CSS.ERROR);
         codeInput.focus();
       }
     } catch (error) {
-      console.error('Login error:', error);
-      showError(errorDiv, 'Er ging iets mis bij het controleren van uw code. Probeer het later opnieuw.');
+      showError(errorDiv, CONSTANTS.ERRORS.NETWORK_ERROR);
     } finally {
-      // Reset button state
-      btnText.style.display = 'inline';
-      btnLoading.style.display = 'none';
-      loginBtn.disabled = false;
+      setLoadingState(false, loginBtn, btnText, btnLoading);
     }
 
     return false;
   };
 
   /**
-   * Validate organization code against Google Apps Script backend
+   * Set the loading state of the login button
+   * @param {boolean} isLoading - Whether to show loading state
+   * @param {HTMLButtonElement} btn - The button element
+   * @param {HTMLElement} textEl - The button text element
+   * @param {HTMLElement} loadingEl - The loading indicator element
    */
-  async function validateOrganizationCode(code) {
-    // If no script URL configured, use demo mode
-    if (!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
-      console.warn('No Google Apps Script URL configured. Using demo mode.');
-      return demoValidation(code);
-    }
-
-    const response = await fetch(CONFIG.SCRIPT_URL, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'text/plain'
-      },
-      body: JSON.stringify({
-        action: 'validateCode',
-        code: code
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
-    }
-
-    return await response.json();
+  function setLoadingState(isLoading, btn, textEl, loadingEl) {
+    btn.disabled = isLoading;
+    textEl.style.display = isLoading ? 'none' : 'inline';
+    loadingEl.style.display = isLoading ? 'flex' : 'none';
   }
 
   /**
-   * Demo validation for testing without backend
+   * Validate organization code against backend
+   * Falls back to demo validation in dev mode or when API is not configured
+   * @param {string} code - The organization code to validate
+   * @returns {Promise<{success: boolean, organizationName?: string, message?: string}>}
+   */
+  async function validateOrganizationCode(code) {
+    // Use demo validation if API is not configured
+    if (!ApiClient.isConfigured()) {
+      if (CONFIG.DEV_MODE) {
+        return demoValidation(code);
+      }
+      // In production without API, reject all codes
+      return {
+        success: false,
+        message: CONSTANTS.ERRORS.NETWORK_ERROR
+      };
+    }
+
+    return ApiClient.validateCode(code);
+  }
+
+  /**
+   * Demo validation for testing without backend (dev mode only)
    * Accepts codes in format: ORG-YYYY-XXX or DEMO
+   * @param {string} code - The organization code to validate
+   * @returns {{success: boolean, organizationName?: string, message?: string}}
    */
   function demoValidation(code) {
-    // Demo codes for testing
-    const demoCodes = {
-      'DEMO': 'Demo Organisatie',
-      'ORG-2025-001': 'Voorbeeld Bedrijf BV',
-      'ORG-2025-002': 'Test Organisatie NV',
-      'ORG-2025-003': 'Stichting Voorbeeld'
-    };
-
-    if (demoCodes[code]) {
+    // Accept DEMO code
+    if (code === 'DEMO') {
       return {
         success: true,
-        organizationName: demoCodes[code]
+        organizationName: 'Demo Organisatie'
       };
     }
 
@@ -187,30 +181,9 @@
   }
 
   /**
-   * Save session to localStorage
-   */
-  function saveSession(data) {
-    localStorage.setItem(CONFIG.STORAGE_KEYS.SESSION, JSON.stringify(data));
-  }
-
-  /**
-   * Get session from localStorage
-   */
-  function getSession() {
-    const data = localStorage.getItem(CONFIG.STORAGE_KEYS.SESSION);
-    return data ? JSON.parse(data) : null;
-  }
-
-  /**
-   * Clear session data
-   */
-  function clearSession() {
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.SESSION);
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.FORM_DATA);
-  }
-
-  /**
-   * Show error message
+   * Show error message in the error display element
+   * @param {HTMLElement} element - The error container element
+   * @param {string} message - The error message to display
    */
   function showError(element, message) {
     const span = element.querySelector('span');
@@ -222,8 +195,9 @@
 
   // Export functions for use in other modules
   window.AuthModule = {
-    getSession,
-    clearSession,
-    saveSession
+    getSession: Storage.getSession,
+    clearSession: Storage.clearSession,
+    saveSession: Storage.saveSession,
+    isSessionValid: Storage.isSessionValid
   };
 })();
