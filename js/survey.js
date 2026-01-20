@@ -16,7 +16,7 @@
     // Check authentication
     session = Storage.getSession();
     if (!session || !session.orgCode) {
-      window.location.href = 'index.html';
+      window.location.href = '/index.html';
       return;
     }
 
@@ -563,7 +563,7 @@
    */
   function logout() {
     Storage.clearSession();
-    window.location.href = 'index.html';
+    window.location.href = '/index.html';
   }
 
 })();

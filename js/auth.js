@@ -54,7 +54,7 @@
    */
   function checkExistingSession() {
     if (Storage.isSessionValid()) {
-      window.location.href = 'survey.html';
+      window.location.href = '/survey.html';
       return;
     }
     // Clear any expired session data
@@ -78,7 +78,7 @@
     });
 
     // Redirect to survey
-    window.location.href = 'survey.html';
+    window.location.href = '/survey.html';
   }
 
   /**
@@ -118,7 +118,7 @@
         });
 
         // Redirect to survey
-        window.location.href = 'survey.html';
+        window.location.href = '/survey.html';
       } else {
         showError(errorDiv, result.message || CONSTANTS.ERRORS.INVALID_CODE);
         codeInput.classList.add(CONSTANTS.CSS.ERROR);
