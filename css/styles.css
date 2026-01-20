@@ -727,7 +727,7 @@ h1 {
   padding-bottom: 0;
   transition: max-height 0.3s ease-out, opacity 0.2s ease-out, padding 0.3s ease-out;
   visibility: hidden;
-  max-width: 250px;
+  width: calc(100% - 32px);
 }
 
 .conditional.show {
@@ -740,7 +740,6 @@ h1 {
 
 .conditional .field input {
   width: 100%;
-  max-width: 200px;
 }
 
 /* ==========================================================================
