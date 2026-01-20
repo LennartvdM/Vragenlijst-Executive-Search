@@ -447,7 +447,7 @@ body {
   margin-right: -20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-bottom: 1px solid var(--sand-dark);
+  border-bottom: 1px solid rgba(180, 160, 140, 0.4);
 }
 
 .index-item {
@@ -544,6 +544,7 @@ body {
   justify-content: flex-start;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
 }
 
 h1 {
@@ -940,9 +941,12 @@ h1 {
 }
 
 .progress-dots-top-container {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
-  margin: -42px 0 20px 0;
 }
 
 .progress-dots-bottom-container {
@@ -1129,7 +1133,7 @@ h1 {
   margin-right: -20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-bottom: 1px solid var(--sand-dark);
+  border-bottom: 1px solid rgba(180, 160, 140, 0.4);
 }
 
 .progress-bar {
