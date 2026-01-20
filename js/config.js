@@ -18,7 +18,7 @@ const CONFIG = {
    *
    * WARNING: Set to false before deploying to production!
    */
-  DEV_MODE: false,
+  DEV_MODE: true,
 
   /**
    * Google Apps Script Web App URL
