@@ -563,7 +563,8 @@
    */
   function logout() {
     Storage.clearSession();
-    window.location.href = '/index.html';
+    // Redirect with logout parameter as extra safety
+    window.location.href = '/index.html?logout=1';
   }
 
 })();
