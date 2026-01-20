@@ -879,6 +879,59 @@ h1 {
   border-bottom: 1px solid var(--sand-medium);
 }
 
+/* Horizontal breadcrumbs at top of content */
+.breadcrumbs-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--sand-medium);
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--sand-light);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.breadcrumb-item:hover {
+  background: var(--sand-medium);
+}
+
+.breadcrumb-item.active {
+  background: var(--terracotta);
+  color: white;
+}
+
+.breadcrumb-item.active .status {
+  color: white;
+}
+
+.breadcrumb-item .status {
+  font-size: 0.75rem;
+  color: var(--sand-dark);
+}
+
+.breadcrumb-item.complete .status {
+  color: var(--green);
+}
+
+.breadcrumb-item.partial .status {
+  color: var(--salmon);
+  font-size: 0.7rem;
+}
+
+.breadcrumb-item .label {
+  white-space: nowrap;
+}
+
 .progress-dots {
   position: absolute;
   bottom: 30px;

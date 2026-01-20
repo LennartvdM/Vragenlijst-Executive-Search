@@ -250,17 +250,23 @@
   }
 
   /**
-   * Update sidebar index highlighting
+   * Update sidebar index and top breadcrumbs highlighting
    */
   function updateIndex() {
+    // Update sidebar index items
     document.querySelectorAll('.index-item').forEach(item => {
+      const step = parseInt(item.dataset.step);
+      item.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
+    });
+    // Update top breadcrumb items
+    document.querySelectorAll('.breadcrumb-item').forEach(item => {
       const step = parseInt(item.dataset.step);
       item.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
     });
   }
 
   /**
-   * Update index item completion status
+   * Update index item and breadcrumb completion status
    */
   function updateIndexStatus() {
     Object.keys(CONFIG.STEP_FIELDS).forEach(step => {
@@ -281,20 +287,34 @@
         }
       });
 
+      // Update sidebar index item
       const indexItem = document.querySelector(`.index-item[data-step="${step}"]`);
-      if (!indexItem) return;
+      // Update top breadcrumb item
+      const breadcrumbItem = document.querySelector(`.breadcrumb-item[data-step="${step}"]`);
 
-      const statusEl = indexItem.querySelector('.status');
-      indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
+      // Determine status
+      const isComplete = filled === fields.length;
+      const isPartial = filled > 0 && !isComplete;
+      const statusText = isComplete ? CONSTANTS.UI.STATUS_COMPLETE :
+                         isPartial ? `${filled}/${fields.length}` :
+                         CONSTANTS.UI.STATUS_EMPTY;
 
-      if (filled === fields.length) {
-        indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
-        statusEl.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
-      } else if (filled > 0) {
-        indexItem.classList.add(CONSTANTS.CSS.PARTIAL);
-        statusEl.innerHTML = `${filled}/${fields.length}`;
-      } else {
-        statusEl.innerHTML = CONSTANTS.UI.STATUS_EMPTY;
+      // Apply to sidebar index
+      if (indexItem) {
+        const statusEl = indexItem.querySelector('.status');
+        indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
+        if (isComplete) indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
+        else if (isPartial) indexItem.classList.add(CONSTANTS.CSS.PARTIAL);
+        if (statusEl) statusEl.innerHTML = statusText;
+      }
+
+      // Apply to top breadcrumb
+      if (breadcrumbItem) {
+        const statusEl = breadcrumbItem.querySelector('.status');
+        breadcrumbItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
+        if (isComplete) breadcrumbItem.classList.add(CONSTANTS.CSS.COMPLETE);
+        else if (isPartial) breadcrumbItem.classList.add(CONSTANTS.CSS.PARTIAL);
+        if (statusEl) statusEl.innerHTML = statusText;
       }
     });
   }
@@ -362,6 +382,7 @@
     const btnPrevTop = document.getElementById('btnPrevTop');
     const btnNextTop = document.getElementById('btnNextTop');
     const navButtonsTop = document.getElementById('navButtonsTop');
+    const breadcrumbsTop = document.getElementById('breadcrumbsTop');
 
     // Update both prev buttons
     const showPrev = step > 0 && step < CONFIG.TOTAL_STEPS;
@@ -374,9 +395,10 @@
       if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
       if (btnNextTop) btnNextTop.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
     } else if (step === CONFIG.TOTAL_STEPS) {
-      // Success step - hide all navigation
+      // Success step - hide all navigation and breadcrumbs
       if (navButtons) navButtons.style.display = 'none';
       if (navButtonsTop) navButtonsTop.style.display = 'none';
+      if (breadcrumbsTop) breadcrumbsTop.style.display = 'none';
     } else {
       // Normal steps
       if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
