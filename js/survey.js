@@ -249,11 +249,14 @@
    * Update progress dots display
    */
   function updateProgress() {
-    const dots = document.querySelectorAll('.progress-dots span');
-    dots.forEach((dot, i) => {
-      dot.classList.remove(CONSTANTS.CSS.ACTIVE, CONSTANTS.CSS.DONE);
-      if (i < currentStep) dot.classList.add(CONSTANTS.CSS.DONE);
-      if (i === currentStep) dot.classList.add(CONSTANTS.CSS.ACTIVE);
+    const dotsContainers = document.querySelectorAll('.progress-dots');
+    dotsContainers.forEach(container => {
+      const dots = container.querySelectorAll('span');
+      dots.forEach((dot, i) => {
+        dot.classList.remove(CONSTANTS.CSS.ACTIVE, CONSTANTS.CSS.DONE);
+        if (i < currentStep) dot.classList.add(CONSTANTS.CSS.DONE);
+        if (i === currentStep) dot.classList.add(CONSTANTS.CSS.ACTIVE);
+      });
     });
   }
 
