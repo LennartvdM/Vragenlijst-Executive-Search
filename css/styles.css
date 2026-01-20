@@ -443,6 +443,10 @@ body {
   color: var(--text);
   margin-bottom: 16px;
   padding-bottom: 12px;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-left: 20px;
+  padding-right: 20px;
   border-bottom: 1px solid var(--sand-dark);
 }
 
@@ -938,7 +942,7 @@ h1 {
 .progress-dots-top-container {
   display: flex;
   justify-content: center;
-  margin: -35px 0 15px 0;
+  margin: -42px 0 20px 0;
 }
 
 .progress-dots-bottom-container {
@@ -1121,6 +1125,10 @@ h1 {
   gap: 10px;
   margin-bottom: 16px;
   padding-bottom: 16px;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-left: 20px;
+  padding-right: 20px;
   border-bottom: 1px solid var(--sand-dark);
 }
 
