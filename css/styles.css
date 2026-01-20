@@ -879,16 +879,10 @@ h1 {
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--sand-dark);
-}
-
-.top-bar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .bottom-bar {
@@ -945,10 +939,16 @@ h1 {
   background: var(--salmon);
 }
 
+.progress-dots-top-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 10px;
+}
+
 .progress-dots-top {
   position: static;
   transform: none;
-  justify-content: flex-start;
+  justify-content: center;
   margin-bottom: 0;
 }
 
@@ -1167,6 +1167,7 @@ h1 {
   .index,
   .progress-dots,
   .progress-dots-top,
+  .progress-dots-top-container,
   .nav-buttons,
   .nav-buttons-top,
   .btn-print,
