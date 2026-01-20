@@ -27,7 +27,20 @@
     setupInputListeners();
     setupAutoSave();
     loadSavedFormData();
+    calculateStableCardDimensions();
     showStep(0);
+
+    // Recalculate on window resize (debounced)
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        // Reset min-height before recalculating
+        const content = document.querySelector('.content');
+        if (content) content.style.minHeight = '';
+        calculateStableCardDimensions();
+      }, 250);
+    });
   });
 
   /**
@@ -128,6 +141,67 @@
     updateAllSections();
     updateIndexStatus();
     saveFormData();
+  }
+
+  /**
+   * Calculate and set stable card dimensions based on the largest step
+   * This prevents the card from resizing when navigating between steps
+   */
+  function calculateStableCardDimensions() {
+    const content = document.querySelector('.content');
+    const steps = document.querySelectorAll('.step');
+
+    if (!content || steps.length === 0) return;
+
+    // Store original states
+    const originalStates = Array.from(steps).map(step => ({
+      element: step,
+      display: step.style.display,
+      visibility: step.style.visibility,
+      position: step.style.position,
+      hasActive: step.classList.contains(CONSTANTS.CSS.ACTIVE)
+    }));
+
+    // Temporarily make all steps measurable
+    steps.forEach(step => {
+      step.style.display = 'flex';
+      step.style.visibility = 'hidden';
+      step.style.position = 'absolute';
+      step.classList.remove(CONSTANTS.CSS.ACTIVE);
+    });
+
+    // Force layout recalculation
+    content.offsetHeight;
+
+    // Measure each step
+    let maxHeight = 0;
+    steps.forEach(step => {
+      // Temporarily make this step visible for measurement
+      step.style.visibility = 'visible';
+      step.style.position = 'relative';
+
+      const height = step.scrollHeight;
+      if (height > maxHeight) maxHeight = height;
+
+      // Hide again for next measurement
+      step.style.visibility = 'hidden';
+      step.style.position = 'absolute';
+    });
+
+    // Restore original states
+    originalStates.forEach(state => {
+      state.element.style.display = state.display;
+      state.element.style.visibility = state.visibility;
+      state.element.style.position = state.position;
+      if (state.hasActive) {
+        state.element.classList.add(CONSTANTS.CSS.ACTIVE);
+      }
+    });
+
+    // Set minimum height on content to prevent resizing
+    if (maxHeight > 0) {
+      content.style.minHeight = maxHeight + 'px';
+    }
   }
 
   /**
