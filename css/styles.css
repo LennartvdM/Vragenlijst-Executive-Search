@@ -572,13 +572,9 @@ h1 {
 
 .form-section {
   flex: 1;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-right: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  scrollbar-gutter: stable;
   width: 100%;
   min-width: 0;
 }
