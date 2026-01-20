@@ -441,9 +441,9 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--sand-dark);
+  border-bottom: 1px solid var(--sand-dark);
 }
 
 .index-item {
@@ -938,7 +938,7 @@ h1 {
 .progress-dots-top-container {
   display: flex;
   justify-content: center;
-  margin: -38px 0 12px 0;
+  margin: -35px 0 15px 0;
 }
 
 .progress-dots-bottom-container {
