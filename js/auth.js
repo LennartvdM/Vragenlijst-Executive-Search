@@ -8,11 +8,29 @@
 (function() {
   'use strict';
 
-  // Check if already logged in on page load
+  // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', function() {
     initDevMode();
+    setupEventListeners();
     checkExistingSession();
   });
+
+  /**
+   * Setup all event listeners for the login page
+   */
+  function setupEventListeners() {
+    // Login form submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', handleLogin);
+    }
+
+    // Public login button (dev mode)
+    const publicLoginBtn = document.getElementById('publicLoginBtn');
+    if (publicLoginBtn) {
+      publicLoginBtn.addEventListener('click', publicLogin);
+    }
+  }
 
   /**
    * Initialize dev mode UI elements
@@ -46,7 +64,7 @@
   /**
    * Public login without organization code (dev mode only)
    */
-  window.publicLogin = function() {
+  function publicLogin() {
     if (!CONFIG.DEV_MODE) {
       return;
     }
@@ -61,14 +79,13 @@
 
     // Redirect to survey
     window.location.href = 'survey.html';
-  };
+  }
 
   /**
    * Handle login form submission
    * @param {Event} event - Form submit event
-   * @returns {boolean} Always false to prevent form submission
    */
-  window.handleLogin = async function(event) {
+  async function handleLogin(event) {
     event.preventDefault();
 
     const codeInput = document.getElementById('orgCode');
@@ -81,7 +98,7 @@
 
     if (!code) {
       showError(errorDiv, CONSTANTS.ERRORS.ENTER_CODE);
-      return false;
+      return;
     }
 
     // Show loading state
@@ -112,9 +129,7 @@
     } finally {
       setLoadingState(false, loginBtn, btnText, btnLoading);
     }
-
-    return false;
-  };
+  }
 
   /**
    * Set the loading state of the login button
@@ -193,7 +208,7 @@
     element.style.display = 'flex';
   }
 
-  // Export functions for use in other modules
+  // Export functions for use in other modules (if needed)
   window.AuthModule = {
     getSession: Storage.getSession,
     clearSession: Storage.clearSession,

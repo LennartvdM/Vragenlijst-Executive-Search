@@ -23,11 +23,112 @@
     // Initialize UI
     initializeOrganizationInfo();
     initProgress();
-    loadSavedFormData();
-    setupAutoSave();
+    setupEventDelegation();
     setupInputListeners();
+    setupAutoSave();
+    loadSavedFormData();
     showStep(0);
   });
+
+  /**
+   * Setup event delegation for all interactive elements
+   * This replaces inline onclick handlers with a single document-level listener
+   */
+  function setupEventDelegation() {
+    document.addEventListener('click', function(event) {
+      const target = event.target;
+
+      // Check for data-action attribute on target or parent elements
+      const actionElement = target.closest('[data-action]');
+      if (actionElement) {
+        const action = actionElement.dataset.action;
+        handleAction(action, actionElement, event);
+        return;
+      }
+
+      // Handle option card clicks (labels containing radio buttons)
+      const optionCard = target.closest('.option-card');
+      if (optionCard) {
+        handleOptionCardClick(optionCard);
+        return;
+      }
+    });
+  }
+
+  /**
+   * Handle actions triggered by data-action attributes
+   * @param {string} action - The action name
+   * @param {HTMLElement} element - The element that triggered the action
+   * @param {Event} event - The original event
+   */
+  function handleAction(action, element, event) {
+    switch (action) {
+      case 'goToStep':
+        const step = parseInt(element.dataset.step, 10);
+        goToStep(step);
+        break;
+
+      case 'prevStep':
+        prevStep();
+        break;
+
+      case 'nextStep':
+        nextStep();
+        break;
+
+      case 'toggleComments':
+        const commentStep = parseInt(element.dataset.step, 10);
+        toggleComments(commentStep);
+        break;
+
+      case 'resetGroup':
+        const name = element.dataset.name;
+        resetGroup(name);
+        break;
+
+      case 'logout':
+        logout();
+        break;
+    }
+  }
+
+  /**
+   * Handle option card clicks
+   * @param {HTMLElement} card - The option card element
+   */
+  function handleOptionCardClick(card) {
+    const input = card.querySelector('input[type="radio"]');
+    if (!input) return;
+
+    const name = input.name;
+    const value = input.value;
+
+    // Deselect all cards in the same group
+    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+      const parentCard = radio.closest('.option-card');
+      if (parentCard) {
+        parentCard.classList.remove(CONSTANTS.CSS.SELECTED);
+      }
+    });
+
+    // Select this card
+    card.classList.add(CONSTANTS.CSS.SELECTED);
+    input.checked = true;
+
+    // Update header state
+    const header = document.getElementById(`header-${name}`);
+    if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
+
+    // Handle conditional field visibility using centralized mapping
+    const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
+    if (conditionalId) {
+      toggleConditional(conditionalId, value === CONSTANTS.ANSWERS.YES);
+    }
+
+    updateAllSections();
+    updateIndexStatus();
+    saveFormData();
+  }
 
   /**
    * Initialize organization info display
@@ -206,68 +307,44 @@
    * Navigate to a specific step
    * @param {number} step - Step index to navigate to
    */
-  window.goToStep = function(step) {
+  function goToStep(step) {
     currentStep = step;
     showStep(step);
-  };
+  }
 
   /**
    * Go to next step or submit if on last step
    */
-  window.nextStep = function() {
+  function nextStep() {
     if (currentStep === CONFIG.TOTAL_STEPS - 1) {
       submitForm();
     } else {
       currentStep++;
       showStep(currentStep);
     }
-  };
+  }
 
   /**
    * Go to previous step
    */
-  window.prevStep = function() {
+  function prevStep() {
     if (currentStep > 0) {
       currentStep--;
       showStep(currentStep);
     }
-  };
-
-  /**
-   * Select an option card (for radio button groups styled as cards)
-   * @param {HTMLElement} el - The option card element
-   * @param {string} name - The field name
-   * @param {string} value - The selected value
-   */
-  window.selectOption = function(el, name, value) {
-    document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
-      input.closest('.option-card').classList.remove(CONSTANTS.CSS.SELECTED);
-    });
-    el.classList.add(CONSTANTS.CSS.SELECTED);
-    el.querySelector('input').checked = true;
-
-    const header = document.getElementById(`header-${name}`);
-    if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
-
-    // Handle conditional field visibility using centralized mapping
-    const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
-    if (conditionalId) {
-      toggleConditional(conditionalId, value === CONSTANTS.ANSWERS.YES);
-    }
-
-    updateAllSections();
-    updateIndexStatus();
-    saveFormData();
-  };
+  }
 
   /**
    * Reset a radio button group
    * @param {string} name - The field name to reset
    */
-  window.resetGroup = function(name) {
+  function resetGroup(name) {
     document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
       input.checked = false;
-      input.closest('.option-card').classList.remove(CONSTANTS.CSS.SELECTED);
+      const card = input.closest('.option-card');
+      if (card) {
+        card.classList.remove(CONSTANTS.CSS.SELECTED);
+      }
     });
 
     const header = document.getElementById(`header-${name}`);
@@ -282,23 +359,23 @@
     updateAllSections();
     updateIndexStatus();
     saveFormData();
-  };
+  }
 
   /**
    * Toggle conditional field visibility
    * @param {string} id - The element ID to toggle
    * @param {boolean} show - Whether to show or hide
    */
-  window.toggleConditional = function(id, show) {
+  function toggleConditional(id, show) {
     const el = document.getElementById(id);
     if (el) el.classList.toggle(CONSTANTS.CSS.SHOW, show);
-  };
+  }
 
   /**
    * Toggle comments field visibility for a specific step
    * @param {number} step - The step index
    */
-  window.toggleComments = function(step) {
+  function toggleComments(step) {
     const field = document.getElementById(`comments-field-${step}`);
     if (field) {
       field.classList.toggle(CONSTANTS.CSS.SHOW);
@@ -308,7 +385,7 @@
         if (textarea) textarea.focus();
       }
     }
-  };
+  }
 
   /**
    * Setup input change listeners for real-time status updates
@@ -484,9 +561,9 @@
   /**
    * Logout and return to login page
    */
-  window.logout = function() {
+  function logout() {
     Storage.clearSession();
     window.location.href = 'index.html';
-  };
+  }
 
 })();

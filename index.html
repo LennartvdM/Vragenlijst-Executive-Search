@@ -31,7 +31,7 @@
           Ontwikkelmodus actief
         </div>
 
-        <form id="loginForm" onsubmit="return handleLogin(event)">
+        <form id="loginForm">
           <div class="field">
             <label for="orgCode">Organisatiecode</label>
             <input
@@ -69,7 +69,7 @@
         <!-- Public access button - shown when DEV_MODE is true -->
         <div id="publicAccess" class="public-access" style="display: none;">
           <div class="divider"><span>of</span></div>
-          <button type="button" class="btn btn-secondary btn-full" onclick="publicLogin()">
+          <button type="button" class="btn btn-secondary btn-full" id="publicLoginBtn">
             Ga door zonder inloggen
           </button>
         </div>

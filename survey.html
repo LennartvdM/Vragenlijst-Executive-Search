@@ -11,27 +11,27 @@
 <div class="container">
   <div class="index">
     <h2>Voortgang</h2>
-    <div class="index-item active" data-step="0" onclick="goToStep(0)">
+    <div class="index-item active" data-step="0" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Welkom</span>
     </div>
-    <div class="index-item" data-step="1" onclick="goToStep(1)">
+    <div class="index-item" data-step="1" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Streefcijfer</span>
     </div>
-    <div class="index-item" data-step="2" onclick="goToStep(2)">
+    <div class="index-item" data-step="2" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Kwantitatieve gegevens</span>
     </div>
-    <div class="index-item" data-step="3" onclick="goToStep(3)">
+    <div class="index-item" data-step="3" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Bestuursorganen</span>
     </div>
-    <div class="index-item" data-step="4" onclick="goToStep(4)">
+    <div class="index-item" data-step="4" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Leiderschap</span>
     </div>
-    <div class="index-item" data-step="5" onclick="goToStep(5)">
+    <div class="index-item" data-step="5" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Ondertekenen</span>
     </div>
@@ -39,7 +39,7 @@
     <div class="org-info" id="orgInfo">
       <div class="org-name" id="orgNameDisplay">-</div>
       <div class="org-code" id="orgCodeDisplay">-</div>
-      <button type="button" class="logout-btn" onclick="logout()">Uitloggen</button>
+      <button type="button" class="logout-btn" data-action="logout">Uitloggen</button>
     </div>
   </div>
 
@@ -57,7 +57,7 @@
           </div>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" onclick="toggleComments(0)">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="0">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
             <div class="comments-field" id="comments-field-0">
@@ -75,10 +75,10 @@
 
           <div class="question-header" id="header-streefcijfer">
             <span class="question-text">Heeft u een streefcijfer voor het aandeel mensen met herkomst Buiten-Europa in de top?</span>
-            <button type="button" class="reset-btn" onclick="resetGroup('streefcijfer')" title="Wis selectie">↺</button>
+            <button type="button" class="reset-btn" data-action="resetGroup" data-name="streefcijfer" title="Wis selectie">↺</button>
           </div>
 
-          <label class="option-card" onclick="selectOption(this, 'streefcijfer', 'Ja')">
+          <label class="option-card">
             <input type="radio" name="streefcijfer" value="Ja">
             <div class="option-radio"></div>
             <div class="option-content">
@@ -98,7 +98,7 @@
             </div>
           </div>
 
-          <label class="option-card" onclick="selectOption(this, 'streefcijfer', 'Nee')">
+          <label class="option-card">
             <input type="radio" name="streefcijfer" value="Nee">
             <div class="option-radio"></div>
             <div class="option-content">
@@ -110,19 +110,19 @@
           <div style="margin-top:20px;">
             <div class="question-header" id="header-streefcijfer_gehaald">
               <span class="question-text">Heeft u dit streefcijfer in 2025 gehaald?</span>
-              <button type="button" class="reset-btn" onclick="resetGroup('streefcijfer_gehaald')" title="Wis selectie">↺</button>
+              <button type="button" class="reset-btn" data-action="resetGroup" data-name="streefcijfer_gehaald" title="Wis selectie">↺</button>
             </div>
-            <label class="option-card" onclick="selectOption(this, 'streefcijfer_gehaald', 'Ja')">
+            <label class="option-card">
               <input type="radio" name="streefcijfer_gehaald" value="Ja">
               <div class="option-radio"></div>
               <div class="option-content"><h3>Ja</h3></div>
             </label>
-            <label class="option-card" onclick="selectOption(this, 'streefcijfer_gehaald', 'Nee')">
+            <label class="option-card">
               <input type="radio" name="streefcijfer_gehaald" value="Nee">
               <div class="option-radio"></div>
               <div class="option-content"><h3>Nee</h3></div>
             </label>
-            <label class="option-card" onclick="selectOption(this, 'streefcijfer_gehaald', 'Weet niet')">
+            <label class="option-card">
               <input type="radio" name="streefcijfer_gehaald" value="Weet niet">
               <div class="option-radio"></div>
               <div class="option-content"><h3>Weet niet</h3></div>
@@ -130,7 +130,7 @@
           </div>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" onclick="toggleComments(1)">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="1">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
             <div class="comments-field" id="comments-field-1">
@@ -176,7 +176,7 @@
           </div>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" onclick="toggleComments(2)">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="2">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
             <div class="comments-field" id="comments-field-2">
@@ -194,9 +194,9 @@
           <div class="section-header" data-section="rvb">Raad van Bestuur <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvb">
             <span class="question-text">Heeft u een (Raad van) Bestuur?</span>
-            <button type="button" class="reset-btn" onclick="resetGroup('heeft_rvb')" title="Wis selectie">↺</button>
+            <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvb" title="Wis selectie">↺</button>
           </div>
-          <label class="option-card" onclick="selectOption(this, 'heeft_rvb', 'Ja'); toggleConditional('rvb-details', true)">
+          <label class="option-card">
             <input type="radio" name="heeft_rvb" value="Ja">
             <div class="option-radio"></div>
             <div class="option-content"><h3>Ja</h3></div>
@@ -211,7 +211,7 @@
               <input type="number" name="rvb_buiten_europa" min="0">
             </div>
           </div>
-          <label class="option-card" onclick="selectOption(this, 'heeft_rvb', 'Nee'); toggleConditional('rvb-details', false)">
+          <label class="option-card">
             <input type="radio" name="heeft_rvb" value="Nee">
             <div class="option-radio"></div>
             <div class="option-content"><h3>Nee</h3></div>
@@ -220,9 +220,9 @@
           <div class="section-header" data-section="rvc">Raad van Commissarissen <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvc">
             <span class="question-text">Heeft u een Raad van Commissarissen?</span>
-            <button type="button" class="reset-btn" onclick="resetGroup('heeft_rvc')" title="Wis selectie">↺</button>
+            <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvc" title="Wis selectie">↺</button>
           </div>
-          <label class="option-card" onclick="selectOption(this, 'heeft_rvc', 'Ja'); toggleConditional('rvc-details', true)">
+          <label class="option-card">
             <input type="radio" name="heeft_rvc" value="Ja">
             <div class="option-radio"></div>
             <div class="option-content"><h3>Ja</h3></div>
@@ -237,7 +237,7 @@
               <input type="number" name="rvc_buiten_europa" min="0">
             </div>
           </div>
-          <label class="option-card" onclick="selectOption(this, 'heeft_rvc', 'Nee'); toggleConditional('rvc-details', false)">
+          <label class="option-card">
             <input type="radio" name="heeft_rvc" value="Nee">
             <div class="option-radio"></div>
             <div class="option-content"><h3>Nee</h3></div>
@@ -246,9 +246,9 @@
           <div class="section-header" data-section="rvt">Raad van Toezicht <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvt">
             <span class="question-text">Heeft u een Raad van Toezicht?</span>
-            <button type="button" class="reset-btn" onclick="resetGroup('heeft_rvt')" title="Wis selectie">↺</button>
+            <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvt" title="Wis selectie">↺</button>
           </div>
-          <label class="option-card" onclick="selectOption(this, 'heeft_rvt', 'Ja'); toggleConditional('rvt-details', true)">
+          <label class="option-card">
             <input type="radio" name="heeft_rvt" value="Ja">
             <div class="option-radio"></div>
             <div class="option-content"><h3>Ja</h3></div>
@@ -263,14 +263,14 @@
               <input type="number" name="rvt_buiten_europa" min="0">
             </div>
           </div>
-          <label class="option-card" onclick="selectOption(this, 'heeft_rvt', 'Nee'); toggleConditional('rvt-details', false)">
+          <label class="option-card">
             <input type="radio" name="heeft_rvt" value="Nee">
             <div class="option-radio"></div>
             <div class="option-content"><h3>Nee</h3></div>
           </label>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" onclick="toggleComments(3)">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="3">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
             <div class="comments-field" id="comments-field-3">
@@ -339,7 +339,7 @@
           </div>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" onclick="toggleComments(4)">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="4">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
             <div class="comments-field" id="comments-field-4">
@@ -373,7 +373,7 @@
           </div>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" onclick="toggleComments(5)">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="5">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
             <div class="comments-field" id="comments-field-5">
@@ -402,8 +402,8 @@
     </form>
 
     <div class="nav-buttons" id="navButtons">
-      <button type="button" class="btn btn-secondary" id="btnPrev" onclick="prevStep()" style="display:none;">Vorige</button>
-      <button type="button" class="btn btn-primary" id="btnNext" onclick="nextStep()">Volgende</button>
+      <button type="button" class="btn btn-secondary" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
+      <button type="button" class="btn btn-primary" id="btnNext" data-action="nextStep">Volgende</button>
     </div>
   </div>
 
