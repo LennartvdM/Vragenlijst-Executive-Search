@@ -1,6 +1,8 @@
 /**
  * Survey module for Monitoring Cultureel Talent naar de Top
  * Handles form navigation, validation, and submission
+ *
+ * Dependencies: config.js, constants.js, storage.js, api.js
  */
 
 (function() {
@@ -12,7 +14,7 @@
   // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
-    session = getSession();
+    session = Storage.getSession();
     if (!session || !session.orgCode) {
       window.location.href = 'index.html';
       return;
@@ -21,18 +23,111 @@
     // Initialize UI
     initializeOrganizationInfo();
     initProgress();
-    loadSavedFormData();
-    setupAutoSave();
+    setupEventDelegation();
     setupInputListeners();
+    setupAutoSave();
+    loadSavedFormData();
     showStep(0);
   });
 
   /**
-   * Get session from localStorage
+   * Setup event delegation for all interactive elements
+   * This replaces inline onclick handlers with a single document-level listener
    */
-  function getSession() {
-    const data = localStorage.getItem(CONFIG.STORAGE_KEYS.SESSION);
-    return data ? JSON.parse(data) : null;
+  function setupEventDelegation() {
+    document.addEventListener('click', function(event) {
+      const target = event.target;
+
+      // Check for data-action attribute on target or parent elements
+      const actionElement = target.closest('[data-action]');
+      if (actionElement) {
+        const action = actionElement.dataset.action;
+        handleAction(action, actionElement, event);
+        return;
+      }
+
+      // Handle option card clicks (labels containing radio buttons)
+      const optionCard = target.closest('.option-card');
+      if (optionCard) {
+        handleOptionCardClick(optionCard);
+        return;
+      }
+    });
+  }
+
+  /**
+   * Handle actions triggered by data-action attributes
+   * @param {string} action - The action name
+   * @param {HTMLElement} element - The element that triggered the action
+   * @param {Event} event - The original event
+   */
+  function handleAction(action, element, event) {
+    switch (action) {
+      case 'goToStep':
+        const step = parseInt(element.dataset.step, 10);
+        goToStep(step);
+        break;
+
+      case 'prevStep':
+        prevStep();
+        break;
+
+      case 'nextStep':
+        nextStep();
+        break;
+
+      case 'toggleComments':
+        const commentStep = parseInt(element.dataset.step, 10);
+        toggleComments(commentStep);
+        break;
+
+      case 'resetGroup':
+        const name = element.dataset.name;
+        resetGroup(name);
+        break;
+
+      case 'logout':
+        logout();
+        break;
+    }
+  }
+
+  /**
+   * Handle option card clicks
+   * @param {HTMLElement} card - The option card element
+   */
+  function handleOptionCardClick(card) {
+    const input = card.querySelector('input[type="radio"]');
+    if (!input) return;
+
+    const name = input.name;
+    const value = input.value;
+
+    // Deselect all cards in the same group
+    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+      const parentCard = radio.closest('.option-card');
+      if (parentCard) {
+        parentCard.classList.remove(CONSTANTS.CSS.SELECTED);
+      }
+    });
+
+    // Select this card
+    card.classList.add(CONSTANTS.CSS.SELECTED);
+    input.checked = true;
+
+    // Update header state
+    const header = document.getElementById(`header-${name}`);
+    if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
+
+    // Handle conditional field visibility using centralized mapping
+    const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
+    if (conditionalId) {
+      toggleConditional(conditionalId, value === CONSTANTS.ANSWERS.YES);
+    }
+
+    updateAllSections();
+    updateIndexStatus();
+    saveFormData();
   }
 
   /**
@@ -63,7 +158,7 @@
     dots.innerHTML = '';
     for (let i = 0; i < CONFIG.TOTAL_STEPS; i++) {
       const span = document.createElement('span');
-      if (i === 0) span.classList.add('active');
+      if (i === 0) span.classList.add(CONSTANTS.CSS.ACTIVE);
       dots.appendChild(span);
     }
   }
@@ -74,9 +169,9 @@
   function updateProgress() {
     const dots = document.querySelectorAll('.progress-dots span');
     dots.forEach((dot, i) => {
-      dot.classList.remove('active', 'done');
-      if (i < currentStep) dot.classList.add('done');
-      if (i === currentStep) dot.classList.add('active');
+      dot.classList.remove(CONSTANTS.CSS.ACTIVE, CONSTANTS.CSS.DONE);
+      if (i < currentStep) dot.classList.add(CONSTANTS.CSS.DONE);
+      if (i === currentStep) dot.classList.add(CONSTANTS.CSS.ACTIVE);
     });
   }
 
@@ -86,7 +181,7 @@
   function updateIndex() {
     document.querySelectorAll('.index-item').forEach(item => {
       const step = parseInt(item.dataset.step);
-      item.classList.toggle('active', step === currentStep);
+      item.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
     });
   }
 
@@ -116,22 +211,23 @@
       if (!indexItem) return;
 
       const statusEl = indexItem.querySelector('.status');
-      indexItem.classList.remove('complete', 'partial');
+      indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
 
       if (filled === fields.length) {
-        indexItem.classList.add('complete');
-        statusEl.innerHTML = '✓';
+        indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
+        statusEl.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
       } else if (filled > 0) {
-        indexItem.classList.add('partial');
+        indexItem.classList.add(CONSTANTS.CSS.PARTIAL);
         statusEl.innerHTML = `${filled}/${fields.length}`;
       } else {
-        statusEl.innerHTML = '○';
+        statusEl.innerHTML = CONSTANTS.UI.STATUS_EMPTY;
       }
     });
   }
 
   /**
    * Update section header completion status
+   * @param {string} sectionName - Name of the section to update
    */
   function updateSectionStatus(sectionName) {
     const fields = CONFIG.SECTION_FIELDS[sectionName];
@@ -156,16 +252,16 @@
     });
 
     const icon = header.querySelector('.status-icon');
-    header.classList.remove('complete', 'partial');
+    header.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
 
     if (filled === total) {
-      header.classList.add('complete');
-      icon.innerHTML = '✓';
+      header.classList.add(CONSTANTS.CSS.COMPLETE);
+      icon.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
     } else if (filled > 0) {
-      header.classList.add('partial');
+      header.classList.add(CONSTANTS.CSS.PARTIAL);
       icon.innerHTML = `${filled}/${total}`;
     } else {
-      icon.innerHTML = '○';
+      icon.innerHTML = CONSTANTS.UI.STATUS_EMPTY;
     }
   }
 
@@ -178,11 +274,12 @@
 
   /**
    * Show a specific step
+   * @param {number} step - Step index to show
    */
   function showStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.step').forEach(s => s.classList.remove(CONSTANTS.CSS.ACTIVE));
     const stepEl = document.querySelector(`.step[data-step="${step}"]`);
-    if (stepEl) stepEl.classList.add('active');
+    if (stepEl) stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
 
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
@@ -194,11 +291,11 @@
 
     if (btnNext) {
       if (step === CONFIG.TOTAL_STEPS - 1) {
-        btnNext.textContent = 'Verzenden';
+        btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
       } else if (step === CONFIG.TOTAL_STEPS) {
         if (navButtons) navButtons.style.display = 'none';
       } else {
-        btnNext.textContent = 'Volgende';
+        btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
       }
     }
 
@@ -208,109 +305,90 @@
 
   /**
    * Navigate to a specific step
+   * @param {number} step - Step index to navigate to
    */
-  window.goToStep = function(step) {
+  function goToStep(step) {
     currentStep = step;
     showStep(step);
-  };
+  }
 
   /**
-   * Go to next step
+   * Go to next step or submit if on last step
    */
-  window.nextStep = function() {
+  function nextStep() {
     if (currentStep === CONFIG.TOTAL_STEPS - 1) {
       submitForm();
     } else {
       currentStep++;
       showStep(currentStep);
     }
-  };
+  }
 
   /**
    * Go to previous step
    */
-  window.prevStep = function() {
+  function prevStep() {
     if (currentStep > 0) {
       currentStep--;
       showStep(currentStep);
     }
-  };
-
-  /**
-   * Select an option card
-   */
-  window.selectOption = function(el, name, value) {
-    document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
-      input.closest('.option-card').classList.remove('selected');
-    });
-    el.classList.add('selected');
-    el.querySelector('input').checked = true;
-
-    const header = document.getElementById(`header-${name}`);
-    if (header) header.classList.add('has-value');
-
-    if (name === 'streefcijfer') {
-      toggleConditional('streefcijfer-details', value === 'Ja');
-    }
-
-    updateAllSections();
-    updateIndexStatus();
-    saveFormData();
-  };
+  }
 
   /**
    * Reset a radio button group
+   * @param {string} name - The field name to reset
    */
-  window.resetGroup = function(name) {
+  function resetGroup(name) {
     document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
       input.checked = false;
-      input.closest('.option-card').classList.remove('selected');
+      const card = input.closest('.option-card');
+      if (card) {
+        card.classList.remove(CONSTANTS.CSS.SELECTED);
+      }
     });
 
     const header = document.getElementById(`header-${name}`);
-    if (header) header.classList.remove('has-value');
+    if (header) header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
 
-    const conditionalMap = {
-      'streefcijfer': 'streefcijfer-details',
-      'heeft_rvb': 'rvb-details',
-      'heeft_rvc': 'rvc-details',
-      'heeft_rvt': 'rvt-details'
-    };
-
-    if (conditionalMap[name]) {
-      toggleConditional(conditionalMap[name], false);
+    // Hide conditional field if applicable
+    const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
+    if (conditionalId) {
+      toggleConditional(conditionalId, false);
     }
 
     updateAllSections();
     updateIndexStatus();
     saveFormData();
-  };
+  }
 
   /**
    * Toggle conditional field visibility
+   * @param {string} id - The element ID to toggle
+   * @param {boolean} show - Whether to show or hide
    */
-  window.toggleConditional = function(id, show) {
+  function toggleConditional(id, show) {
     const el = document.getElementById(id);
-    if (el) el.classList.toggle('show', show);
-  };
+    if (el) el.classList.toggle(CONSTANTS.CSS.SHOW, show);
+  }
 
   /**
    * Toggle comments field visibility for a specific step
+   * @param {number} step - The step index
    */
-  window.toggleComments = function(step) {
+  function toggleComments(step) {
     const field = document.getElementById(`comments-field-${step}`);
     if (field) {
-      field.classList.toggle('show');
+      field.classList.toggle(CONSTANTS.CSS.SHOW);
       // Focus the textarea when opening
-      if (field.classList.contains('show')) {
+      if (field.classList.contains(CONSTANTS.CSS.SHOW)) {
         const textarea = field.querySelector('textarea');
         if (textarea) textarea.focus();
       }
     }
-  };
+  }
 
   /**
-   * Setup input change listeners
+   * Setup input change listeners for real-time status updates
    */
   function setupInputListeners() {
     document.querySelectorAll('input, textarea').forEach(input => {
@@ -327,21 +405,21 @@
     // Likert scale row highlighting
     document.querySelectorAll('.likert-table input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', function() {
-        this.closest('tr').classList.add('answered');
+        this.closest('tr').classList.add(CONSTANTS.CSS.ANSWERED);
         updateIndexStatus();
       });
     });
   }
 
   /**
-   * Setup auto-save functionality
+   * Setup auto-save functionality with debouncing
    */
   function setupAutoSave() {
     let saveTimeout;
     document.querySelectorAll('input, textarea').forEach(input => {
       input.addEventListener('input', () => {
         clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(saveFormData, 500);
+        saveTimeout = setTimeout(saveFormData, CONSTANTS.TIMEOUTS.AUTO_SAVE_DELAY);
       });
       input.addEventListener('change', saveFormData);
     });
@@ -354,17 +432,15 @@
     const form = document.getElementById('monitoringForm');
     const data = {};
     new FormData(form).forEach((v, k) => data[k] = v);
-    localStorage.setItem(CONFIG.STORAGE_KEYS.FORM_DATA, JSON.stringify(data));
+    Storage.saveFormData(data);
   }
 
   /**
-   * Load saved form data from localStorage
+   * Load saved form data from localStorage and restore UI state
    */
   function loadSavedFormData() {
-    const savedData = localStorage.getItem(CONFIG.STORAGE_KEYS.FORM_DATA);
-    if (!savedData) return;
-
-    const data = JSON.parse(savedData);
+    const data = Storage.getFormData();
+    if (!data) return;
 
     Object.entries(data).forEach(([name, value]) => {
       const input = document.querySelector(`[name="${name}"]`);
@@ -375,28 +451,20 @@
         if (radio) {
           radio.checked = true;
           const card = radio.closest('.option-card');
-          if (card) card.classList.add('selected');
+          if (card) card.classList.add(CONSTANTS.CSS.SELECTED);
 
           const header = document.getElementById(`header-${name}`);
-          if (header) header.classList.add('has-value');
+          if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
 
-          // Handle conditional fields
-          if (name === 'streefcijfer' && value === 'Ja') {
-            toggleConditional('streefcijfer-details', true);
-          }
-          if (name === 'heeft_rvb' && value === 'Ja') {
-            toggleConditional('rvb-details', true);
-          }
-          if (name === 'heeft_rvc' && value === 'Ja') {
-            toggleConditional('rvc-details', true);
-          }
-          if (name === 'heeft_rvt' && value === 'Ja') {
-            toggleConditional('rvt-details', true);
+          // Handle conditional fields using centralized mapping
+          const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
+          if (conditionalId && value === CONSTANTS.ANSWERS.YES) {
+            toggleConditional(conditionalId, true);
           }
 
           // Likert table row highlighting
           const row = radio.closest('tr');
-          if (row) row.classList.add('answered');
+          if (row) row.classList.add(CONSTANTS.CSS.ANSWERED);
         }
       } else if (input.type === 'checkbox') {
         input.checked = value === 'on' || value === true;
@@ -406,7 +474,7 @@
         if (name.startsWith('opmerkingen_stap_') && value.trim() !== '') {
           const step = name.replace('opmerkingen_stap_', '');
           const field = document.getElementById(`comments-field-${step}`);
-          if (field) field.classList.add('show');
+          if (field) field.classList.add(CONSTANTS.CSS.SHOW);
         }
       }
     });
@@ -416,7 +484,8 @@
   }
 
   /**
-   * Get all form data
+   * Collect all form data including metadata
+   * @returns {Object} Form data with timestamp, orgCode, and orgName
    */
   function getFormData() {
     const form = document.getElementById('monitoringForm');
@@ -432,48 +501,36 @@
   }
 
   /**
-   * Submit the form
+   * Submit the form to the backend
    */
   async function submitForm() {
     const btn = document.getElementById('btnNext');
     const originalText = btn.textContent;
     btn.disabled = true;
-    btn.textContent = 'Verzenden...';
+    btn.textContent = CONSTANTS.UI.BUTTON_SUBMITTING;
 
     try {
       const formData = getFormData();
 
-      // If no script URL configured, show demo success
-      if (!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
-        console.warn('No Google Apps Script URL configured. Demo submission.');
-        console.log('Form data:', formData);
+      // If API is not configured, show demo success in dev mode
+      if (!ApiClient.isConfigured()) {
+        if (CONFIG.DEV_MODE) {
+          // Simulate network delay for demo
+          await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+          // Show success
+          currentStep = CONFIG.TOTAL_STEPS;
+          showStep(currentStep);
 
-        // Show success
-        currentStep = CONFIG.TOTAL_STEPS;
-        showStep(currentStep);
-
-        // Clear saved form data
-        localStorage.removeItem(CONFIG.STORAGE_KEYS.FORM_DATA);
-        return;
+          // Clear saved form data
+          Storage.clearFormData();
+          return;
+        }
+        throw new Error(CONSTANTS.ERRORS.NETWORK_ERROR);
       }
 
-      // Submit to Google Apps Script
-      const response = await fetch(CONFIG.SCRIPT_URL, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        body: JSON.stringify({
-          action: 'submitSurvey',
-          data: formData
-        })
-      });
-
-      const result = await response.json();
+      // Submit to backend
+      const result = await ApiClient.submitSurvey(formData);
 
       if (result.success) {
         currentStep = CONFIG.TOTAL_STEPS;
@@ -490,13 +547,12 @@
         }
 
         // Clear saved form data
-        localStorage.removeItem(CONFIG.STORAGE_KEYS.FORM_DATA);
+        Storage.clearFormData();
       } else {
-        throw new Error(result.message || 'Submission failed');
+        throw new Error(result.message || CONSTANTS.ERRORS.SUBMIT_ERROR);
       }
     } catch (e) {
-      console.error('Submit error:', e);
-      alert('Er ging iets mis bij het verzenden. Probeer het opnieuw.');
+      alert(CONSTANTS.ERRORS.SUBMIT_ERROR);
       btn.disabled = false;
       btn.textContent = originalText;
     }
@@ -505,10 +561,9 @@
   /**
    * Logout and return to login page
    */
-  window.logout = function() {
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.SESSION);
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.FORM_DATA);
+  function logout() {
+    Storage.clearSession();
     window.location.href = 'index.html';
-  };
+  }
 
 })();
