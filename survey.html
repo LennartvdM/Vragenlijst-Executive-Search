@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring Cultureel Talent naar de Top 2025</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="survey-body">
+
+<div class="container">
+  <div class="index">
+    <h2>Voortgang</h2>
+    <div class="index-item active" data-step="0" onclick="goToStep(0)">
+      <span class="status">○</span>
+      <span class="label">Welkom</span>
+    </div>
+    <div class="index-item" data-step="1" onclick="goToStep(1)">
+      <span class="status">○</span>
+      <span class="label">Streefcijfer</span>
+    </div>
+    <div class="index-item" data-step="2" onclick="goToStep(2)">
+      <span class="status">○</span>
+      <span class="label">Kwantitatieve gegevens</span>
+    </div>
+    <div class="index-item" data-step="3" onclick="goToStep(3)">
+      <span class="status">○</span>
+      <span class="label">Bestuursorganen</span>
+    </div>
+    <div class="index-item" data-step="4" onclick="goToStep(4)">
+      <span class="status">○</span>
+      <span class="label">Leiderschap</span>
+    </div>
+    <div class="index-item" data-step="5" onclick="goToStep(5)">
+      <span class="status">○</span>
+      <span class="label">Ondertekenen</span>
+    </div>
+
+    <div class="org-info" id="orgInfo">
+      <div class="org-name" id="orgNameDisplay">-</div>
+      <div class="org-code" id="orgCodeDisplay">-</div>
+      <button type="button" class="logout-btn" onclick="logout()">Uitloggen</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <form id="monitoringForm">
+
+      <!-- Step 0: Welcome -->
+      <div class="step active" data-step="0">
+        <h1>Monitoring Cultureel Talent naar de Top 2025</h1>
+        <p class="subtitle">Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw organisatiegegevens en beleid rondom culturele diversiteit.</p>
+        <div class="form-section">
+          <div class="field">
+            <label>Naam organisatie (Charter)</label>
+            <input type="text" name="organisatie" id="organisatieField" required placeholder="Voer de naam van uw organisatie in">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Streefcijfer -->
+      <div class="step" data-step="1">
+        <h1>Streefcijfer</h1>
+        <p class="subtitle">Heeft uw organisatie doelstellingen voor culturele diversiteit in de top?</p>
+        <div class="form-section">
+
+          <div class="question-header" id="header-streefcijfer">
+            <span class="question-text">Heeft u een streefcijfer voor het aandeel mensen met herkomst Buiten-Europa in de top?</span>
+            <button type="button" class="reset-btn" onclick="resetGroup('streefcijfer')" title="Wis selectie">↺</button>
+          </div>
+
+          <label class="option-card" onclick="selectOption(this, 'streefcijfer', 'Ja')">
+            <input type="radio" name="streefcijfer" value="Ja">
+            <div class="option-radio"></div>
+            <div class="option-content">
+              <h3>Ja</h3>
+              <p>Wij hebben een concreet streefcijfer vastgesteld</p>
+            </div>
+          </label>
+
+          <div class="conditional" id="streefcijfer-details">
+            <div class="field">
+              <label>Welk percentage gebruikt u?</label>
+              <input type="text" name="streefcijfer_percentage" placeholder="bijv. 15%">
+            </div>
+            <div class="field">
+              <label>Voor welk jaar?</label>
+              <input type="text" name="streefcijfer_jaar" placeholder="bijv. 2025">
+            </div>
+          </div>
+
+          <label class="option-card" onclick="selectOption(this, 'streefcijfer', 'Nee')">
+            <input type="radio" name="streefcijfer" value="Nee">
+            <div class="option-radio"></div>
+            <div class="option-content">
+              <h3>Nee</h3>
+              <p>Wij hebben geen specifiek streefcijfer</p>
+            </div>
+          </label>
+
+          <div style="margin-top:20px;">
+            <div class="question-header" id="header-streefcijfer_gehaald">
+              <span class="question-text">Heeft u dit streefcijfer in 2025 gehaald?</span>
+              <button type="button" class="reset-btn" onclick="resetGroup('streefcijfer_gehaald')" title="Wis selectie">↺</button>
+            </div>
+            <label class="option-card" onclick="selectOption(this, 'streefcijfer_gehaald', 'Ja')">
+              <input type="radio" name="streefcijfer_gehaald" value="Ja">
+              <div class="option-radio"></div>
+              <div class="option-content"><h3>Ja</h3></div>
+            </label>
+            <label class="option-card" onclick="selectOption(this, 'streefcijfer_gehaald', 'Nee')">
+              <input type="radio" name="streefcijfer_gehaald" value="Nee">
+              <div class="option-radio"></div>
+              <div class="option-content"><h3>Nee</h3></div>
+            </label>
+            <label class="option-card" onclick="selectOption(this, 'streefcijfer_gehaald', 'Weet niet')">
+              <input type="radio" name="streefcijfer_gehaald" value="Weet niet">
+              <div class="option-radio"></div>
+              <div class="option-content"><h3>Weet niet</h3></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Kwantitatieve gegevens -->
+      <div class="step" data-step="2">
+        <h1>Kwantitatieve gegevens</h1>
+        <p class="subtitle">Vul de aantallen in voor uw organisatie in 2025.</p>
+        <div class="form-section">
+          <div class="section-header" data-section="werknemers">👥 Werknemers <span class="status-icon">○</span></div>
+          <div class="field">
+            <label>Totaal aantal werknemers</label>
+            <input type="number" name="aantal_werknemers" min="0" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Aantal met herkomst Buiten-Europa</label>
+            <input type="number" name="werknemers_buiten_europa" min="0" placeholder="0">
+          </div>
+
+          <div class="section-header" data-section="top">🏢 Top (RvB/directie + 2 managementlagen) <span class="status-icon">○</span></div>
+          <div class="field">
+            <label>Aantal werknemers in de top</label>
+            <input type="number" name="aantal_top" min="0" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Aantal met herkomst Buiten-Europa in de top</label>
+            <input type="number" name="top_buiten_europa" min="0" placeholder="0">
+          </div>
+
+          <div class="section-header" data-section="subtop">📊 Subtop (middenmanagement) <span class="status-icon">○</span></div>
+          <div class="field">
+            <label>Aantal werknemers in de subtop</label>
+            <input type="number" name="aantal_subtop" min="0" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Aantal met herkomst Buiten-Europa in de subtop</label>
+            <input type="number" name="subtop_buiten_europa" min="0" placeholder="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Bestuursorganen -->
+      <div class="step" data-step="3">
+        <h1>Bestuursorganen</h1>
+        <p class="subtitle">Informatie over uw Raad van Bestuur, Commissarissen en Toezicht.</p>
+        <div class="form-section">
+          <div class="section-header" data-section="rvb">Raad van Bestuur <span class="status-icon">○</span></div>
+          <div class="question-header" id="header-heeft_rvb">
+            <span class="question-text">Heeft u een (Raad van) Bestuur?</span>
+            <button type="button" class="reset-btn" onclick="resetGroup('heeft_rvb')" title="Wis selectie">↺</button>
+          </div>
+          <label class="option-card" onclick="selectOption(this, 'heeft_rvb', 'Ja'); toggleConditional('rvb-details', true)">
+            <input type="radio" name="heeft_rvb" value="Ja">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Ja</h3></div>
+          </label>
+          <div class="conditional" id="rvb-details">
+            <div class="field">
+              <label>Aantal mensen in de RvB</label>
+              <input type="number" name="aantal_rvb" min="0">
+            </div>
+            <div class="field">
+              <label>Aantal met herkomst Buiten-Europa</label>
+              <input type="number" name="rvb_buiten_europa" min="0">
+            </div>
+          </div>
+          <label class="option-card" onclick="selectOption(this, 'heeft_rvb', 'Nee'); toggleConditional('rvb-details', false)">
+            <input type="radio" name="heeft_rvb" value="Nee">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Nee</h3></div>
+          </label>
+
+          <div class="section-header" data-section="rvc">Raad van Commissarissen <span class="status-icon">○</span></div>
+          <div class="question-header" id="header-heeft_rvc">
+            <span class="question-text">Heeft u een Raad van Commissarissen?</span>
+            <button type="button" class="reset-btn" onclick="resetGroup('heeft_rvc')" title="Wis selectie">↺</button>
+          </div>
+          <label class="option-card" onclick="selectOption(this, 'heeft_rvc', 'Ja'); toggleConditional('rvc-details', true)">
+            <input type="radio" name="heeft_rvc" value="Ja">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Ja</h3></div>
+          </label>
+          <div class="conditional" id="rvc-details">
+            <div class="field">
+              <label>Aantal mensen in de RvC</label>
+              <input type="number" name="aantal_rvc" min="0">
+            </div>
+            <div class="field">
+              <label>Aantal met herkomst Buiten-Europa</label>
+              <input type="number" name="rvc_buiten_europa" min="0">
+            </div>
+          </div>
+          <label class="option-card" onclick="selectOption(this, 'heeft_rvc', 'Nee'); toggleConditional('rvc-details', false)">
+            <input type="radio" name="heeft_rvc" value="Nee">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Nee</h3></div>
+          </label>
+
+          <div class="section-header" data-section="rvt">Raad van Toezicht <span class="status-icon">○</span></div>
+          <div class="question-header" id="header-heeft_rvt">
+            <span class="question-text">Heeft u een Raad van Toezicht?</span>
+            <button type="button" class="reset-btn" onclick="resetGroup('heeft_rvt')" title="Wis selectie">↺</button>
+          </div>
+          <label class="option-card" onclick="selectOption(this, 'heeft_rvt', 'Ja'); toggleConditional('rvt-details', true)">
+            <input type="radio" name="heeft_rvt" value="Ja">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Ja</h3></div>
+          </label>
+          <div class="conditional" id="rvt-details">
+            <div class="field">
+              <label>Aantal mensen in de RvT</label>
+              <input type="number" name="aantal_rvt" min="0">
+            </div>
+            <div class="field">
+              <label>Aantal met herkomst Buiten-Europa</label>
+              <input type="number" name="rvt_buiten_europa" min="0">
+            </div>
+          </div>
+          <label class="option-card" onclick="selectOption(this, 'heeft_rvt', 'Nee'); toggleConditional('rvt-details', false)">
+            <input type="radio" name="heeft_rvt" value="Nee">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Nee</h3></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Step 4: Leiderschap -->
+      <div class="step" data-step="4">
+        <h1>Leiderschap</h1>
+        <p class="subtitle">Hoe geeft de top richting aan culturele diversiteit?</p>
+        <div class="form-section">
+          <table class="likert-table">
+            <thead>
+              <tr>
+                <th>Stelling</th>
+                <th>Niet</th>
+                <th>Enigszins</th>
+                <th>Grotendeels</th>
+                <th>Volledig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>De top is gecommitteerd aan de doelstellingen</td>
+                <td><input type="radio" name="leid_1" value="0"></td>
+                <td><input type="radio" name="leid_1" value="1"></td>
+                <td><input type="radio" name="leid_1" value="2"></td>
+                <td><input type="radio" name="leid_1" value="3"></td>
+              </tr>
+              <tr>
+                <td>De top draagt het belang actief uit</td>
+                <td><input type="radio" name="leid_2" value="0"></td>
+                <td><input type="radio" name="leid_2" value="1"></td>
+                <td><input type="radio" name="leid_2" value="2"></td>
+                <td><input type="radio" name="leid_2" value="3"></td>
+              </tr>
+              <tr>
+                <td>De top stuurt op resultaten</td>
+                <td><input type="radio" name="leid_3" value="0"></td>
+                <td><input type="radio" name="leid_3" value="1"></td>
+                <td><input type="radio" name="leid_3" value="2"></td>
+                <td><input type="radio" name="leid_3" value="3"></td>
+              </tr>
+              <tr>
+                <td>De top stelt voldoende middelen beschikbaar</td>
+                <td><input type="radio" name="leid_4" value="0"></td>
+                <td><input type="radio" name="leid_4" value="1"></td>
+                <td><input type="radio" name="leid_4" value="2"></td>
+                <td><input type="radio" name="leid_4" value="3"></td>
+              </tr>
+              <tr>
+                <td>De top neemt eindverantwoordelijkheid</td>
+                <td><input type="radio" name="leid_5" value="0"></td>
+                <td><input type="radio" name="leid_5" value="1"></td>
+                <td><input type="radio" name="leid_5" value="2"></td>
+                <td><input type="radio" name="leid_5" value="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field">
+            <label>Toelichting (optioneel)</label>
+            <textarea name="leiderschap_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Ondertekenen -->
+      <div class="step" data-step="5">
+        <h1>Ondertekenen</h1>
+        <p class="subtitle">Bevestig de monitorgegevens namens uw organisatie.</p>
+        <div class="form-section">
+          <div class="info-box">
+            <strong>Let op:</strong> De CEO/directeur dient de monitorgegevens te ondertekenen als ondertekenaar van het Charter Talent naar de Top.
+          </div>
+          <div class="field">
+            <label>Datum</label>
+            <input type="date" name="datum" required>
+          </div>
+          <div class="field">
+            <label>Naam CEO/directeur</label>
+            <input type="text" name="ondertekenaar" required placeholder="Volledige naam">
+          </div>
+          <div class="field">
+            <label style="display:flex;align-items:flex-start;gap:10px;font-weight:400;cursor:pointer;">
+              <input type="checkbox" name="bevestiging" required style="margin-top:3px;accent-color:var(--terracotta);width:18px;height:18px;">
+              <span>Ik bevestig dat de bovenstaande gegevens naar waarheid zijn ingevuld.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: Success -->
+      <div class="step" data-step="6">
+        <div class="success">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h1>Verzonden!</h1>
+          <p class="subtitle" style="margin-top:16px;">Uw monitorgegevens zijn succesvol ontvangen. Bedankt voor uw deelname aan de monitoring Cultureel Talent naar de Top 2025.</p>
+          <p class="subtitle" id="docLink" style="display:none;">
+            <a href="#" id="docLinkAnchor" target="_blank" style="color:var(--terracotta);">Bekijk uw ingevulde document</a>
+          </p>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="nav-buttons" id="navButtons">
+      <button type="button" class="btn btn-secondary" id="btnPrev" onclick="prevStep()" style="display:none;">Vorige</button>
+      <button type="button" class="btn btn-primary" id="btnNext" onclick="nextStep()">Volgende</button>
+    </div>
+  </div>
+
+  <div class="progress-dots" id="progressDots"></div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/survey.js"></script>
+
+</body>
+</html>
