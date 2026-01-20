@@ -426,16 +426,29 @@
     if (step === CONFIG.TOTAL_STEPS - 1) {
       // Last step before submit
       if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
-      if (btnNextTop) btnNextTop.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
+      if (btnNextTop) {
+        btnNextTop.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
+        // Disable top submit button to prevent accidental submissions
+        btnNextTop.disabled = true;
+        btnNextTop.classList.add('btn-disabled-top');
+      }
     } else if (step === CONFIG.TOTAL_STEPS) {
-      // Success step - hide all navigation and progress dots
-      if (navButtons) navButtons.style.display = 'none';
+      // Success step - hide top navigation but keep bottom for navigation
       if (navButtonsTop) navButtonsTop.style.display = 'none';
       if (progressDotsTop) progressDotsTop.style.display = 'none';
+      // Keep bottom prev button visible for navigation, hide next/submit
+      if (btnNext) btnNext.style.display = 'none';
+      if (btnPrev) {
+        btnPrev.style.display = 'block';
+      }
     } else {
       // Normal steps
       if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
-      if (btnNextTop) btnNextTop.textContent = CONSTANTS.UI.BUTTON_NEXT;
+      if (btnNextTop) {
+        btnNextTop.textContent = CONSTANTS.UI.BUTTON_NEXT;
+        btnNextTop.disabled = false;
+        btnNextTop.classList.remove('btn-disabled-top');
+      }
     }
 
     updateProgress();
@@ -643,6 +656,21 @@
    * Submit the form to the backend
    */
   async function submitForm() {
+    // Validate required fields on the sign-off page
+    const ondertekenaar = document.querySelector('[name="ondertekenaar"]');
+    const bevestiging = document.querySelector('[name="bevestiging"]');
+
+    if (!ondertekenaar || !ondertekenaar.value.trim()) {
+      alert('Vul de naam van de CEO/directeur in.');
+      if (ondertekenaar) ondertekenaar.focus();
+      return;
+    }
+
+    if (!bevestiging || !bevestiging.checked) {
+      alert('Bevestig dat de gegevens naar waarheid zijn ingevuld.');
+      return;
+    }
+
     const btn = document.getElementById('btnNext');
     const btnTop = document.getElementById('btnNextTop');
     const originalText = btn ? btn.textContent : CONSTANTS.UI.BUTTON_SUBMIT;
