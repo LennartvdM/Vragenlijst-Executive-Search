@@ -295,6 +295,21 @@
   };
 
   /**
+   * Toggle comments field visibility for a specific step
+   */
+  window.toggleComments = function(step) {
+    const field = document.getElementById(`comments-field-${step}`);
+    if (field) {
+      field.classList.toggle('show');
+      // Focus the textarea when opening
+      if (field.classList.contains('show')) {
+        const textarea = field.querySelector('textarea');
+        if (textarea) textarea.focus();
+      }
+    }
+  };
+
+  /**
    * Setup input change listeners
    */
   function setupInputListeners() {
@@ -387,6 +402,12 @@
         input.checked = value === 'on' || value === true;
       } else {
         input.value = value;
+        // Show comments field if it has content
+        if (name.startsWith('opmerkingen_stap_') && value.trim() !== '') {
+          const step = name.replace('opmerkingen_stap_', '');
+          const field = document.getElementById(`comments-field-${step}`);
+          if (field) field.classList.add('show');
+        }
       }
     });
 
