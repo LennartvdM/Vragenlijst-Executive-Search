@@ -8,6 +8,13 @@
 </head>
 <body class="survey-body">
 
+<noscript>
+  <div style="background:#fef3c7;border:1px solid #f59e0b;padding:20px;margin:20px;border-radius:8px;text-align:center;">
+    <p style="margin:0 0 10px 0;font-weight:bold;">JavaScript is vereist voor deze vragenlijst.</p>
+    <p style="margin:0;"><a href="/index.html?logout=1" style="color:#b45309;">Klik hier om terug te gaan naar de inlogpagina</a></p>
+  </div>
+</noscript>
+
 <div class="container">
   <div class="index">
     <h2>Voortgang</h2>
@@ -39,7 +46,7 @@
     <div class="org-info" id="orgInfo">
       <div class="org-name" id="orgNameDisplay">-</div>
       <div class="org-code" id="orgCodeDisplay">-</div>
-      <button type="button" class="logout-btn" data-action="logout">Uitloggen</button>
+      <a href="/index.html?logout=1" class="logout-btn" data-action="logout">Uitloggen</a>
     </div>
   </div>
 

@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+  <noscript>
+    <div style="background:#fee2e2;border:1px solid #ef4444;padding:20px;margin:20px;border-radius:8px;text-align:center;">
+      <p style="margin:0;font-weight:bold;">JavaScript is vereist om in te loggen.</p>
+      <p style="margin:10px 0 0 0;">Schakel JavaScript in om door te gaan.</p>
+    </div>
+  </noscript>
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
@@ -98,6 +104,23 @@
       </p>
     </div>
   </div>
+
+  <!-- Logout handler - must run before other scripts to clear session if requested -->
+  <script>
+    (function() {
+      // Check for logout parameter in URL
+      if (window.location.search.includes('logout=1')) {
+        try {
+          localStorage.removeItem('cttt_session');
+          localStorage.removeItem('cttt_form_data');
+        } catch (e) {
+          // Ignore storage errors
+        }
+        // Remove the query parameter from URL to prevent re-triggering
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    })();
+  </script>
 
   <!-- Core modules (order matters) -->
   <script src="/js/config.js"></script>
