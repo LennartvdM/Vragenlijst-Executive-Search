@@ -703,6 +703,11 @@
           stepEl.classList.add('slide-down');
         }
       }
+
+      // On mobile, scroll to top when navigating to a new page
+      if (window.innerWidth <= 768) {
+        window.scrollTo(0, 0);
+      }
     }
 
     // Update previous step tracker
