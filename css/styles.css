@@ -688,6 +688,74 @@ h1 {
   opacity: 1;
 }
 
+/* Larger info box for intro/informational pages */
+.info-box-large {
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.info-box-large p {
+  margin-bottom: 12px;
+}
+
+.info-box-large p:last-child {
+  margin-bottom: 0;
+}
+
+/* Answer categories box for qualitative intro */
+.answer-categories-box {
+  background: white;
+  border: 2px solid var(--terracotta);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.answer-categories-box h3 {
+  color: var(--terracotta);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.answer-categories-box p {
+  font-size: 14px;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.answer-categories-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.answer-categories-list li {
+  background: linear-gradient(135deg, var(--sand-light) 0%, var(--sand) 100%);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .answer-categories-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Index item for info pages (no status circle needed) */
+.index-item-info .status {
+  background: var(--terracotta);
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .form-section {
   flex: 1;
   display: flex;

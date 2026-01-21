@@ -39,19 +39,19 @@ const CONFIG = {
   SESSION_TIMEOUT: 24 * 60 * 60 * 1000,
 
   /**
-   * Total number of steps in the survey wizard (0-12 = content, 13 = review, 14 = success)
+   * Total number of steps in the survey wizard (0-13 = content, 14 = review, 15 = success)
    */
-  TOTAL_STEPS: 15,
+  TOTAL_STEPS: 16,
 
   /**
    * Review step index - shows overview of incomplete fields
    */
-  REVIEW_STEP: 13,
+  REVIEW_STEP: 14,
 
   /**
    * Success step index - shown after successful submission
    */
-  SUCCESS_STEP: 14,
+  SUCCESS_STEP: 15,
 
   /**
    * Field definitions for validation and progress tracking
@@ -62,15 +62,16 @@ const CONFIG = {
     1: ['streefcijfer', 'streefcijfer_gehaald', 'definitie_afwijking'],
     2: ['aantal_werknemers', 'werknemers_buiten_europa', 'aantal_top', 'top_buiten_europa', 'aantal_subtop', 'subtop_buiten_europa'],
     3: ['heeft_rvb', 'heeft_rvc', 'heeft_rvt', 'beleid_samenstelling'],
-    4: ['leid_1', 'leid_2', 'leid_3', 'leid_4', 'leid_5'],
-    5: ['strat_1', 'strat_2', 'strat_3', 'strat_4', 'strat_5', 'strat_6', 'strat_7', 'strat_8'],
-    6: ['hr_1', 'hr_2', 'hr_3', 'hr_4', 'hr_5', 'hr_6', 'hr_7', 'hr_8', 'hr_9', 'hr_10', 'hr_11', 'hr_12', 'hr_13', 'hr_14'],
-    7: ['comm_1', 'comm_2', 'comm_3', 'comm_4', 'comm_5'],
-    8: ['kennis_1', 'kennis_2', 'kennis_3', 'kennis_4', 'kennis_5', 'kennis_6', 'kennis_7', 'kennis_8'],
-    9: ['klimaat_1', 'klimaat_2', 'klimaat_3', 'klimaat_4', 'klimaat_5', 'klimaat_6'],
-    10: ['motivatie'],
-    11: ['strategie_vraag_1', 'blokkade_1', 'bevorderend_1', 'voorbeeld_organisatie'],
-    12: ['datum', 'ondertekenaar', 'bevestiging']
+    4: [], // Kwalitatieve gegevens intro - no fields, informational only
+    5: ['leid_1', 'leid_2', 'leid_3', 'leid_4', 'leid_5'],
+    6: ['strat_1', 'strat_2', 'strat_3', 'strat_4', 'strat_5', 'strat_6', 'strat_7', 'strat_8'],
+    7: ['hr_1', 'hr_2', 'hr_3', 'hr_4', 'hr_5', 'hr_6', 'hr_7', 'hr_8', 'hr_9', 'hr_10', 'hr_11', 'hr_12', 'hr_13', 'hr_14'],
+    8: ['comm_1', 'comm_2', 'comm_3', 'comm_4', 'comm_5'],
+    9: ['kennis_1', 'kennis_2', 'kennis_3', 'kennis_4', 'kennis_5', 'kennis_6', 'kennis_7', 'kennis_8'],
+    10: ['klimaat_1', 'klimaat_2', 'klimaat_3', 'klimaat_4', 'klimaat_5', 'klimaat_6'],
+    11: ['motivatie'],
+    12: ['strategie_vraag_1', 'blokkade_1', 'bevorderend_1', 'voorbeeld_organisatie'],
+    13: ['datum', 'ondertekenaar', 'bevestiging']
   },
 
   /**
