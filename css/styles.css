@@ -1500,8 +1500,9 @@ h1 {
     border-bottom: none;
   }
 
-  /* Hide success step in print */
-  .step[data-step="13"] {
+  /* Hide review and success steps in print */
+  .step[data-step="13"],
+  .step[data-step="14"] {
     display: none !important;
   }
 
@@ -1575,6 +1576,181 @@ h1 {
 /* Hide print header in normal view */
 .print-header {
   display: none;
+}
+
+/* ==========================================================================
+   Review Step Styles
+   ========================================================================== */
+
+.review-loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+}
+
+/* Complete state - all fields filled */
+.review-complete {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 2px solid var(--success);
+  border-radius: 12px;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.review-complete-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--success);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.review-complete-icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.review-complete h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--success);
+  margin-bottom: 8px;
+}
+
+.review-complete p {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+/* Incomplete state - some fields missing */
+.review-incomplete {
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.review-incomplete-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.review-incomplete-header svg {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.review-incomplete-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #92400e;
+  margin: 0;
+}
+
+.review-incomplete-subtitle {
+  font-size: 14px;
+  color: #78350f;
+  margin-bottom: 20px;
+  padding-left: 36px;
+}
+
+/* Individual review items */
+.review-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.review-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.review-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.review-item-step {
+  font-size: 11px;
+  font-weight: 600;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.review-item-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.review-item-count {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* Go to step button */
+.btn-review-goto {
+  padding: 6px 14px;
+  font-size: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Confirmation checkbox */
+.review-confirm {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.review-confirm-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.review-confirm-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--terracotta);
+  flex-shrink: 0;
+}
+
+/* Submit button on review page */
+.btn-submit-review {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 16px;
+}
+
+.btn-submit-review:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ==========================================================================
