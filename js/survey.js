@@ -704,9 +704,9 @@
         }
       }
 
-      // On mobile, scroll to top when navigating to a new page
+      // On mobile, start at top when navigating to a new page
       if (window.innerWidth <= 768) {
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'instant' });
       }
     }
 
