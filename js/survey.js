@@ -558,7 +558,11 @@
 
     table.querySelectorAll('tr.answered').forEach(row => {
       row.classList.remove(CONSTANTS.CSS.ANSWERED);
+      row.classList.remove('just-answered');
     });
+
+    // Remove arrow indicators
+    table.classList.remove('has-missing');
 
     const header = document.getElementById(`header-${tableId}`);
     if (header) header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
