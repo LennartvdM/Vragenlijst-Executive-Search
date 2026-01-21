@@ -540,6 +540,10 @@ body {
   background: var(--salmon);
 }
 
+.index-item.conditional-incomplete .status {
+  background: var(--salmon);
+}
+
 .index-item .label {
   font-size: 13px;
   color: var(--text);
@@ -768,6 +772,22 @@ h1 {
   border-color: var(--terracotta);
   background: var(--sand-light);
   opacity: 1;
+  box-shadow: 0 4px 16px rgba(196, 120, 90, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Option card with unfilled conditional - waiting state */
+.option-card.selected.awaiting-conditional {
+  border-color: var(--salmon);
+  box-shadow: 0 2px 8px rgba(232, 160, 145, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Full completion - satisfied conditional */
+.option-card.selected.conditional-satisfied {
+  border-color: var(--terracotta);
+  box-shadow: 0 6px 20px rgba(196, 120, 90, 0.2);
+  transform: translateY(-3px);
 }
 
 .option-card input {
@@ -1038,6 +1058,57 @@ h1 {
 .section-header.partial .status-icon {
   background: var(--salmon);
   color: white;
+}
+
+/* Half-done state: conditional fields not yet filled */
+.section-header.conditional-incomplete {
+  opacity: 0.85;
+  border-left-color: var(--salmon);
+}
+
+.section-header.conditional-incomplete .status-icon {
+  background: var(--salmon);
+  color: white;
+}
+
+/* ==========================================================================
+   Question Group Completion Effects - Lift & Shadow
+   ========================================================================== */
+
+/* Question group wrapper for completion tracking */
+.question-group {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+}
+
+/* Lift effect for completed question groups */
+.question-group.complete {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(139, 90, 60, 0.12), 0 2px 8px rgba(139, 90, 60, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Subtle state for partial/conditional-incomplete groups */
+.question-group.conditional-incomplete {
+  background: rgba(232, 160, 145, 0.06);
+  border: 1px dashed var(--salmon);
+}
+
+/* Option card enhancement when parent group is complete */
+.question-group.complete .option-card.selected {
+  box-shadow: 0 2px 12px rgba(196, 120, 90, 0.2);
+}
+
+/* Completed section header gets extra visual polish */
+.section-header.complete {
+  box-shadow: 0 2px 8px rgba(196, 120, 90, 0.1);
+  transform: translateY(-1px);
 }
 
 /* ==========================================================================
