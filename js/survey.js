@@ -2529,6 +2529,21 @@
 
       const radioName = firstRadio.name;
 
+      // Add mobile reset button to the row
+      if (!row.querySelector('.likert-row-reset')) {
+        const resetBtn = document.createElement('button');
+        resetBtn.type = 'button';
+        resetBtn.className = 'likert-row-reset';
+        resetBtn.setAttribute('aria-label', 'Wis selectie');
+        resetBtn.innerHTML = '×';
+        resetBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          resetLikertRow(row, radioName);
+        });
+        row.appendChild(resetBtn);
+      }
+
       // Create the segmented control container
       const segment = document.createElement('div');
       segment.className = 'likert-segment';
@@ -2681,6 +2696,48 @@
         // Dispatch change event to trigger existing handlers
         radio.dispatchEvent(new Event('change', { bubbles: true }));
       }
+    }
+
+    /**
+     * Reset a single Likert row
+     */
+    function resetLikertRow(row, radioName) {
+      // Uncheck all radio buttons for this row
+      row.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.checked = false;
+      });
+
+      // Remove answered state from row
+      row.classList.remove(CONSTANTS.CSS.ANSWERED);
+      row.classList.remove('just-answered');
+
+      // Reset segmented control
+      const segment = row.querySelector('.likert-segment');
+      if (segment) {
+        const slider = segment.querySelector('.likert-segment-slider');
+        segment.classList.remove('has-selection');
+        segment.querySelectorAll('.likert-segment-option').forEach(btn => {
+          btn.classList.remove('selected');
+          btn.setAttribute('aria-checked', 'false');
+        });
+      }
+
+      // Check if table still has any values
+      const table = row.closest('.likert-table');
+      if (table) {
+        const hasAnsweredRows = table.querySelectorAll('tbody tr.answered').length > 0;
+        if (!hasAnsweredRows && table.id) {
+          const header = document.getElementById(`header-${table.id}`);
+          if (header) header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
+        }
+        // Remove missing arrows indicator
+        table.classList.remove('has-missing');
+      }
+
+      // Trigger updates
+      updateAllSections();
+      updateIndexStatus();
+      saveFormData();
     }
 
     /**
