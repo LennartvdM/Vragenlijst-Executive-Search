@@ -256,6 +256,14 @@
         const formId = element.dataset.formId;
         if (formId) printArchivedForm(formId);
         break;
+
+      case 'closeValidationModal':
+        hideValidationModal();
+        break;
+
+      case 'closeErrorModal':
+        hideErrorModal();
+        break;
     }
   }
 
@@ -1859,13 +1867,29 @@
     const bevestiging = document.querySelector('[name="bevestiging"]');
 
     if (!ondertekenaar || !ondertekenaar.value.trim()) {
-      alert('Vul de naam van de CEO/directeur in.');
-      if (ondertekenaar) ondertekenaar.focus();
+      showValidationModal(
+        'Nog niet compleet',
+        'Vul de naam van de CEO/directeur in voordat u het formulier kunt verzenden.',
+        {
+          linkText: 'Ga naar ondertekenen →',
+          linkAction: () => {
+            goToStep(12);
+            setTimeout(() => ondertekenaar && ondertekenaar.focus(), 100);
+          }
+        }
+      );
       return;
     }
 
     if (!bevestiging || !bevestiging.checked) {
-      alert('Bevestig dat de gegevens naar waarheid zijn ingevuld.');
+      showValidationModal(
+        'Bevestiging vereist',
+        'Bevestig dat de gegevens naar waarheid zijn ingevuld voordat u het formulier kunt verzenden.',
+        {
+          linkText: 'Ga naar ondertekenen →',
+          linkAction: () => goToStep(12)
+        }
+      );
       return;
     }
 
@@ -1931,7 +1955,10 @@
         throw new Error(result.message || CONSTANTS.ERRORS.SUBMIT_ERROR);
       }
     } catch (e) {
-      alert(CONSTANTS.ERRORS.SUBMIT_ERROR);
+      showErrorModal(
+        'Verzenden mislukt',
+        CONSTANTS.ERRORS.SUBMIT_ERROR
+      );
       // Re-enable both buttons on error
       if (btn) {
         btn.disabled = false;
@@ -1980,7 +2007,10 @@
   function printArchivedForm(formId) {
     const archivedForm = Storage.getSubmittedFormById(formId);
     if (!archivedForm) {
-      alert('Formulier niet gevonden.');
+      showErrorModal(
+        'Niet gevonden',
+        'Het formulier kon niet worden gevonden.'
+      );
       return;
     }
 
@@ -2200,6 +2230,82 @@
     const restartModal = document.getElementById('restartChoiceModal');
     if (warningModal) warningModal.style.display = 'none';
     if (restartModal) restartModal.style.display = 'flex';
+  }
+
+  /**
+   * Show the validation modal with custom message
+   * @param {string} title - The modal title
+   * @param {string} message - The validation message
+   * @param {Object} options - Optional settings (linkText, linkAction)
+   */
+  function showValidationModal(title, message, options = {}) {
+    const modal = document.getElementById('validationModal');
+    const titleEl = document.getElementById('validationModalTitle');
+    const textEl = document.getElementById('validationModalText');
+    const linkEl = document.getElementById('validationModalLink');
+
+    if (modal && titleEl && textEl) {
+      titleEl.textContent = title;
+      textEl.textContent = message;
+
+      // Handle optional link
+      if (linkEl) {
+        if (options.linkText && options.linkAction) {
+          linkEl.textContent = options.linkText;
+          linkEl.style.display = 'inline-block';
+          linkEl.onclick = (e) => {
+            e.preventDefault();
+            hideValidationModal();
+            options.linkAction();
+          };
+        } else {
+          linkEl.style.display = 'none';
+        }
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  /**
+   * Hide the validation modal
+   */
+  function hideValidationModal() {
+    const modal = document.getElementById('validationModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Show the error modal with custom message
+   * @param {string} title - The modal title
+   * @param {string} message - The error message
+   */
+  function showErrorModal(title, message) {
+    const modal = document.getElementById('errorModal');
+    const titleEl = document.getElementById('errorModalTitle');
+    const textEl = document.getElementById('errorModalText');
+
+    if (modal && titleEl && textEl) {
+      titleEl.textContent = title;
+      textEl.textContent = message;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  /**
+   * Hide the error modal
+   */
+  function hideErrorModal() {
+    const modal = document.getElementById('errorModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
   }
 
   /**

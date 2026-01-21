@@ -2128,6 +2128,30 @@ h1 {
   color: #d97706;
 }
 
+.modal-icon-error {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.modal-icon-error svg {
+  color: #dc2626;
+}
+
+/* Modal Link */
+.modal-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--terracotta);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-link:hover {
+  color: var(--terracotta-dark, #a85c46);
+  text-decoration: underline;
+}
+
 /* Modal Options (stacked buttons) */
 .modal-options {
   display: flex;
