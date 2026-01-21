@@ -371,6 +371,16 @@ body {
   border-color: var(--salmon);
 }
 
+.btn-tertiary {
+  background: transparent;
+  border: 2px solid var(--terracotta);
+  color: var(--terracotta);
+}
+
+.btn-tertiary:hover {
+  background: rgba(196, 120, 90, 0.1);
+}
+
 .btn-primary {
   background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
   border: none;
