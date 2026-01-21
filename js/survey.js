@@ -231,6 +231,26 @@
       case 'goToReview':
         goToStep(CONFIG.REVIEW_STEP);
         break;
+
+      case 'startNewForm':
+        showRestartChoiceModal();
+        break;
+
+      case 'continueExistingForm':
+        hideRestartChoiceModal();
+        break;
+
+      case 'showClearWarning':
+        showClearWarningModal();
+        break;
+
+      case 'confirmClearForm':
+        clearFormAndRestart();
+        break;
+
+      case 'cancelClearForm':
+        hideClearWarningModal();
+        break;
     }
   }
 
@@ -1947,6 +1967,111 @@
     Storage.clearSession();
     // Redirect with logout parameter as extra safety
     window.location.href = '/index.html?logout=1';
+  }
+
+  /**
+   * Show the restart choice modal
+   * User can choose to continue with existing data or clear and start fresh
+   */
+  function showRestartChoiceModal() {
+    const modal = document.getElementById('restartChoiceModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      // Prevent scrolling on body
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  /**
+   * Hide the restart choice modal
+   */
+  function hideRestartChoiceModal() {
+    const modal = document.getElementById('restartChoiceModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    // Navigate to step 0 to continue with existing data
+    currentStep = 0;
+    previousStep = -1;
+    reviewVisited = false;
+    initialReviewItems = null;
+    showStep(0);
+    updateIndexStatus();
+  }
+
+  /**
+   * Show the clear warning modal
+   */
+  function showClearWarningModal() {
+    const restartModal = document.getElementById('restartChoiceModal');
+    const warningModal = document.getElementById('clearWarningModal');
+    if (restartModal) restartModal.style.display = 'none';
+    if (warningModal) warningModal.style.display = 'flex';
+  }
+
+  /**
+   * Hide the clear warning modal and go back to choice
+   */
+  function hideClearWarningModal() {
+    const warningModal = document.getElementById('clearWarningModal');
+    const restartModal = document.getElementById('restartChoiceModal');
+    if (warningModal) warningModal.style.display = 'none';
+    if (restartModal) restartModal.style.display = 'flex';
+  }
+
+  /**
+   * Clear all form data and restart fresh
+   */
+  function clearFormAndRestart() {
+    // Clear form data from storage
+    Storage.clearFormData();
+
+    // Reset form fields
+    const form = document.getElementById('monitoringForm');
+    if (form) {
+      form.reset();
+    }
+
+    // Clear all option card selections
+    document.querySelectorAll('.option-card').forEach(card => {
+      card.classList.remove(CONSTANTS.CSS.SELECTED, 'awaiting-conditional', 'conditional-satisfied');
+    });
+
+    // Clear all question header states
+    document.querySelectorAll('.question-header').forEach(header => {
+      header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
+    });
+
+    // Hide all conditional fields
+    document.querySelectorAll('.conditional').forEach(conditional => {
+      conditional.classList.remove(CONSTANTS.CSS.VISIBLE);
+    });
+
+    // Hide all comment fields
+    document.querySelectorAll('.comments-field').forEach(field => {
+      field.classList.remove(CONSTANTS.CSS.VISIBLE);
+    });
+
+    // Reset section headers
+    document.querySelectorAll('.section-header').forEach(header => {
+      header.classList.remove('complete', 'partial');
+      const icon = header.querySelector('.status-icon');
+      if (icon) icon.textContent = '○';
+    });
+
+    // Close modals
+    const warningModal = document.getElementById('clearWarningModal');
+    if (warningModal) warningModal.style.display = 'none';
+    document.body.style.overflow = '';
+
+    // Reset state and go to step 0
+    currentStep = 0;
+    previousStep = -1;
+    reviewVisited = false;
+    initialReviewItems = null;
+    showStep(0);
+    updateIndexStatus();
   }
 
 })();
