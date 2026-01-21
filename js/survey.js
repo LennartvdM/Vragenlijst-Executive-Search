@@ -101,6 +101,11 @@
         resetGroup(name);
         break;
 
+      case 'resetLikertTable':
+        const tableId = element.dataset.table;
+        resetLikertTable(tableId);
+        break;
+
       case 'logout':
         logout();
         break;
@@ -540,6 +545,30 @@
   }
 
   /**
+   * Reset all radio buttons in a Likert table
+   * @param {string} tableId - The table ID to reset
+   */
+  function resetLikertTable(tableId) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+
+    table.querySelectorAll('input[type="radio"]').forEach(input => {
+      input.checked = false;
+    });
+
+    table.querySelectorAll('tr.answered').forEach(row => {
+      row.classList.remove(CONSTANTS.CSS.ANSWERED);
+    });
+
+    const header = document.getElementById(`header-${tableId}`);
+    if (header) header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
+
+    updateAllSections();
+    updateIndexStatus();
+    saveFormData();
+  }
+
+  /**
    * Toggle conditional field visibility
    * @param {string} id - The element ID to toggle
    * @param {boolean} show - Whether to show or hide
@@ -580,10 +609,16 @@
       });
     });
 
-    // Likert scale row highlighting
+    // Likert scale row highlighting and header tracking
     document.querySelectorAll('.likert-table input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', function() {
         this.closest('tr').classList.add(CONSTANTS.CSS.ANSWERED);
+        // Update the Likert header to show reset button
+        const table = this.closest('.likert-table');
+        if (table && table.id) {
+          const header = document.getElementById(`header-${table.id}`);
+          if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
+        }
         updateIndexStatus();
       });
     });
@@ -646,9 +681,16 @@
             }
           }
 
-          // Likert table row highlighting
+          // Likert table row highlighting and header tracking
           const row = radio.closest('tr');
-          if (row) row.classList.add(CONSTANTS.CSS.ANSWERED);
+          if (row) {
+            row.classList.add(CONSTANTS.CSS.ANSWERED);
+            const table = radio.closest('.likert-table');
+            if (table && table.id) {
+              const header = document.getElementById(`header-${table.id}`);
+              if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
+            }
+          }
         }
       } else if (input.type === 'checkbox') {
         input.checked = value === 'on' || value === true;
