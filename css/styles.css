@@ -712,6 +712,26 @@ h1 {
 }
 
 /* ==========================================================================
+   Question Numbering
+   ========================================================================== */
+
+.q-num {
+  color: var(--terracotta);
+  font-weight: 600;
+  display: inline-block;
+  min-width: 2.5em;
+  margin-left: -2.5em;
+}
+
+.field label .q-num,
+.question-text .q-num,
+.likert-table td .q-num {
+  margin-left: 0;
+  margin-right: 0.5em;
+  min-width: auto;
+}
+
+/* ==========================================================================
    Survey Page - Question Elements
    ========================================================================== */
 
