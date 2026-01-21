@@ -913,6 +913,7 @@ h1 {
   font-weight: 700;
   font-size: 14px;
   pointer-events: none;
+  opacity: 0.4;
 }
 
 .likert-table input[type="radio"] {
