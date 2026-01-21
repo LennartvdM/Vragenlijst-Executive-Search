@@ -218,6 +218,13 @@
       case 'confirmSubmit':
         handleConfirmSubmit();
         break;
+
+      case 'toggleAccordion':
+        const accordionId = element.dataset.accordion;
+        if (accordionId) {
+          toggleAccordion(accordionId);
+        }
+        break;
     }
   }
 
@@ -1082,8 +1089,9 @@
         </div>
       `;
     } else {
-      // Show incomplete items
+      // Show incomplete items with accordions
       let itemsHtml = '';
+      let accordionIndex = 0;
 
       // Group items by step for cleaner display
       const itemsByStep = {};
@@ -1099,29 +1107,58 @@
         const stepLabel = STEP_LABELS[step] || `Stap ${step}`;
 
         items.forEach(item => {
+          const accordionId = `accordion-${accordionIndex}`;
+          accordionIndex++;
+
           if (item.type === 'likert') {
+            const accordionContent = generateLikertAccordionContent(item);
             itemsHtml += `
-              <div class="review-item">
-                <div class="review-item-info">
-                  <span class="review-item-step">${item.stepLabel}</span>
-                  <span class="review-item-label">${item.label}</span>
-                  <span class="review-item-count">${item.filled} van ${item.total} ingevuld</span>
+              <div class="review-item-accordion">
+                <div class="review-item-header" data-action="toggleAccordion" data-accordion="${accordionId}">
+                  <div class="review-item-info">
+                    <span class="review-item-step">${item.stepLabel}</span>
+                    <span class="review-item-label">${item.label}</span>
+                    <span class="review-item-count" id="${accordionId}-count">${item.filled} van ${item.total} ingevuld</span>
+                  </div>
+                  <div class="review-item-actions">
+                    <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
+                      Naar sectie &rarr;
+                    </button>
+                    <span class="accordion-chevron" id="${accordionId}-chevron">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-                <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
-                  Invullen &rarr;
-                </button>
+                <div class="review-item-content" id="${accordionId}" data-step="${item.step}" data-type="likert">
+                  ${accordionContent}
+                </div>
               </div>
             `;
           } else {
+            const accordionContent = generateFieldsAccordionContent(item);
             itemsHtml += `
-              <div class="review-item">
-                <div class="review-item-info">
-                  <span class="review-item-step">${item.stepLabel}</span>
-                  <span class="review-item-label">${item.count} veld${item.count > 1 ? 'en' : ''} niet ingevuld</span>
+              <div class="review-item-accordion">
+                <div class="review-item-header" data-action="toggleAccordion" data-accordion="${accordionId}">
+                  <div class="review-item-info">
+                    <span class="review-item-step">${item.stepLabel}</span>
+                    <span class="review-item-label" id="${accordionId}-label">${item.count} veld${item.count > 1 ? 'en' : ''} niet ingevuld</span>
+                  </div>
+                  <div class="review-item-actions">
+                    <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
+                      Naar sectie &rarr;
+                    </button>
+                    <span class="accordion-chevron" id="${accordionId}-chevron">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-                <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
-                  Invullen &rarr;
-                </button>
+                <div class="review-item-content" id="${accordionId}" data-step="${item.step}" data-type="fields" data-fields='${JSON.stringify(item.missingFields)}'>
+                  ${accordionContent}
+                </div>
               </div>
             `;
           }
@@ -1136,7 +1173,7 @@
             </svg>
             <h3>Niet alle velden zijn ingevuld</h3>
           </div>
-          <p class="review-incomplete-subtitle">U kunt teruggaan om ontbrekende velden in te vullen, of bewust incompleet verzenden.</p>
+          <p class="review-incomplete-subtitle">Klik op een sectie om de velden direct hier in te vullen, of ga naar de betreffende stap.</p>
 
           <div class="review-items">
             ${itemsHtml}
@@ -1163,6 +1200,385 @@
           submitBtn.disabled = !this.checked;
         });
       }
+
+      // Setup accordion input listeners
+      setupAccordionInputListeners();
+    }
+  }
+
+  /**
+   * Generate accordion content for Likert table items
+   * @param {Object} item - The incomplete item object
+   * @returns {string} HTML content for the accordion
+   */
+  function generateLikertAccordionContent(item) {
+    // Find the Likert table configuration
+    let tableConfig = null;
+    let tableId = null;
+    Object.keys(LIKERT_LABELS).forEach(id => {
+      if (LIKERT_LABELS[id].step === item.step && LIKERT_LABELS[id].label === item.label) {
+        tableConfig = LIKERT_LABELS[id];
+        tableId = id;
+      }
+    });
+
+    if (!tableConfig) return '<p>Kon vragen niet laden.</p>';
+
+    // Find the original table and get row data
+    const originalTable = document.getElementById(tableId);
+    let rows = [];
+
+    if (originalTable) {
+      const tbody = originalTable.querySelector('tbody');
+      if (tbody) {
+        tbody.querySelectorAll('tr').forEach(tr => {
+          const questionCell = tr.querySelector('td:first-child');
+          const radios = tr.querySelectorAll('input[type="radio"]');
+          if (questionCell && radios.length > 0) {
+            const fieldName = radios[0].name;
+            rows.push({
+              question: questionCell.textContent,
+              fieldName: fieldName,
+              filled: isFieldFilled(fieldName)
+            });
+          }
+        });
+      }
+    } else {
+      // Fallback for klimaat table (no id in HTML)
+      if (item.step === 9) {
+        const klimaatQuestions = [
+          'Er wordt actief strijd gevoerd tegen stereotypen',
+          'Maatregelen worden geaccepteerd in de organisatie',
+          'Culturele verschillen worden gewaardeerd',
+          'Diversiteitsaandacht leeft in de organisatie',
+          'Managers voelen zich verantwoordelijk',
+          'De organisatie staat bekend als diversiteitsgericht'
+        ];
+        tableConfig.fields.forEach((fieldName, index) => {
+          rows.push({
+            question: klimaatQuestions[index] || `Vraag ${index + 1}`,
+            fieldName: fieldName,
+            filled: isFieldFilled(fieldName)
+          });
+        });
+      }
+    }
+
+    // Generate table HTML with only incomplete rows highlighted
+    let rowsHtml = rows.map(row => {
+      const currentValue = getFieldValue(row.fieldName);
+      return `
+        <tr class="${row.filled ? 'row-complete' : 'row-incomplete'}">
+          <td>${row.question}</td>
+          <td><input type="radio" name="review_${row.fieldName}" value="0" ${currentValue === '0' ? 'checked' : ''} data-original="${row.fieldName}"></td>
+          <td><input type="radio" name="review_${row.fieldName}" value="1" ${currentValue === '1' ? 'checked' : ''} data-original="${row.fieldName}"></td>
+          <td><input type="radio" name="review_${row.fieldName}" value="2" ${currentValue === '2' ? 'checked' : ''} data-original="${row.fieldName}"></td>
+          <td><input type="radio" name="review_${row.fieldName}" value="3" ${currentValue === '3' ? 'checked' : ''} data-original="${row.fieldName}"></td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <table class="likert-table likert-table-review">
+        <thead>
+          <tr>
+            <th>Stelling</th>
+            <th>Niet</th>
+            <th>Enigszins</th>
+            <th>Grotendeels</th>
+            <th>Volledig</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    `;
+  }
+
+  /**
+   * Generate accordion content for regular field items
+   * @param {Object} item - The incomplete item object
+   * @returns {string} HTML content for the accordion
+   */
+  function generateFieldsAccordionContent(item) {
+    let fieldsHtml = '';
+
+    item.missingFields.forEach(fieldName => {
+      const label = FIELD_LABELS[fieldName] || fieldName;
+      const originalField = document.querySelector(`[name="${fieldName}"]`);
+
+      if (!originalField) return;
+
+      if (originalField.type === 'radio') {
+        // Radio button group
+        const radioGroup = document.querySelectorAll(`[name="${fieldName}"]`);
+        let optionsHtml = '';
+        radioGroup.forEach(radio => {
+          const optionCard = radio.closest('.option-card');
+          let optionLabel = radio.value;
+          if (optionCard) {
+            const h3 = optionCard.querySelector('h3');
+            if (h3) optionLabel = h3.textContent;
+          }
+          const currentValue = getFieldValue(fieldName);
+          optionsHtml += `
+            <label class="review-option-card">
+              <input type="radio" name="review_${fieldName}" value="${radio.value}" ${currentValue === radio.value ? 'checked' : ''} data-original="${fieldName}">
+              <span>${optionLabel}</span>
+            </label>
+          `;
+        });
+        fieldsHtml += `
+          <div class="review-field">
+            <label class="review-field-label">${label}</label>
+            <div class="review-radio-group">
+              ${optionsHtml}
+            </div>
+          </div>
+        `;
+      } else if (originalField.type === 'checkbox') {
+        // Checkbox
+        const isChecked = originalField.checked;
+        fieldsHtml += `
+          <div class="review-field">
+            <label class="review-checkbox-label">
+              <input type="checkbox" name="review_${fieldName}" ${isChecked ? 'checked' : ''} data-original="${fieldName}">
+              <span>${label}</span>
+            </label>
+          </div>
+        `;
+      } else if (originalField.tagName === 'TEXTAREA') {
+        // Textarea
+        const currentValue = originalField.value || '';
+        fieldsHtml += `
+          <div class="review-field">
+            <label class="review-field-label">${label}</label>
+            <textarea name="review_${fieldName}" rows="3" data-original="${fieldName}" placeholder="Vul hier in...">${currentValue}</textarea>
+          </div>
+        `;
+      } else if (originalField.type === 'date') {
+        // Date input
+        const currentValue = originalField.value || '';
+        fieldsHtml += `
+          <div class="review-field">
+            <label class="review-field-label">${label}</label>
+            <input type="date" name="review_${fieldName}" value="${currentValue}" data-original="${fieldName}">
+          </div>
+        `;
+      } else if (originalField.type === 'number') {
+        // Number input
+        const currentValue = originalField.value || '';
+        fieldsHtml += `
+          <div class="review-field">
+            <label class="review-field-label">${label}</label>
+            <input type="number" name="review_${fieldName}" value="${currentValue}" min="0" data-original="${fieldName}" placeholder="0">
+          </div>
+        `;
+      } else {
+        // Text input
+        const currentValue = originalField.value || '';
+        fieldsHtml += `
+          <div class="review-field">
+            <label class="review-field-label">${label}</label>
+            <input type="text" name="review_${fieldName}" value="${currentValue}" data-original="${fieldName}" placeholder="Vul hier in...">
+          </div>
+        `;
+      }
+    });
+
+    return `<div class="review-fields-container">${fieldsHtml}</div>`;
+  }
+
+  /**
+   * Get the current value of a field
+   * @param {string} fieldName - The field name
+   * @returns {string} The field value
+   */
+  function getFieldValue(fieldName) {
+    const input = document.querySelector(`[name="${fieldName}"]`);
+    if (!input) return '';
+
+    if (input.type === 'radio') {
+      const checked = document.querySelector(`[name="${fieldName}"]:checked`);
+      return checked ? checked.value : '';
+    } else if (input.type === 'checkbox') {
+      return input.checked ? 'true' : '';
+    } else {
+      return input.value || '';
+    }
+  }
+
+  /**
+   * Setup listeners for accordion inputs to sync with main form
+   */
+  function setupAccordionInputListeners() {
+    const reviewContent = document.getElementById('reviewContent');
+    if (!reviewContent) return;
+
+    // Listen for changes on all review inputs
+    reviewContent.addEventListener('change', function(event) {
+      const input = event.target;
+      if (!input.dataset.original) return;
+
+      const originalName = input.dataset.original;
+      const originalInput = document.querySelector(`[name="${originalName}"]`);
+
+      if (!originalInput) return;
+
+      // Sync value to original input
+      if (input.type === 'radio') {
+        const originalRadio = document.querySelector(`[name="${originalName}"][value="${input.value}"]`);
+        if (originalRadio) {
+          originalRadio.checked = true;
+          // Trigger change event for option card handling
+          const optionCard = originalRadio.closest('.option-card');
+          if (optionCard) {
+            handleOptionCardClick(optionCard);
+          }
+        }
+      } else if (input.type === 'checkbox') {
+        originalInput.checked = input.checked;
+      } else {
+        originalInput.value = input.value;
+      }
+
+      // Save form data
+      saveFormData();
+
+      // Update the accordion item status
+      updateAccordionItemStatus(input);
+    });
+
+    // Also listen for input events on text/number fields
+    reviewContent.addEventListener('input', function(event) {
+      const input = event.target;
+      if (!input.dataset.original) return;
+      if (input.type === 'radio' || input.type === 'checkbox') return;
+
+      const originalName = input.dataset.original;
+      const originalInput = document.querySelector(`[name="${originalName}"]`);
+
+      if (originalInput) {
+        originalInput.value = input.value;
+        saveFormData();
+      }
+    });
+  }
+
+  /**
+   * Update the status display of an accordion item after a field is filled
+   * @param {HTMLElement} input - The input that was changed
+   */
+  function updateAccordionItemStatus(input) {
+    const accordionContent = input.closest('.review-item-content');
+    if (!accordionContent) return;
+
+    const accordionId = accordionContent.id;
+    const dataType = accordionContent.dataset.type;
+
+    if (dataType === 'likert') {
+      // Update Likert table row styling
+      const row = input.closest('tr');
+      if (row) {
+        row.classList.remove('row-incomplete');
+        row.classList.add('row-complete');
+      }
+
+      // Update count display
+      const countEl = document.getElementById(`${accordionId}-count`);
+      if (countEl) {
+        // Count filled fields in this accordion
+        const radios = accordionContent.querySelectorAll('input[type="radio"]');
+        const fieldNames = new Set();
+        radios.forEach(r => fieldNames.add(r.dataset.original));
+
+        let filled = 0;
+        fieldNames.forEach(name => {
+          if (isFieldFilled(name)) filled++;
+        });
+
+        countEl.textContent = `${filled} van ${fieldNames.size} ingevuld`;
+
+        // If all filled, mark accordion as complete
+        if (filled === fieldNames.size) {
+          markAccordionComplete(accordionId);
+        }
+      }
+    } else {
+      // Update field styling
+      const fieldWrapper = input.closest('.review-field');
+      if (fieldWrapper && input.value && input.value.trim() !== '') {
+        fieldWrapper.classList.add('field-complete');
+      }
+
+      // Update label display
+      const labelEl = document.getElementById(`${accordionId}-label`);
+      if (labelEl) {
+        const fieldsData = accordionContent.dataset.fields;
+        if (fieldsData) {
+          const fields = JSON.parse(fieldsData);
+          let remaining = 0;
+          fields.forEach(name => {
+            if (!isFieldFilled(name)) remaining++;
+          });
+
+          if (remaining === 0) {
+            markAccordionComplete(accordionId);
+          } else {
+            labelEl.textContent = `${remaining} veld${remaining > 1 ? 'en' : ''} niet ingevuld`;
+          }
+        }
+      }
+    }
+
+    // Check if all items are now complete
+    checkAllItemsComplete();
+  }
+
+  /**
+   * Mark an accordion item as complete
+   * @param {string} accordionId - The accordion ID
+   */
+  function markAccordionComplete(accordionId) {
+    const accordionContent = document.getElementById(accordionId);
+    const accordionItem = accordionContent?.closest('.review-item-accordion');
+
+    if (accordionItem) {
+      accordionItem.classList.add('accordion-complete');
+      // Collapse the accordion
+      accordionContent.classList.remove('open');
+      const chevron = document.getElementById(`${accordionId}-chevron`);
+      if (chevron) chevron.classList.remove('open');
+    }
+  }
+
+  /**
+   * Check if all incomplete items are now complete and update UI
+   */
+  function checkAllItemsComplete() {
+    const incompleteItems = getIncompleteItems();
+
+    if (incompleteItems.length === 0) {
+      // All items now complete - regenerate to show success
+      generateReviewContent();
+    }
+  }
+
+  /**
+   * Toggle accordion open/close
+   * @param {string} accordionId - The accordion content element ID
+   */
+  function toggleAccordion(accordionId) {
+    const content = document.getElementById(accordionId);
+    const chevron = document.getElementById(`${accordionId}-chevron`);
+
+    if (content) {
+      content.classList.toggle('open');
+    }
+    if (chevron) {
+      chevron.classList.toggle('open');
     }
   }
 

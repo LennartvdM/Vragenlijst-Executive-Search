@@ -1661,7 +1661,7 @@ h1 {
   padding-left: 36px;
 }
 
-/* Individual review items */
+/* Individual review items with accordion */
 .review-items {
   display: flex;
   flex-direction: column;
@@ -1669,15 +1669,44 @@ h1 {
   margin-bottom: 24px;
 }
 
-.review-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.review-item-accordion {
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(245, 158, 11, 0.3);
   border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.review-item-accordion:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.review-item-accordion.accordion-complete {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--success);
+}
+
+.review-item-accordion.accordion-complete .review-item-step {
+  color: var(--success);
+}
+
+.review-item-accordion.accordion-complete .review-item-label::after {
+  content: ' ✓';
+  color: var(--success);
+}
+
+.review-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 16px;
   gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.review-item-header:hover {
+  background: rgba(245, 158, 11, 0.05);
 }
 
 .review-item-info {
@@ -1707,12 +1736,173 @@ h1 {
   color: var(--text-light);
 }
 
+.review-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Accordion chevron */
+.accordion-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  color: var(--text-light);
+  transition: all 0.3s ease;
+}
+
+.accordion-chevron:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+
+.accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Accordion content */
+.review-item-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid transparent;
+}
+
+.review-item-content.open {
+  max-height: 2000px;
+  padding: 16px;
+  border-top-color: rgba(245, 158, 11, 0.2);
+}
+
 /* Go to step button */
 .btn-review-goto {
   padding: 6px 14px;
   font-size: 12px;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+/* Likert table in review accordion */
+.likert-table-review {
+  width: 100%;
+  font-size: 13px;
+}
+
+.likert-table-review th {
+  padding: 8px 4px;
+  font-size: 11px;
+}
+
+.likert-table-review td {
+  padding: 8px 4px;
+}
+
+.likert-table-review tr.row-incomplete {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.likert-table-review tr.row-incomplete td:first-child {
+  font-weight: 500;
+}
+
+.likert-table-review tr.row-complete {
+  background: rgba(16, 185, 129, 0.05);
+  color: var(--text-light);
+}
+
+/* Review fields container */
+.review-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-field.field-complete {
+  opacity: 0.7;
+}
+
+.review-field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.review-field input[type="text"],
+.review-field input[type="number"],
+.review-field input[type="date"],
+.review-field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-field input:focus,
+.review-field textarea:focus {
+  outline: none;
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(194, 117, 94, 0.1);
+}
+
+/* Review radio group */
+.review-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-option-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.review-option-card:hover {
+  border-color: var(--terracotta);
+}
+
+.review-option-card input[type="radio"] {
+  accent-color: var(--terracotta);
+}
+
+.review-option-card:has(input:checked) {
+  border-color: var(--terracotta);
+  background: rgba(194, 117, 94, 0.05);
+}
+
+/* Review checkbox label */
+.review-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.review-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--terracotta);
 }
 
 /* Confirmation checkbox */
