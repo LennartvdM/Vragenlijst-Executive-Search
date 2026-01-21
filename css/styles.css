@@ -856,6 +856,11 @@ h1 {
   font-size: 13px;
   border-collapse: collapse;
   margin-bottom: 16px;
+  overflow: visible;
+}
+
+.likert-table tbody {
+  overflow: visible;
 }
 
 .likert-table th {
@@ -891,19 +896,23 @@ h1 {
 .likert-table tbody tr {
   opacity: 0.85;
   transition: opacity 0.2s ease;
+  position: relative;
 }
 
 .likert-table tbody tr.answered {
   opacity: 1;
 }
 
-.likert-table tbody tr.answered td:last-child::after {
+.likert-table tbody tr.answered::after {
   content: '✓';
-  display: inline-block;
-  margin-left: 8px;
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--terracotta);
   font-weight: 700;
   font-size: 14px;
+  pointer-events: none;
 }
 
 .likert-table input[type="radio"] {
