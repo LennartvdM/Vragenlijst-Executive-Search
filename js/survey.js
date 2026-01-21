@@ -12,6 +12,107 @@
   let previousStep = -1; // Track previous step for slide direction
   let session = null;
 
+  // Step labels for review page
+  const STEP_LABELS = {
+    0: 'Welkom',
+    1: 'Streefcijfer',
+    2: 'Kwantitatief',
+    3: 'Bestuursorganen',
+    4: 'Leiderschap',
+    5: 'Strategie',
+    6: 'HR Management',
+    7: 'Communicatie',
+    8: 'Kennis',
+    9: 'Klimaat',
+    10: 'Motivatie',
+    11: 'Aanvullend',
+    12: 'Ondertekenen'
+  };
+
+  // Field labels for review page (human readable names)
+  const FIELD_LABELS = {
+    organisatie: 'Naam organisatie',
+    streefcijfer: 'Heeft u een streefcijfer?',
+    streefcijfer_percentage: 'Streefcijfer percentage',
+    streefcijfer_jaar: 'Streefcijfer jaar',
+    streefcijfer_gehaald: 'Streefcijfer gehaald?',
+    definitie_afwijking: 'Wijkt definitie af?',
+    eigen_definitie: 'Eigen definitie',
+    aantal_werknemers: 'Totaal aantal werknemers',
+    werknemers_buiten_europa: 'Werknemers Buiten-Europa',
+    aantal_top: 'Aantal in de top',
+    top_buiten_europa: 'Top Buiten-Europa',
+    aantal_subtop: 'Aantal in de subtop',
+    subtop_buiten_europa: 'Subtop Buiten-Europa',
+    heeft_rvb: 'Heeft u een RvB?',
+    aantal_rvb: 'Aantal RvB',
+    rvb_buiten_europa: 'RvB Buiten-Europa',
+    heeft_rvc: 'Heeft u een RvC?',
+    aantal_rvc: 'Aantal RvC',
+    rvc_buiten_europa: 'RvC Buiten-Europa',
+    heeft_rvt: 'Heeft u een RvT?',
+    aantal_rvt: 'Aantal RvT',
+    rvt_buiten_europa: 'RvT Buiten-Europa',
+    beleid_samenstelling: 'Beleid samenstelling',
+    beleid_samenstelling_anders: 'Beleid toelichting',
+    motivatie: 'Motivatie',
+    strategie_vraag_1: 'Strategievraag 1',
+    blokkade_1: 'Blokkade 1',
+    bevorderend_1: 'Bevorderend 1',
+    voorbeeld_organisatie: 'Voorbeeld organisatie',
+    datum: 'Datum',
+    ondertekenaar: 'Naam ondertekenaar',
+    bevestiging: 'Bevestiging'
+  };
+
+  // Likert table groupings for review page
+  const LIKERT_LABELS = {
+    'likert-leiderschap': {
+      step: 4,
+      label: 'Leiderschap stellingen',
+      fields: ['leid_1', 'leid_2', 'leid_3', 'leid_4', 'leid_5']
+    },
+    'likert-strategie': {
+      step: 5,
+      label: 'Strategie stellingen',
+      fields: ['strat_1', 'strat_2', 'strat_3', 'strat_4', 'strat_5', 'strat_6', 'strat_7', 'strat_8']
+    },
+    'likert-hr': {
+      step: 6,
+      label: 'HR Management stellingen',
+      fields: ['hr_1', 'hr_2', 'hr_3', 'hr_4', 'hr_5', 'hr_6', 'hr_7', 'hr_8', 'hr_9', 'hr_10', 'hr_11', 'hr_12', 'hr_13', 'hr_14']
+    },
+    'likert-communicatie': {
+      step: 7,
+      label: 'Communicatie stellingen',
+      fields: ['comm_1', 'comm_2', 'comm_3', 'comm_4', 'comm_5']
+    },
+    'likert-kennis': {
+      step: 8,
+      label: 'Kennis stellingen',
+      fields: ['kennis_1', 'kennis_2', 'kennis_3', 'kennis_4', 'kennis_5', 'kennis_6', 'kennis_7', 'kennis_8']
+    },
+    'likert-klimaat': {
+      step: 9,
+      label: 'Klimaat stellingen',
+      fields: ['klimaat_1', 'klimaat_2', 'klimaat_3', 'klimaat_4', 'klimaat_5', 'klimaat_6']
+    }
+  };
+
+  // Conditional field parent mapping (child -> parent info)
+  const CONDITIONAL_PARENT_MAP = {
+    'streefcijfer_percentage': { parent: 'streefcijfer', value: 'Ja' },
+    'streefcijfer_jaar': { parent: 'streefcijfer', value: 'Ja' },
+    'eigen_definitie': { parent: 'definitie_afwijking', value: 'Ja' },
+    'aantal_rvb': { parent: 'heeft_rvb', value: 'Ja' },
+    'rvb_buiten_europa': { parent: 'heeft_rvb', value: 'Ja' },
+    'aantal_rvc': { parent: 'heeft_rvc', value: 'Ja' },
+    'rvc_buiten_europa': { parent: 'heeft_rvc', value: 'Ja' },
+    'aantal_rvt': { parent: 'heeft_rvt', value: 'Ja' },
+    'rvt_buiten_europa': { parent: 'heeft_rvt', value: 'Ja' },
+    'beleid_samenstelling_anders': { parent: 'beleid_samenstelling', value: 'Anders' }
+  };
+
   // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
@@ -112,6 +213,10 @@
 
       case 'printForm':
         printForm();
+        break;
+
+      case 'confirmSubmit':
+        handleConfirmSubmit();
         break;
     }
   }
@@ -267,15 +372,17 @@
 
   /**
    * Initialize progress dots (both top and bottom)
+   * Only show dots for steps 0-12 (not review/success)
    */
   function initProgress() {
     const dotsBottom = document.getElementById('progressDots');
     const dotsTop = document.getElementById('progressDotsTop');
+    const contentSteps = 13; // Steps 0-12
 
     [dotsBottom, dotsTop].forEach(dots => {
       if (!dots) return;
       dots.innerHTML = '';
-      for (let i = 0; i < CONFIG.TOTAL_STEPS; i++) {
+      for (let i = 0; i < contentSteps; i++) {
         const span = document.createElement('span');
         if (i === 0) span.classList.add(CONSTANTS.CSS.ACTIVE);
         dots.appendChild(span);
@@ -285,16 +392,27 @@
 
   /**
    * Update progress dots display
+   * Dots only represent steps 0-12
    */
   function updateProgress() {
     const dotsContainers = document.querySelectorAll('.progress-dots');
+    const displayStep = currentStep <= 12 ? currentStep : 12; // Clamp to 12 for review/success
+
     dotsContainers.forEach(container => {
       const dots = container.querySelectorAll('span');
       dots.forEach((dot, i) => {
         dot.classList.remove(CONSTANTS.CSS.ACTIVE, CONSTANTS.CSS.DONE);
-        if (i < currentStep) dot.classList.add(CONSTANTS.CSS.DONE);
-        if (i === currentStep) dot.classList.add(CONSTANTS.CSS.ACTIVE);
+        if (i < displayStep) dot.classList.add(CONSTANTS.CSS.DONE);
+        if (i === displayStep) dot.classList.add(CONSTANTS.CSS.ACTIVE);
       });
+
+      // Mark all done on review/success step
+      if (currentStep >= CONFIG.REVIEW_STEP) {
+        dots.forEach(dot => {
+          dot.classList.remove(CONSTANTS.CSS.ACTIVE);
+          dot.classList.add(CONSTANTS.CSS.DONE);
+        });
+      }
     });
   }
 
@@ -535,6 +653,11 @@
     // Update previous step tracker
     previousStep = step;
 
+    // Generate review content when showing review step
+    if (step === CONFIG.REVIEW_STEP) {
+      generateReviewContent();
+    }
+
     // Get both sets of navigation buttons (top and bottom)
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
@@ -545,37 +668,47 @@
     const progressDotsTop = document.getElementById('progressDotsTop');
 
     // Update both prev buttons
-    const showPrev = step > 0 && step < CONFIG.TOTAL_STEPS;
+    const showPrev = step > 0 && step <= CONFIG.REVIEW_STEP;
     if (btnPrev) btnPrev.style.display = showPrev ? 'block' : 'none';
     if (btnPrevTop) btnPrevTop.style.display = showPrev ? 'block' : 'none';
 
     // Update both next buttons and nav containers
-    if (step === CONFIG.TOTAL_STEPS - 1) {
-      // Last step before submit
-      if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
-      if (btnNextTop) {
-        btnNextTop.textContent = CONSTANTS.UI.BUTTON_SUBMIT;
-        // Disable top submit button to prevent accidental submissions
-        btnNextTop.disabled = true;
-        btnNextTop.classList.add('btn-disabled-top');
+    if (step === 12) {
+      // Step 12 (Ondertekenen) - next goes to review, button says "Controleren"
+      if (btnNext) {
+        btnNext.textContent = 'Controleren';
+        btnNext.style.display = 'block';
       }
-    } else if (step === CONFIG.TOTAL_STEPS) {
-      // Success step - hide top navigation but keep bottom for navigation
+      if (btnNextTop) {
+        btnNextTop.textContent = 'Controleren';
+        btnNextTop.disabled = false;
+        btnNextTop.classList.remove('btn-disabled-top');
+      }
+    } else if (step === CONFIG.REVIEW_STEP) {
+      // Review step - hide normal navigation, review has its own submit
       if (navButtonsTop) navButtonsTop.style.display = 'none';
       if (progressDotsTop) progressDotsTop.style.display = 'none';
-      // Keep bottom prev button visible for navigation, hide next/submit
       if (btnNext) btnNext.style.display = 'none';
-      if (btnPrev) {
-        btnPrev.style.display = 'block';
-      }
+      if (btnPrev) btnPrev.style.display = 'block';
+    } else if (step === CONFIG.SUCCESS_STEP) {
+      // Success step - hide all navigation
+      if (navButtonsTop) navButtonsTop.style.display = 'none';
+      if (progressDotsTop) progressDotsTop.style.display = 'none';
+      if (btnNext) btnNext.style.display = 'none';
+      if (btnPrev) btnPrev.style.display = 'none';
     } else {
-      // Normal steps
-      if (btnNext) btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
+      // Normal steps (0-11)
+      if (btnNext) {
+        btnNext.textContent = CONSTANTS.UI.BUTTON_NEXT;
+        btnNext.style.display = 'block';
+      }
       if (btnNextTop) {
         btnNextTop.textContent = CONSTANTS.UI.BUTTON_NEXT;
         btnNextTop.disabled = false;
         btnNextTop.classList.remove('btn-disabled-top');
       }
+      if (navButtonsTop) navButtonsTop.style.display = 'flex';
+      if (progressDotsTop) progressDotsTop.style.display = 'flex';
     }
 
     updateProgress();
@@ -592,15 +725,18 @@
   }
 
   /**
-   * Go to next step or submit if on last step
+   * Go to next step (step 12 goes to review, review is handled by its own button)
    */
   function nextStep() {
-    if (currentStep === CONFIG.TOTAL_STEPS - 1) {
-      submitForm();
-    } else {
+    if (currentStep === 12) {
+      // Go to review step
+      currentStep = CONFIG.REVIEW_STEP;
+      showStep(currentStep);
+    } else if (currentStep < 12) {
       currentStep++;
       showStep(currentStep);
     }
+    // Note: Review step submission is handled by handleConfirmSubmit()
   }
 
   /**
@@ -772,6 +908,279 @@
   }
 
   /**
+   * Check if a field is filled
+   * @param {string} fieldName - The field name to check
+   * @returns {boolean} True if the field has a value
+   */
+  function isFieldFilled(fieldName) {
+    const input = document.querySelector(`[name="${fieldName}"]`);
+    if (!input) return false;
+
+    if (input.type === 'radio') {
+      const checked = document.querySelector(`[name="${fieldName}"]:checked`);
+      return !!checked;
+    } else if (input.type === 'checkbox') {
+      return input.checked;
+    } else {
+      return input.value && input.value.trim() !== '';
+    }
+  }
+
+  /**
+   * Check if a field is a conditional field
+   * @param {string} fieldName - The field name to check
+   * @returns {boolean} True if the field is conditional
+   */
+  function isConditionalField(fieldName) {
+    return !!CONDITIONAL_PARENT_MAP[fieldName];
+  }
+
+  /**
+   * Check if a conditional field's parent condition is active
+   * @param {string} fieldName - The conditional field name
+   * @returns {boolean} True if the parent condition is met (field should be visible)
+   */
+  function isConditionalActive(fieldName) {
+    const parentInfo = CONDITIONAL_PARENT_MAP[fieldName];
+    if (!parentInfo) return true; // Not a conditional field
+
+    const parentInput = document.querySelector(`[name="${parentInfo.parent}"]:checked`);
+    if (!parentInput) return false;
+
+    return parentInput.value === parentInfo.value;
+  }
+
+  /**
+   * Check if a Likert table is incomplete
+   * @param {string[]} fields - Array of field names in the Likert table
+   * @returns {Object} { incomplete: boolean, filled: number, total: number }
+   */
+  function checkLikertTableStatus(fields) {
+    let filled = 0;
+    const total = fields.length;
+
+    fields.forEach(fieldName => {
+      if (isFieldFilled(fieldName)) {
+        filled++;
+      }
+    });
+
+    return {
+      incomplete: filled < total,
+      filled: filled,
+      total: total
+    };
+  }
+
+  /**
+   * Get all incomplete items grouped by section/step
+   * @returns {Array} Array of incomplete item objects
+   */
+  function getIncompleteItems() {
+    const incompleteItems = [];
+    const processedLikertFields = new Set();
+
+    // Process each step
+    Object.keys(CONFIG.STEP_FIELDS).forEach(stepStr => {
+      const step = parseInt(stepStr, 10);
+      const fields = CONFIG.STEP_FIELDS[step];
+      const stepLabel = STEP_LABELS[step] || `Stap ${step}`;
+
+      // Check for Likert tables in this step
+      Object.keys(LIKERT_LABELS).forEach(tableId => {
+        const tableInfo = LIKERT_LABELS[tableId];
+        if (tableInfo.step === step) {
+          const status = checkLikertTableStatus(tableInfo.fields);
+          if (status.incomplete) {
+            incompleteItems.push({
+              step: step,
+              stepLabel: stepLabel,
+              label: tableInfo.label,
+              type: 'likert',
+              filled: status.filled,
+              total: status.total
+            });
+          }
+          // Mark these fields as processed
+          tableInfo.fields.forEach(f => processedLikertFields.add(f));
+        }
+      });
+
+      // Check non-Likert fields
+      const nonLikertMissing = [];
+      fields.forEach(fieldName => {
+        // Skip if already processed as part of Likert table
+        if (processedLikertFields.has(fieldName)) return;
+
+        // Skip conditional fields whose parent condition is not active
+        if (isConditionalField(fieldName) && !isConditionalActive(fieldName)) {
+          return;
+        }
+
+        // Check if field is filled
+        if (!isFieldFilled(fieldName)) {
+          nonLikertMissing.push(fieldName);
+        }
+      });
+
+      // Also check conditional fields that are active
+      Object.keys(CONDITIONAL_PARENT_MAP).forEach(conditionalField => {
+        const parentInfo = CONDITIONAL_PARENT_MAP[conditionalField];
+        // Find which step this conditional field belongs to
+        const parentStep = Object.keys(CONFIG.STEP_FIELDS).find(s =>
+          CONFIG.STEP_FIELDS[s].includes(parentInfo.parent)
+        );
+
+        if (parseInt(parentStep, 10) === step) {
+          if (isConditionalActive(conditionalField) && !isFieldFilled(conditionalField)) {
+            if (!nonLikertMissing.includes(conditionalField)) {
+              nonLikertMissing.push(conditionalField);
+            }
+          }
+        }
+      });
+
+      // Add non-Likert incomplete fields as a group for this step
+      if (nonLikertMissing.length > 0) {
+        incompleteItems.push({
+          step: step,
+          stepLabel: stepLabel,
+          label: stepLabel,
+          type: 'fields',
+          missingFields: nonLikertMissing,
+          count: nonLikertMissing.length
+        });
+      }
+    });
+
+    return incompleteItems;
+  }
+
+  /**
+   * Generate the review content HTML
+   */
+  function generateReviewContent() {
+    const reviewContent = document.getElementById('reviewContent');
+    if (!reviewContent) return;
+
+    const incompleteItems = getIncompleteItems();
+
+    if (incompleteItems.length === 0) {
+      // All fields filled - show success message
+      reviewContent.innerHTML = `
+        <div class="review-complete">
+          <div class="review-complete-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Alle velden zijn ingevuld!</h3>
+          <p>Uw formulier is volledig ingevuld. U kunt nu verzenden.</p>
+          <button type="button" class="btn btn-primary btn-submit-review" data-action="confirmSubmit">
+            Verzenden
+          </button>
+        </div>
+      `;
+    } else {
+      // Show incomplete items
+      let itemsHtml = '';
+
+      // Group items by step for cleaner display
+      const itemsByStep = {};
+      incompleteItems.forEach(item => {
+        if (!itemsByStep[item.step]) {
+          itemsByStep[item.step] = [];
+        }
+        itemsByStep[item.step].push(item);
+      });
+
+      Object.keys(itemsByStep).sort((a, b) => parseInt(a) - parseInt(b)).forEach(step => {
+        const items = itemsByStep[step];
+        const stepLabel = STEP_LABELS[step] || `Stap ${step}`;
+
+        items.forEach(item => {
+          if (item.type === 'likert') {
+            itemsHtml += `
+              <div class="review-item">
+                <div class="review-item-info">
+                  <span class="review-item-step">${item.stepLabel}</span>
+                  <span class="review-item-label">${item.label}</span>
+                  <span class="review-item-count">${item.filled} van ${item.total} ingevuld</span>
+                </div>
+                <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
+                  Invullen &rarr;
+                </button>
+              </div>
+            `;
+          } else {
+            itemsHtml += `
+              <div class="review-item">
+                <div class="review-item-info">
+                  <span class="review-item-step">${item.stepLabel}</span>
+                  <span class="review-item-label">${item.count} veld${item.count > 1 ? 'en' : ''} niet ingevuld</span>
+                </div>
+                <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
+                  Invullen &rarr;
+                </button>
+              </div>
+            `;
+          }
+        });
+      });
+
+      reviewContent.innerHTML = `
+        <div class="review-incomplete">
+          <div class="review-incomplete-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>Niet alle velden zijn ingevuld</h3>
+          </div>
+          <p class="review-incomplete-subtitle">U kunt teruggaan om ontbrekende velden in te vullen, of bewust incompleet verzenden.</p>
+
+          <div class="review-items">
+            ${itemsHtml}
+          </div>
+
+          <div class="review-confirm">
+            <label class="review-confirm-label">
+              <input type="checkbox" id="confirmIncomplete" class="review-confirm-checkbox">
+              <span>Ik begrijp dat niet alle velden zijn ingevuld en wil toch verzenden</span>
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-submit-review" data-action="confirmSubmit" id="btnConfirmSubmit" disabled>
+            Verzenden
+          </button>
+        </div>
+      `;
+
+      // Add checkbox listener
+      const checkbox = document.getElementById('confirmIncomplete');
+      const submitBtn = document.getElementById('btnConfirmSubmit');
+      if (checkbox && submitBtn) {
+        checkbox.addEventListener('change', function() {
+          submitBtn.disabled = !this.checked;
+        });
+      }
+    }
+  }
+
+  /**
+   * Handle confirm submit action from review page
+   */
+  function handleConfirmSubmit() {
+    // If incomplete, check that checkbox is checked
+    const checkbox = document.getElementById('confirmIncomplete');
+    if (checkbox && !checkbox.checked) {
+      return; // Button should be disabled anyway
+    }
+
+    // Proceed with submission
+    submitForm();
+  }
+
+  /**
    * Save form data to localStorage
    */
   function saveFormData() {
@@ -902,7 +1311,7 @@
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Show success
-        currentStep = CONFIG.TOTAL_STEPS;
+        currentStep = CONFIG.SUCCESS_STEP;
         showStep(currentStep);
 
         // Clear saved form data
@@ -914,7 +1323,7 @@
       const result = await ApiClient.submitSurvey(formData);
 
       if (result.success) {
-        currentStep = CONFIG.TOTAL_STEPS;
+        currentStep = CONFIG.SUCCESS_STEP;
         showStep(currentStep);
 
         // Show document link if available

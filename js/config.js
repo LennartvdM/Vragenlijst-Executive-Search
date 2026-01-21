@@ -38,9 +38,19 @@ const CONFIG = {
   SESSION_TIMEOUT: 24 * 60 * 60 * 1000,
 
   /**
-   * Total number of steps in the survey wizard (excluding success step)
+   * Total number of steps in the survey wizard (0-12 = content, 13 = review, 14 = success)
    */
-  TOTAL_STEPS: 13,
+  TOTAL_STEPS: 15,
+
+  /**
+   * Review step index - shows overview of incomplete fields
+   */
+  REVIEW_STEP: 13,
+
+  /**
+   * Success step index - shown after successful submission
+   */
+  SUCCESS_STEP: 14,
 
   /**
    * Field definitions for validation and progress tracking
