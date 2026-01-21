@@ -936,15 +936,15 @@ h1 {
 }
 
 /* Bouncing arrow for unfilled rows */
-.likert-table.has-missing tbody tr:not(.answered)::before {
-  content: '→';
+.likert-table.has-missing tbody tr:not(.answered)::after {
+  content: '›';
   position: absolute;
-  left: -24px;
+  right: -28px;
   top: 50%;
   transform: translateY(-50%);
   color: #2a9d8f;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 900;
+  font-size: 20px;
   pointer-events: none;
   opacity: 0.5;
   animation: arrow-bounce 2s ease-in-out infinite;
@@ -952,10 +952,12 @@ h1 {
 
 @keyframes arrow-bounce {
   0%, 100% {
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(-50%) translateX(0px);
+    opacity: 0.5;
   }
   50% {
-    transform: translateY(-50%) translateX(2px);
+    transform: translateY(-50%) translateX(3px);
+    opacity: 0.7;
   }
 }
 
