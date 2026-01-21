@@ -139,6 +139,9 @@
     // Initialize mobile drawer
     initMobileDrawer();
 
+    // Initialize mobile Likert controls
+    initMobileLikert();
+
     // Recalculate on window resize (debounced)
     let resizeTimeout;
     window.addEventListener('resize', function() {
@@ -870,6 +873,12 @@
 
     const header = document.getElementById(`header-${tableId}`);
     if (header) header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
+
+    // Reset segmented controls on mobile
+    table.querySelectorAll('.likert-segment-option').forEach(btn => {
+      btn.classList.remove('selected');
+      btn.setAttribute('aria-checked', 'false');
+    });
 
     updateAllSections();
     updateIndexStatus();
@@ -1853,6 +1862,11 @@
     updateAllSections();
     updateIndexStatus();
     updateAllOptionCardConditionalStatuses();
+
+    // Sync mobile Likert segmented controls with loaded data
+    if (typeof window.syncLikertSegments === 'function') {
+      window.syncLikertSegments();
+    }
   }
 
   /**
@@ -2484,6 +2498,154 @@
     overlay.classList.remove('active');
     index.classList.remove('mobile-open');
     document.body.classList.remove('mobile-drawer-open');
+  }
+
+  /**
+   * Initialize mobile-friendly Likert scale controls
+   * Creates segmented control UI for each Likert row on mobile
+   */
+  function initMobileLikert() {
+    const MOBILE_BREAKPOINT = 768;
+    const LIKERT_OPTIONS = [
+      { value: '0', label: 'Niet' },
+      { value: '1', label: 'Enigszins' },
+      { value: '2', label: 'Grotendeels' },
+      { value: '3', label: 'Volledig' }
+    ];
+
+    /**
+     * Create a segmented control for a Likert row
+     */
+    function createSegmentedControl(row) {
+      // Check if already has segmented control
+      if (row.querySelector('.likert-segment')) return;
+
+      const firstCell = row.querySelector('td:first-child');
+      if (!firstCell) return;
+
+      // Get the radio button name from the first radio in this row
+      const firstRadio = row.querySelector('input[type="radio"]');
+      if (!firstRadio) return;
+
+      const radioName = firstRadio.name;
+
+      // Create the segmented control container
+      const segment = document.createElement('div');
+      segment.className = 'likert-segment';
+      segment.setAttribute('role', 'radiogroup');
+      segment.setAttribute('aria-label', 'Selecteer uw antwoord');
+
+      // Create options
+      LIKERT_OPTIONS.forEach(option => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'likert-segment-option';
+        btn.dataset.value = option.value;
+        btn.dataset.radioName = radioName;
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', 'false');
+
+        const label = document.createElement('span');
+        label.className = 'likert-segment-label';
+        label.textContent = option.label;
+
+        btn.appendChild(label);
+        segment.appendChild(btn);
+
+        // Check if this option is already selected
+        const radio = row.querySelector(`input[name="${radioName}"][value="${option.value}"]`);
+        if (radio && radio.checked) {
+          btn.classList.add('selected');
+          btn.setAttribute('aria-checked', 'true');
+        }
+
+        // Handle click
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          selectLikertOption(this, radioName, option.value, row);
+        });
+      });
+
+      // Insert after the first cell (statement text)
+      firstCell.after(segment);
+    }
+
+    /**
+     * Select a Likert option via segmented control
+     */
+    function selectLikertOption(button, radioName, value, row) {
+      // Update visual state
+      const segment = button.closest('.likert-segment');
+      segment.querySelectorAll('.likert-segment-option').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.setAttribute('aria-checked', 'false');
+      });
+      button.classList.add('selected');
+      button.setAttribute('aria-checked', 'true');
+
+      // Trigger the actual radio button
+      const radio = document.querySelector(`input[name="${radioName}"][value="${value}"]`);
+      if (radio) {
+        radio.checked = true;
+        // Dispatch change event to trigger existing handlers
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    /**
+     * Sync segmented controls with radio button state
+     * (Called when loading saved data or resetting)
+     */
+    function syncSegmentedControls() {
+      document.querySelectorAll('.likert-table tbody tr').forEach(row => {
+        const segment = row.querySelector('.likert-segment');
+        if (!segment) return;
+
+        const firstRadio = row.querySelector('input[type="radio"]');
+        if (!firstRadio) return;
+
+        const radioName = firstRadio.name;
+        const checkedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+
+        segment.querySelectorAll('.likert-segment-option').forEach(btn => {
+          const isSelected = checkedRadio && btn.dataset.value === checkedRadio.value;
+          btn.classList.toggle('selected', isSelected);
+          btn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+        });
+      });
+    }
+
+    /**
+     * Initialize or remove segmented controls based on screen size
+     */
+    function handleResponsive() {
+      const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+      document.querySelectorAll('.likert-table tbody tr').forEach(row => {
+        if (isMobile) {
+          createSegmentedControl(row);
+        }
+        // Note: We keep the controls in DOM even on desktop (CSS hides them)
+        // This maintains state and avoids recreation on resize
+      });
+
+      if (isMobile) {
+        syncSegmentedControls();
+      }
+    }
+
+    // Initial setup
+    handleResponsive();
+
+    // Handle window resize (debounced)
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResponsive, 250);
+    });
+
+    // Expose sync function for external use (e.g., after data load)
+    window.syncLikertSegments = syncSegmentedControls;
   }
 
 })();

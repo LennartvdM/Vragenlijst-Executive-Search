@@ -1123,6 +1123,11 @@ h1 {
   pointer-events: auto;
 }
 
+/* Mobile Likert segmented controls - hidden on desktop */
+.likert-segment {
+  display: none;
+}
+
 /* ==========================================================================
    Survey Page - Section Headers
    ========================================================================== */
@@ -2134,15 +2139,6 @@ h1 {
   .login-info {
     display: none;
   }
-
-  .likert-table {
-    font-size: 12px;
-  }
-
-  .likert-table th,
-  .likert-table td {
-    padding: 8px 4px;
-  }
 }
 
 /* ==========================================================================
@@ -2821,61 +2817,166 @@ h1 {
     border-radius: 0 14px 14px 0;
   }
 
-  /* Likert tables - horizontal scroll wrapper */
+  /* ==========================================================================
+     Mobile Likert Scale - Card-based with Segmented Controls
+     Best practice for mobile survey forms
+     ========================================================================== */
+
   .likert-table {
     display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin: 0 -16px 20px;
-    padding: 0 16px;
-    font-size: 13px;
+    margin: 0 0 20px;
+    border-collapse: separate;
   }
 
-  .likert-table table {
-    min-width: 500px;
+  /* Hide the table header on mobile - we'll show labels in segmented control */
+  .likert-table thead {
+    display: none;
   }
 
-  .likert-table th,
-  .likert-table td {
-    padding: 12px 10px;
+  .likert-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .likert-table th:first-child,
-  .likert-table td:first-child {
-    position: sticky;
-    left: 0;
-    background: var(--cream);
-    z-index: 1;
-    min-width: 160px;
-    max-width: 220px;
-    /* Robust line breaking for long Dutch words */
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  /* Each row becomes a card */
+  .likert-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--sand);
+    opacity: 1;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .likert-table tbody tr:not(.answered) {
+    opacity: 0.9;
+  }
+
+  .likert-table tbody tr.answered {
+    border-color: var(--terracotta);
+    box-shadow: 0 2px 8px rgba(196, 120, 90, 0.15);
+  }
+
+  /* Statement text - first cell */
+  .likert-table tbody td:first-child {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    padding: 0 0 14px 0;
+    border: none;
+    font-weight: 500;
+  }
+
+  .likert-table tbody td:first-child .q-num {
+    color: var(--terracotta);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  /* Hide radio cells, we'll use labels instead */
+  .likert-table tbody td:not(:first-child) {
+    display: none;
+  }
+
+  /* Mobile checkmark position adjustment */
+  .likert-table tbody tr.answered::after {
+    right: 12px;
+    top: 14px;
+    transform: none;
+    font-size: 16px;
+    opacity: 0.5;
+  }
+
+  /* Bouncing arrow for unfilled rows - mobile position */
+  .likert-table.has-missing tbody tr:not(.answered)::after {
+    right: 12px;
+    top: 14px;
+    transform: none;
+    font-size: 22px;
+  }
+
+  @keyframes arrow-bounce {
+    0%, 100% {
+      transform: translateX(0px);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translateX(-3px);
+      opacity: 0.7;
+    }
+  }
+
+  /* Hide the reset button on mobile - cleaner experience */
+  .likert-header .reset-btn {
+    display: none;
+  }
+
+  /* Segmented control for Likert options */
+  .likert-segment {
+    display: flex;
+    width: 100%;
+    background: var(--sand);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .likert-segment-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 4px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 52px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .likert-segment-option:active {
+    transform: scale(0.96);
+  }
+
+  .likert-segment-option.selected {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .likert-segment-option.selected .likert-segment-label {
+    color: var(--terracotta);
+    font-weight: 600;
+  }
+
+  .likert-segment-label {
+    font-size: 11px;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.2;
     word-break: break-word;
     hyphens: auto;
-    -webkit-hyphens: auto;
-    white-space: normal;
   }
 
-  .likert-table th:first-child {
-    background: var(--sand);
+  /* Likert header with scale legend on mobile */
+  .likert-scale-legend {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 8px 12px;
+    font-size: 11px;
+    color: var(--text-light);
   }
 
-  .likert-table input[type="radio"] {
-    width: 22px;
-    height: 22px;
-  }
-
-  /* Scroll hint for tables */
-  .likert-table::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    background: linear-gradient(90deg, transparent, rgba(255, 251, 247, 0.9));
-    pointer-events: none;
+  .likert-scale-legend span {
+    opacity: 0.7;
   }
 
   /* Section headers */
@@ -3066,16 +3167,23 @@ h1 {
     font-size: 13px;
   }
 
-  /* Likert tables - extra small screens */
-  .likert-table {
-    font-size: 12px;
+  /* Likert cards - extra small screens */
+  .likert-table tbody td:first-child {
+    font-size: 13px;
+    padding: 0 0 12px 0;
   }
 
-  .likert-table th:first-child,
-  .likert-table td:first-child {
-    min-width: 130px;
-    max-width: 180px;
-    padding: 10px 8px;
+  .likert-table tbody tr {
+    padding: 14px;
+  }
+
+  .likert-segment-option {
+    padding: 10px 2px;
+    min-height: 48px;
+  }
+
+  .likert-segment-label {
+    font-size: 10px;
   }
 }
 
