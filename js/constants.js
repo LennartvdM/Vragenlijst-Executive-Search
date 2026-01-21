@@ -32,12 +32,42 @@ const CONSTANTS = {
     beleid_samenstelling: 'Anders'
   },
 
+  // Required fields when conditional is triggered (for completion tracking)
+  // Maps: parent field -> { triggerValue, requiredFields[] }
+  CONDITIONAL_REQUIREMENTS: {
+    streefcijfer: {
+      triggerValue: 'Ja',
+      requiredFields: ['streefcijfer_percentage', 'streefcijfer_jaar']
+    },
+    definitie_afwijking: {
+      triggerValue: 'Ja',
+      requiredFields: ['eigen_definitie']
+    },
+    heeft_rvb: {
+      triggerValue: 'Ja',
+      requiredFields: ['aantal_rvb', 'rvb_buiten_europa']
+    },
+    heeft_rvc: {
+      triggerValue: 'Ja',
+      requiredFields: ['aantal_rvc', 'rvc_buiten_europa']
+    },
+    heeft_rvt: {
+      triggerValue: 'Ja',
+      requiredFields: ['aantal_rvt', 'rvt_buiten_europa']
+    },
+    beleid_samenstelling: {
+      triggerValue: 'Anders',
+      requiredFields: ['beleid_anders_toelichting']
+    }
+  },
+
   // UI text
   UI: {
     BUTTON_NEXT: 'Volgende',
     BUTTON_SUBMIT: 'Verzenden',
     BUTTON_SUBMITTING: 'Verzenden...',
     STATUS_COMPLETE: '✓',
+    STATUS_PARTIAL: '−',
     STATUS_EMPTY: '○'
   },
 
@@ -63,6 +93,7 @@ const CONSTANTS = {
     SELECTED: 'selected',
     COMPLETE: 'complete',
     PARTIAL: 'partial',
+    CONDITIONAL_INCOMPLETE: 'conditional-incomplete',
     SHOW: 'show',
     DONE: 'done',
     ERROR: 'error',
@@ -90,6 +121,7 @@ Object.freeze(CONSTANTS.ANSWERS);
 Object.freeze(CONSTANTS.SESSION);
 Object.freeze(CONSTANTS.CONDITIONAL_FIELDS);
 Object.freeze(CONSTANTS.CONDITIONAL_VALUES);
+Object.freeze(CONSTANTS.CONDITIONAL_REQUIREMENTS);
 Object.freeze(CONSTANTS.UI);
 Object.freeze(CONSTANTS.ERRORS);
 Object.freeze(CONSTANTS.API_ACTIONS);

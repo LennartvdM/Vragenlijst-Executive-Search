@@ -117,6 +117,31 @@
   }
 
   /**
+   * Update option card conditional status classes
+   * @param {string} fieldName - The field name to update
+   */
+  function updateOptionCardConditionalStatus(fieldName) {
+    const selectedRadio = document.querySelector(`[name="${fieldName}"]:checked`);
+    if (!selectedRadio) return;
+
+    const card = selectedRadio.closest('.option-card');
+    if (!card) return;
+
+    // Remove previous conditional status classes
+    card.classList.remove('awaiting-conditional', 'conditional-satisfied');
+
+    // Check if this field has conditional requirements
+    const conditionalStatus = checkConditionalCompletion(fieldName);
+    if (conditionalStatus.triggered) {
+      if (conditionalStatus.filled) {
+        card.classList.add('conditional-satisfied');
+      } else {
+        card.classList.add('awaiting-conditional');
+      }
+    }
+  }
+
+  /**
    * Handle option card clicks
    * @param {HTMLElement} card - The option card element
    */
@@ -127,11 +152,11 @@
     const name = input.name;
     const value = input.value;
 
-    // Deselect all cards in the same group
+    // Deselect all cards in the same group and remove conditional classes
     document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
       const parentCard = radio.closest('.option-card');
       if (parentCard) {
-        parentCard.classList.remove(CONSTANTS.CSS.SELECTED);
+        parentCard.classList.remove(CONSTANTS.CSS.SELECTED, 'awaiting-conditional', 'conditional-satisfied');
       }
     });
 
@@ -152,6 +177,9 @@
         : CONSTANTS.ANSWERS.YES;
       toggleConditional(conditionalId, value === triggerValue);
     }
+
+    // Update conditional status for this card
+    updateOptionCardConditionalStatus(name);
 
     updateAllSections();
     updateIndexStatus();
@@ -287,6 +315,7 @@
     Object.keys(CONFIG.STEP_FIELDS).forEach(step => {
       const fields = CONFIG.STEP_FIELDS[step];
       let filled = 0;
+      let hasConditionalIncomplete = false;
 
       fields.forEach(fieldName => {
         const input = document.querySelector(`[name="${fieldName}"]`);
@@ -294,7 +323,14 @@
 
         if (input.type === 'radio') {
           const checked = document.querySelector(`[name="${fieldName}"]:checked`);
-          if (checked) filled++;
+          if (checked) {
+            filled++;
+            // Check if this field has conditional requirements
+            const conditionalStatus = checkConditionalCompletion(fieldName);
+            if (conditionalStatus.triggered && !conditionalStatus.filled) {
+              hasConditionalIncomplete = true;
+            }
+          }
         } else if (input.type === 'checkbox') {
           if (input.checked) filled++;
         } else if (input.value && input.value.trim() !== '') {
@@ -306,11 +342,17 @@
       if (!indexItem) return;
 
       const statusEl = indexItem.querySelector('.status');
-      indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
+      indexItem.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL, CONSTANTS.CSS.CONDITIONAL_INCOMPLETE);
 
       if (filled === fields.length) {
-        indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
-        statusEl.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
+        if (hasConditionalIncomplete) {
+          // All primary fields filled, but conditional fields missing
+          indexItem.classList.add(CONSTANTS.CSS.CONDITIONAL_INCOMPLETE);
+          statusEl.innerHTML = CONSTANTS.UI.STATUS_PARTIAL;
+        } else {
+          indexItem.classList.add(CONSTANTS.CSS.COMPLETE);
+          statusEl.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
+        }
       } else if (filled > 0) {
         indexItem.classList.add(CONSTANTS.CSS.PARTIAL);
         statusEl.innerHTML = `${filled}/${fields.length}`;
@@ -366,6 +408,46 @@
   }
 
   /**
+   * Check if conditional fields for a parent field are filled
+   * @param {string} parentField - The parent field name
+   * @returns {Object} { triggered: boolean, filled: boolean }
+   */
+  function checkConditionalCompletion(parentField) {
+    const requirements = CONSTANTS.CONDITIONAL_REQUIREMENTS[parentField];
+    if (!requirements) {
+      return { triggered: false, filled: true };
+    }
+
+    const parentInput = document.querySelector(`[name="${parentField}"]:checked`);
+    if (!parentInput) {
+      return { triggered: false, filled: true };
+    }
+
+    // Check if the selected value triggers the conditional
+    if (parentInput.value !== requirements.triggerValue) {
+      return { triggered: false, filled: true };
+    }
+
+    // Conditional is triggered - check if required fields are filled
+    let allFilled = true;
+    requirements.requiredFields.forEach(fieldName => {
+      const input = document.querySelector(`[name="${fieldName}"]`);
+      if (!input) {
+        allFilled = false;
+        return;
+      }
+      if (input.type === 'radio') {
+        const checked = document.querySelector(`[name="${fieldName}"]:checked`);
+        if (!checked) allFilled = false;
+      } else if (!input.value || input.value.trim() === '') {
+        allFilled = false;
+      }
+    });
+
+    return { triggered: true, filled: allFilled };
+  }
+
+  /**
    * Update section header completion status
    * @param {string} sectionName - Name of the section to update
    */
@@ -377,6 +459,7 @@
     if (!header) return;
 
     let filled = 0;
+    let hasConditionalIncomplete = false;
     const total = fields.length;
 
     fields.forEach(fieldName => {
@@ -385,18 +468,31 @@
 
       if (input.type === 'radio') {
         const checked = document.querySelector(`[name="${fieldName}"]:checked`);
-        if (checked) filled++;
+        if (checked) {
+          filled++;
+          // Check if this field has conditional requirements
+          const conditionalStatus = checkConditionalCompletion(fieldName);
+          if (conditionalStatus.triggered && !conditionalStatus.filled) {
+            hasConditionalIncomplete = true;
+          }
+        }
       } else if (input.value && input.value.trim() !== '') {
         filled++;
       }
     });
 
     const icon = header.querySelector('.status-icon');
-    header.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL);
+    header.classList.remove(CONSTANTS.CSS.COMPLETE, CONSTANTS.CSS.PARTIAL, CONSTANTS.CSS.CONDITIONAL_INCOMPLETE);
 
     if (filled === total) {
-      header.classList.add(CONSTANTS.CSS.COMPLETE);
-      icon.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
+      if (hasConditionalIncomplete) {
+        // All primary fields filled, but conditional fields missing
+        header.classList.add(CONSTANTS.CSS.CONDITIONAL_INCOMPLETE);
+        icon.innerHTML = CONSTANTS.UI.STATUS_PARTIAL;
+      } else {
+        header.classList.add(CONSTANTS.CSS.COMPLETE);
+        icon.innerHTML = CONSTANTS.UI.STATUS_COMPLETE;
+      }
     } else if (filled > 0) {
       header.classList.add(CONSTANTS.CSS.PARTIAL);
       icon.innerHTML = `${filled}/${total}`;
@@ -599,6 +695,15 @@
   }
 
   /**
+   * Update all option cards that have conditional requirements
+   */
+  function updateAllOptionCardConditionalStatuses() {
+    Object.keys(CONSTANTS.CONDITIONAL_REQUIREMENTS).forEach(fieldName => {
+      updateOptionCardConditionalStatus(fieldName);
+    });
+  }
+
+  /**
    * Setup input change listeners for real-time status updates
    */
   function setupInputListeners() {
@@ -606,10 +711,12 @@
       input.addEventListener('input', () => {
         updateAllSections();
         updateIndexStatus();
+        updateAllOptionCardConditionalStatuses();
       });
       input.addEventListener('change', () => {
         updateAllSections();
         updateIndexStatus();
+        updateAllOptionCardConditionalStatuses();
       });
     });
 
@@ -733,6 +840,7 @@
 
     updateAllSections();
     updateIndexStatus();
+    updateAllOptionCardConditionalStatuses();
   }
 
   /**
