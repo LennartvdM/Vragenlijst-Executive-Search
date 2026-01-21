@@ -897,6 +897,15 @@ h1 {
   opacity: 1;
 }
 
+.likert-table tbody tr.answered td:last-child::after {
+  content: '✓';
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--terracotta);
+  font-weight: 700;
+  font-size: 14px;
+}
+
 .likert-table input[type="radio"] {
   width: 18px;
   height: 18px;
