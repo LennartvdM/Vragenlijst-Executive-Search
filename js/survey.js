@@ -471,6 +471,11 @@
       const step = parseInt(item.dataset.step);
       item.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
     });
+    // Also handle clickable dividers
+    document.querySelectorAll('.index-divider-clickable').forEach(divider => {
+      const step = parseInt(divider.dataset.step);
+      divider.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
+    });
   }
 
   /**

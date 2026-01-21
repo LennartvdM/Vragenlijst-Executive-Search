@@ -584,6 +584,27 @@ body {
   border-top: 1px solid rgba(180, 160, 140, 0.3);
 }
 
+/* Clickable divider that navigates to a step */
+.index-divider-clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  margin-left: -8px;
+  margin-right: -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.index-divider-clickable:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--terracotta);
+}
+
+.index-divider-clickable.active {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--terracotta);
+}
+
 .org-info {
   margin-top: auto;
   padding-top: 20px;
@@ -747,13 +768,6 @@ h1 {
   .answer-categories-list {
     grid-template-columns: 1fr;
   }
-}
-
-/* Index item for info pages (no status circle needed) */
-.index-item-info .status {
-  background: var(--terracotta);
-  font-size: 11px;
-  font-weight: 600;
 }
 
 .form-section {
