@@ -641,6 +641,34 @@ h1 {
   border-radius: 0 8px 8px 0;
 }
 
+.info-box-link {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.info-box-link:hover {
+  background: linear-gradient(135deg, var(--sand) 0%, #e8dcc8 100%);
+  border-left-color: var(--terracotta-dark, #c55a3a);
+  transform: translateX(2px);
+}
+
+.info-box-link .info-box-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  font-size: 14px;
+  transition: opacity 0.2s ease;
+}
+
+.info-box-link:hover .info-box-icon {
+  opacity: 1;
+}
+
 .form-section {
   flex: 1;
   display: flex;
