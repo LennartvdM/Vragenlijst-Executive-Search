@@ -624,17 +624,20 @@
           const header = document.getElementById(`header-${table.id}`);
           if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
         }
-        // Check for unfilled rows and show bouncing arrows
+        // Check for unfilled rows and show bouncing arrows (only when last row is answered)
         if (table) {
-          const totalRows = table.querySelectorAll('tbody tr').length;
+          const rows = table.querySelectorAll('tbody tr');
+          const lastRow = rows[rows.length - 1];
+          const lastRowAnswered = lastRow && lastRow.classList.contains(CONSTANTS.CSS.ANSWERED);
           const answeredRows = table.querySelectorAll('tbody tr.answered').length;
-          if (answeredRows < totalRows) {
-            // Has missing rows - show arrows
+
+          if (lastRowAnswered && answeredRows < rows.length) {
+            // Last row answered but has missing rows - show arrows
             table.classList.remove('has-missing');
             void table.offsetWidth; // Force reflow to restart animation
             table.classList.add('has-missing');
           } else {
-            // All rows filled - remove arrows
+            // Either last row not answered yet, or all rows filled - remove arrows
             table.classList.remove('has-missing');
           }
         }
