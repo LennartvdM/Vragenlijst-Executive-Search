@@ -2504,7 +2504,8 @@ h1 {
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 4px 20px rgba(196, 120, 90, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Only transition transform and box-shadow, not position (prevents jitter when mobile address bar shows/hides) */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .mobile-menu-btn:hover {
