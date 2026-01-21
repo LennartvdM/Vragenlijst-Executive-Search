@@ -12,6 +12,7 @@
   let previousStep = -1; // Track previous step for slide direction
   let session = null;
   let reviewVisited = false; // Track if review step has been visited
+  let initialReviewItems = null; // Snapshot of incomplete items when review was first visited
 
   // Step labels for review page
   const STEP_LABELS = {
@@ -667,7 +668,11 @@
 
     // Generate review content when showing review step
     if (step === CONFIG.REVIEW_STEP) {
-      reviewVisited = true;
+      // Capture initial incomplete items on first visit
+      if (!reviewVisited) {
+        reviewVisited = true;
+        initialReviewItems = getIncompleteItems();
+      }
       generateReviewContent();
     }
 
@@ -1078,15 +1083,17 @@
 
   /**
    * Generate the review content HTML
+   * Uses initialReviewItems (snapshot from first visit) to show persistent list
    */
   function generateReviewContent() {
     const reviewContent = document.getElementById('reviewContent');
     if (!reviewContent) return;
 
-    const incompleteItems = getIncompleteItems();
+    // Use stored initial items, or get current if not yet captured
+    const reviewItems = initialReviewItems || getIncompleteItems();
 
-    if (incompleteItems.length === 0) {
-      // All fields filled - show success message
+    // If there were no incomplete items at first visit, show success
+    if (reviewItems.length === 0) {
       reviewContent.innerHTML = `
         <div class="review-complete">
           <div class="review-complete-icon">
@@ -1101,122 +1108,179 @@
           </button>
         </div>
       `;
-    } else {
-      // Show incomplete items with accordions
-      let itemsHtml = '';
-      let accordionIndex = 0;
-
-      // Group items by step for cleaner display
-      const itemsByStep = {};
-      incompleteItems.forEach(item => {
-        if (!itemsByStep[item.step]) {
-          itemsByStep[item.step] = [];
-        }
-        itemsByStep[item.step].push(item);
-      });
-
-      Object.keys(itemsByStep).sort((a, b) => parseInt(a) - parseInt(b)).forEach(step => {
-        const items = itemsByStep[step];
-        const stepLabel = STEP_LABELS[step] || `Stap ${step}`;
-
-        items.forEach(item => {
-          const accordionId = `accordion-${accordionIndex}`;
-          accordionIndex++;
-
-          if (item.type === 'likert') {
-            const accordionContent = generateLikertAccordionContent(item);
-            itemsHtml += `
-              <div class="review-item-accordion">
-                <div class="review-item-header" data-action="toggleAccordion" data-accordion="${accordionId}">
-                  <div class="review-item-info">
-                    <span class="review-item-step">${item.stepLabel}</span>
-                    <span class="review-item-label">${item.label}</span>
-                    <span class="review-item-count" id="${accordionId}-count">${item.filled} van ${item.total} ingevuld</span>
-                  </div>
-                  <div class="review-item-actions">
-                    <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
-                      Naar sectie &rarr;
-                    </button>
-                    <span class="accordion-chevron" id="${accordionId}-chevron">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-                <div class="review-item-content" id="${accordionId}" data-step="${item.step}" data-type="likert">
-                  ${accordionContent}
-                </div>
-              </div>
-            `;
-          } else {
-            const accordionContent = generateFieldsAccordionContent(item);
-            itemsHtml += `
-              <div class="review-item-accordion">
-                <div class="review-item-header" data-action="toggleAccordion" data-accordion="${accordionId}">
-                  <div class="review-item-info">
-                    <span class="review-item-step">${item.stepLabel}</span>
-                    <span class="review-item-label" id="${accordionId}-label">${item.count} veld${item.count > 1 ? 'en' : ''} niet ingevuld</span>
-                  </div>
-                  <div class="review-item-actions">
-                    <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
-                      Naar sectie &rarr;
-                    </button>
-                    <span class="accordion-chevron" id="${accordionId}-chevron">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-                <div class="review-item-content" id="${accordionId}" data-step="${item.step}" data-type="fields" data-fields='${JSON.stringify(item.missingFields)}'>
-                  ${accordionContent}
-                </div>
-              </div>
-            `;
-          }
-        });
-      });
-
-      reviewContent.innerHTML = `
-        <div class="review-incomplete">
-          <div class="review-incomplete-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h3>Niet alle velden zijn ingevuld</h3>
-          </div>
-          <p class="review-incomplete-subtitle">Klik op een sectie om de velden direct hier in te vullen, of ga naar de betreffende stap.</p>
-
-          <div class="review-items">
-            ${itemsHtml}
-          </div>
-
-          <div class="review-confirm">
-            <label class="review-confirm-label">
-              <input type="checkbox" id="confirmIncomplete" class="review-confirm-checkbox">
-              <span>Ik begrijp dat niet alle velden zijn ingevuld en wil toch verzenden</span>
-            </label>
-          </div>
-
-          <button type="button" class="btn btn-primary btn-submit-review" data-action="confirmSubmit" id="btnConfirmSubmit" disabled>
-            Verzenden
-          </button>
-        </div>
-      `;
-
-      // Add checkbox listener
-      const checkbox = document.getElementById('confirmIncomplete');
-      const submitBtn = document.getElementById('btnConfirmSubmit');
-      if (checkbox && submitBtn) {
-        checkbox.addEventListener('change', function() {
-          submitBtn.disabled = !this.checked;
-        });
-      }
-
-      // Setup accordion input listeners
-      setupAccordionInputListeners();
+      return;
     }
+
+    // Calculate current completion status for each stored item
+    let allNowComplete = true;
+    let itemsHtml = '';
+    let accordionIndex = 0;
+
+    // Group items by step for cleaner display
+    const itemsByStep = {};
+    reviewItems.forEach(item => {
+      if (!itemsByStep[item.step]) {
+        itemsByStep[item.step] = [];
+      }
+      itemsByStep[item.step].push(item);
+    });
+
+    Object.keys(itemsByStep).sort((a, b) => parseInt(a) - parseInt(b)).forEach(step => {
+      const items = itemsByStep[step];
+
+      items.forEach(item => {
+        const accordionId = `accordion-${accordionIndex}`;
+        accordionIndex++;
+
+        // Calculate current status of this item
+        let isNowComplete = false;
+        let currentFilled = 0;
+        let currentRemaining = 0;
+
+        if (item.type === 'likert') {
+          const status = checkLikertTableStatus(item.fields || LIKERT_LABELS[Object.keys(LIKERT_LABELS).find(k => LIKERT_LABELS[k].step === item.step && LIKERT_LABELS[k].label === item.label)]?.fields || []);
+          currentFilled = status.filled;
+          isNowComplete = !status.incomplete;
+        } else {
+          item.missingFields.forEach(fieldName => {
+            if (isFieldFilled(fieldName)) {
+              currentFilled++;
+            } else {
+              currentRemaining++;
+            }
+          });
+          isNowComplete = currentRemaining === 0;
+        }
+
+        if (!isNowComplete) {
+          allNowComplete = false;
+        }
+
+        const completedClass = isNowComplete ? 'accordion-complete' : '';
+
+        if (item.type === 'likert') {
+          const accordionContent = generateLikertAccordionContent(item);
+          const statusText = isNowComplete
+            ? `${item.total} van ${item.total} ingevuld`
+            : `${currentFilled} van ${item.total} ingevuld`;
+
+          itemsHtml += `
+            <div class="review-item-accordion ${completedClass}">
+              <div class="review-item-header" data-action="toggleAccordion" data-accordion="${accordionId}">
+                <div class="review-item-info">
+                  <span class="review-item-step">${item.stepLabel}</span>
+                  <span class="review-item-label">${item.label}</span>
+                  <span class="review-item-count" id="${accordionId}-count">${statusText}</span>
+                </div>
+                <div class="review-item-actions">
+                  <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
+                    Naar sectie &rarr;
+                  </button>
+                  <span class="accordion-chevron" id="${accordionId}-chevron">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                      <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="review-item-content" id="${accordionId}" data-step="${item.step}" data-type="likert">
+                ${accordionContent}
+              </div>
+            </div>
+          `;
+        } else {
+          const accordionContent = generateFieldsAccordionContent(item);
+          const statusText = isNowComplete
+            ? 'Compleet'
+            : `${currentRemaining} veld${currentRemaining > 1 ? 'en' : ''} niet ingevuld`;
+
+          itemsHtml += `
+            <div class="review-item-accordion ${completedClass}">
+              <div class="review-item-header" data-action="toggleAccordion" data-accordion="${accordionId}">
+                <div class="review-item-info">
+                  <span class="review-item-step">${item.stepLabel}</span>
+                  <span class="review-item-label" id="${accordionId}-label">${statusText}</span>
+                </div>
+                <div class="review-item-actions">
+                  <button type="button" class="btn btn-secondary btn-review-goto" data-action="goToStep" data-step="${item.step}">
+                    Naar sectie &rarr;
+                  </button>
+                  <span class="accordion-chevron" id="${accordionId}-chevron">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                      <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="review-item-content" id="${accordionId}" data-step="${item.step}" data-type="fields" data-fields='${JSON.stringify(item.missingFields)}'>
+                ${accordionContent}
+              </div>
+            </div>
+          `;
+        }
+      });
+    });
+
+    // Determine header and confirmation UI based on current completion
+    const headerIcon = allNowComplete
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="24" height="24">
+           <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+           <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>`;
+
+    const headerClass = allNowComplete ? 'review-all-complete-header' : 'review-incomplete-header';
+    const headerText = allNowComplete
+      ? 'Alle secties zijn nu ingevuld!'
+      : 'Niet alle velden zijn ingevuld';
+    const subtitleText = allNowComplete
+      ? 'De onderstaande secties waren oorspronkelijk incompleet maar zijn nu ingevuld. U kunt nu verzenden.'
+      : 'Klik op een sectie om de velden direct hier in te vullen, of ga naar de betreffende stap.';
+
+    const confirmHtml = allNowComplete
+      ? ''
+      : `<div class="review-confirm">
+           <label class="review-confirm-label">
+             <input type="checkbox" id="confirmIncomplete" class="review-confirm-checkbox">
+             <span>Ik begrijp dat niet alle velden zijn ingevuld en wil toch verzenden</span>
+           </label>
+         </div>`;
+
+    const submitDisabled = allNowComplete ? '' : 'disabled';
+    const containerClass = allNowComplete ? 'review-now-complete' : 'review-incomplete';
+
+    reviewContent.innerHTML = `
+      <div class="${containerClass}">
+        <div class="${headerClass}">
+          ${headerIcon}
+          <h3>${headerText}</h3>
+        </div>
+        <p class="review-incomplete-subtitle">${subtitleText}</p>
+
+        <div class="review-items">
+          ${itemsHtml}
+        </div>
+
+        ${confirmHtml}
+
+        <button type="button" class="btn btn-primary btn-submit-review" data-action="confirmSubmit" id="btnConfirmSubmit" ${submitDisabled}>
+          Verzenden
+        </button>
+      </div>
+    `;
+
+    // Add checkbox listener if present
+    const checkbox = document.getElementById('confirmIncomplete');
+    const submitBtn = document.getElementById('btnConfirmSubmit');
+    if (checkbox && submitBtn) {
+      checkbox.addEventListener('change', function() {
+        submitBtn.disabled = !this.checked;
+      });
+    }
+
+    // Setup accordion input listeners
+    setupAccordionInputListeners();
   }
 
   /**
@@ -1580,14 +1644,65 @@
   }
 
   /**
-   * Check if all incomplete items are now complete and update UI
+   * Check if all initially incomplete items are now complete and update UI
+   * Does NOT regenerate the list - items persist permanently
    */
   function checkAllItemsComplete() {
-    const incompleteItems = getIncompleteItems();
+    if (!initialReviewItems || initialReviewItems.length === 0) return;
 
-    if (incompleteItems.length === 0) {
-      // All items now complete - regenerate to show success
-      generateReviewContent();
+    // Check current status of all initial items
+    let allNowComplete = true;
+    initialReviewItems.forEach(item => {
+      if (item.type === 'likert') {
+        const tableConfig = LIKERT_LABELS[Object.keys(LIKERT_LABELS).find(k =>
+          LIKERT_LABELS[k].step === item.step && LIKERT_LABELS[k].label === item.label
+        )];
+        if (tableConfig) {
+          const status = checkLikertTableStatus(tableConfig.fields);
+          if (status.incomplete) allNowComplete = false;
+        }
+      } else {
+        item.missingFields.forEach(fieldName => {
+          if (!isFieldFilled(fieldName)) allNowComplete = false;
+        });
+      }
+    });
+
+    // Update submit button state
+    const submitBtn = document.getElementById('btnConfirmSubmit');
+    const checkbox = document.getElementById('confirmIncomplete');
+    const confirmContainer = document.querySelector('.review-confirm');
+    const headerEl = document.querySelector('.review-incomplete-header, .review-all-complete-header');
+    const containerEl = document.querySelector('.review-incomplete, .review-now-complete');
+
+    if (allNowComplete) {
+      // All complete - enable submit, hide checkbox
+      if (submitBtn) submitBtn.disabled = false;
+      if (confirmContainer) confirmContainer.style.display = 'none';
+      if (headerEl) {
+        headerEl.className = 'review-all-complete-header';
+        const h3 = headerEl.querySelector('h3');
+        if (h3) h3.textContent = 'Alle secties zijn nu ingevuld!';
+        const svg = headerEl.querySelector('svg');
+        if (svg) {
+          svg.outerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="24" height="24">
+            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>`;
+        }
+      }
+      if (containerEl) {
+        containerEl.className = 'review-now-complete';
+      }
+      const subtitle = document.querySelector('.review-incomplete-subtitle');
+      if (subtitle) {
+        subtitle.textContent = 'De onderstaande secties waren oorspronkelijk incompleet maar zijn nu ingevuld. U kunt nu verzenden.';
+      }
+    } else {
+      // Still incomplete - require checkbox
+      if (submitBtn && checkbox) {
+        submitBtn.disabled = !checkbox.checked;
+      }
+      if (confirmContainer) confirmContainer.style.display = 'block';
     }
   }
 
