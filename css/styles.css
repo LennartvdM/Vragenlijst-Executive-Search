@@ -2919,12 +2919,41 @@ h1 {
 
   /* Segmented control for Likert options */
   .likert-segment {
+    position: relative;
     display: flex;
     width: 100%;
     background: var(--sand);
     border-radius: 10px;
     padding: 4px;
-    gap: 4px;
+    gap: 0;
+  }
+
+  /* Sliding indicator background */
+  .likert-segment-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(25% - 2px);
+    height: calc(100% - 8px);
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .likert-segment-slider.no-transition {
+    transition: none;
+  }
+
+  .likert-segment.has-selection .likert-segment-slider {
+    opacity: 1;
+  }
+
+  .likert-segment.is-dragging .likert-segment-slider {
+    transition: transform 0.1s ease-out;
   }
 
   .likert-segment-option {
@@ -2934,26 +2963,47 @@ h1 {
     align-items: center;
     justify-content: center;
     padding: 12px 4px;
-    background: rgba(255, 255, 255, 0.5);
+    background: transparent;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 52px;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Subtle fill for unselected options when no selection yet */
+  .likert-segment:not(.has-selection) .likert-segment-option {
+    background: rgba(255, 255, 255, 0.5);
+    margin: 0 2px;
+  }
+
+  .likert-segment:not(.has-selection) .likert-segment-option:first-of-type {
+    margin-left: 0;
+  }
+
+  .likert-segment:not(.has-selection) .likert-segment-option:last-of-type {
+    margin-right: 0;
   }
 
   .likert-segment-option:active {
     transform: scale(0.96);
+  }
+
+  .likert-segment:not(.has-selection) .likert-segment-option:active {
     background: rgba(255, 255, 255, 0.8);
   }
 
-  .likert-segment-option.selected {
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  /* Selected option text styling */
+  .likert-segment-option.selected .likert-segment-label {
+    color: var(--terracotta);
+    font-weight: 600;
   }
 
-  .likert-segment-option.selected .likert-segment-label {
+  /* Hover state during drag */
+  .likert-segment-option.hover .likert-segment-label {
     color: var(--terracotta);
     font-weight: 600;
   }
