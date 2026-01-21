@@ -20,9 +20,16 @@ const CONSTANTS = {
   // Field names that trigger conditional sections
   CONDITIONAL_FIELDS: {
     streefcijfer: 'streefcijfer-details',
+    definitie_afwijking: 'definitie-afwijking-details',
     heeft_rvb: 'rvb-details',
     heeft_rvc: 'rvc-details',
-    heeft_rvt: 'rvt-details'
+    heeft_rvt: 'rvt-details',
+    beleid_samenstelling: 'beleid-anders-details'
+  },
+
+  // Answer values that trigger conditional sections (for "Anders" options)
+  CONDITIONAL_VALUES: {
+    beleid_samenstelling: 'Anders'
   },
 
   // UI text
@@ -82,6 +89,7 @@ Object.freeze(CONSTANTS);
 Object.freeze(CONSTANTS.ANSWERS);
 Object.freeze(CONSTANTS.SESSION);
 Object.freeze(CONSTANTS.CONDITIONAL_FIELDS);
+Object.freeze(CONSTANTS.CONDITIONAL_VALUES);
 Object.freeze(CONSTANTS.UI);
 Object.freeze(CONSTANTS.ERRORS);
 Object.freeze(CONSTANTS.API_ACTIONS);

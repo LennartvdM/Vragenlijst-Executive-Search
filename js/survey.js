@@ -141,7 +141,11 @@
     // Handle conditional field visibility using centralized mapping
     const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
     if (conditionalId) {
-      toggleConditional(conditionalId, value === CONSTANTS.ANSWERS.YES);
+      // Check if there's a custom trigger value for this field
+      const triggerValue = CONSTANTS.CONDITIONAL_VALUES && CONSTANTS.CONDITIONAL_VALUES[name]
+        ? CONSTANTS.CONDITIONAL_VALUES[name]
+        : CONSTANTS.ANSWERS.YES;
+      toggleConditional(conditionalId, value === triggerValue);
     }
 
     updateAllSections();
@@ -632,8 +636,14 @@
 
           // Handle conditional fields using centralized mapping
           const conditionalId = CONSTANTS.CONDITIONAL_FIELDS[name];
-          if (conditionalId && value === CONSTANTS.ANSWERS.YES) {
-            toggleConditional(conditionalId, true);
+          if (conditionalId) {
+            // Check if there's a custom trigger value for this field
+            const triggerValue = CONSTANTS.CONDITIONAL_VALUES && CONSTANTS.CONDITIONAL_VALUES[name]
+              ? CONSTANTS.CONDITIONAL_VALUES[name]
+              : CONSTANTS.ANSWERS.YES;
+            if (value === triggerValue) {
+              toggleConditional(conditionalId, true);
+            }
           }
 
           // Likert table row highlighting
