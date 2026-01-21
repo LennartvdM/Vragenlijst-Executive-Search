@@ -20,15 +20,16 @@
     1: 'Streefcijfer',
     2: 'Kwantitatief',
     3: 'Bestuursorganen',
-    4: 'Leiderschap',
-    5: 'Strategie',
-    6: 'HR Management',
-    7: 'Communicatie',
-    8: 'Kennis',
-    9: 'Klimaat',
-    10: 'Motivatie',
-    11: 'Aanvullend',
-    12: 'Ondertekenen'
+    4: 'Kwalitatief (intro)',
+    5: 'Leiderschap',
+    6: 'Strategie',
+    7: 'HR Management',
+    8: 'Communicatie',
+    9: 'Kennis',
+    10: 'Klimaat',
+    11: 'Motivatie',
+    12: 'Aanvullend',
+    13: 'Ondertekenen'
   };
 
   // Field labels for review page (human readable names)
@@ -70,32 +71,32 @@
   // Likert table groupings for review page
   const LIKERT_LABELS = {
     'likert-leiderschap': {
-      step: 4,
+      step: 5,
       label: 'Leiderschap stellingen',
       fields: ['leid_1', 'leid_2', 'leid_3', 'leid_4', 'leid_5']
     },
     'likert-strategie': {
-      step: 5,
+      step: 6,
       label: 'Strategie stellingen',
       fields: ['strat_1', 'strat_2', 'strat_3', 'strat_4', 'strat_5', 'strat_6', 'strat_7', 'strat_8']
     },
     'likert-hr': {
-      step: 6,
+      step: 7,
       label: 'HR Management stellingen',
       fields: ['hr_1', 'hr_2', 'hr_3', 'hr_4', 'hr_5', 'hr_6', 'hr_7', 'hr_8', 'hr_9', 'hr_10', 'hr_11', 'hr_12', 'hr_13', 'hr_14']
     },
     'likert-communicatie': {
-      step: 7,
+      step: 8,
       label: 'Communicatie stellingen',
       fields: ['comm_1', 'comm_2', 'comm_3', 'comm_4', 'comm_5']
     },
     'likert-kennis': {
-      step: 8,
+      step: 9,
       label: 'Kennis stellingen',
       fields: ['kennis_1', 'kennis_2', 'kennis_3', 'kennis_4', 'kennis_5', 'kennis_6', 'kennis_7', 'kennis_8']
     },
     'likert-klimaat': {
-      step: 9,
+      step: 10,
       label: 'Klimaat stellingen',
       fields: ['klimaat_1', 'klimaat_2', 'klimaat_3', 'klimaat_4', 'klimaat_5', 'klimaat_6']
     }
@@ -418,12 +419,12 @@
 
   /**
    * Initialize progress dots (both top and bottom)
-   * Only show dots for steps 0-12 (not review/success)
+   * Only show dots for steps 0-13 (not review/success)
    */
   function initProgress() {
     const dotsBottom = document.getElementById('progressDots');
     const dotsTop = document.getElementById('progressDotsTop');
-    const contentSteps = 13; // Steps 0-12
+    const contentSteps = 14; // Steps 0-13
 
     [dotsBottom, dotsTop].forEach(dots => {
       if (!dots) return;
@@ -438,11 +439,11 @@
 
   /**
    * Update progress dots display
-   * Dots only represent steps 0-12
+   * Dots only represent steps 0-13
    */
   function updateProgress() {
     const dotsContainers = document.querySelectorAll('.progress-dots');
-    const displayStep = currentStep <= 12 ? currentStep : 12; // Clamp to 12 for review/success
+    const displayStep = currentStep <= 13 ? currentStep : 13; // Clamp to 13 for review/success
 
     dotsContainers.forEach(container => {
       const dots = container.querySelectorAll('span');
@@ -731,8 +732,8 @@
     if (btnPrevTop) btnPrevTop.style.display = showPrev ? 'block' : 'none';
 
     // Update both next buttons and nav containers
-    if (step === 12) {
-      // Step 12 (Ondertekenen) - next goes to review, button says "Controleren"
+    if (step === 13) {
+      // Step 13 (Ondertekenen) - next goes to review, button says "Controleren"
       if (btnNext) {
         btnNext.textContent = 'Controleren';
         btnNext.style.display = 'block';
@@ -783,14 +784,14 @@
   }
 
   /**
-   * Go to next step (step 12 goes to review, review is handled by its own button)
+   * Go to next step (step 13 goes to review, review is handled by its own button)
    */
   function nextStep() {
-    if (currentStep === 12) {
+    if (currentStep === 13) {
       // Go to review step
       currentStep = CONFIG.REVIEW_STEP;
       showStep(currentStep);
-    } else if (currentStep < 12) {
+    } else if (currentStep < 13) {
       currentStep++;
       showStep(currentStep);
     }
@@ -1873,7 +1874,7 @@
         {
           linkText: 'Ga naar ondertekenen →',
           linkAction: () => {
-            goToStep(12);
+            goToStep(13);
             setTimeout(() => ondertekenaar && ondertekenaar.focus(), 100);
           }
         }
@@ -1887,7 +1888,7 @@
         'Bevestig dat de gegevens naar waarheid zijn ingevuld voordat u het formulier kunt verzenden.',
         {
           linkText: 'Ga naar ondertekenen →',
-          linkAction: () => goToStep(12)
+          linkAction: () => goToStep(13)
         }
       );
       return;
@@ -2054,7 +2055,7 @@
     const steps = document.querySelectorAll('.step');
     steps.forEach(step => {
       const stepNum = parseInt(step.dataset.step, 10);
-      if (stepNum <= 12) {
+      if (stepNum <= 13) {
         step.classList.add('active');
       }
     });
