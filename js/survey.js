@@ -136,6 +136,9 @@
     calculateStableCardDimensions();
     showStep(0);
 
+    // Initialize mobile drawer
+    initMobileDrawer();
+
     // Recalculate on window resize (debounced)
     let resizeTimeout;
     window.addEventListener('resize', function() {
@@ -2366,6 +2369,116 @@
     initialReviewItems = null;
     showStep(0);
     updateIndexStatus();
+  }
+
+  /**
+   * Initialize mobile drawer functionality
+   * Sets up the hamburger menu button and overlay interactions
+   */
+  function initMobileDrawer() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const overlay = document.getElementById('mobileOverlay');
+    const index = document.querySelector('.index');
+
+    if (!menuBtn || !overlay || !index) return;
+
+    // Toggle drawer on menu button click
+    menuBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleMobileDrawer();
+    });
+
+    // Close drawer when clicking overlay
+    overlay.addEventListener('click', function() {
+      closeMobileDrawer();
+    });
+
+    // Close drawer when clicking an index item (after navigation)
+    index.addEventListener('click', function(e) {
+      const indexItem = e.target.closest('.index-item, .index-divider-clickable');
+      if (indexItem && indexItem.dataset.action === 'goToStep') {
+        // Small delay to let the navigation animation start
+        setTimeout(closeMobileDrawer, 150);
+      }
+    });
+
+    // Close drawer on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && index.classList.contains('mobile-open')) {
+        closeMobileDrawer();
+      }
+    });
+
+    // Handle swipe gestures on mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const swipeDistance = touchEndX - touchStartX;
+
+      // Swipe right to open (only from left edge)
+      if (swipeDistance > swipeThreshold && touchStartX < 50) {
+        openMobileDrawer();
+      }
+
+      // Swipe left to close
+      if (swipeDistance < -swipeThreshold && index.classList.contains('mobile-open')) {
+        closeMobileDrawer();
+      }
+    }
+  }
+
+  /**
+   * Toggle mobile drawer open/closed state
+   */
+  function toggleMobileDrawer() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const overlay = document.getElementById('mobileOverlay');
+    const index = document.querySelector('.index');
+
+    if (index.classList.contains('mobile-open')) {
+      closeMobileDrawer();
+    } else {
+      openMobileDrawer();
+    }
+  }
+
+  /**
+   * Open the mobile drawer
+   */
+  function openMobileDrawer() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const overlay = document.getElementById('mobileOverlay');
+    const index = document.querySelector('.index');
+
+    menuBtn.classList.add('active');
+    overlay.classList.add('active');
+    index.classList.add('mobile-open');
+    document.body.classList.add('mobile-drawer-open');
+  }
+
+  /**
+   * Close the mobile drawer
+   */
+  function closeMobileDrawer() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const overlay = document.getElementById('mobileOverlay');
+    const index = document.querySelector('.index');
+
+    menuBtn.classList.remove('active');
+    overlay.classList.remove('active');
+    index.classList.remove('mobile-open');
+    document.body.classList.remove('mobile-drawer-open');
   }
 
 })();

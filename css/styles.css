@@ -2468,3 +2468,549 @@ h1 {
     justify-content: center;
   }
 }
+
+/* ==========================================================================
+   MOBILE-FRIENDLY REDESIGN
+   All styles below are mobile-only and don't affect desktop
+   ========================================================================== */
+
+/* Hide mobile elements on desktop */
+.mobile-menu-btn,
+.mobile-overlay {
+  display: none;
+}
+
+/* ==========================================================================
+   Mobile Styles (768px and below)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* Mobile Menu Button - Floating pill on left side */
+  .mobile-menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    position: fixed;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(196, 120, 90, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-menu-btn:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 24px rgba(196, 120, 90, 0.5), 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .mobile-menu-btn:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  /* Hamburger lines */
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  /* Animate to X when open */
+  .mobile-menu-btn.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .mobile-menu-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .mobile-menu-btn.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* Mobile Overlay - Semi-transparent backdrop */
+  .mobile-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(74, 55, 40, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Index Sidebar - Slide-out drawer */
+  .index {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    max-width: 85vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, rgba(255, 251, 247, 0.98) 0%, rgba(245, 230, 211, 0.98) 100%);
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+    border-radius: 0 20px 20px 0;
+  }
+
+  .index.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Close hint at top of drawer */
+  .index::before {
+    content: 'Tik buiten menu om te sluiten';
+    display: block;
+    font-size: 11px;
+    color: var(--text-light);
+    text-align: center;
+    padding: 8px 0 16px;
+    margin: -8px -20px 12px;
+    border-bottom: 1px solid rgba(180, 160, 140, 0.3);
+    opacity: 0.7;
+  }
+
+  /* Make index items more touch-friendly */
+  .index-item {
+    padding: 14px 16px;
+    margin-bottom: 6px;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+
+  .index-item .label {
+    font-size: 14px;
+  }
+
+  .index-item .status {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .index-divider {
+    padding: 16px 16px 8px;
+    margin-top: 12px;
+    font-size: 11px;
+  }
+
+  .index-divider-clickable {
+    padding: 14px 16px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Progress bar in drawer */
+  .progress-bar-container {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+
+  .progress-bar {
+    height: 10px;
+  }
+
+  .progress-percentage {
+    font-size: 14px;
+    min-width: 42px;
+  }
+
+  /* Org info at bottom of drawer */
+  .org-info {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .logout-btn {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  /* Main container adjustments */
+  .survey-body {
+    padding: 16px 12px;
+  }
+
+  .container {
+    flex-direction: column;
+    border-radius: 16px;
+    min-height: auto;
+  }
+
+  /* Content area - full width on mobile */
+  .content {
+    padding: 20px 16px 24px;
+    width: 100%;
+  }
+
+  /* Hide progress dots at top on mobile - we have the drawer */
+  .progress-dots-top-container {
+    display: none;
+  }
+
+  /* Top bar adjustments */
+  .top-bar {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  /* Headings */
+  h1 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  /* Buttons - larger touch targets */
+  .btn {
+    padding: 14px 24px;
+    font-size: 15px;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+
+  .btn-small {
+    padding: 12px 18px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+
+  .nav-buttons {
+    gap: 10px;
+  }
+
+  /* Form fields - larger touch targets */
+  .field {
+    margin-bottom: 24px;
+  }
+
+  .field label {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .field input[type="text"],
+  .field input[type="number"],
+  .field input[type="date"],
+  .field input[type="email"],
+  .field input[type="password"],
+  .field textarea,
+  .field select {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    border-radius: 12px;
+  }
+
+  /* Option cards - more touch-friendly */
+  .option-card {
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    min-height: 60px;
+  }
+
+  .option-radio {
+    width: 24px;
+    height: 24px;
+  }
+
+  .option-card.selected .option-radio::after {
+    width: 12px;
+    height: 12px;
+  }
+
+  .option-content h3 {
+    font-size: 15px;
+  }
+
+  .option-content p {
+    font-size: 13px;
+  }
+
+  /* Conditional fields */
+  .conditional {
+    margin-left: 24px;
+    padding: 18px 16px;
+    width: calc(100% - 24px);
+    border-radius: 0 14px 14px 0;
+  }
+
+  /* Likert tables - horizontal scroll wrapper */
+  .likert-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px 20px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+
+  .likert-table table {
+    min-width: 500px;
+  }
+
+  .likert-table th,
+  .likert-table td {
+    padding: 12px 10px;
+  }
+
+  .likert-table th:first-child,
+  .likert-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--cream);
+    z-index: 1;
+    min-width: 180px;
+    max-width: 200px;
+  }
+
+  .likert-table th:first-child {
+    background: var(--sand);
+  }
+
+  .likert-table input[type="radio"] {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Scroll hint for tables */
+  .likert-table::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, rgba(255, 251, 247, 0.9));
+    pointer-events: none;
+  }
+
+  /* Section headers */
+  .section-header {
+    padding: 14px 16px;
+    margin: 24px -16px 18px;
+    border-radius: 0;
+    font-size: 14px;
+  }
+
+  /* Question groups */
+  .question-group {
+    padding: 18px 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    border-radius: 0;
+  }
+
+  /* Info boxes */
+  .info-box {
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .info-box-large {
+    padding: 20px 20px;
+  }
+
+  /* Answer categories box */
+  .answer-categories-box {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .answer-categories-box h3 {
+    font-size: 17px;
+  }
+
+  .answer-categories-list li {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    margin-top: 20px;
+    padding-top: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Progress dots at bottom */
+  .progress-dots-bottom-container {
+    padding: 16px 0 8px;
+  }
+
+  .progress-dots span {
+    width: 10px;
+    height: 10px;
+  }
+
+  .progress-dots span.active {
+    width: 28px;
+  }
+
+  /* Success page */
+  .success {
+    padding: 40px 20px;
+  }
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .success-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Review step */
+  .review-item-header {
+    padding: 14px 16px;
+  }
+
+  .review-item-content.open {
+    padding: 18px 16px;
+  }
+
+  .btn-review-goto {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  /* Comments section */
+  .comments-section {
+    margin-top: 20px;
+    padding-top: 14px;
+  }
+
+  .comments-toggle {
+    padding: 8px 0;
+  }
+
+  /* Multi-input groups */
+  .multi-input-group {
+    gap: 14px;
+  }
+
+  .multi-input-group input {
+    padding: 14px 16px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  /* Checkbox labels */
+  .checkbox-label {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Question numbers */
+  .q-num {
+    font-size: 13px;
+  }
+
+  /* Reset buttons */
+  .reset-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  /* Print button - hide on mobile */
+  .btn-print {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Extra Small Mobile (< 400px)
+   ========================================================================== */
+@media (max-width: 400px) {
+  .mobile-menu-btn {
+    left: 12px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .hamburger-line {
+    width: 18px;
+  }
+
+  .survey-body {
+    padding: 12px 8px;
+  }
+
+  .content {
+    padding: 16px 12px 20px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .option-card {
+    padding: 14px 14px;
+  }
+
+  .index {
+    width: 260px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+  }
+
+  .btn-small {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+/* ==========================================================================
+   Prevent body scroll when drawer is open
+   ========================================================================== */
+body.mobile-drawer-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
