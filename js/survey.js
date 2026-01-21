@@ -2529,18 +2529,39 @@
 
       const radioName = firstRadio.name;
 
+      // Add mobile reset button to the row
+      if (!row.querySelector('.likert-row-reset')) {
+        const resetBtn = document.createElement('button');
+        resetBtn.type = 'button';
+        resetBtn.className = 'likert-row-reset';
+        resetBtn.setAttribute('aria-label', 'Wis selectie');
+        resetBtn.innerHTML = '×';
+        resetBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          resetLikertRow(row, radioName);
+        });
+        row.appendChild(resetBtn);
+      }
+
       // Create the segmented control container
       const segment = document.createElement('div');
       segment.className = 'likert-segment';
       segment.setAttribute('role', 'radiogroup');
       segment.setAttribute('aria-label', 'Selecteer uw antwoord');
 
+      // Create sliding indicator
+      const slider = document.createElement('div');
+      slider.className = 'likert-segment-slider';
+      segment.appendChild(slider);
+
       // Create options
-      LIKERT_OPTIONS.forEach(option => {
+      LIKERT_OPTIONS.forEach((option, index) => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'likert-segment-option';
         btn.dataset.value = option.value;
+        btn.dataset.index = index;
         btn.dataset.radioName = radioName;
         btn.setAttribute('role', 'radio');
         btn.setAttribute('aria-checked', 'false');
@@ -2557,31 +2578,116 @@
         if (radio && radio.checked) {
           btn.classList.add('selected');
           btn.setAttribute('aria-checked', 'true');
+          // Position slider on selected option
+          segment.classList.add('has-selection');
+          slider.style.transform = `translateX(${index * 100}%)`;
         }
 
         // Handle click
         btn.addEventListener('click', function(e) {
           e.preventDefault();
-          selectLikertOption(this, radioName, option.value, row);
+          selectLikertOption(this, radioName, option.value, row, index);
         });
       });
+
+      // Setup touch sliding interaction
+      setupTouchSliding(segment, radioName, row);
 
       // Insert after the first cell (statement text)
       firstCell.after(segment);
     }
 
     /**
+     * Setup touch sliding interaction for a segment
+     */
+    function setupTouchSliding(segment, radioName, row) {
+      const slider = segment.querySelector('.likert-segment-slider');
+      const options = segment.querySelectorAll('.likert-segment-option');
+      let isDragging = false;
+      let currentIndex = -1;
+
+      function getOptionIndexFromTouch(touchX) {
+        const rect = segment.getBoundingClientRect();
+        const relativeX = touchX - rect.left;
+        const optionWidth = rect.width / options.length;
+        let index = Math.floor(relativeX / optionWidth);
+        // Clamp to valid range
+        return Math.max(0, Math.min(options.length - 1, index));
+      }
+
+      function updateSliderPosition(index, animate = true) {
+        if (index === currentIndex) return;
+        currentIndex = index;
+
+        segment.classList.add('has-selection');
+        slider.classList.toggle('no-transition', !animate);
+        slider.style.transform = `translateX(${index * 100}%)`;
+
+        // Update visual hover state
+        options.forEach((opt, i) => {
+          opt.classList.toggle('hover', i === index);
+        });
+      }
+
+      segment.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        segment.classList.add('is-dragging');
+        const touch = e.touches[0];
+        const index = getOptionIndexFromTouch(touch.clientX);
+        updateSliderPosition(index, false);
+      }, { passive: true });
+
+      segment.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        const index = getOptionIndexFromTouch(touch.clientX);
+        updateSliderPosition(index, true);
+      }, { passive: true });
+
+      segment.addEventListener('touchend', function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        segment.classList.remove('is-dragging');
+
+        // Remove hover states
+        options.forEach(opt => opt.classList.remove('hover'));
+
+        // Select the option where finger lifted
+        if (currentIndex >= 0 && currentIndex < options.length) {
+          const option = options[currentIndex];
+          selectLikertOption(option, radioName, option.dataset.value, row, currentIndex);
+        }
+      }, { passive: true });
+
+      // Cancel on touch leaving the element
+      segment.addEventListener('touchcancel', function() {
+        isDragging = false;
+        segment.classList.remove('is-dragging');
+        options.forEach(opt => opt.classList.remove('hover'));
+      }, { passive: true });
+    }
+
+    /**
      * Select a Likert option via segmented control
      */
-    function selectLikertOption(button, radioName, value, row) {
+    function selectLikertOption(button, radioName, value, row, index) {
       // Update visual state
       const segment = button.closest('.likert-segment');
+      const slider = segment.querySelector('.likert-segment-slider');
+
       segment.querySelectorAll('.likert-segment-option').forEach(btn => {
         btn.classList.remove('selected');
         btn.setAttribute('aria-checked', 'false');
       });
       button.classList.add('selected');
       button.setAttribute('aria-checked', 'true');
+
+      // Animate slider to selected position
+      if (slider && index !== undefined) {
+        segment.classList.add('has-selection');
+        slider.classList.remove('no-transition');
+        slider.style.transform = `translateX(${index * 100}%)`;
+      }
 
       // Trigger the actual radio button
       const radio = document.querySelector(`input[name="${radioName}"][value="${value}"]`);
@@ -2593,6 +2699,48 @@
     }
 
     /**
+     * Reset a single Likert row
+     */
+    function resetLikertRow(row, radioName) {
+      // Uncheck all radio buttons for this row
+      row.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.checked = false;
+      });
+
+      // Remove answered state from row
+      row.classList.remove(CONSTANTS.CSS.ANSWERED);
+      row.classList.remove('just-answered');
+
+      // Reset segmented control
+      const segment = row.querySelector('.likert-segment');
+      if (segment) {
+        const slider = segment.querySelector('.likert-segment-slider');
+        segment.classList.remove('has-selection');
+        segment.querySelectorAll('.likert-segment-option').forEach(btn => {
+          btn.classList.remove('selected');
+          btn.setAttribute('aria-checked', 'false');
+        });
+      }
+
+      // Check if table still has any values
+      const table = row.closest('.likert-table');
+      if (table) {
+        const hasAnsweredRows = table.querySelectorAll('tbody tr.answered').length > 0;
+        if (!hasAnsweredRows && table.id) {
+          const header = document.getElementById(`header-${table.id}`);
+          if (header) header.classList.remove(CONSTANTS.CSS.HAS_VALUE);
+        }
+        // Remove missing arrows indicator
+        table.classList.remove('has-missing');
+      }
+
+      // Trigger updates
+      updateAllSections();
+      updateIndexStatus();
+      saveFormData();
+    }
+
+    /**
      * Sync segmented controls with radio button state
      * (Called when loading saved data or resetting)
      */
@@ -2601,17 +2749,33 @@
         const segment = row.querySelector('.likert-segment');
         if (!segment) return;
 
+        const slider = segment.querySelector('.likert-segment-slider');
         const firstRadio = row.querySelector('input[type="radio"]');
         if (!firstRadio) return;
 
         const radioName = firstRadio.name;
         const checkedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+        let selectedIndex = -1;
 
-        segment.querySelectorAll('.likert-segment-option').forEach(btn => {
+        segment.querySelectorAll('.likert-segment-option').forEach((btn, index) => {
           const isSelected = checkedRadio && btn.dataset.value === checkedRadio.value;
           btn.classList.toggle('selected', isSelected);
           btn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+          if (isSelected) selectedIndex = index;
         });
+
+        // Position slider
+        if (slider) {
+          if (selectedIndex >= 0) {
+            segment.classList.add('has-selection');
+            slider.classList.add('no-transition');
+            slider.style.transform = `translateX(${selectedIndex * 100}%)`;
+            // Remove no-transition after a frame
+            requestAnimationFrame(() => slider.classList.remove('no-transition'));
+          } else {
+            segment.classList.remove('has-selection');
+          }
+        }
       });
     }
 
