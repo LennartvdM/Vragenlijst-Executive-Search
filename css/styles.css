@@ -2548,8 +2548,6 @@ h1 {
     right: 0;
     bottom: 0;
     background: rgba(74, 55, 40, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     z-index: 998;
     opacity: 0;
     visibility: hidden;
