@@ -612,7 +612,12 @@
     // Likert scale row highlighting and header tracking
     document.querySelectorAll('.likert-table input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', function() {
-        this.closest('tr').classList.add(CONSTANTS.CSS.ANSWERED);
+        const row = this.closest('tr');
+        row.classList.add(CONSTANTS.CSS.ANSWERED);
+        // Add animation class for pop effect (only on user interaction)
+        row.classList.remove('just-answered');
+        void row.offsetWidth; // Force reflow to restart animation
+        row.classList.add('just-answered');
         // Update the Likert header to show reset button
         const table = this.closest('.likert-table');
         if (table && table.id) {
