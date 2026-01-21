@@ -229,49 +229,49 @@
         <div class="form-section">
           <div class="section-header" data-section="werknemers">Werknemers <span class="status-icon">○</span></div>
           <div class="field">
-            <label>2a. Totaal aantal werknemers</label>
+            <label><span class="q-num">2a.</span> Totaal aantal werknemers</label>
             <input type="number" name="aantal_werknemers" min="0" placeholder="0">
           </div>
           <div class="field">
-            <label>2b. Aantal met herkomst Buiten-Europa</label>
+            <label><span class="q-num">2b.</span> Aantal met herkomst Buiten-Europa</label>
             <input type="number" name="werknemers_buiten_europa" min="0" placeholder="0">
           </div>
           <div class="field">
             <label class="checkbox-label">
               <input type="checkbox" name="werknemers_is_schatting">
-              <span>2b1. Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
             </label>
           </div>
 
           <div class="section-header" data-section="top">Top (RvB/directie + 2 managementlagen) <span class="status-icon">○</span></div>
           <div class="field">
-            <label>2c. Aantal werknemers in de top</label>
+            <label><span class="q-num">2c.</span> Aantal werknemers in de top</label>
             <input type="number" name="aantal_top" min="0" placeholder="0">
           </div>
           <div class="field">
-            <label>2d1. Aantal met herkomst Buiten-Europa in de top</label>
+            <label><span class="q-num">2d.</span> Aantal met herkomst Buiten-Europa in de top</label>
             <input type="number" name="top_buiten_europa" min="0" placeholder="0">
           </div>
           <div class="field">
             <label class="checkbox-label">
               <input type="checkbox" name="top_is_schatting">
-              <span>2d2. Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
             </label>
           </div>
 
           <div class="section-header" data-section="subtop">Subtop (middenmanagement) <span class="status-icon">○</span></div>
           <div class="field">
-            <label>2f. Aantal werknemers in de subtop</label>
+            <label><span class="q-num">2f.</span> Aantal werknemers in de subtop</label>
             <input type="number" name="aantal_subtop" min="0" placeholder="0">
           </div>
           <div class="field">
-            <label>2g1. Aantal met herkomst Buiten-Europa in de subtop</label>
+            <label><span class="q-num">2g.</span> Aantal met herkomst Buiten-Europa in de subtop</label>
             <input type="number" name="subtop_buiten_europa" min="0" placeholder="0">
           </div>
           <div class="field">
             <label class="checkbox-label">
               <input type="checkbox" name="subtop_is_schatting">
-              <span>2g2. Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
             </label>
           </div>
 
@@ -293,7 +293,7 @@
         <div class="form-section">
           <div class="section-header" data-section="rvb">Raad van Bestuur <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvb">
-            <span class="question-text">2h. Heeft u een (Raad van) Bestuur?</span>
+            <span class="question-text"><span class="q-num">2h.</span> Heeft u een (Raad van) Bestuur?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvb" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
@@ -303,11 +303,11 @@
           </label>
           <div class="conditional" id="rvb-details">
             <div class="field">
-              <label>2i1. Aantal mensen in de RvB</label>
+              <label><span class="q-num">2i.</span> Aantal mensen in de RvB</label>
               <input type="number" name="aantal_rvb" min="0">
             </div>
             <div class="field">
-              <label>2i2. Aantal met herkomst Buiten-Europa</label>
+              <label><span class="q-num">2j.</span> Aantal met herkomst Buiten-Europa</label>
               <input type="number" name="rvb_buiten_europa" min="0">
             </div>
           </div>
@@ -319,7 +319,7 @@
 
           <div class="section-header" data-section="rvc">Raad van Commissarissen <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvc">
-            <span class="question-text">2j. Heeft u een Raad van Commissarissen?</span>
+            <span class="question-text"><span class="q-num">2k.</span> Heeft u een Raad van Commissarissen?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvc" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
@@ -329,11 +329,11 @@
           </label>
           <div class="conditional" id="rvc-details">
             <div class="field">
-              <label>2k1. Aantal mensen in de RvC</label>
+              <label><span class="q-num">2l.</span> Aantal mensen in de RvC</label>
               <input type="number" name="aantal_rvc" min="0">
             </div>
             <div class="field">
-              <label>2k2. Aantal met herkomst Buiten-Europa</label>
+              <label><span class="q-num">2m.</span> Aantal met herkomst Buiten-Europa</label>
               <input type="number" name="rvc_buiten_europa" min="0">
             </div>
           </div>
@@ -345,7 +345,7 @@
 
           <div class="section-header" data-section="rvt">Raad van Toezicht <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvt">
-            <span class="question-text">2l. Heeft u een Raad van Toezicht?</span>
+            <span class="question-text"><span class="q-num">2n.</span> Heeft u een Raad van Toezicht?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvt" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
@@ -355,11 +355,11 @@
           </label>
           <div class="conditional" id="rvt-details">
             <div class="field">
-              <label>2m1. Aantal mensen in de RvT</label>
+              <label><span class="q-num">2o.</span> Aantal mensen in de RvT</label>
               <input type="number" name="aantal_rvt" min="0">
             </div>
             <div class="field">
-              <label>2m2. Aantal met herkomst Buiten-Europa</label>
+              <label><span class="q-num">2p.</span> Aantal met herkomst Buiten-Europa</label>
               <input type="number" name="rvt_buiten_europa" min="0">
             </div>
           </div>
@@ -371,7 +371,7 @@
 
           <div class="section-header" data-section="beleid">Beleid samenstelling bestuursorganen <span class="status-icon">○</span></div>
           <div class="question-header" id="header-beleid_samenstelling">
-            <span class="question-text">2n. Heeft uw organisatie beleid ten aanzien van de samenstelling van bestuursorganen met betrekking tot culturele diversiteit?</span>
+            <span class="question-text"><span class="q-num">2q.</span> Heeft uw organisatie beleid ten aanzien van de samenstelling van bestuursorganen met betrekking tot culturele diversiteit?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="beleid_samenstelling" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
@@ -442,35 +442,35 @@
             </thead>
             <tbody>
               <tr>
-                <td>1. De top is gecommitteerd aan de doelstellingen</td>
+                <td><span class="q-num">1.</span> De top is gecommitteerd aan de doelstellingen</td>
                 <td><input type="radio" name="leid_1" value="0"></td>
                 <td><input type="radio" name="leid_1" value="1"></td>
                 <td><input type="radio" name="leid_1" value="2"></td>
                 <td><input type="radio" name="leid_1" value="3"></td>
               </tr>
               <tr>
-                <td>2. De top draagt het belang actief uit</td>
+                <td><span class="q-num">2.</span> De top draagt het belang actief uit</td>
                 <td><input type="radio" name="leid_2" value="0"></td>
                 <td><input type="radio" name="leid_2" value="1"></td>
                 <td><input type="radio" name="leid_2" value="2"></td>
                 <td><input type="radio" name="leid_2" value="3"></td>
               </tr>
               <tr>
-                <td>3. De top stuurt op resultaten</td>
+                <td><span class="q-num">3.</span> De top stuurt op resultaten</td>
                 <td><input type="radio" name="leid_3" value="0"></td>
                 <td><input type="radio" name="leid_3" value="1"></td>
                 <td><input type="radio" name="leid_3" value="2"></td>
                 <td><input type="radio" name="leid_3" value="3"></td>
               </tr>
               <tr>
-                <td>4. De top stelt voldoende middelen beschikbaar</td>
+                <td><span class="q-num">4.</span> De top stelt voldoende middelen beschikbaar</td>
                 <td><input type="radio" name="leid_4" value="0"></td>
                 <td><input type="radio" name="leid_4" value="1"></td>
                 <td><input type="radio" name="leid_4" value="2"></td>
                 <td><input type="radio" name="leid_4" value="3"></td>
               </tr>
               <tr>
-                <td>5. De top neemt eindverantwoordelijkheid</td>
+                <td><span class="q-num">5.</span> De top neemt eindverantwoordelijkheid</td>
                 <td><input type="radio" name="leid_5" value="0"></td>
                 <td><input type="radio" name="leid_5" value="1"></td>
                 <td><input type="radio" name="leid_5" value="2"></td>
@@ -515,56 +515,56 @@
             </thead>
             <tbody>
               <tr>
-                <td>1. De business case voor diversiteit is duidelijk</td>
+                <td><span class="q-num">1.</span> De business case voor diversiteit is duidelijk</td>
                 <td><input type="radio" name="strat_1" value="0"></td>
                 <td><input type="radio" name="strat_1" value="1"></td>
                 <td><input type="radio" name="strat_1" value="2"></td>
                 <td><input type="radio" name="strat_1" value="3"></td>
               </tr>
               <tr>
-                <td>2. Er zijn expliciete doelen voor Buiten-Europa in de top</td>
+                <td><span class="q-num">2.</span> Er zijn expliciete doelen voor Buiten-Europa in de top</td>
                 <td><input type="radio" name="strat_2" value="0"></td>
                 <td><input type="radio" name="strat_2" value="1"></td>
                 <td><input type="radio" name="strat_2" value="2"></td>
                 <td><input type="radio" name="strat_2" value="3"></td>
               </tr>
               <tr>
-                <td>3. Er is een gedocumenteerd plan met tijdlijn</td>
+                <td><span class="q-num">3.</span> Er is een gedocumenteerd plan met tijdlijn</td>
                 <td><input type="radio" name="strat_3" value="0"></td>
                 <td><input type="radio" name="strat_3" value="1"></td>
                 <td><input type="radio" name="strat_3" value="2"></td>
                 <td><input type="radio" name="strat_3" value="3"></td>
               </tr>
               <tr>
-                <td>4. Business units rapporteren over diversiteitsdoelen</td>
+                <td><span class="q-num">4.</span> Business units rapporteren over diversiteitsdoelen</td>
                 <td><input type="radio" name="strat_4" value="0"></td>
                 <td><input type="radio" name="strat_4" value="1"></td>
                 <td><input type="radio" name="strat_4" value="2"></td>
                 <td><input type="radio" name="strat_4" value="3"></td>
               </tr>
               <tr>
-                <td>5. Managers worden beoordeeld op diversiteitsdoelen</td>
+                <td><span class="q-num">5.</span> Managers worden beoordeeld op diversiteitsdoelen</td>
                 <td><input type="radio" name="strat_5" value="0"></td>
                 <td><input type="radio" name="strat_5" value="1"></td>
                 <td><input type="radio" name="strat_5" value="2"></td>
                 <td><input type="radio" name="strat_5" value="3"></td>
               </tr>
               <tr>
-                <td>6. Het diversiteitsbeleid wordt regelmatig geevalueerd</td>
+                <td><span class="q-num">6.</span> Het diversiteitsbeleid wordt regelmatig geevalueerd</td>
                 <td><input type="radio" name="strat_6" value="0"></td>
                 <td><input type="radio" name="strat_6" value="1"></td>
                 <td><input type="radio" name="strat_6" value="2"></td>
                 <td><input type="radio" name="strat_6" value="3"></td>
               </tr>
               <tr>
-                <td>7. Evaluatie-uitkomsten worden gebruikt voor verbetering</td>
+                <td><span class="q-num">7.</span> Evaluatie-uitkomsten worden gebruikt voor verbetering</td>
                 <td><input type="radio" name="strat_7" value="0"></td>
                 <td><input type="radio" name="strat_7" value="1"></td>
                 <td><input type="radio" name="strat_7" value="2"></td>
                 <td><input type="radio" name="strat_7" value="3"></td>
               </tr>
               <tr>
-                <td>8. Er wordt gebenchmarkt met andere organisaties</td>
+                <td><span class="q-num">8.</span> Er wordt gebenchmarkt met andere organisaties</td>
                 <td><input type="radio" name="strat_8" value="0"></td>
                 <td><input type="radio" name="strat_8" value="1"></td>
                 <td><input type="radio" name="strat_8" value="2"></td>
@@ -609,98 +609,98 @@
             </thead>
             <tbody>
               <tr>
-                <td>1. Er zijn instrumenten voor doorstroom van divers talent</td>
+                <td><span class="q-num">1.</span> Er zijn instrumenten voor doorstroom van divers talent</td>
                 <td><input type="radio" name="hr_1" value="0"></td>
                 <td><input type="radio" name="hr_1" value="1"></td>
                 <td><input type="radio" name="hr_1" value="2"></td>
                 <td><input type="radio" name="hr_1" value="3"></td>
               </tr>
               <tr>
-                <td>2. Werving is gericht op culturele diversiteit</td>
+                <td><span class="q-num">2.</span> Werving is gericht op culturele diversiteit</td>
                 <td><input type="radio" name="hr_2" value="0"></td>
                 <td><input type="radio" name="hr_2" value="1"></td>
                 <td><input type="radio" name="hr_2" value="2"></td>
                 <td><input type="radio" name="hr_2" value="3"></td>
               </tr>
               <tr>
-                <td>3. Selectieprocedures zijn objectief ingericht</td>
+                <td><span class="q-num">3.</span> Selectieprocedures zijn objectief ingericht</td>
                 <td><input type="radio" name="hr_3" value="0"></td>
                 <td><input type="radio" name="hr_3" value="1"></td>
                 <td><input type="radio" name="hr_3" value="2"></td>
                 <td><input type="radio" name="hr_3" value="3"></td>
               </tr>
               <tr>
-                <td>4. Employer branding weerspiegelt diversiteit</td>
+                <td><span class="q-num">4.</span> Employer branding weerspiegelt diversiteit</td>
                 <td><input type="radio" name="hr_4" value="0"></td>
                 <td><input type="radio" name="hr_4" value="1"></td>
                 <td><input type="radio" name="hr_4" value="2"></td>
                 <td><input type="radio" name="hr_4" value="3"></td>
               </tr>
               <tr>
-                <td>5. Er is loopbaanontwikkeling via training</td>
+                <td><span class="q-num">5.</span> Er is loopbaanontwikkeling via training</td>
                 <td><input type="radio" name="hr_5" value="0"></td>
                 <td><input type="radio" name="hr_5" value="1"></td>
                 <td><input type="radio" name="hr_5" value="2"></td>
                 <td><input type="radio" name="hr_5" value="3"></td>
               </tr>
               <tr>
-                <td>6. Er is loopbaanontwikkeling via coaching/mentoring</td>
+                <td><span class="q-num">6.</span> Er is loopbaanontwikkeling via coaching/mentoring</td>
                 <td><input type="radio" name="hr_6" value="0"></td>
                 <td><input type="radio" name="hr_6" value="1"></td>
                 <td><input type="radio" name="hr_6" value="2"></td>
                 <td><input type="radio" name="hr_6" value="3"></td>
               </tr>
               <tr>
-                <td>7. HR-effectiviteit wordt gemeten</td>
+                <td><span class="q-num">7.</span> HR-effectiviteit wordt gemeten</td>
                 <td><input type="radio" name="hr_7" value="0"></td>
                 <td><input type="radio" name="hr_7" value="1"></td>
                 <td><input type="radio" name="hr_7" value="2"></td>
                 <td><input type="radio" name="hr_7" value="3"></td>
               </tr>
               <tr>
-                <td>8. Diversiteit wordt bijgehouden per niveau/afdeling</td>
+                <td><span class="q-num">8.</span> Diversiteit wordt bijgehouden per niveau/afdeling</td>
                 <td><input type="radio" name="hr_8" value="0"></td>
                 <td><input type="radio" name="hr_8" value="1"></td>
                 <td><input type="radio" name="hr_8" value="2"></td>
                 <td><input type="radio" name="hr_8" value="3"></td>
               </tr>
               <tr>
-                <td>9. Opvolgingsplanning houdt rekening met diversiteit</td>
+                <td><span class="q-num">9.</span> Opvolgingsplanning houdt rekening met diversiteit</td>
                 <td><input type="radio" name="hr_9" value="0"></td>
                 <td><input type="radio" name="hr_9" value="1"></td>
                 <td><input type="radio" name="hr_9" value="2"></td>
                 <td><input type="radio" name="hr_9" value="3"></td>
               </tr>
               <tr>
-                <td>10. Er is ondersteuning via netwerken</td>
+                <td><span class="q-num">10.</span> Er is ondersteuning via netwerken</td>
                 <td><input type="radio" name="hr_10" value="0"></td>
                 <td><input type="radio" name="hr_10" value="1"></td>
                 <td><input type="radio" name="hr_10" value="2"></td>
                 <td><input type="radio" name="hr_10" value="3"></td>
               </tr>
               <tr>
-                <td>11. Er is ondersteuning via rolmodellen</td>
+                <td><span class="q-num">11.</span> Er is ondersteuning via rolmodellen</td>
                 <td><input type="radio" name="hr_11" value="0"></td>
                 <td><input type="radio" name="hr_11" value="1"></td>
                 <td><input type="radio" name="hr_11" value="2"></td>
                 <td><input type="radio" name="hr_11" value="3"></td>
               </tr>
               <tr>
-                <td>12. Diversiteit is geintegreerd in alle HR-maatregelen</td>
+                <td><span class="q-num">12.</span> Diversiteit is geintegreerd in alle HR-maatregelen</td>
                 <td><input type="radio" name="hr_12" value="0"></td>
                 <td><input type="radio" name="hr_12" value="1"></td>
                 <td><input type="radio" name="hr_12" value="2"></td>
                 <td><input type="radio" name="hr_12" value="3"></td>
               </tr>
               <tr>
-                <td>13. Er zijn empowerment programma's</td>
+                <td><span class="q-num">13.</span> Er zijn empowerment programma's</td>
                 <td><input type="radio" name="hr_13" value="0"></td>
                 <td><input type="radio" name="hr_13" value="1"></td>
                 <td><input type="radio" name="hr_13" value="2"></td>
                 <td><input type="radio" name="hr_13" value="3"></td>
               </tr>
               <tr>
-                <td>14. Er is beleid om ongewenste uitstroom te voorkomen</td>
+                <td><span class="q-num">14.</span> Er is beleid om ongewenste uitstroom te voorkomen</td>
                 <td><input type="radio" name="hr_14" value="0"></td>
                 <td><input type="radio" name="hr_14" value="1"></td>
                 <td><input type="radio" name="hr_14" value="2"></td>
@@ -745,35 +745,35 @@
             </thead>
             <tbody>
               <tr>
-                <td>1. Er is interne communicatie over diversiteit</td>
+                <td><span class="q-num">1.</span> Er is interne communicatie over diversiteit</td>
                 <td><input type="radio" name="comm_1" value="0"></td>
                 <td><input type="radio" name="comm_1" value="1"></td>
                 <td><input type="radio" name="comm_1" value="2"></td>
                 <td><input type="radio" name="comm_1" value="3"></td>
               </tr>
               <tr>
-                <td>2. Er is externe communicatie over diversiteit</td>
+                <td><span class="q-num">2.</span> Er is externe communicatie over diversiteit</td>
                 <td><input type="radio" name="comm_2" value="0"></td>
                 <td><input type="radio" name="comm_2" value="1"></td>
                 <td><input type="radio" name="comm_2" value="2"></td>
                 <td><input type="radio" name="comm_2" value="3"></td>
               </tr>
               <tr>
-                <td>3. Alle medewerkers zijn op de hoogte van de strategie</td>
+                <td><span class="q-num">3.</span> Alle medewerkers zijn op de hoogte van de strategie</td>
                 <td><input type="radio" name="comm_3" value="0"></td>
                 <td><input type="radio" name="comm_3" value="1"></td>
                 <td><input type="radio" name="comm_3" value="2"></td>
                 <td><input type="radio" name="comm_3" value="3"></td>
               </tr>
               <tr>
-                <td>4. De organisatie staat extern bekend om diversiteit</td>
+                <td><span class="q-num">4.</span> De organisatie staat extern bekend om diversiteit</td>
                 <td><input type="radio" name="comm_4" value="0"></td>
                 <td><input type="radio" name="comm_4" value="1"></td>
                 <td><input type="radio" name="comm_4" value="2"></td>
                 <td><input type="radio" name="comm_4" value="3"></td>
               </tr>
               <tr>
-                <td>5. Diversiteit is zichtbaar in woord en beeld</td>
+                <td><span class="q-num">5.</span> Diversiteit is zichtbaar in woord en beeld</td>
                 <td><input type="radio" name="comm_5" value="0"></td>
                 <td><input type="radio" name="comm_5" value="1"></td>
                 <td><input type="radio" name="comm_5" value="2"></td>
@@ -818,56 +818,56 @@
             </thead>
             <tbody>
               <tr>
-                <td>1. Er is inzicht in bevorderende maatregelen</td>
+                <td><span class="q-num">1.</span> Er is inzicht in bevorderende maatregelen</td>
                 <td><input type="radio" name="kennis_1" value="0"></td>
                 <td><input type="radio" name="kennis_1" value="1"></td>
                 <td><input type="radio" name="kennis_1" value="2"></td>
                 <td><input type="radio" name="kennis_1" value="3"></td>
               </tr>
               <tr>
-                <td>2. Er is inzicht in blokkerende mechanismen</td>
+                <td><span class="q-num">2.</span> Er is inzicht in blokkerende mechanismen</td>
                 <td><input type="radio" name="kennis_2" value="0"></td>
                 <td><input type="radio" name="kennis_2" value="1"></td>
                 <td><input type="radio" name="kennis_2" value="2"></td>
                 <td><input type="radio" name="kennis_2" value="3"></td>
               </tr>
               <tr>
-                <td>3. Managers zijn zich bewust van de waarde van diversiteit</td>
+                <td><span class="q-num">3.</span> Managers zijn zich bewust van de waarde van diversiteit</td>
                 <td><input type="radio" name="kennis_3" value="0"></td>
                 <td><input type="radio" name="kennis_3" value="1"></td>
                 <td><input type="radio" name="kennis_3" value="2"></td>
                 <td><input type="radio" name="kennis_3" value="3"></td>
               </tr>
               <tr>
-                <td>4. Managers kennen blokkerende mechanismen</td>
+                <td><span class="q-num">4.</span> Managers kennen blokkerende mechanismen</td>
                 <td><input type="radio" name="kennis_4" value="0"></td>
                 <td><input type="radio" name="kennis_4" value="1"></td>
                 <td><input type="radio" name="kennis_4" value="2"></td>
                 <td><input type="radio" name="kennis_4" value="3"></td>
               </tr>
               <tr>
-                <td>5. Managers nemen bevorderende maatregelen</td>
+                <td><span class="q-num">5.</span> Managers nemen bevorderende maatregelen</td>
                 <td><input type="radio" name="kennis_5" value="0"></td>
                 <td><input type="radio" name="kennis_5" value="1"></td>
                 <td><input type="radio" name="kennis_5" value="2"></td>
                 <td><input type="radio" name="kennis_5" value="3"></td>
               </tr>
               <tr>
-                <td>6. Beschikbare kennis wordt continu benut</td>
+                <td><span class="q-num">6.</span> Beschikbare kennis wordt continu benut</td>
                 <td><input type="radio" name="kennis_6" value="0"></td>
                 <td><input type="radio" name="kennis_6" value="1"></td>
                 <td><input type="radio" name="kennis_6" value="2"></td>
                 <td><input type="radio" name="kennis_6" value="3"></td>
               </tr>
               <tr>
-                <td>7. Medewerkerstevredenheidsonderzoek wordt ingezet</td>
+                <td><span class="q-num">7.</span> Medewerkerstevredenheidsonderzoek wordt ingezet</td>
                 <td><input type="radio" name="kennis_7" value="0"></td>
                 <td><input type="radio" name="kennis_7" value="1"></td>
                 <td><input type="radio" name="kennis_7" value="2"></td>
                 <td><input type="radio" name="kennis_7" value="3"></td>
               </tr>
               <tr>
-                <td>8. Kennis uit exitgesprekken wordt gebruikt</td>
+                <td><span class="q-num">8.</span> Kennis uit exitgesprekken wordt gebruikt</td>
                 <td><input type="radio" name="kennis_8" value="0"></td>
                 <td><input type="radio" name="kennis_8" value="1"></td>
                 <td><input type="radio" name="kennis_8" value="2"></td>
@@ -908,42 +908,42 @@
             </thead>
             <tbody>
               <tr>
-                <td>1. Er wordt actief strijd gevoerd tegen stereotypen</td>
+                <td><span class="q-num">1.</span> Er wordt actief strijd gevoerd tegen stereotypen</td>
                 <td><input type="radio" name="klimaat_1" value="0"></td>
                 <td><input type="radio" name="klimaat_1" value="1"></td>
                 <td><input type="radio" name="klimaat_1" value="2"></td>
                 <td><input type="radio" name="klimaat_1" value="3"></td>
               </tr>
               <tr>
-                <td>2. Maatregelen worden geaccepteerd in de organisatie</td>
+                <td><span class="q-num">2.</span> Maatregelen worden geaccepteerd in de organisatie</td>
                 <td><input type="radio" name="klimaat_2" value="0"></td>
                 <td><input type="radio" name="klimaat_2" value="1"></td>
                 <td><input type="radio" name="klimaat_2" value="2"></td>
                 <td><input type="radio" name="klimaat_2" value="3"></td>
               </tr>
               <tr>
-                <td>3. Culturele verschillen worden gewaardeerd</td>
+                <td><span class="q-num">3.</span> Culturele verschillen worden gewaardeerd</td>
                 <td><input type="radio" name="klimaat_3" value="0"></td>
                 <td><input type="radio" name="klimaat_3" value="1"></td>
                 <td><input type="radio" name="klimaat_3" value="2"></td>
                 <td><input type="radio" name="klimaat_3" value="3"></td>
               </tr>
               <tr>
-                <td>4. Diversiteitsaandacht leeft in de organisatie</td>
+                <td><span class="q-num">4.</span> Diversiteitsaandacht leeft in de organisatie</td>
                 <td><input type="radio" name="klimaat_4" value="0"></td>
                 <td><input type="radio" name="klimaat_4" value="1"></td>
                 <td><input type="radio" name="klimaat_4" value="2"></td>
                 <td><input type="radio" name="klimaat_4" value="3"></td>
               </tr>
               <tr>
-                <td>5. Managers voelen zich verantwoordelijk</td>
+                <td><span class="q-num">5.</span> Managers voelen zich verantwoordelijk</td>
                 <td><input type="radio" name="klimaat_5" value="0"></td>
                 <td><input type="radio" name="klimaat_5" value="1"></td>
                 <td><input type="radio" name="klimaat_5" value="2"></td>
                 <td><input type="radio" name="klimaat_5" value="3"></td>
               </tr>
               <tr>
-                <td>6. De organisatie staat bekend als diversiteitsgericht</td>
+                <td><span class="q-num">6.</span> De organisatie staat bekend als diversiteitsgericht</td>
                 <td><input type="radio" name="klimaat_6" value="0"></td>
                 <td><input type="radio" name="klimaat_6" value="1"></td>
                 <td><input type="radio" name="klimaat_6" value="2"></td>
@@ -994,7 +994,7 @@
         <p class="subtitle">Tot slot enkele open vragen over uw ervaringen met diversiteitsbeleid.</p>
         <div class="form-section">
           <div class="field">
-            <label>5a. Welke 3 vragen zou u graag beantwoord willen zien over strategie voor diversiteit?</label>
+            <label><span class="q-num">5a.</span> Welke 3 vragen zou u graag beantwoord willen zien over strategie voor diversiteit?</label>
             <div class="multi-input-group">
               <input type="text" name="strategie_vraag_1" placeholder="Vraag 1">
               <input type="text" name="strategie_vraag_2" placeholder="Vraag 2">
@@ -1003,7 +1003,7 @@
           </div>
 
           <div class="field">
-            <label>5b. Wat blokkeert diversiteit in uw organisatie het meest? (noem 3 factoren)</label>
+            <label><span class="q-num">5b.</span> Wat blokkeert diversiteit in uw organisatie het meest? (noem 3 factoren)</label>
             <div class="multi-input-group">
               <input type="text" name="blokkade_1" placeholder="Factor 1">
               <input type="text" name="blokkade_2" placeholder="Factor 2">
@@ -1012,7 +1012,7 @@
           </div>
 
           <div class="field">
-            <label>5c. Wat helpt het meest bij het bevorderen van diversiteit? (noem 3 factoren)</label>
+            <label><span class="q-num">5c.</span> Wat helpt het meest bij het bevorderen van diversiteit? (noem 3 factoren)</label>
             <div class="multi-input-group">
               <input type="text" name="bevorderend_1" placeholder="Factor 1">
               <input type="text" name="bevorderend_2" placeholder="Factor 2">
@@ -1021,7 +1021,7 @@
           </div>
 
           <div class="field">
-            <label>5d. Waarom is uw organisatie een voorbeeld op het gebied van culturele diversiteit? (max. 200 woorden)</label>
+            <label><span class="q-num">5d.</span> Waarom is uw organisatie een voorbeeld op het gebied van culturele diversiteit? (max. 200 woorden)</label>
             <textarea name="voorbeeld_organisatie" rows="5" placeholder="Beschrijf wat uw organisatie onderscheidt..." maxlength="1500"></textarea>
             <span class="field-hint">Maximaal 200 woorden</span>
           </div>
