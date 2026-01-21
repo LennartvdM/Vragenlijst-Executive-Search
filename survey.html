@@ -34,17 +34,47 @@
     </div>
     <div class="index-item" data-step="2" data-action="goToStep">
       <span class="status">○</span>
-      <span class="label">Kwantitatieve gegevens</span>
+      <span class="label">Kwantitatief</span>
     </div>
     <div class="index-item" data-step="3" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Bestuursorganen</span>
     </div>
+    <div class="index-divider">Kwalitatief</div>
     <div class="index-item" data-step="4" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Leiderschap</span>
     </div>
     <div class="index-item" data-step="5" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">Strategie</span>
+    </div>
+    <div class="index-item" data-step="6" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">HR Management</span>
+    </div>
+    <div class="index-item" data-step="7" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">Communicatie</span>
+    </div>
+    <div class="index-item" data-step="8" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">Kennis</span>
+    </div>
+    <div class="index-item" data-step="9" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">Klimaat</span>
+    </div>
+    <div class="index-divider">Afsluiting</div>
+    <div class="index-item" data-step="10" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">Motivatie</span>
+    </div>
+    <div class="index-item" data-step="11" data-action="goToStep">
+      <span class="status">○</span>
+      <span class="label">Aanvullend</span>
+    </div>
+    <div class="index-item" data-step="12" data-action="goToStep">
       <span class="status">○</span>
       <span class="label">Ondertekenen</span>
     </div>
@@ -95,6 +125,10 @@
         <h1>Streefcijfer</h1>
         <p class="subtitle">Heeft uw organisatie doelstellingen voor culturele diversiteit in de top?</p>
         <div class="form-section">
+
+          <div class="info-box">
+            <strong>CBS-definitie:</strong> De term "Buiten-Europa" verwijst naar personen van wie ten minste een van de ouders geboren is buiten Europa, met uitzondering van Indonesie en Japan. Deze definitie is vastgesteld door het CBS.
+          </div>
 
           <div class="question-header" id="header-streefcijfer">
             <span class="question-text">Heeft u een streefcijfer voor het aandeel mensen met herkomst Buiten-Europa in de top?</span>
@@ -152,6 +186,29 @@
             </label>
           </div>
 
+          <div style="margin-top:20px;">
+            <div class="question-header" id="header-definitie_afwijking">
+              <span class="question-text">Wijkt uw definitie van "Buiten-Europa" af van de CBS-definitie?</span>
+              <button type="button" class="reset-btn" data-action="resetGroup" data-name="definitie_afwijking" title="Wis selectie">↺</button>
+            </div>
+            <label class="option-card">
+              <input type="radio" name="definitie_afwijking" value="Ja">
+              <div class="option-radio"></div>
+              <div class="option-content"><h3>Ja</h3></div>
+            </label>
+            <div class="conditional" id="definitie-afwijking-details">
+              <div class="field">
+                <label>Beschrijf uw eigen definitie</label>
+                <textarea name="eigen_definitie" rows="3" placeholder="Beschrijf de definitie die uw organisatie hanteert..."></textarea>
+              </div>
+            </div>
+            <label class="option-card">
+              <input type="radio" name="definitie_afwijking" value="Nee">
+              <div class="option-radio"></div>
+              <div class="option-content"><h3>Nee</h3></div>
+            </label>
+          </div>
+
           <div class="comments-section">
             <button type="button" class="comments-toggle" data-action="toggleComments" data-step="1">
               <span class="comments-label">Opmerking achterlaten</span>
@@ -168,7 +225,7 @@
         <h1>Kwantitatieve gegevens</h1>
         <p class="subtitle">Vul de aantallen in voor uw organisatie in 2025.</p>
         <div class="form-section">
-          <div class="section-header" data-section="werknemers">👥 Werknemers <span class="status-icon">○</span></div>
+          <div class="section-header" data-section="werknemers">Werknemers <span class="status-icon">○</span></div>
           <div class="field">
             <label>Totaal aantal werknemers</label>
             <input type="number" name="aantal_werknemers" min="0" placeholder="0">
@@ -177,8 +234,14 @@
             <label>Aantal met herkomst Buiten-Europa</label>
             <input type="number" name="werknemers_buiten_europa" min="0" placeholder="0">
           </div>
+          <div class="field">
+            <label class="checkbox-label">
+              <input type="checkbox" name="werknemers_is_schatting">
+              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+            </label>
+          </div>
 
-          <div class="section-header" data-section="top">🏢 Top (RvB/directie + 2 managementlagen) <span class="status-icon">○</span></div>
+          <div class="section-header" data-section="top">Top (RvB/directie + 2 managementlagen) <span class="status-icon">○</span></div>
           <div class="field">
             <label>Aantal werknemers in de top</label>
             <input type="number" name="aantal_top" min="0" placeholder="0">
@@ -187,8 +250,14 @@
             <label>Aantal met herkomst Buiten-Europa in de top</label>
             <input type="number" name="top_buiten_europa" min="0" placeholder="0">
           </div>
+          <div class="field">
+            <label class="checkbox-label">
+              <input type="checkbox" name="top_is_schatting">
+              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+            </label>
+          </div>
 
-          <div class="section-header" data-section="subtop">📊 Subtop (middenmanagement) <span class="status-icon">○</span></div>
+          <div class="section-header" data-section="subtop">Subtop (middenmanagement) <span class="status-icon">○</span></div>
           <div class="field">
             <label>Aantal werknemers in de subtop</label>
             <input type="number" name="aantal_subtop" min="0" placeholder="0">
@@ -196,6 +265,12 @@
           <div class="field">
             <label>Aantal met herkomst Buiten-Europa in de subtop</label>
             <input type="number" name="subtop_buiten_europa" min="0" placeholder="0">
+          </div>
+          <div class="field">
+            <label class="checkbox-label">
+              <input type="checkbox" name="subtop_is_schatting">
+              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+            </label>
           </div>
 
           <div class="comments-section">
@@ -292,6 +367,47 @@
             <div class="option-content"><h3>Nee</h3></div>
           </label>
 
+          <div class="section-header" data-section="beleid">Beleid samenstelling bestuursorganen <span class="status-icon">○</span></div>
+          <div class="question-header" id="header-beleid_samenstelling">
+            <span class="question-text">Heeft uw organisatie beleid ten aanzien van de samenstelling van bestuursorganen met betrekking tot culturele diversiteit?</span>
+            <button type="button" class="reset-btn" data-action="resetGroup" data-name="beleid_samenstelling" title="Wis selectie">↺</button>
+          </div>
+          <label class="option-card">
+            <input type="radio" name="beleid_samenstelling" value="Ja, formeel vastgesteld">
+            <div class="option-radio"></div>
+            <div class="option-content">
+              <h3>Ja, formeel vastgesteld</h3>
+              <p>Het beleid is schriftelijk vastgelegd</p>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="beleid_samenstelling" value="Ja, informeel">
+            <div class="option-radio"></div>
+            <div class="option-content">
+              <h3>Ja, informeel</h3>
+              <p>Er is beleid maar niet formeel vastgelegd</p>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="beleid_samenstelling" value="Nee">
+            <div class="option-radio"></div>
+            <div class="option-content">
+              <h3>Nee</h3>
+              <p>Er is geen specifiek beleid</p>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="beleid_samenstelling" value="Anders">
+            <div class="option-radio"></div>
+            <div class="option-content"><h3>Anders</h3></div>
+          </label>
+          <div class="conditional" id="beleid-anders-details">
+            <div class="field">
+              <label>Licht uw antwoord toe</label>
+              <textarea name="beleid_samenstelling_anders" rows="2" placeholder="Beschrijf uw situatie..."></textarea>
+            </div>
+          </div>
+
           <div class="comments-section">
             <button type="button" class="comments-toggle" data-action="toggleComments" data-step="3">
               <span class="comments-label">Opmerking achterlaten</span>
@@ -372,8 +488,539 @@
         </div>
       </div>
 
-      <!-- Step 5: Ondertekenen -->
+      <!-- Step 5: Strategie en management -->
       <div class="step" data-step="5">
+        <h1>Strategie en management</h1>
+        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <div class="form-section">
+          <table class="likert-table">
+            <thead>
+              <tr>
+                <th>Stelling</th>
+                <th>Niet</th>
+                <th>Enigszins</th>
+                <th>Grotendeels</th>
+                <th>Volledig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>De business case voor diversiteit is duidelijk</td>
+                <td><input type="radio" name="strat_1" value="0"></td>
+                <td><input type="radio" name="strat_1" value="1"></td>
+                <td><input type="radio" name="strat_1" value="2"></td>
+                <td><input type="radio" name="strat_1" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er zijn expliciete doelen voor Buiten-Europa in de top</td>
+                <td><input type="radio" name="strat_2" value="0"></td>
+                <td><input type="radio" name="strat_2" value="1"></td>
+                <td><input type="radio" name="strat_2" value="2"></td>
+                <td><input type="radio" name="strat_2" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is een gedocumenteerd plan met tijdlijn</td>
+                <td><input type="radio" name="strat_3" value="0"></td>
+                <td><input type="radio" name="strat_3" value="1"></td>
+                <td><input type="radio" name="strat_3" value="2"></td>
+                <td><input type="radio" name="strat_3" value="3"></td>
+              </tr>
+              <tr>
+                <td>Business units rapporteren over diversiteitsdoelen</td>
+                <td><input type="radio" name="strat_4" value="0"></td>
+                <td><input type="radio" name="strat_4" value="1"></td>
+                <td><input type="radio" name="strat_4" value="2"></td>
+                <td><input type="radio" name="strat_4" value="3"></td>
+              </tr>
+              <tr>
+                <td>Managers worden beoordeeld op diversiteitsdoelen</td>
+                <td><input type="radio" name="strat_5" value="0"></td>
+                <td><input type="radio" name="strat_5" value="1"></td>
+                <td><input type="radio" name="strat_5" value="2"></td>
+                <td><input type="radio" name="strat_5" value="3"></td>
+              </tr>
+              <tr>
+                <td>Het diversiteitsbeleid wordt regelmatig geevalueerd</td>
+                <td><input type="radio" name="strat_6" value="0"></td>
+                <td><input type="radio" name="strat_6" value="1"></td>
+                <td><input type="radio" name="strat_6" value="2"></td>
+                <td><input type="radio" name="strat_6" value="3"></td>
+              </tr>
+              <tr>
+                <td>Evaluatie-uitkomsten worden gebruikt voor verbetering</td>
+                <td><input type="radio" name="strat_7" value="0"></td>
+                <td><input type="radio" name="strat_7" value="1"></td>
+                <td><input type="radio" name="strat_7" value="2"></td>
+                <td><input type="radio" name="strat_7" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er wordt gebenchmarkt met andere organisaties</td>
+                <td><input type="radio" name="strat_8" value="0"></td>
+                <td><input type="radio" name="strat_8" value="1"></td>
+                <td><input type="radio" name="strat_8" value="2"></td>
+                <td><input type="radio" name="strat_8" value="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field">
+            <label>Toelichting (optioneel)</label>
+            <textarea name="strategie_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="5">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-5">
+              <textarea name="opmerkingen_stap_5" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: HR Management -->
+      <div class="step" data-step="6">
+        <h1>HR Management</h1>
+        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <div class="form-section">
+          <table class="likert-table">
+            <thead>
+              <tr>
+                <th>Stelling</th>
+                <th>Niet</th>
+                <th>Enigszins</th>
+                <th>Grotendeels</th>
+                <th>Volledig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Er zijn instrumenten voor doorstroom van divers talent</td>
+                <td><input type="radio" name="hr_1" value="0"></td>
+                <td><input type="radio" name="hr_1" value="1"></td>
+                <td><input type="radio" name="hr_1" value="2"></td>
+                <td><input type="radio" name="hr_1" value="3"></td>
+              </tr>
+              <tr>
+                <td>Werving is gericht op culturele diversiteit</td>
+                <td><input type="radio" name="hr_2" value="0"></td>
+                <td><input type="radio" name="hr_2" value="1"></td>
+                <td><input type="radio" name="hr_2" value="2"></td>
+                <td><input type="radio" name="hr_2" value="3"></td>
+              </tr>
+              <tr>
+                <td>Selectieprocedures zijn objectief ingericht</td>
+                <td><input type="radio" name="hr_3" value="0"></td>
+                <td><input type="radio" name="hr_3" value="1"></td>
+                <td><input type="radio" name="hr_3" value="2"></td>
+                <td><input type="radio" name="hr_3" value="3"></td>
+              </tr>
+              <tr>
+                <td>Employer branding weerspiegelt diversiteit</td>
+                <td><input type="radio" name="hr_4" value="0"></td>
+                <td><input type="radio" name="hr_4" value="1"></td>
+                <td><input type="radio" name="hr_4" value="2"></td>
+                <td><input type="radio" name="hr_4" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is loopbaanontwikkeling via training</td>
+                <td><input type="radio" name="hr_5" value="0"></td>
+                <td><input type="radio" name="hr_5" value="1"></td>
+                <td><input type="radio" name="hr_5" value="2"></td>
+                <td><input type="radio" name="hr_5" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is loopbaanontwikkeling via coaching/mentoring</td>
+                <td><input type="radio" name="hr_6" value="0"></td>
+                <td><input type="radio" name="hr_6" value="1"></td>
+                <td><input type="radio" name="hr_6" value="2"></td>
+                <td><input type="radio" name="hr_6" value="3"></td>
+              </tr>
+              <tr>
+                <td>HR-effectiviteit wordt gemeten</td>
+                <td><input type="radio" name="hr_7" value="0"></td>
+                <td><input type="radio" name="hr_7" value="1"></td>
+                <td><input type="radio" name="hr_7" value="2"></td>
+                <td><input type="radio" name="hr_7" value="3"></td>
+              </tr>
+              <tr>
+                <td>Diversiteit wordt bijgehouden per niveau/afdeling</td>
+                <td><input type="radio" name="hr_8" value="0"></td>
+                <td><input type="radio" name="hr_8" value="1"></td>
+                <td><input type="radio" name="hr_8" value="2"></td>
+                <td><input type="radio" name="hr_8" value="3"></td>
+              </tr>
+              <tr>
+                <td>Opvolgingsplanning houdt rekening met diversiteit</td>
+                <td><input type="radio" name="hr_9" value="0"></td>
+                <td><input type="radio" name="hr_9" value="1"></td>
+                <td><input type="radio" name="hr_9" value="2"></td>
+                <td><input type="radio" name="hr_9" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is ondersteuning via netwerken</td>
+                <td><input type="radio" name="hr_10" value="0"></td>
+                <td><input type="radio" name="hr_10" value="1"></td>
+                <td><input type="radio" name="hr_10" value="2"></td>
+                <td><input type="radio" name="hr_10" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is ondersteuning via rolmodellen</td>
+                <td><input type="radio" name="hr_11" value="0"></td>
+                <td><input type="radio" name="hr_11" value="1"></td>
+                <td><input type="radio" name="hr_11" value="2"></td>
+                <td><input type="radio" name="hr_11" value="3"></td>
+              </tr>
+              <tr>
+                <td>Diversiteit is geintegreerd in alle HR-maatregelen</td>
+                <td><input type="radio" name="hr_12" value="0"></td>
+                <td><input type="radio" name="hr_12" value="1"></td>
+                <td><input type="radio" name="hr_12" value="2"></td>
+                <td><input type="radio" name="hr_12" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er zijn empowerment programma's</td>
+                <td><input type="radio" name="hr_13" value="0"></td>
+                <td><input type="radio" name="hr_13" value="1"></td>
+                <td><input type="radio" name="hr_13" value="2"></td>
+                <td><input type="radio" name="hr_13" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is beleid om ongewenste uitstroom te voorkomen</td>
+                <td><input type="radio" name="hr_14" value="0"></td>
+                <td><input type="radio" name="hr_14" value="1"></td>
+                <td><input type="radio" name="hr_14" value="2"></td>
+                <td><input type="radio" name="hr_14" value="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field">
+            <label>Toelichting (optioneel)</label>
+            <textarea name="hr_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="6">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-6">
+              <textarea name="opmerkingen_stap_6" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7: Communicatie -->
+      <div class="step" data-step="7">
+        <h1>Communicatie</h1>
+        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <div class="form-section">
+          <table class="likert-table">
+            <thead>
+              <tr>
+                <th>Stelling</th>
+                <th>Niet</th>
+                <th>Enigszins</th>
+                <th>Grotendeels</th>
+                <th>Volledig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Er is interne communicatie over diversiteit</td>
+                <td><input type="radio" name="comm_1" value="0"></td>
+                <td><input type="radio" name="comm_1" value="1"></td>
+                <td><input type="radio" name="comm_1" value="2"></td>
+                <td><input type="radio" name="comm_1" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is externe communicatie over diversiteit</td>
+                <td><input type="radio" name="comm_2" value="0"></td>
+                <td><input type="radio" name="comm_2" value="1"></td>
+                <td><input type="radio" name="comm_2" value="2"></td>
+                <td><input type="radio" name="comm_2" value="3"></td>
+              </tr>
+              <tr>
+                <td>Alle medewerkers zijn op de hoogte van de strategie</td>
+                <td><input type="radio" name="comm_3" value="0"></td>
+                <td><input type="radio" name="comm_3" value="1"></td>
+                <td><input type="radio" name="comm_3" value="2"></td>
+                <td><input type="radio" name="comm_3" value="3"></td>
+              </tr>
+              <tr>
+                <td>De organisatie staat extern bekend om diversiteit</td>
+                <td><input type="radio" name="comm_4" value="0"></td>
+                <td><input type="radio" name="comm_4" value="1"></td>
+                <td><input type="radio" name="comm_4" value="2"></td>
+                <td><input type="radio" name="comm_4" value="3"></td>
+              </tr>
+              <tr>
+                <td>Diversiteit is zichtbaar in woord en beeld</td>
+                <td><input type="radio" name="comm_5" value="0"></td>
+                <td><input type="radio" name="comm_5" value="1"></td>
+                <td><input type="radio" name="comm_5" value="2"></td>
+                <td><input type="radio" name="comm_5" value="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field">
+            <label>Toelichting (optioneel)</label>
+            <textarea name="communicatie_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="7">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-7">
+              <textarea name="opmerkingen_stap_7" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8: Kennis en vaardigheden -->
+      <div class="step" data-step="8">
+        <h1>Kennis en vaardigheden</h1>
+        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <div class="form-section">
+          <table class="likert-table">
+            <thead>
+              <tr>
+                <th>Stelling</th>
+                <th>Niet</th>
+                <th>Enigszins</th>
+                <th>Grotendeels</th>
+                <th>Volledig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Er is inzicht in bevorderende maatregelen</td>
+                <td><input type="radio" name="kennis_1" value="0"></td>
+                <td><input type="radio" name="kennis_1" value="1"></td>
+                <td><input type="radio" name="kennis_1" value="2"></td>
+                <td><input type="radio" name="kennis_1" value="3"></td>
+              </tr>
+              <tr>
+                <td>Er is inzicht in blokkerende mechanismen</td>
+                <td><input type="radio" name="kennis_2" value="0"></td>
+                <td><input type="radio" name="kennis_2" value="1"></td>
+                <td><input type="radio" name="kennis_2" value="2"></td>
+                <td><input type="radio" name="kennis_2" value="3"></td>
+              </tr>
+              <tr>
+                <td>Managers zijn zich bewust van de waarde van diversiteit</td>
+                <td><input type="radio" name="kennis_3" value="0"></td>
+                <td><input type="radio" name="kennis_3" value="1"></td>
+                <td><input type="radio" name="kennis_3" value="2"></td>
+                <td><input type="radio" name="kennis_3" value="3"></td>
+              </tr>
+              <tr>
+                <td>Managers kennen blokkerende mechanismen</td>
+                <td><input type="radio" name="kennis_4" value="0"></td>
+                <td><input type="radio" name="kennis_4" value="1"></td>
+                <td><input type="radio" name="kennis_4" value="2"></td>
+                <td><input type="radio" name="kennis_4" value="3"></td>
+              </tr>
+              <tr>
+                <td>Managers nemen bevorderende maatregelen</td>
+                <td><input type="radio" name="kennis_5" value="0"></td>
+                <td><input type="radio" name="kennis_5" value="1"></td>
+                <td><input type="radio" name="kennis_5" value="2"></td>
+                <td><input type="radio" name="kennis_5" value="3"></td>
+              </tr>
+              <tr>
+                <td>Beschikbare kennis wordt continu benut</td>
+                <td><input type="radio" name="kennis_6" value="0"></td>
+                <td><input type="radio" name="kennis_6" value="1"></td>
+                <td><input type="radio" name="kennis_6" value="2"></td>
+                <td><input type="radio" name="kennis_6" value="3"></td>
+              </tr>
+              <tr>
+                <td>Medewerkerstevredenheidsonderzoek wordt ingezet</td>
+                <td><input type="radio" name="kennis_7" value="0"></td>
+                <td><input type="radio" name="kennis_7" value="1"></td>
+                <td><input type="radio" name="kennis_7" value="2"></td>
+                <td><input type="radio" name="kennis_7" value="3"></td>
+              </tr>
+              <tr>
+                <td>Kennis uit exitgesprekken wordt gebruikt</td>
+                <td><input type="radio" name="kennis_8" value="0"></td>
+                <td><input type="radio" name="kennis_8" value="1"></td>
+                <td><input type="radio" name="kennis_8" value="2"></td>
+                <td><input type="radio" name="kennis_8" value="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field">
+            <label>Toelichting (optioneel)</label>
+            <textarea name="kennis_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="8">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-8">
+              <textarea name="opmerkingen_stap_8" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 9: Klimaat -->
+      <div class="step" data-step="9">
+        <h1>Klimaat</h1>
+        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <div class="form-section">
+          <table class="likert-table">
+            <thead>
+              <tr>
+                <th>Stelling</th>
+                <th>Niet</th>
+                <th>Enigszins</th>
+                <th>Grotendeels</th>
+                <th>Volledig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Er wordt actief strijd gevoerd tegen stereotypen</td>
+                <td><input type="radio" name="klimaat_1" value="0"></td>
+                <td><input type="radio" name="klimaat_1" value="1"></td>
+                <td><input type="radio" name="klimaat_1" value="2"></td>
+                <td><input type="radio" name="klimaat_1" value="3"></td>
+              </tr>
+              <tr>
+                <td>Maatregelen worden geaccepteerd in de organisatie</td>
+                <td><input type="radio" name="klimaat_2" value="0"></td>
+                <td><input type="radio" name="klimaat_2" value="1"></td>
+                <td><input type="radio" name="klimaat_2" value="2"></td>
+                <td><input type="radio" name="klimaat_2" value="3"></td>
+              </tr>
+              <tr>
+                <td>Culturele verschillen worden gewaardeerd</td>
+                <td><input type="radio" name="klimaat_3" value="0"></td>
+                <td><input type="radio" name="klimaat_3" value="1"></td>
+                <td><input type="radio" name="klimaat_3" value="2"></td>
+                <td><input type="radio" name="klimaat_3" value="3"></td>
+              </tr>
+              <tr>
+                <td>Diversiteitsaandacht leeft in de organisatie</td>
+                <td><input type="radio" name="klimaat_4" value="0"></td>
+                <td><input type="radio" name="klimaat_4" value="1"></td>
+                <td><input type="radio" name="klimaat_4" value="2"></td>
+                <td><input type="radio" name="klimaat_4" value="3"></td>
+              </tr>
+              <tr>
+                <td>Managers voelen zich verantwoordelijk</td>
+                <td><input type="radio" name="klimaat_5" value="0"></td>
+                <td><input type="radio" name="klimaat_5" value="1"></td>
+                <td><input type="radio" name="klimaat_5" value="2"></td>
+                <td><input type="radio" name="klimaat_5" value="3"></td>
+              </tr>
+              <tr>
+                <td>De organisatie staat bekend als diversiteitsgericht</td>
+                <td><input type="radio" name="klimaat_6" value="0"></td>
+                <td><input type="radio" name="klimaat_6" value="1"></td>
+                <td><input type="radio" name="klimaat_6" value="2"></td>
+                <td><input type="radio" name="klimaat_6" value="3"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field">
+            <label>Toelichting (optioneel)</label>
+            <textarea name="klimaat_toelichting" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="9">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-9">
+              <textarea name="opmerkingen_stap_9" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 10: Motivatie -->
+      <div class="step" data-step="10">
+        <h1>Motivatie</h1>
+        <p class="subtitle">Wij zijn benieuwd naar de motivatie van uw organisatie.</p>
+        <div class="form-section">
+          <div class="field">
+            <label>Wat is de motivatie van uw organisatie om culturele diversiteit in de top te bevorderen?</label>
+            <textarea name="motivatie" rows="6" placeholder="Beschrijf de motivatie van uw organisatie..."></textarea>
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="10">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-10">
+              <textarea name="opmerkingen_stap_10" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 11: Aanvullende vragen -->
+      <div class="step" data-step="11">
+        <h1>Aanvullende vragen</h1>
+        <p class="subtitle">Tot slot enkele open vragen over uw ervaringen met diversiteitsbeleid.</p>
+        <div class="form-section">
+          <div class="field">
+            <label>Welke 3 vragen zou u graag beantwoord willen zien over strategie voor diversiteit?</label>
+            <div class="multi-input-group">
+              <input type="text" name="strategie_vraag_1" placeholder="Vraag 1">
+              <input type="text" name="strategie_vraag_2" placeholder="Vraag 2">
+              <input type="text" name="strategie_vraag_3" placeholder="Vraag 3">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Wat blokkeert diversiteit in uw organisatie het meest? (noem 3 factoren)</label>
+            <div class="multi-input-group">
+              <input type="text" name="blokkade_1" placeholder="Factor 1">
+              <input type="text" name="blokkade_2" placeholder="Factor 2">
+              <input type="text" name="blokkade_3" placeholder="Factor 3">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Wat helpt het meest bij het bevorderen van diversiteit? (noem 3 factoren)</label>
+            <div class="multi-input-group">
+              <input type="text" name="bevorderend_1" placeholder="Factor 1">
+              <input type="text" name="bevorderend_2" placeholder="Factor 2">
+              <input type="text" name="bevorderend_3" placeholder="Factor 3">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Waarom is uw organisatie een voorbeeld op het gebied van culturele diversiteit? (max. 200 woorden)</label>
+            <textarea name="voorbeeld_organisatie" rows="5" placeholder="Beschrijf wat uw organisatie onderscheidt..." maxlength="1500"></textarea>
+            <span class="field-hint">Maximaal 200 woorden</span>
+          </div>
+
+          <div class="info-box">
+            <strong>Beleidsdocumenten:</strong> Heeft u relevante beleidsdocumenten die u wilt delen? Stuur deze naar <a href="mailto:info@commissiemonitoring.nl">info@commissiemonitoring.nl</a>.
+          </div>
+
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="11">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-11">
+              <textarea name="opmerkingen_stap_11" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 12: Ondertekenen -->
+      <div class="step" data-step="12">
         <h1>Ondertekenen</h1>
         <p class="subtitle">Bevestig de monitorgegevens namens uw organisatie.</p>
         <div class="form-section">
@@ -396,18 +1043,18 @@
           </div>
 
           <div class="comments-section">
-            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="5">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="12">
               <span class="comments-label">Opmerking achterlaten</span>
             </button>
-            <div class="comments-field" id="comments-field-5">
-              <textarea name="opmerkingen_stap_5" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            <div class="comments-field" id="comments-field-12">
+              <textarea name="opmerkingen_stap_12" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Step 6: Success -->
-      <div class="step" data-step="6">
+      <!-- Step 13: Success -->
+      <div class="step" data-step="13">
         <div class="success">
           <div class="success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
