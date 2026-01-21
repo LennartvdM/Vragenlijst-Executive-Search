@@ -624,6 +624,20 @@
           const header = document.getElementById(`header-${table.id}`);
           if (header) header.classList.add(CONSTANTS.CSS.HAS_VALUE);
         }
+        // Check for unfilled rows and show bouncing arrows
+        if (table) {
+          const totalRows = table.querySelectorAll('tbody tr').length;
+          const answeredRows = table.querySelectorAll('tbody tr.answered').length;
+          if (answeredRows < totalRows) {
+            // Has missing rows - show arrows
+            table.classList.remove('has-missing');
+            void table.offsetWidth; // Force reflow to restart animation
+            table.classList.add('has-missing');
+          } else {
+            // All rows filled - remove arrows
+            table.classList.remove('has-missing');
+          }
+        }
         updateIndexStatus();
       });
     });
