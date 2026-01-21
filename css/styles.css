@@ -860,17 +860,12 @@ h1 {
   text-align: left;
 }
 
-.likert-table tr {
-  opacity: 0.5;
-  transition: all 0.3s ease;
+.likert-table tbody tr {
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
 }
 
-.likert-table tr:hover {
-  background: var(--sand-light);
-  opacity: 0.8;
-}
-
-.likert-table tr.answered {
+.likert-table tbody tr.answered {
   opacity: 1;
 }
 
@@ -879,6 +874,24 @@ h1 {
   height: 18px;
   cursor: pointer;
   accent-color: var(--terracotta);
+}
+
+.likert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.likert-header .reset-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s;
+}
+
+.likert-header.has-value .reset-btn {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ==========================================================================
