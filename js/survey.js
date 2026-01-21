@@ -11,6 +11,7 @@
   let currentStep = 0;
   let previousStep = -1; // Track previous step for slide direction
   let session = null;
+  let reviewVisited = false; // Track if review step has been visited
 
   // Step labels for review page
   const STEP_LABELS = {
@@ -224,6 +225,10 @@
         if (accordionId) {
           toggleAccordion(accordionId);
         }
+        break;
+
+      case 'goToReview':
+        goToStep(CONFIG.REVIEW_STEP);
         break;
     }
   }
@@ -662,8 +667,16 @@
 
     // Generate review content when showing review step
     if (step === CONFIG.REVIEW_STEP) {
+      reviewVisited = true;
       generateReviewContent();
     }
+
+    // Show/hide "Ga naar controle" button based on reviewVisited status
+    const btnGoToReview = document.getElementById('btnGoToReview');
+    const btnGoToReviewTop = document.getElementById('btnGoToReviewTop');
+    const showReviewBtn = reviewVisited && step < CONFIG.REVIEW_STEP;
+    if (btnGoToReview) btnGoToReview.style.display = showReviewBtn ? 'block' : 'none';
+    if (btnGoToReviewTop) btnGoToReviewTop.style.display = showReviewBtn ? 'block' : 'none';
 
     // Get both sets of navigation buttons (top and bottom)
     const btnPrev = document.getElementById('btnPrev');
@@ -1427,7 +1440,7 @@
 
       if (!originalInput) return;
 
-      // Sync value to original input
+      // Sync value to original input and dispatch change event
       if (input.type === 'radio') {
         const originalRadio = document.querySelector(`[name="${originalName}"][value="${input.value}"]`);
         if (originalRadio) {
@@ -1436,16 +1449,27 @@
           const optionCard = originalRadio.closest('.option-card');
           if (optionCard) {
             handleOptionCardClick(optionCard);
+          } else {
+            // For Likert tables and other radios without option cards
+            // Dispatch change event to trigger any listeners
+            originalRadio.dispatchEvent(new Event('change', { bubbles: true }));
           }
         }
       } else if (input.type === 'checkbox') {
         originalInput.checked = input.checked;
+        originalInput.dispatchEvent(new Event('change', { bubbles: true }));
       } else {
         originalInput.value = input.value;
+        originalInput.dispatchEvent(new Event('input', { bubbles: true }));
+        originalInput.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
       // Save form data
       saveFormData();
+
+      // Update all section statuses and index
+      updateAllSections();
+      updateIndexStatus();
 
       // Update the accordion item status
       updateAccordionItemStatus(input);
@@ -1462,6 +1486,7 @@
 
       if (originalInput) {
         originalInput.value = input.value;
+        originalInput.dispatchEvent(new Event('input', { bubbles: true }));
         saveFormData();
       }
     });
