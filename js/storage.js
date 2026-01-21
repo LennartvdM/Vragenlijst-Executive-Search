@@ -152,6 +152,57 @@ const Storage = (function() {
     return remove(CONFIG.STORAGE_KEYS.FORM_DATA);
   }
 
+  // Submitted forms archive helpers
+
+  /**
+   * Get all submitted forms from archive
+   * @returns {Array} Array of submitted form objects
+   */
+  function getSubmittedForms() {
+    return getJSON(CONFIG.STORAGE_KEYS.SUBMITTED_FORMS, []);
+  }
+
+  /**
+   * Add a form to the submitted forms archive
+   * @param {Object} formData - The form data to archive
+   * @param {string} orgName - Organization name for display
+   * @returns {string} The ID of the archived form
+   */
+  function addSubmittedForm(formData, orgName) {
+    const forms = getSubmittedForms();
+    const id = 'form_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const archivedForm = {
+      id: id,
+      orgName: orgName,
+      submittedAt: new Date().toISOString(),
+      data: formData
+    };
+    forms.unshift(archivedForm); // Add to beginning (newest first)
+    setJSON(CONFIG.STORAGE_KEYS.SUBMITTED_FORMS, forms);
+    return id;
+  }
+
+  /**
+   * Get a specific submitted form by ID
+   * @param {string} id - The form ID
+   * @returns {Object|null} The form object or null if not found
+   */
+  function getSubmittedFormById(id) {
+    const forms = getSubmittedForms();
+    return forms.find(f => f.id === id) || null;
+  }
+
+  /**
+   * Delete a submitted form from archive
+   * @param {string} id - The form ID to delete
+   * @returns {boolean} Success status
+   */
+  function deleteSubmittedForm(id) {
+    const forms = getSubmittedForms();
+    const filtered = forms.filter(f => f.id !== id);
+    return setJSON(CONFIG.STORAGE_KEYS.SUBMITTED_FORMS, filtered);
+  }
+
   // Public API
   return {
     isAvailable,
@@ -165,6 +216,10 @@ const Storage = (function() {
     clearSession,
     getFormData,
     saveFormData,
-    clearFormData
+    clearFormData,
+    getSubmittedForms,
+    addSubmittedForm,
+    getSubmittedFormById,
+    deleteSubmittedForm
   };
 })();

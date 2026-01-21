@@ -251,6 +251,11 @@
       case 'cancelClearForm':
         hideClearWarningModal();
         break;
+
+      case 'printArchivedForm':
+        const formId = element.dataset.formId;
+        if (formId) printArchivedForm(formId);
+        break;
     }
   }
 
@@ -1886,6 +1891,10 @@
         // Simulate network delay for demo
         await new Promise(resolve => setTimeout(resolve, 1000));
 
+        // Archive the submitted form before clearing
+        const orgName = formData.organisatie || session.orgName || 'Onbekende organisatie';
+        Storage.addSubmittedForm(formData, orgName);
+
         // Show success
         currentStep = CONFIG.SUCCESS_STEP;
         showStep(currentStep);
@@ -1899,6 +1908,10 @@
       const result = await ApiClient.submitSurvey(formData);
 
       if (result.success) {
+        // Archive the submitted form before clearing
+        const orgName = formData.organisatie || session.orgName || 'Onbekende organisatie';
+        Storage.addSubmittedForm(formData, orgName);
+
         currentStep = CONFIG.SUCCESS_STEP;
         showStep(currentStep);
 
@@ -1961,6 +1974,114 @@
   }
 
   /**
+   * Print an archived form by temporarily loading its data
+   * @param {string} formId - The ID of the archived form to print
+   */
+  function printArchivedForm(formId) {
+    const archivedForm = Storage.getSubmittedFormById(formId);
+    if (!archivedForm) {
+      alert('Formulier niet gevonden.');
+      return;
+    }
+
+    // Store current form data to restore after printing
+    const currentFormData = getFormData();
+    const originalStep = currentStep;
+
+    // Temporarily load the archived form data into the form
+    const form = document.getElementById('monitoringForm');
+    if (!form) return;
+
+    // Clear current form state
+    form.reset();
+    document.querySelectorAll('.option-card').forEach(card => {
+      card.classList.remove(CONSTANTS.CSS.SELECTED);
+    });
+
+    // Load archived data
+    const data = archivedForm.data;
+    for (const [key, value] of Object.entries(data)) {
+      if (key === 'timestamp' || key === 'orgCode' || key === 'orgName') continue;
+
+      const field = form.elements[key];
+      if (!field) continue;
+
+      if (field.type === 'checkbox') {
+        field.checked = value === 'on' || value === true;
+      } else if (field.type === 'radio') {
+        const radio = form.querySelector(`[name="${key}"][value="${value}"]`);
+        if (radio) {
+          radio.checked = true;
+          const card = radio.closest('.option-card');
+          if (card) card.classList.add(CONSTANTS.CSS.SELECTED);
+        }
+      } else {
+        field.value = value;
+      }
+    }
+
+    // Show all content steps for printing (not review/success)
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+      const stepNum = parseInt(step.dataset.step, 10);
+      if (stepNum <= 12) {
+        step.classList.add('active');
+      }
+    });
+
+    // Hide the modal during print
+    const modal = document.getElementById('restartChoiceModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+
+    // Trigger browser print dialog
+    window.print();
+
+    // Restore original state after print dialog closes
+    setTimeout(() => {
+      // Hide all steps
+      steps.forEach(step => {
+        step.classList.remove('active');
+      });
+
+      // Restore current form data
+      form.reset();
+      document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove(CONSTANTS.CSS.SELECTED);
+      });
+
+      if (currentFormData) {
+        for (const [key, value] of Object.entries(currentFormData)) {
+          const field = form.elements[key];
+          if (!field) continue;
+
+          if (field.type === 'checkbox') {
+            field.checked = value === 'on' || value === true;
+          } else if (field.type === 'radio') {
+            const radio = form.querySelector(`[name="${key}"][value="${value}"]`);
+            if (radio) {
+              radio.checked = true;
+              const card = radio.closest('.option-card');
+              if (card) card.classList.add(CONSTANTS.CSS.SELECTED);
+            }
+          } else {
+            field.value = value;
+          }
+        }
+      }
+
+      // Restore step display
+      showStep(originalStep);
+
+      // Show modal again
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }, 100);
+  }
+
+  /**
    * Logout and return to login page
    */
   function logout() {
@@ -1976,10 +2097,71 @@
   function showRestartChoiceModal() {
     const modal = document.getElementById('restartChoiceModal');
     if (modal) {
+      // Populate archived forms list
+      populateArchivedFormsList();
+
       modal.style.display = 'flex';
       // Prevent scrolling on body
       document.body.style.overflow = 'hidden';
     }
+  }
+
+  /**
+   * Populate the archived forms list in the modal
+   */
+  function populateArchivedFormsList() {
+    const section = document.getElementById('archivedFormsSection');
+    const list = document.getElementById('archivedFormsList');
+    if (!section || !list) return;
+
+    const forms = Storage.getSubmittedForms();
+
+    if (forms.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    list.innerHTML = forms.map((form, index) => {
+      const date = new Date(form.submittedAt);
+      const dateStr = date.toLocaleDateString('nl-NL', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const isLatest = index === 0;
+
+      return `
+        <div class="archived-form-item ${isLatest ? 'archived-form-latest' : ''}">
+          <div class="archived-form-info">
+            <span class="archived-form-org">${escapeHtml(form.orgName)}</span>
+            <span class="archived-form-date">${dateStr}</span>
+            ${isLatest ? '<span class="archived-form-badge">Laatst verzonden</span>' : ''}
+          </div>
+          <div class="archived-form-actions">
+            <button type="button" class="btn btn-small btn-tertiary" data-action="printArchivedForm" data-form-id="${form.id}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              Print
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /**
+   * Escape HTML to prevent XSS
+   */
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   /**
