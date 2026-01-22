@@ -68,7 +68,7 @@ body {
 
 .logo-icon {
   width: 56px;
-  height: 56px;
+  height: 64px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   display: flex;
@@ -78,8 +78,8 @@ body {
 }
 
 .logo-icon svg {
-  width: 32px;
-  height: 32px;
+  width: auto;
+  height: 38px;
 }
 
 .login-header h1 {
