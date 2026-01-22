@@ -450,37 +450,45 @@
 
     if (!content || steps.length === 0) return;
 
+    // Get the content area's actual available width (minus padding)
+    const contentStyle = window.getComputedStyle(content);
+    const paddingLeft = parseFloat(contentStyle.paddingLeft) || 0;
+    const paddingRight = parseFloat(contentStyle.paddingRight) || 0;
+    const availableWidth = content.clientWidth - paddingLeft - paddingRight;
+
     // Store original states
     const originalStates = Array.from(steps).map(step => ({
       element: step,
       display: step.style.display,
       visibility: step.style.visibility,
       position: step.style.position,
+      width: step.style.width,
+      minWidth: step.style.minWidth,
       hasActive: step.classList.contains(CONSTANTS.CSS.ACTIVE)
     }));
 
-    // Temporarily make all steps measurable
+    // Temporarily make all steps measurable with a fixed width context
     steps.forEach(step => {
       step.style.display = 'flex';
       step.style.visibility = 'hidden';
       step.style.position = 'absolute';
+      step.style.width = availableWidth + 'px';
       step.classList.remove(CONSTANTS.CSS.ACTIVE);
     });
 
     // Force layout recalculation
     content.offsetHeight;
 
-    // Measure each step's width
-    let maxWidth = 0;
+    // Measure each step's natural content width (scrollWidth reveals if content overflows)
+    let maxWidth = availableWidth;
     steps.forEach(step => {
-      // Temporarily make this step visible for measurement
       step.style.visibility = 'visible';
       step.style.position = 'relative';
 
-      const width = step.scrollWidth;
-      if (width > maxWidth) maxWidth = width;
+      // scrollWidth shows the full content width including overflow
+      const contentWidth = step.scrollWidth;
+      if (contentWidth > maxWidth) maxWidth = contentWidth;
 
-      // Hide again for next measurement
       step.style.visibility = 'hidden';
       step.style.position = 'absolute';
     });
@@ -490,6 +498,8 @@
       state.element.style.display = state.display;
       state.element.style.visibility = state.visibility;
       state.element.style.position = state.position;
+      state.element.style.width = state.width;
+      state.element.style.minWidth = state.minWidth;
       if (state.hasActive) {
         state.element.classList.add(CONSTANTS.CSS.ACTIVE);
       }
