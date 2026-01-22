@@ -643,7 +643,7 @@ body {
    ========================================================================== */
 
 .content {
-  flex: 1;
+  flex: 1 0 auto;
   padding: 50px 60px 50px 20px;
   display: flex;
   flex-direction: column;
@@ -1345,11 +1345,12 @@ h1 {
   display: none;
   flex-direction: column;
   align-items: stretch;
+  box-sizing: border-box;
 }
 
 .step.active {
   display: flex;
-  flex: 1;
+  flex: 1 0 100%;
   width: 100%;
 }
 
@@ -1358,6 +1359,7 @@ h1 {
 .step > .subtitle,
 .step > .form-section {
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
