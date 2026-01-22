@@ -29,7 +29,8 @@ const CONFIG = {
   STORAGE_KEYS: {
     SESSION: 'cttt_session',
     FORM_DATA: 'cttt_form_data',
-    SUBMITTED_FORMS: 'cttt_submitted_forms'
+    SUBMITTED_FORMS: 'cttt_submitted_forms',
+    SCROLL_POSITIONS: 'cttt_scroll_positions'
   },
 
   /**
