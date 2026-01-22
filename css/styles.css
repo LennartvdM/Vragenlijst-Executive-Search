@@ -3290,3 +3290,117 @@ body.mobile-drawer-open {
   position: fixed;
   width: 100%;
 }
+
+/* ==========================================================================
+   Decorative Logo Shapes - Background Elements
+   ========================================================================== */
+
+/* Container for decorative elements - fixed positioning */
+.logo-decor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* The person figure shape (circle head + V-body) */
+.logo-decor-figure {
+  position: absolute;
+  width: 400px;
+  height: 460px;
+  opacity: 0.08;
+  -webkit-mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
+}
+
+.logo-decor-figure svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* The chevron shape */
+.logo-decor-chevron {
+  position: absolute;
+  width: 500px;
+  height: 200px;
+  opacity: 0.06;
+  -webkit-mask-image: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+}
+
+.logo-decor-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Bottom-left positioning - figure peeking up from corner */
+.logo-decor-bottom-left {
+  bottom: -120px;
+  left: -100px;
+}
+
+/* Top-right positioning - chevron peeking from corner */
+.logo-decor-top-right {
+  top: -60px;
+  right: -150px;
+  transform: rotate(180deg);
+}
+
+/* Login page specific - larger and more visible */
+body:not(.survey-body) .logo-decor-figure {
+  width: 500px;
+  height: 575px;
+  opacity: 0.1;
+}
+
+body:not(.survey-body) .logo-decor-chevron {
+  width: 600px;
+  height: 240px;
+  opacity: 0.08;
+}
+
+body:not(.survey-body) .logo-decor-bottom-left {
+  bottom: -150px;
+  left: -120px;
+}
+
+body:not(.survey-body) .logo-decor-top-right {
+  top: -80px;
+  right: -180px;
+}
+
+/* Hide decorations on very small screens */
+@media (max-width: 600px) {
+  .logo-decor-figure {
+    width: 280px;
+    height: 320px;
+    opacity: 0.06;
+  }
+
+  .logo-decor-chevron {
+    width: 350px;
+    height: 140px;
+    opacity: 0.04;
+  }
+
+  .logo-decor-bottom-left {
+    bottom: -80px;
+    left: -70px;
+  }
+
+  .logo-decor-top-right {
+    top: -40px;
+    right: -100px;
+  }
+}
+
+/* Hide decorations when printing */
+@media print {
+  .logo-decor {
+    display: none !important;
+  }
+}
