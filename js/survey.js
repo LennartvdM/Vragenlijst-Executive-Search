@@ -147,9 +147,9 @@
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function() {
-        // Reset min-height before recalculating
+        // Reset min-width before recalculating
         const content = document.querySelector('.content');
-        if (content) content.style.minHeight = '';
+        if (content) content.style.minWidth = '';
         calculateStableCardDimensions();
       }, 250);
     });
@@ -345,8 +345,9 @@
   }
 
   /**
-   * Calculate and set stable card dimensions based on the largest step
-   * This prevents the card from resizing when navigating between steps
+   * Calculate and set stable card width based on the widest step
+   * This prevents horizontal resizing when navigating between steps
+   * Vertical sizing is allowed to fit the current page content
    */
   function calculateStableCardDimensions() {
     const content = document.querySelector('.content');
@@ -374,15 +375,15 @@
     // Force layout recalculation
     content.offsetHeight;
 
-    // Measure each step
-    let maxHeight = 0;
+    // Measure each step's width
+    let maxWidth = 0;
     steps.forEach(step => {
       // Temporarily make this step visible for measurement
       step.style.visibility = 'visible';
       step.style.position = 'relative';
 
-      const height = step.scrollHeight;
-      if (height > maxHeight) maxHeight = height;
+      const width = step.scrollWidth;
+      if (width > maxWidth) maxWidth = width;
 
       // Hide again for next measurement
       step.style.visibility = 'hidden';
@@ -399,9 +400,9 @@
       }
     });
 
-    // Set minimum height on content to prevent resizing
-    if (maxHeight > 0) {
-      content.style.minHeight = maxHeight + 'px';
+    // Set minimum width on content to prevent horizontal resizing
+    if (maxWidth > 0) {
+      content.style.minWidth = maxWidth + 'px';
     }
   }
 
