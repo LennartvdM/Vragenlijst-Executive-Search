@@ -68,7 +68,7 @@ body {
 
 .logo-icon {
   width: 56px;
-  height: 56px;
+  height: 64px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   display: flex;
@@ -78,8 +78,8 @@ body {
 }
 
 .logo-icon svg {
-  width: 32px;
-  height: 32px;
+  width: auto;
+  height: 38px;
 }
 
 .login-header h1 {
@@ -3307,93 +3307,68 @@ body.mobile-drawer-open {
   overflow: hidden;
 }
 
-/* The person figure shape (circle head + V-body) */
-.logo-decor-figure {
+/* The complete logo shape (person + chevron as one unit) */
+.logo-decor-shape {
   position: absolute;
-  width: 400px;
-  height: 460px;
+  width: 450px;
+  height: 520px;
   opacity: 0.08;
-  -webkit-mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
 }
 
-.logo-decor-figure svg {
+.logo-decor-shape svg {
   width: 100%;
   height: 100%;
 }
 
-/* The chevron shape */
-.logo-decor-chevron {
-  position: absolute;
-  width: 500px;
-  height: 200px;
-  opacity: 0.06;
-  -webkit-mask-image: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
-}
-
-.logo-decor-chevron svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* Bottom-left positioning - figure peeking up from corner */
+/* Bottom-left positioning - logo peeking up from corner */
 .logo-decor-bottom-left {
-  bottom: -120px;
-  left: -100px;
+  bottom: -180px;
+  left: -120px;
+  -webkit-mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
 }
 
-/* Top-right positioning - chevron peeking from corner */
+/* Top-right positioning - logo peeking from corner */
 .logo-decor-top-right {
-  top: -60px;
-  right: -150px;
+  top: -200px;
+  right: -140px;
   transform: rotate(180deg);
+  -webkit-mask-image: linear-gradient(315deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(315deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
 }
 
 /* Login page specific - larger and more visible */
-body:not(.survey-body) .logo-decor-figure {
-  width: 500px;
-  height: 575px;
+body:not(.survey-body) .logo-decor-shape {
+  width: 550px;
+  height: 640px;
   opacity: 0.1;
 }
 
-body:not(.survey-body) .logo-decor-chevron {
-  width: 600px;
-  height: 240px;
-  opacity: 0.08;
-}
-
 body:not(.survey-body) .logo-decor-bottom-left {
-  bottom: -150px;
-  left: -120px;
+  bottom: -220px;
+  left: -140px;
 }
 
 body:not(.survey-body) .logo-decor-top-right {
-  top: -80px;
-  right: -180px;
+  top: -240px;
+  right: -160px;
 }
 
-/* Hide decorations on very small screens */
+/* Smaller on mobile screens */
 @media (max-width: 600px) {
-  .logo-decor-figure {
-    width: 280px;
-    height: 320px;
+  .logo-decor-shape {
+    width: 320px;
+    height: 370px;
     opacity: 0.06;
   }
 
-  .logo-decor-chevron {
-    width: 350px;
-    height: 140px;
-    opacity: 0.04;
-  }
-
   .logo-decor-bottom-left {
-    bottom: -80px;
-    left: -70px;
+    bottom: -130px;
+    left: -90px;
   }
 
   .logo-decor-top-right {
-    top: -40px;
+    top: -140px;
     right: -100px;
   }
 }
