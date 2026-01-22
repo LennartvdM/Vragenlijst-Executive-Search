@@ -1067,20 +1067,27 @@
       }
     }
 
+    // Interpolate color from yellow to red for gradient
+    function getGradientColor(index, total) {
+      // Yellow: rgb(230, 170, 0) -> Red: rgb(200, 50, 50)
+      const t = total <= 1 ? 1 : index / (total - 1);
+      const r = Math.round(230 + (200 - 230) * t);
+      const g = Math.round(170 + (50 - 170) * t);
+      const b = Math.round(0 + (50 - 0) * t);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
     function updateDisplay() {
       const text = getPlainText();
       const words = getWords(text);
       const wordCount = words.length;
-
-      // Update counter
-      counter.classList.remove('warning', 'error', 'success');
 
       // Sync to hidden input (plain text for form submission)
       hiddenInput.value = text;
 
       // If at or under soft limit, just show plain text
       if (wordCount <= softLimit) {
-        counter.textContent = `${wordCount} / ${softLimit} woorden`;
+        counter.innerHTML = `${wordCount} / ${softLimit} woorden`;
         // Only update if content changed (avoid cursor jump)
         if (editor.textContent !== text) {
           editor.textContent = text;
@@ -1088,13 +1095,16 @@
         return;
       }
 
-      // Over soft limit - add status hint
+      // Over soft limit - build counter with colored parts
+      const excessIndex = Math.min(wordCount - softLimit - 1, 19); // 0-19 for gradient
+      const counterColor = wordCount >= hardLimit
+        ? getGradientColor(19, 20) // Full red at limit
+        : getGradientColor(excessIndex, 20);
+
       if (wordCount >= hardLimit) {
-        counter.textContent = `${wordCount} / ${softLimit} woorden — limiet bereikt`;
-        counter.classList.add('error');
+        counter.innerHTML = `<span style="color: ${counterColor}; font-weight: 500;">${wordCount} / ${softLimit} woorden</span> — <span class="hint-error">limiet bereikt</span>`;
       } else {
-        counter.textContent = `${wordCount} / ${softLimit} woorden — dit mag nog`;
-        counter.classList.add('success');
+        counter.innerHTML = `<span style="color: ${counterColor}; font-weight: 500;">${wordCount} / ${softLimit} woorden</span> — <span class="hint-success">dit mag nog</span>`;
       }
 
       // Save cursor position
@@ -1103,16 +1113,6 @@
       // Build HTML with excess words in yellow-to-red gradient
       const normalWords = words.slice(0, softLimit);
       const excessWords = words.slice(softLimit, hardLimit);
-
-      // Interpolate color from yellow to red for each excess word
-      function getGradientColor(index, total) {
-        // Yellow: rgb(230, 170, 0) -> Red: rgb(200, 50, 50)
-        const t = total <= 1 ? 1 : index / (total - 1);
-        const r = Math.round(230 + (200 - 230) * t);
-        const g = Math.round(170 + (50 - 170) * t);
-        const b = Math.round(0 + (50 - 0) * t);
-        return `rgb(${r}, ${g}, ${b})`;
-      }
 
       let html = normalWords.join(' ');
       if (excessWords.length > 0) {
