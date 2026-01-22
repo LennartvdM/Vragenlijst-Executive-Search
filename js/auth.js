@@ -50,15 +50,15 @@
   }
 
   /**
-   * Check for existing valid session and redirect to survey if found
+   * Check for existing valid session
+   * Note: We no longer auto-redirect to survey - users can stay on login page
+   * even with an active session
    */
   function checkExistingSession() {
-    if (Storage.isSessionValid()) {
-      window.location.href = '/survey.html';
-      return;
+    // Clear any expired session data (but don't redirect if valid)
+    if (!Storage.isSessionValid()) {
+      Storage.clearSession();
     }
-    // Clear any expired session data
-    Storage.clearSession();
   }
 
   /**
