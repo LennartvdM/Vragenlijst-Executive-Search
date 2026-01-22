@@ -158,7 +158,7 @@
 
           <div class="conditional" id="streefcijfer-details">
             <div class="field">
-              <label>Welk percentage gebruikt u?</label>
+              <label>Zo ja, welk percentage gebruikt u voor dit streefcijfer?</label>
               <input type="text" name="streefcijfer_percentage" placeholder="bijv. 15%">
             </div>
             <div class="field">
@@ -200,7 +200,7 @@
 
           <div style="margin-top:20px;">
             <div class="question-header" id="header-definitie_afwijking">
-              <span class="question-text">Wijkt uw definitie van "Buiten-Europa" af van de CBS-definitie?</span>
+              <span class="question-text">Wijkt uw definitie af van deze definitie?</span>
               <button type="button" class="reset-btn" data-action="resetGroup" data-name="definitie_afwijking" title="Wis selectie">↺</button>
             </div>
             <label class="option-card">
@@ -210,7 +210,7 @@
             </label>
             <div class="conditional" id="definitie-afwijking-details">
               <div class="field">
-                <label>Beschrijf uw eigen definitie</label>
+                <label>Zo ja, geef dan hieronder uw definitie weer:</label>
                 <textarea name="eigen_definitie" rows="3" placeholder="Beschrijf de definitie die uw organisatie hanteert..."></textarea>
               </div>
             </div>
@@ -239,49 +239,54 @@
         <div class="form-section">
           <div class="section-header" data-section="werknemers">Werknemers <span class="status-icon">○</span></div>
           <div class="field">
-            <label><span class="q-num">2a.</span> Totaal aantal werknemers</label>
+            <label><span class="q-num">2a.</span> Aantal werknemers in de organisatie:</label>
             <input type="number" name="aantal_werknemers" min="0" placeholder="0">
           </div>
           <div class="field">
-            <label><span class="q-num">2b.</span> Aantal met herkomst Buiten-Europa</label>
+            <label><span class="q-num">2b.</span> Aantal werknemers met herkomst Buiten-Europa in de organisatie:</label>
             <input type="number" name="werknemers_buiten_europa" min="0" placeholder="0">
           </div>
           <div class="field">
+            <label><span class="q-num">2b1.</span> Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven:</label>
             <label class="checkbox-label">
               <input type="checkbox" name="werknemers_is_schatting">
-              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+              <span>Dit is een schatting</span>
             </label>
           </div>
 
-          <div class="section-header" data-section="top">Top (RvB/directie + 2 managementlagen) <span class="status-icon">○</span></div>
+          <div class="section-header" data-section="top">Top <span class="status-icon">○</span></div>
+          <p class="section-description">Toelichting: Top = Raad van bestuur/directie en de twee managementlagen daaronder (senior management).</p>
           <div class="field">
             <label><span class="q-num">2c.</span> Aantal werknemers in de top</label>
             <input type="number" name="aantal_top" min="0" placeholder="0">
           </div>
           <div class="field">
-            <label><span class="q-num">2d.</span> Aantal met herkomst Buiten-Europa in de top</label>
+            <label><span class="q-num">2d1.</span> Aantal werknemers met herkomst Buiten-Europa in de top</label>
             <input type="number" name="top_buiten_europa" min="0" placeholder="0">
           </div>
           <div class="field">
+            <label><span class="q-num">2d2.</span> Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven:</label>
             <label class="checkbox-label">
               <input type="checkbox" name="top_is_schatting">
-              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+              <span>Dit is een schatting</span>
             </label>
           </div>
 
-          <div class="section-header" data-section="subtop">Subtop (middenmanagement) <span class="status-icon">○</span></div>
+          <div class="section-header" data-section="subtop">Subtop <span class="status-icon">○</span></div>
+          <p class="section-description">Toelichting: Subtop = Het management in de twee lagen onder de top. Het betreft hier (de bovenste laag van) het middenmanagement, mogelijk de kweekvijver voor de top.</p>
           <div class="field">
             <label><span class="q-num">2f.</span> Aantal werknemers in de subtop</label>
             <input type="number" name="aantal_subtop" min="0" placeholder="0">
           </div>
           <div class="field">
-            <label><span class="q-num">2g.</span> Aantal met herkomst Buiten-Europa in de subtop</label>
+            <label><span class="q-num">2g1.</span> Aantal werknemers met herkomst Buiten-Europa in de subtop</label>
             <input type="number" name="subtop_buiten_europa" min="0" placeholder="0">
           </div>
           <div class="field">
+            <label><span class="q-num">2g2.</span> Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven:</label>
             <label class="checkbox-label">
               <input type="checkbox" name="subtop_is_schatting">
-              <span>Dit is een schatting (exacte cijfers zijn niet beschikbaar)</span>
+              <span>Dit is een schatting</span>
             </label>
           </div>
 
@@ -302,6 +307,7 @@
         <p class="subtitle">Informatie over uw Raad van Bestuur, Commissarissen en Toezicht.</p>
         <div class="form-section">
           <div class="section-header" data-section="rvb">Raad van Bestuur <span class="status-icon">○</span></div>
+          <p class="section-description">In plaats van Raad van bestuur spreekt u mogelijk over directie.</p>
           <div class="question-header" id="header-heeft_rvb">
             <span class="question-text"><span class="q-num">2h.</span> Heeft u een (Raad van) Bestuur?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvb" title="Wis selectie">↺</button>
@@ -313,11 +319,11 @@
           </label>
           <div class="conditional" id="rvb-details">
             <div class="field">
-              <label><span class="q-num">2i.</span> Aantal mensen in de RvB</label>
+              <label><span class="q-num">2i1.</span> Aantal mensen in de Raad van Bestuur:</label>
               <input type="number" name="aantal_rvb" min="0">
             </div>
             <div class="field">
-              <label><span class="q-num">2j.</span> Aantal met herkomst Buiten-Europa</label>
+              <label><span class="q-num">2i2.</span> Aantal mensen met herkomst Buiten-Europa in de Raad van Bestuur:</label>
               <input type="number" name="rvb_buiten_europa" min="0">
             </div>
           </div>
@@ -329,7 +335,7 @@
 
           <div class="section-header" data-section="rvc">Raad van Commissarissen <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvc">
-            <span class="question-text"><span class="q-num">2k.</span> Heeft u een Raad van Commissarissen?</span>
+            <span class="question-text"><span class="q-num">2j.</span> Heeft u een Raad van Commissarissen?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvc" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
@@ -339,11 +345,11 @@
           </label>
           <div class="conditional" id="rvc-details">
             <div class="field">
-              <label><span class="q-num">2l.</span> Aantal mensen in de RvC</label>
+              <label><span class="q-num">2k1.</span> Aantal mensen in de Raad van Commissarissen:</label>
               <input type="number" name="aantal_rvc" min="0">
             </div>
             <div class="field">
-              <label><span class="q-num">2m.</span> Aantal met herkomst Buiten-Europa</label>
+              <label><span class="q-num">2k2.</span> Aantal mensen met herkomst Buiten-Europa in de Raad van Commissarissen:</label>
               <input type="number" name="rvc_buiten_europa" min="0">
             </div>
           </div>
@@ -355,7 +361,7 @@
 
           <div class="section-header" data-section="rvt">Raad van Toezicht <span class="status-icon">○</span></div>
           <div class="question-header" id="header-heeft_rvt">
-            <span class="question-text"><span class="q-num">2n.</span> Heeft u een Raad van Toezicht?</span>
+            <span class="question-text"><span class="q-num">2l.</span> Heeft u een Raad van Toezicht?</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="heeft_rvt" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
@@ -365,11 +371,11 @@
           </label>
           <div class="conditional" id="rvt-details">
             <div class="field">
-              <label><span class="q-num">2o.</span> Aantal mensen in de RvT</label>
+              <label><span class="q-num">2m1.</span> Aantal mensen in de Raad van Toezicht:</label>
               <input type="number" name="aantal_rvt" min="0">
             </div>
             <div class="field">
-              <label><span class="q-num">2p.</span> Aantal met herkomst Buiten-Europa</label>
+              <label><span class="q-num">2m2.</span> Aantal mensen met herkomst Buiten-Europa in de Raad van Toezicht:</label>
               <input type="number" name="rvt_buiten_europa" min="0">
             </div>
           </div>
@@ -379,43 +385,32 @@
             <div class="option-content"><h3>Nee</h3></div>
           </label>
 
-          <div class="section-header" data-section="beleid">Beleid samenstelling bestuursorganen <span class="status-icon">○</span></div>
+          <div class="section-header" data-section="beleid">Beleid <span class="status-icon">○</span></div>
           <div class="question-header" id="header-beleid_samenstelling">
-            <span class="question-text"><span class="q-num">2q.</span> Heeft uw organisatie beleid ten aanzien van de samenstelling van bestuursorganen met betrekking tot culturele diversiteit?</span>
+            <span class="question-text"><span class="q-num">2n.</span> Wat is op uw organisatie van toepassing t.a.v. de samenstelling van rvb, rvc/rvt:</span>
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="beleid_samenstelling" title="Wis selectie">↺</button>
           </div>
           <label class="option-card">
-            <input type="radio" name="beleid_samenstelling" value="Ja, formeel vastgesteld">
+            <input type="radio" name="beleid_samenstelling" value="Beleid RvB/RvC/RvT">
             <div class="option-radio"></div>
             <div class="option-content">
-              <h3>Ja, formeel vastgesteld</h3>
-              <p>Het beleid is schriftelijk vastgelegd</p>
+              <h3>Onze organisatie heeft bewust beleid om het aandeel mensen met herkomst Buiten-Europa in de raad van bestuur en/of raad van commissarissen/rvt te vergroten</h3>
             </div>
           </label>
           <label class="option-card">
-            <input type="radio" name="beleid_samenstelling" value="Ja, informeel">
+            <input type="radio" name="beleid_samenstelling" value="Beleid management">
             <div class="option-radio"></div>
             <div class="option-content">
-              <h3>Ja, informeel</h3>
-              <p>Er is beleid maar niet formeel vastgelegd</p>
-            </div>
-          </label>
-          <label class="option-card">
-            <input type="radio" name="beleid_samenstelling" value="Nee">
-            <div class="option-radio"></div>
-            <div class="option-content">
-              <h3>Nee</h3>
-              <p>Er is geen specifiek beleid</p>
+              <h3>Onze organisatie heeft bewust beleid om het aandeel mensen met herkomst Buiten-Europa in hogere managementposities te vergroten</h3>
             </div>
           </label>
           <label class="option-card">
             <input type="radio" name="beleid_samenstelling" value="Anders">
             <div class="option-radio"></div>
-            <div class="option-content"><h3>Anders</h3></div>
+            <div class="option-content"><h3>Anders:</h3></div>
           </label>
           <div class="conditional" id="beleid-anders-details">
             <div class="field">
-              <label>Licht uw antwoord toe</label>
               <textarea name="beleid_samenstelling_anders" rows="2" placeholder="Beschrijf uw situatie..."></textarea>
             </div>
           </div>
@@ -464,7 +459,7 @@
       <!-- Step 5: Leiderschap -->
       <div class="step" data-step="5">
         <h1>3.1 Leiderschap</h1>
-        <p class="subtitle">Hoe geeft de top richting aan culturele diversiteit?</p>
+        <p class="subtitle">Leiderschap betreft het richting geven en het stimuleren om de gewenste doelen te realiseren. Wilt u in uw antwoorden op onderstaande vragen aangeven wat van toepassing is voor uw organisatie.</p>
         <div class="form-section">
           <div class="likert-header" id="header-likert-leiderschap">
             <span></span>
@@ -474,43 +469,43 @@
             <thead>
               <tr>
                 <th>Stelling</th>
-                <th>Niet</th>
-                <th>Enigszins</th>
-                <th>Grotendeels</th>
-                <th>Volledig</th>
+                <th>Niet gerealiseerd</th>
+                <th>Enigszins gerealiseerd</th>
+                <th>Grotendeels gerealiseerd</th>
+                <th>Volledig gerealiseerd</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="q-num">1.</span> De top is gecommitteerd aan de doelstellingen</td>
+                <td><span class="q-num">1.</span> De top heeft zich verbonden (is gecommitteerd) aan de doelstellingen en het beleid voor meer mensen met herkomst Buiten-Europa</td>
                 <td><input type="radio" name="leid_1" value="0"></td>
                 <td><input type="radio" name="leid_1" value="1"></td>
                 <td><input type="radio" name="leid_1" value="2"></td>
                 <td><input type="radio" name="leid_1" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">2.</span> De top draagt het belang actief uit</td>
+                <td><span class="q-num">2.</span> De top draagt het belang van culturele diversiteit actief uit</td>
                 <td><input type="radio" name="leid_2" value="0"></td>
                 <td><input type="radio" name="leid_2" value="1"></td>
                 <td><input type="radio" name="leid_2" value="2"></td>
                 <td><input type="radio" name="leid_2" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">3.</span> De top stuurt op resultaten</td>
+                <td><span class="q-num">3.</span> De top stuurt aanwijsbaar op het bereiken van de gewenste resultaten</td>
                 <td><input type="radio" name="leid_3" value="0"></td>
                 <td><input type="radio" name="leid_3" value="1"></td>
                 <td><input type="radio" name="leid_3" value="2"></td>
                 <td><input type="radio" name="leid_3" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">4.</span> De top stelt voldoende middelen beschikbaar</td>
+                <td><span class="q-num">4.</span> De top stelt voldoende middelen (financiën, personeel, technologie) ter beschikking om de doelstellingen te kunnen realiseren</td>
                 <td><input type="radio" name="leid_4" value="0"></td>
                 <td><input type="radio" name="leid_4" value="1"></td>
                 <td><input type="radio" name="leid_4" value="2"></td>
                 <td><input type="radio" name="leid_4" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">5.</span> De top neemt eindverantwoordelijkheid</td>
+                <td><span class="q-num">5.</span> De top neemt eindverantwoordelijkheid voor het culturele diversiteitsbeleid</td>
                 <td><input type="radio" name="leid_5" value="0"></td>
                 <td><input type="radio" name="leid_5" value="1"></td>
                 <td><input type="radio" name="leid_5" value="2"></td>
@@ -537,7 +532,7 @@
       <!-- Step 6: Strategie en management -->
       <div class="step" data-step="6">
         <h1>3.2 Strategie en management</h1>
-        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <p class="subtitle">Wat kenmerkte in 2025 uw strategie en management om uw culturele diversiteitsdoelstellingen te bereiken? Wilt u in uw antwoorden op onderstaande vragen laten zien wat van toepassing is voor uw organisatie.</p>
         <div class="form-section">
           <div class="likert-header" id="header-likert-strategie">
             <span></span>
@@ -547,64 +542,64 @@
             <thead>
               <tr>
                 <th>Stelling</th>
-                <th>Niet</th>
-                <th>Enigszins</th>
-                <th>Grotendeels</th>
-                <th>Volledig</th>
+                <th>Niet gerealiseerd</th>
+                <th>Enigszins gerealiseerd</th>
+                <th>Grotendeels gerealiseerd</th>
+                <th>Volledig gerealiseerd</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="q-num">1.</span> De business case voor diversiteit is duidelijk</td>
+                <td><span class="q-num">1.</span> Culturele diversiteit is een business case voor onze organisatie, d.w.z. voor onze organisatie is het om zakelijke of bedrijfsmatige redenen waardevol om culturele diversiteit te stimuleren</td>
                 <td><input type="radio" name="strat_1" value="0"></td>
                 <td><input type="radio" name="strat_1" value="1"></td>
                 <td><input type="radio" name="strat_1" value="2"></td>
                 <td><input type="radio" name="strat_1" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">2.</span> Er zijn expliciete doelen voor Buiten-Europa in de top</td>
+                <td><span class="q-num">2.</span> De organisatie streeft expliciete doelstellingen voor het aandeel mensen met herkomst Buiten-Europa in de top na</td>
                 <td><input type="radio" name="strat_2" value="0"></td>
                 <td><input type="radio" name="strat_2" value="1"></td>
                 <td><input type="radio" name="strat_2" value="2"></td>
                 <td><input type="radio" name="strat_2" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">3.</span> Er is een gedocumenteerd plan met tijdlijn</td>
+                <td><span class="q-num">3.</span> Vastgelegd is hoe deze doelstellingen bereikt gaan worden en op welke termijn</td>
                 <td><input type="radio" name="strat_3" value="0"></td>
                 <td><input type="radio" name="strat_3" value="1"></td>
                 <td><input type="radio" name="strat_3" value="2"></td>
                 <td><input type="radio" name="strat_3" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">4.</span> Business units rapporteren over diversiteitsdoelen</td>
+                <td><span class="q-num">4.</span> Bedrijfsonderdelen (business units, afdelingen, teams) rapporteren over het realiseren van culturele diversiteitdoelstellingen (via de planning en controle cyclus)</td>
                 <td><input type="radio" name="strat_4" value="0"></td>
                 <td><input type="radio" name="strat_4" value="1"></td>
                 <td><input type="radio" name="strat_4" value="2"></td>
                 <td><input type="radio" name="strat_4" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">5.</span> Managers worden beoordeeld op diversiteitsdoelen</td>
+                <td><span class="q-num">5.</span> Leidinggevenden worden beoordeeld op het realiseren van culturele diversiteits-doelstellingen i.h.k.v. de periodieke beoordeling</td>
                 <td><input type="radio" name="strat_5" value="0"></td>
                 <td><input type="radio" name="strat_5" value="1"></td>
                 <td><input type="radio" name="strat_5" value="2"></td>
                 <td><input type="radio" name="strat_5" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">6.</span> Het diversiteitsbeleid wordt regelmatig geevalueerd</td>
+                <td><span class="q-num">6.</span> Wij evalueren met vastgestelde regelmaat (bijvoorbeeld elk kwartaal) de resultaten van ons culturele diversiteitsbeleid</td>
                 <td><input type="radio" name="strat_6" value="0"></td>
                 <td><input type="radio" name="strat_6" value="1"></td>
                 <td><input type="radio" name="strat_6" value="2"></td>
                 <td><input type="radio" name="strat_6" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">7.</span> Evaluatie-uitkomsten worden gebruikt voor verbetering</td>
+                <td><span class="q-num">7.</span> De uitkomsten van evaluaties worden gebruikt om ons culturele diversiteitsbeleid te verbeteren</td>
                 <td><input type="radio" name="strat_7" value="0"></td>
                 <td><input type="radio" name="strat_7" value="1"></td>
                 <td><input type="radio" name="strat_7" value="2"></td>
                 <td><input type="radio" name="strat_7" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">8.</span> Er wordt gebenchmarkt met andere organisaties</td>
+                <td><span class="q-num">8.</span> Wij vergelijken ons culturele diversiteitsbeleid met dat van andere organisaties</td>
                 <td><input type="radio" name="strat_8" value="0"></td>
                 <td><input type="radio" name="strat_8" value="1"></td>
                 <td><input type="radio" name="strat_8" value="2"></td>
@@ -631,7 +626,7 @@
       <!-- Step 7: HR Management -->
       <div class="step" data-step="7">
         <h1>3.3 HR Management</h1>
-        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <p class="subtitle">Wat heeft u in 2025 binnen uw HR Management gerealiseerd om uw doelstellingen op het gebied van culturele diversiteit te realiseren? Wilt u in uw antwoorden op onderstaande vragen aangeven wat van toepassing is voor uw organisatie.</p>
         <div class="form-section">
           <div class="likert-header" id="header-likert-hr">
             <span></span>
@@ -641,106 +636,106 @@
             <thead>
               <tr>
                 <th>Stelling</th>
-                <th>Niet</th>
-                <th>Enigszins</th>
-                <th>Grotendeels</th>
-                <th>Volledig</th>
+                <th>Niet gerealiseerd</th>
+                <th>Enigszins gerealiseerd</th>
+                <th>Grotendeels gerealiseerd</th>
+                <th>Volledig gerealiseerd</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="q-num">1.</span> Er zijn instrumenten voor doorstroom van divers talent</td>
+                <td><span class="q-num">1.</span> De organisatie zet bewust maatwerkinstrumenten en regelingen in om de doorstroom van mensen met herkomst Buiten-Europa naar de top en subtop te vergroten</td>
                 <td><input type="radio" name="hr_1" value="0"></td>
                 <td><input type="radio" name="hr_1" value="1"></td>
                 <td><input type="radio" name="hr_1" value="2"></td>
                 <td><input type="radio" name="hr_1" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">2.</span> Werving is gericht op culturele diversiteit</td>
+                <td><span class="q-num">2.</span> Bij de werving van kandidaten voor top- en subtopfuncties wordt doelbewust gestreefd naar culturele diversiteit</td>
                 <td><input type="radio" name="hr_2" value="0"></td>
                 <td><input type="radio" name="hr_2" value="1"></td>
                 <td><input type="radio" name="hr_2" value="2"></td>
                 <td><input type="radio" name="hr_2" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">3.</span> Selectieprocedures zijn objectief ingericht</td>
+                <td><span class="q-num">3.</span> Subjectiviteit en stereotypering worden tegengegaan door transparante en objectieve selectieprocedures</td>
                 <td><input type="radio" name="hr_3" value="0"></td>
                 <td><input type="radio" name="hr_3" value="1"></td>
                 <td><input type="radio" name="hr_3" value="2"></td>
                 <td><input type="radio" name="hr_3" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">4.</span> Employer branding weerspiegelt diversiteit</td>
+                <td><span class="q-num">4.</span> Onze arbeidsmarktcommunicatie reflecteert ons streven naar culturele diversiteit</td>
                 <td><input type="radio" name="hr_4" value="0"></td>
                 <td><input type="radio" name="hr_4" value="1"></td>
                 <td><input type="radio" name="hr_4" value="2"></td>
                 <td><input type="radio" name="hr_4" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">5.</span> Er is loopbaanontwikkeling via training</td>
+                <td><span class="q-num">5.</span> Begeleiding van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door opleiding en management-development</td>
                 <td><input type="radio" name="hr_5" value="0"></td>
                 <td><input type="radio" name="hr_5" value="1"></td>
                 <td><input type="radio" name="hr_5" value="2"></td>
                 <td><input type="radio" name="hr_5" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">6.</span> Er is loopbaanontwikkeling via coaching/mentoring</td>
+                <td><span class="q-num">6.</span> Begeleiding van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door middel van coaching en mentoring</td>
                 <td><input type="radio" name="hr_6" value="0"></td>
                 <td><input type="radio" name="hr_6" value="1"></td>
                 <td><input type="radio" name="hr_6" value="2"></td>
                 <td><input type="radio" name="hr_6" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">7.</span> HR-effectiviteit wordt gemeten</td>
+                <td><span class="q-num">7.</span> Effectiviteit van onze HR-maatregelen ten behoeve het realiseren van culturele diversiteit wordt gemeten om beleid te kunnen verbeteren</td>
                 <td><input type="radio" name="hr_7" value="0"></td>
                 <td><input type="radio" name="hr_7" value="1"></td>
                 <td><input type="radio" name="hr_7" value="2"></td>
                 <td><input type="radio" name="hr_7" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">8.</span> Diversiteit wordt bijgehouden per niveau/afdeling</td>
+                <td><span class="q-num">8.</span> Het aandeel met herkomst Buiten-Europa naar functieniveau en naar afdeling (business unit, team) wordt gemeten (is bekend)</td>
                 <td><input type="radio" name="hr_8" value="0"></td>
                 <td><input type="radio" name="hr_8" value="1"></td>
                 <td><input type="radio" name="hr_8" value="2"></td>
                 <td><input type="radio" name="hr_8" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">9.</span> Opvolgingsplanning houdt rekening met diversiteit</td>
+                <td><span class="q-num">9.</span> Bij de personeels-/successie-planning wordt doelbewust gestreefd naar het realiseren van culturele diversiteit</td>
                 <td><input type="radio" name="hr_9" value="0"></td>
                 <td><input type="radio" name="hr_9" value="1"></td>
                 <td><input type="radio" name="hr_9" value="2"></td>
                 <td><input type="radio" name="hr_9" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">10.</span> Er is ondersteuning via netwerken</td>
+                <td><span class="q-num">10.</span> Ondersteuning van de carrièreontwikkeling van mensen met herkomst Buiten-Europa door netwerken</td>
                 <td><input type="radio" name="hr_10" value="0"></td>
                 <td><input type="radio" name="hr_10" value="1"></td>
                 <td><input type="radio" name="hr_10" value="2"></td>
                 <td><input type="radio" name="hr_10" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">11.</span> Er is ondersteuning via rolmodellen</td>
+                <td><span class="q-num">11.</span> Ondersteuning van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door rolmodellen</td>
                 <td><input type="radio" name="hr_11" value="0"></td>
                 <td><input type="radio" name="hr_11" value="1"></td>
                 <td><input type="radio" name="hr_11" value="2"></td>
                 <td><input type="radio" name="hr_11" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">12.</span> Diversiteit is geintegreerd in alle HR-maatregelen</td>
+                <td><span class="q-num">12.</span> Ons streven naar meer mensen met herkomst Buiten-Europa in de top is geïntegreerd in al onze HR-maatregelen</td>
                 <td><input type="radio" name="hr_12" value="0"></td>
                 <td><input type="radio" name="hr_12" value="1"></td>
                 <td><input type="radio" name="hr_12" value="2"></td>
                 <td><input type="radio" name="hr_12" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">13.</span> Er zijn empowerment programma's</td>
+                <td><span class="q-num">13.</span> Door empowerment worden mensen met herkomst Buiten-Europa gestimuleerd tot carrièreontwikkeling vanuit eigen kracht</td>
                 <td><input type="radio" name="hr_13" value="0"></td>
                 <td><input type="radio" name="hr_13" value="1"></td>
                 <td><input type="radio" name="hr_13" value="2"></td>
                 <td><input type="radio" name="hr_13" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">14.</span> Er is beleid om ongewenste uitstroom te voorkomen</td>
+                <td><span class="q-num">14.</span> Ongewenste uitstroom van talentvolle mensen met herkomst Buiten-Europa wordt voorkomen</td>
                 <td><input type="radio" name="hr_14" value="0"></td>
                 <td><input type="radio" name="hr_14" value="1"></td>
                 <td><input type="radio" name="hr_14" value="2"></td>
@@ -767,7 +762,7 @@
       <!-- Step 8: Communicatie -->
       <div class="step" data-step="8">
         <h1>3.4 Communicatie</h1>
-        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <p class="subtitle">Op welke wijze heeft u in 2025 intern en/of extern gecommuniceerd over uw streven om culturele diversiteit binnen uw organisatie te realiseren? Wilt u in uw antwoorden op onderstaande vragen aangeven wat van toepassing is voor uw organisatie.</p>
         <div class="form-section">
           <div class="likert-header" id="header-likert-communicatie">
             <span></span>
@@ -777,43 +772,43 @@
             <thead>
               <tr>
                 <th>Stelling</th>
-                <th>Niet</th>
-                <th>Enigszins</th>
-                <th>Grotendeels</th>
-                <th>Volledig</th>
+                <th>Niet gerealiseerd</th>
+                <th>Enigszins gerealiseerd</th>
+                <th>Grotendeels gerealiseerd</th>
+                <th>Volledig gerealiseerd</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="q-num">1.</span> Er is interne communicatie over diversiteit</td>
+                <td><span class="q-num">1.</span> De organisatie communiceert intern bewust over haar streven om het aandeel mensen met herkomst Buiten-Europa in topfuncties te verhogen</td>
                 <td><input type="radio" name="comm_1" value="0"></td>
                 <td><input type="radio" name="comm_1" value="1"></td>
                 <td><input type="radio" name="comm_1" value="2"></td>
                 <td><input type="radio" name="comm_1" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">2.</span> Er is externe communicatie over diversiteit</td>
+                <td><span class="q-num">2.</span> De organisatie communiceert extern bewust over haar streven om het aandeel mensen met herkomst Buiten-Europa in topfuncties te verhogen</td>
                 <td><input type="radio" name="comm_2" value="0"></td>
                 <td><input type="radio" name="comm_2" value="1"></td>
                 <td><input type="radio" name="comm_2" value="2"></td>
                 <td><input type="radio" name="comm_2" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">3.</span> Alle medewerkers zijn op de hoogte van de strategie</td>
+                <td><span class="q-num">3.</span> Alle medewerkers in de organisatie zijn op de hoogte van onze strategie en beleid voor culturele diversiteit</td>
                 <td><input type="radio" name="comm_3" value="0"></td>
                 <td><input type="radio" name="comm_3" value="1"></td>
                 <td><input type="radio" name="comm_3" value="2"></td>
                 <td><input type="radio" name="comm_3" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">4.</span> De organisatie staat extern bekend om diversiteit</td>
+                <td><span class="q-num">4.</span> De organisatie staat extern bekend als cultureel diversiteitsgericht</td>
                 <td><input type="radio" name="comm_4" value="0"></td>
                 <td><input type="radio" name="comm_4" value="1"></td>
                 <td><input type="radio" name="comm_4" value="2"></td>
                 <td><input type="radio" name="comm_4" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">5.</span> Diversiteit is zichtbaar in woord en beeld</td>
+                <td><span class="q-num">5.</span> Culturele diversiteit is in onze organisatie zichtbaar in woord en beeld</td>
                 <td><input type="radio" name="comm_5" value="0"></td>
                 <td><input type="radio" name="comm_5" value="1"></td>
                 <td><input type="radio" name="comm_5" value="2"></td>
@@ -840,7 +835,7 @@
       <!-- Step 9: Kennis en vaardigheden -->
       <div class="step" data-step="9">
         <h1>3.5 Kennis en vaardigheden</h1>
-        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <p class="subtitle">Welke kennis, vaardigheden en ervaring heeft de organisatie m.b.t. culturele diversiteit? Daarover gaan de volgende vragen. Wilt u aangeven wat van toepassing is voor uw organisatie.</p>
         <div class="form-section">
           <div class="likert-header" id="header-likert-kennis">
             <span></span>
@@ -850,64 +845,64 @@
             <thead>
               <tr>
                 <th>Stelling</th>
-                <th>Niet</th>
-                <th>Enigszins</th>
-                <th>Grotendeels</th>
-                <th>Volledig</th>
+                <th>Niet gerealiseerd</th>
+                <th>Enigszins gerealiseerd</th>
+                <th>Grotendeels gerealiseerd</th>
+                <th>Volledig gerealiseerd</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="q-num">1.</span> Er is inzicht in bevorderende maatregelen</td>
+                <td><span class="q-num">1.</span> De organisatie beschikt over inzicht in de maatregelen die culturele diversiteit bevorderen</td>
                 <td><input type="radio" name="kennis_1" value="0"></td>
                 <td><input type="radio" name="kennis_1" value="1"></td>
                 <td><input type="radio" name="kennis_1" value="2"></td>
                 <td><input type="radio" name="kennis_1" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">2.</span> Er is inzicht in blokkerende mechanismen</td>
+                <td><span class="q-num">2.</span> De organisatie beschikt over inzicht in de mechanismen die culturele diversiteit belemmeren</td>
                 <td><input type="radio" name="kennis_2" value="0"></td>
                 <td><input type="radio" name="kennis_2" value="1"></td>
                 <td><input type="radio" name="kennis_2" value="2"></td>
                 <td><input type="radio" name="kennis_2" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">3.</span> Managers zijn zich bewust van de waarde van diversiteit</td>
+                <td><span class="q-num">3.</span> Leidinggevenden zijn zich bewust van de meerwaarde van culturele diversiteit</td>
                 <td><input type="radio" name="kennis_3" value="0"></td>
                 <td><input type="radio" name="kennis_3" value="1"></td>
                 <td><input type="radio" name="kennis_3" value="2"></td>
                 <td><input type="radio" name="kennis_3" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">4.</span> Managers kennen blokkerende mechanismen</td>
+                <td><span class="q-num">4.</span> Leidinggevenden zijn zich bewust van de mechanismen (zoals stereotypen) die doorstroom van mensen met herkomst Buiten-Europa naar de top belemmeren</td>
                 <td><input type="radio" name="kennis_4" value="0"></td>
                 <td><input type="radio" name="kennis_4" value="1"></td>
                 <td><input type="radio" name="kennis_4" value="2"></td>
                 <td><input type="radio" name="kennis_4" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">5.</span> Managers nemen bevorderende maatregelen</td>
+                <td><span class="q-num">5.</span> Leidinggevenden zetten maatregelen in die de doorstroom van mensen met herkomst Buiten-Europa naar de top bevorderen</td>
                 <td><input type="radio" name="kennis_5" value="0"></td>
                 <td><input type="radio" name="kennis_5" value="1"></td>
                 <td><input type="radio" name="kennis_5" value="2"></td>
                 <td><input type="radio" name="kennis_5" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">6.</span> Beschikbare kennis wordt continu benut</td>
+                <td><span class="q-num">6.</span> Wij maken voortdurend gebruik van alle beschikbare kennis en ervaring voor het verbeteren van culturele diversiteit</td>
                 <td><input type="radio" name="kennis_6" value="0"></td>
                 <td><input type="radio" name="kennis_6" value="1"></td>
                 <td><input type="radio" name="kennis_6" value="2"></td>
                 <td><input type="radio" name="kennis_6" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">7.</span> Medewerkerstevredenheidsonderzoek wordt ingezet</td>
+                <td><span class="q-num">7.</span> Het periodieke medewerkers-tevredenheidsonderzoek wordt gebruikt om te sturen op culturele diversiteit</td>
                 <td><input type="radio" name="kennis_7" value="0"></td>
                 <td><input type="radio" name="kennis_7" value="1"></td>
                 <td><input type="radio" name="kennis_7" value="2"></td>
                 <td><input type="radio" name="kennis_7" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">8.</span> Kennis uit exitgesprekken wordt gebruikt</td>
+                <td><span class="q-num">8.</span> De organisatie weet waarom talentvolle medewerkers met herkomst Buiten-Europa de organisatie verlaten en gebruikt deze kennis om medewerkers te behouden</td>
                 <td><input type="radio" name="kennis_8" value="0"></td>
                 <td><input type="radio" name="kennis_8" value="1"></td>
                 <td><input type="radio" name="kennis_8" value="2"></td>
@@ -934,56 +929,56 @@
       <!-- Step 10: Klimaat -->
       <div class="step" data-step="10">
         <h1>3.6 Klimaat</h1>
-        <p class="subtitle">In hoeverre zijn de volgende stellingen van toepassing op uw organisatie?</p>
+        <p class="subtitle">Wat kenmerkt het organisatieklimaat - d.w.z. de gemeenschappelijke houding en perceptie - ten aanzien van culturele diversiteit? Wilt u in uw antwoorden op onderstaande vragen aangeven wat geldt voor uw organisatie.</p>
         <div class="form-section">
           <table class="likert-table">
             <thead>
               <tr>
                 <th>Stelling</th>
-                <th>Niet</th>
-                <th>Enigszins</th>
-                <th>Grotendeels</th>
-                <th>Volledig</th>
+                <th>Niet gerealiseerd</th>
+                <th>Enigszins gerealiseerd</th>
+                <th>Grotendeels gerealiseerd</th>
+                <th>Volledig gerealiseerd</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="q-num">1.</span> Er wordt actief strijd gevoerd tegen stereotypen</td>
+                <td><span class="q-num">1.</span> Stereotypen, vooroordelen en discriminatie worden in deze organisatie actief bestreden</td>
                 <td><input type="radio" name="klimaat_1" value="0"></td>
                 <td><input type="radio" name="klimaat_1" value="1"></td>
                 <td><input type="radio" name="klimaat_1" value="2"></td>
                 <td><input type="radio" name="klimaat_1" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">2.</span> Maatregelen worden geaccepteerd in de organisatie</td>
+                <td><span class="q-num">2.</span> De inzet van specifieke maatregelen om te investeren in mensen met herkomst Buiten-Europa teneinde culturele diversiteit in de top te vergroten, is zonder meer geaccepteerd in de organisatie</td>
                 <td><input type="radio" name="klimaat_2" value="0"></td>
                 <td><input type="radio" name="klimaat_2" value="1"></td>
                 <td><input type="radio" name="klimaat_2" value="2"></td>
                 <td><input type="radio" name="klimaat_2" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">3.</span> Culturele verschillen worden gewaardeerd</td>
+                <td><span class="q-num">3.</span> Culturele verschillen tussen medewerkers worden in de gehele organisatie - op alle niveaus en in de organisatie breed - erkend en gewaardeerd</td>
                 <td><input type="radio" name="klimaat_3" value="0"></td>
                 <td><input type="radio" name="klimaat_3" value="1"></td>
                 <td><input type="radio" name="klimaat_3" value="2"></td>
                 <td><input type="radio" name="klimaat_3" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">4.</span> Diversiteitsaandacht leeft in de organisatie</td>
+                <td><span class="q-num">4.</span> De aandacht voor culturele diversiteit leeft binnen de organisatie - op alle niveaus en in de organisatie breed</td>
                 <td><input type="radio" name="klimaat_4" value="0"></td>
                 <td><input type="radio" name="klimaat_4" value="1"></td>
                 <td><input type="radio" name="klimaat_4" value="2"></td>
                 <td><input type="radio" name="klimaat_4" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">5.</span> Managers voelen zich verantwoordelijk</td>
+                <td><span class="q-num">5.</span> Leidinggevenden voelen zich verantwoordelijk voor het realiseren van culturele diversiteit</td>
                 <td><input type="radio" name="klimaat_5" value="0"></td>
                 <td><input type="radio" name="klimaat_5" value="1"></td>
                 <td><input type="radio" name="klimaat_5" value="2"></td>
                 <td><input type="radio" name="klimaat_5" value="3"></td>
               </tr>
               <tr>
-                <td><span class="q-num">6.</span> De organisatie staat bekend als diversiteitsgericht</td>
+                <td><span class="q-num">6.</span> De organisatie wordt door medewerkers gezien als culturele diversiteit minded</td>
                 <td><input type="radio" name="klimaat_6" value="0"></td>
                 <td><input type="radio" name="klimaat_6" value="1"></td>
                 <td><input type="radio" name="klimaat_6" value="2"></td>
@@ -1010,10 +1005,9 @@
       <!-- Step 11: Motivatie -->
       <div class="step" data-step="11">
         <h1>4. Motivatie</h1>
-        <p class="subtitle">Wij zijn benieuwd naar de motivatie van uw organisatie.</p>
         <div class="form-section">
           <div class="field">
-            <label>Wat is de motivatie van uw organisatie om culturele diversiteit in de top te bevorderen?</label>
+            <label>Wat is voor uw organisatie op dit moment de reden om te streven naar meer mensen met herkomst Buiten-Europa in de top van uw organisatie en hiertoe gericht beleid te voeren?</label>
             <textarea name="motivatie" rows="6" placeholder="Beschrijf de motivatie van uw organisatie..."></textarea>
           </div>
 
@@ -1031,43 +1025,43 @@
       <!-- Step 12: Aanvullende vragen -->
       <div class="step" data-step="12">
         <h1>5. Aanvullende vragen</h1>
-        <p class="subtitle">Tot slot enkele open vragen over uw ervaringen met diversiteitsbeleid.</p>
         <div class="form-section">
           <div class="field">
-            <label><span class="q-num">5a.</span> Welke 3 vragen zou u graag beantwoord willen zien over strategie voor diversiteit?</label>
+            <label><span class="q-num">5a.</span> Heeft u vragen naar aanleiding van uw strategie en beleid ten behoeve van de toename van het aandeel mensen met herkomst Buiten-Europa in de top, of culturele diversiteit in het algemeen?</label>
             <div class="multi-input-group">
-              <input type="text" name="strategie_vraag_1" placeholder="Vraag 1">
-              <input type="text" name="strategie_vraag_2" placeholder="Vraag 2">
-              <input type="text" name="strategie_vraag_3" placeholder="Vraag 3">
+              <input type="text" name="strategie_vraag_1" placeholder="1:">
+              <input type="text" name="strategie_vraag_2" placeholder="2:">
+              <input type="text" name="strategie_vraag_3" placeholder="3:">
             </div>
           </div>
 
           <div class="field">
-            <label><span class="q-num">5b.</span> Wat blokkeert diversiteit in uw organisatie het meest? (noem 3 factoren)</label>
+            <label><span class="q-num">5b.</span> Wat staat binnen uw organisatie culturele diversiteit het meest in de weg?</label>
             <div class="multi-input-group">
-              <input type="text" name="blokkade_1" placeholder="Factor 1">
-              <input type="text" name="blokkade_2" placeholder="Factor 2">
-              <input type="text" name="blokkade_3" placeholder="Factor 3">
+              <input type="text" name="blokkade_1" placeholder="1:">
+              <input type="text" name="blokkade_2" placeholder="2:">
+              <input type="text" name="blokkade_3" placeholder="3:">
             </div>
           </div>
 
           <div class="field">
-            <label><span class="q-num">5c.</span> Wat helpt het meest bij het bevorderen van diversiteit? (noem 3 factoren)</label>
+            <label><span class="q-num">5c.</span> Wat helpt binnen uw organisatie het meest om culturele diversiteit te realiseren?</label>
             <div class="multi-input-group">
-              <input type="text" name="bevorderend_1" placeholder="Factor 1">
-              <input type="text" name="bevorderend_2" placeholder="Factor 2">
-              <input type="text" name="bevorderend_3" placeholder="Factor 3">
+              <input type="text" name="bevorderend_1" placeholder="1:">
+              <input type="text" name="bevorderend_2" placeholder="2:">
+              <input type="text" name="bevorderend_3" placeholder="3:">
             </div>
           </div>
 
           <div class="field">
-            <label><span class="q-num">5d.</span> Waarom is uw organisatie een voorbeeld op het gebied van culturele diversiteit? (max. 200 woorden)</label>
+            <label><span class="q-num">5d.</span> Indien u van mening bent dat uw organisatie in 2025 heeft laten zien een aansprekend voorbeeld te zijn op het gebied van culturele diversiteit wilt u dan beschrijven waarom? (max 200 woorden)</label>
             <textarea name="voorbeeld_organisatie" rows="5" placeholder="Beschrijf wat uw organisatie onderscheidt..." maxlength="1500"></textarea>
             <span class="field-hint">Maximaal 200 woorden</span>
           </div>
 
           <div class="info-box">
-            <strong>Beleidsdocumenten:</strong> Heeft u relevante beleidsdocumenten die u wilt delen? Stuur deze naar <a href="mailto:info@commissiemonitoring.nl">info@commissiemonitoring.nl</a>.
+            <p>Informatie over uw strategie en beleid voor culturele diversiteit wordt door de Commissie Monitoring gebruikt voor het selecteren van de aansprekende voorbeelden 2025.</p>
+            <p style="margin-top: 12px;">Graag ontvangen wij een kopie van uw strategie en beleid voor culturele diversiteit via <a href="mailto:info@commissiemonitoring.nl">info@commissiemonitoring.nl</a></p>
           </div>
 
           <div class="comments-section">
