@@ -1344,7 +1344,6 @@ h1 {
 .step {
   display: none;
   flex-direction: column;
-  align-items: stretch;
   width: 100%;
 }
 

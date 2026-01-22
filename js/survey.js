@@ -240,12 +240,12 @@
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function() {
-        // Reset width constraints before recalculating
+        // Reset flex properties before recalculating
         const content = document.querySelector('.content');
         if (content) {
-          content.style.width = '';
-          content.style.minWidth = '';
-          content.style.maxWidth = '';
+          content.style.flexBasis = '';
+          content.style.flexGrow = '';
+          content.style.flexShrink = '';
         }
         calculateStableCardDimensions();
       }, 250);
@@ -442,21 +442,28 @@
   }
 
   /**
-   * Lock the content area width to prevent horizontal resizing when navigating
-   * Simply captures the current rendered width and locks it
+   * Lock the content area to a stable width to prevent horizontal resizing
+   * when navigating between steps. The width is determined by the flex layout
+   * and then locked so step content cannot change it.
    */
   function calculateStableCardDimensions() {
+    const container = document.querySelector('.container');
     const content = document.querySelector('.content');
-    if (!content) return;
 
-    // Get the content area's current rendered width
-    const contentWidth = content.offsetWidth;
+    if (!container || !content) return;
+
+    // First, ensure container is at its natural size
+    // Force a layout calculation
+    container.offsetWidth;
+
+    // Get the content area's natural width as determined by the flex layout
+    const contentWidth = content.getBoundingClientRect().width;
 
     if (contentWidth > 0) {
-      // Lock the content area to this exact width
-      content.style.width = contentWidth + 'px';
-      content.style.minWidth = contentWidth + 'px';
-      content.style.maxWidth = contentWidth + 'px';
+      // Lock the content area to exactly this width - no more, no less
+      content.style.flexBasis = contentWidth + 'px';
+      content.style.flexGrow = '0';
+      content.style.flexShrink = '0';
     }
   }
 
