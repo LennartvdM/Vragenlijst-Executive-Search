@@ -482,8 +482,8 @@ body {
   backdrop-filter: blur(20px);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(139, 90, 60, 0.15), 0 2px 8px rgba(139, 90, 60, 0.1);
-  width: 100%;
-  max-width: 900px;
+  width: 900px;
+  max-width: calc(100vw - 40px);
   min-height: 540px;
   display: flex;
   overflow: hidden;
@@ -643,7 +643,8 @@ body {
    ========================================================================== */
 
 .content {
-  flex: 1 0 auto;
+  flex: 1;
+  min-width: 0;
   padding: 50px 60px 50px 20px;
   display: flex;
   flex-direction: column;
