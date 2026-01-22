@@ -1088,19 +1088,33 @@
         return;
       }
 
-      // Over soft limit - format with red words
+      // Over soft limit - format with gradient words
       counter.classList.add(wordCount > hardLimit ? 'error' : 'warning');
 
       // Save cursor position
       const cursorPos = saveCursorPosition();
 
-      // Build HTML with excess words in red
+      // Build HTML with excess words in yellow-to-red gradient
       const normalWords = words.slice(0, softLimit);
       const excessWords = words.slice(softLimit, hardLimit);
 
+      // Interpolate color from yellow to red for each excess word
+      function getGradientColor(index, total) {
+        // Yellow: rgb(230, 170, 0) -> Red: rgb(200, 50, 50)
+        const t = total <= 1 ? 1 : index / (total - 1);
+        const r = Math.round(230 + (200 - 230) * t);
+        const g = Math.round(170 + (50 - 170) * t);
+        const b = Math.round(0 + (50 - 0) * t);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+
       let html = normalWords.join(' ');
       if (excessWords.length > 0) {
-        html += ' <span class="word-excess">' + excessWords.join(' ') + '</span>';
+        const styledWords = excessWords.map((word, i) => {
+          const color = getGradientColor(i, 20); // Always use 20 steps for consistent gradient
+          return `<span style="color: ${color}; font-weight: 600;">${word}</span>`;
+        });
+        html += ' ' + styledWords.join(' ');
       }
 
       editor.innerHTML = html;
