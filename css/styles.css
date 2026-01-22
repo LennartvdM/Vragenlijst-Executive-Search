@@ -3307,12 +3307,55 @@ body.mobile-drawer-open {
   overflow: hidden;
 }
 
+/* Gentle swaying animation for decorative elements */
+@keyframes sway {
+  0%, 100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(8px) translateY(-5px) rotate(1deg);
+  }
+  50% {
+    transform: translateX(-5px) translateY(8px) rotate(-0.5deg);
+  }
+  75% {
+    transform: translateX(5px) translateY(-3px) rotate(0.5deg);
+  }
+}
+
+@keyframes sway-reverse {
+  0%, 100% {
+    transform: rotate(180deg) translateX(0) translateY(0);
+  }
+  25% {
+    transform: rotate(180deg) translateX(-8px) translateY(5px);
+  }
+  50% {
+    transform: rotate(180deg) translateX(5px) translateY(-8px);
+  }
+  75% {
+    transform: rotate(180deg) translateX(-5px) translateY(3px);
+  }
+}
+
+@keyframes sway-slow {
+  0%, 100% {
+    transform: rotate(90deg) translateX(0) translateY(0);
+  }
+  33% {
+    transform: rotate(90deg) translateX(6px) translateY(-6px);
+  }
+  66% {
+    transform: rotate(90deg) translateX(-4px) translateY(4px);
+  }
+}
+
 /* The complete logo shape (person + chevron as one unit) */
 .logo-decor-shape {
   position: absolute;
   width: 450px;
   height: 520px;
-  opacity: 0.08;
+  opacity: 0.18;
 }
 
 .logo-decor-shape svg {
@@ -3326,6 +3369,7 @@ body.mobile-drawer-open {
   left: -120px;
   -webkit-mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
   mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  animation: sway 12s ease-in-out infinite;
 }
 
 /* Top-right positioning - logo peeking from corner */
@@ -3335,13 +3379,24 @@ body.mobile-drawer-open {
   transform: rotate(180deg);
   -webkit-mask-image: linear-gradient(315deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
   mask-image: linear-gradient(315deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  animation: sway-reverse 15s ease-in-out infinite;
+}
+
+/* Center-right positioning - third decorative element */
+.logo-decor-center-right {
+  top: 50%;
+  right: -200px;
+  transform: rotate(90deg);
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
+  animation: sway-slow 18s ease-in-out infinite;
 }
 
 /* Login page specific - larger and more visible */
 body:not(.survey-body) .logo-decor-shape {
   width: 550px;
   height: 640px;
-  opacity: 0.1;
+  opacity: 0.2;
 }
 
 body:not(.survey-body) .logo-decor-bottom-left {
@@ -3354,12 +3409,19 @@ body:not(.survey-body) .logo-decor-top-right {
   right: -160px;
 }
 
+body:not(.survey-body) .logo-decor-center-right {
+  width: 400px;
+  height: 460px;
+  right: -180px;
+  opacity: 0.12;
+}
+
 /* Smaller on mobile screens */
 @media (max-width: 600px) {
   .logo-decor-shape {
     width: 320px;
     height: 370px;
-    opacity: 0.06;
+    opacity: 0.16;
   }
 
   .logo-decor-bottom-left {
@@ -3370,6 +3432,10 @@ body:not(.survey-body) .logo-decor-top-right {
   .logo-decor-top-right {
     top: -140px;
     right: -100px;
+  }
+
+  .logo-decor-center-right {
+    display: none;
   }
 }
 
