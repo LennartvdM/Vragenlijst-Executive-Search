@@ -3392,8 +3392,8 @@ body:not(.survey-body) .logo-decor-top-right {
   transition: color 0.2s ease;
 }
 
-.word-counter.warning {
-  color: #b86e00;
+.word-counter.success {
+  color: #2e7d32;
   font-weight: 500;
 }
 

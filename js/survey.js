@@ -1073,14 +1073,14 @@
       const wordCount = words.length;
 
       // Update counter
-      counter.textContent = `${wordCount} / ${softLimit} woorden`;
-      counter.classList.remove('warning', 'error');
+      counter.classList.remove('warning', 'error', 'success');
 
       // Sync to hidden input (plain text for form submission)
       hiddenInput.value = text;
 
       // If at or under soft limit, just show plain text
       if (wordCount <= softLimit) {
+        counter.textContent = `${wordCount} / ${softLimit} woorden`;
         // Only update if content changed (avoid cursor jump)
         if (editor.textContent !== text) {
           editor.textContent = text;
@@ -1088,8 +1088,14 @@
         return;
       }
 
-      // Over soft limit - format with gradient words
-      counter.classList.add(wordCount > hardLimit ? 'error' : 'warning');
+      // Over soft limit - add status hint
+      if (wordCount >= hardLimit) {
+        counter.textContent = `${wordCount} / ${softLimit} woorden — limiet bereikt`;
+        counter.classList.add('error');
+      } else {
+        counter.textContent = `${wordCount} / ${softLimit} woorden — dit mag nog`;
+        counter.classList.add('success');
+      }
 
       // Save cursor position
       const cursorPos = saveCursorPosition();
