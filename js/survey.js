@@ -215,6 +215,7 @@
     setupAutoSave();
     loadSavedFormData();
     setupWordCounter(); // After loadSavedFormData so counter shows saved word count
+    setupTextareaWordCounters(); // Word counters for toelichting and comment fields
     updateIndexStatus(); // Initialize progress bar
     calculateStableCardDimensions();
 
@@ -1263,6 +1264,70 @@
 
     // Initialize display
     updateDisplay();
+  }
+
+  /**
+   * Setup simple word counters for large textareas (toelichting, motivatie, opmerkingen)
+   * Shows word count without strict limits - just informational
+   */
+  function setupTextareaWordCounters() {
+    // Define which textareas should have word counters
+    const textareaNames = [
+      // Toelichting fields
+      'leiderschap_toelichting',
+      'strategie_toelichting',
+      'hr_toelichting',
+      'communicatie_toelichting',
+      'kennis_toelichting',
+      'klimaat_toelichting',
+      // Motivatie field
+      'motivatie',
+      // Comment fields
+      'opmerkingen_stap_0',
+      'opmerkingen_stap_1',
+      'opmerkingen_stap_2',
+      'opmerkingen_stap_3',
+      'opmerkingen_stap_5',
+      'opmerkingen_stap_6',
+      'opmerkingen_stap_7',
+      'opmerkingen_stap_8',
+      'opmerkingen_stap_9',
+      'opmerkingen_stap_10',
+      'opmerkingen_stap_11',
+      'opmerkingen_stap_12',
+      'opmerkingen_stap_13'
+    ];
+
+    function getWordCount(text) {
+      const trimmed = text.trim();
+      if (!trimmed) return 0;
+      return trimmed.split(/\s+/).length;
+    }
+
+    function updateCounter(textarea, counter) {
+      const wordCount = getWordCount(textarea.value);
+      counter.textContent = wordCount === 1 ? '1 woord' : `${wordCount} woorden`;
+    }
+
+    textareaNames.forEach(function(name) {
+      const textarea = document.querySelector(`textarea[name="${name}"]`);
+      if (!textarea) return;
+
+      // Create word counter element
+      const counter = document.createElement('span');
+      counter.className = 'word-counter textarea-word-counter';
+
+      // Insert after textarea
+      textarea.parentNode.insertBefore(counter, textarea.nextSibling);
+
+      // Update on input
+      textarea.addEventListener('input', function() {
+        updateCounter(textarea, counter);
+      });
+
+      // Initialize with current value
+      updateCounter(textarea, counter);
+    });
   }
 
   /**

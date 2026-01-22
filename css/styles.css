@@ -1462,7 +1462,7 @@ h1 {
 }
 
 .form-section .comments-section .comments-field.show {
-  max-height: 120px;
+  max-height: 150px;
   opacity: 1;
   margin-top: 8px;
 }
@@ -3505,4 +3505,13 @@ body:not(.survey-body) .logo-decor-center-right {
 .contenteditable-field .word-excess {
   color: var(--error);
   font-weight: 600;
+}
+
+/* Textarea word counters (toelichting, motivatie, comments) */
+.textarea-word-counter {
+  display: block;
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 4px;
+  text-align: right;
 }
