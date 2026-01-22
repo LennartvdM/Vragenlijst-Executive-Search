@@ -116,6 +116,88 @@
     'beleid_samenstelling_anders': { parent: 'beleid_samenstelling', value: 'Anders' }
   };
 
+  // Per-page scroll position memory
+  let scrollPositions = {};
+  let scrollSaveTimeout = null;
+
+  /**
+   * Load scroll positions from localStorage
+   */
+  function loadScrollPositions() {
+    try {
+      const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.SCROLL_POSITIONS);
+      if (saved) {
+        scrollPositions = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.warn('Could not load scroll positions:', e);
+      scrollPositions = {};
+    }
+  }
+
+  /**
+   * Save scroll positions to localStorage
+   */
+  function persistScrollPositions() {
+    try {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.SCROLL_POSITIONS, JSON.stringify(scrollPositions));
+    } catch (e) {
+      console.warn('Could not save scroll positions:', e);
+    }
+  }
+
+  /**
+   * Save the current scroll position for the current step
+   */
+  function saveScrollPosition() {
+    const scrollY = window.scrollY || window.pageYOffset;
+    scrollPositions[currentStep] = scrollY;
+    persistScrollPositions();
+  }
+
+  /**
+   * Restore scroll position for a given step
+   * @param {number} step - The step to restore scroll position for
+   */
+  function restoreScrollPosition(step) {
+    const savedPosition = scrollPositions[step];
+    if (typeof savedPosition === 'number' && savedPosition > 0) {
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: savedPosition, behavior: 'instant' });
+      });
+    } else {
+      // No saved position for this step - scroll to top
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }
+
+  /**
+   * Handle scroll events - debounced save of scroll position
+   */
+  function handleScroll() {
+    // Clear any pending save
+    if (scrollSaveTimeout) {
+      clearTimeout(scrollSaveTimeout);
+    }
+    // Debounce: save after 150ms of no scrolling
+    scrollSaveTimeout = setTimeout(() => {
+      saveScrollPosition();
+    }, 150);
+  }
+
+  /**
+   * Clear scroll positions (called on form reset/clear)
+   */
+  function clearScrollPositions() {
+    scrollPositions = {};
+    try {
+      localStorage.removeItem(CONFIG.STORAGE_KEYS.SCROLL_POSITIONS);
+    } catch (e) {
+      console.warn('Could not clear scroll positions:', e);
+    }
+  }
+
   // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
@@ -135,6 +217,9 @@
     setupWordCounter(); // After loadSavedFormData so counter shows saved word count
     updateIndexStatus(); // Initialize progress bar
     calculateStableCardDimensions();
+
+    // Load saved scroll positions before showing step
+    loadScrollPositions();
     showStep(0);
 
     // Initialize mobile drawer
@@ -142,6 +227,9 @@
 
     // Initialize mobile Likert controls
     initMobileLikert();
+
+    // Listen for scroll events to save position (debounced in handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Recalculate on window resize (debounced)
     let resizeTimeout;
@@ -709,10 +797,8 @@
         }
       }
 
-      // On mobile, start at top when navigating to a new page
-      if (window.innerWidth <= 768) {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      }
+      // Restore saved scroll position for this step (or scroll to top if none saved)
+      restoreScrollPosition(step);
     }
 
     // Update previous step tracker
@@ -797,6 +883,8 @@
    * @param {number} step - Step index to navigate to
    */
   function goToStep(step) {
+    // Save scroll position before leaving current step
+    saveScrollPosition();
     currentStep = step;
     showStep(step);
   }
@@ -805,6 +893,8 @@
    * Go to next step (step 13 goes to review, review is handled by its own button)
    */
   function nextStep() {
+    // Save scroll position before leaving current step
+    saveScrollPosition();
     if (currentStep === 13) {
       // Go to review step
       currentStep = CONFIG.REVIEW_STEP;
@@ -820,6 +910,8 @@
    * Go to previous step
    */
   function prevStep() {
+    // Save scroll position before leaving current step
+    saveScrollPosition();
     if (currentStep > 0) {
       currentStep--;
       showStep(currentStep);
@@ -2138,8 +2230,9 @@
         currentStep = CONFIG.SUCCESS_STEP;
         showStep(currentStep);
 
-        // Clear saved form data
+        // Clear saved form data and scroll positions
         Storage.clearFormData();
+        clearScrollPositions();
         return;
       }
 
@@ -2164,8 +2257,9 @@
           }
         }
 
-        // Clear saved form data
+        // Clear saved form data and scroll positions
         Storage.clearFormData();
+        clearScrollPositions();
       } else {
         throw new Error(result.message || CONSTANTS.ERRORS.SUBMIT_ERROR);
       }
@@ -2529,6 +2623,9 @@
   function clearFormAndRestart() {
     // Clear form data from storage
     Storage.clearFormData();
+
+    // Clear saved scroll positions
+    clearScrollPositions();
 
     // Reset form fields
     const form = document.getElementById('monitoringForm');
