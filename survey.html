@@ -1077,7 +1077,10 @@
 
           <div class="field">
             <label><span class="q-num">5d.</span> Indien u van mening bent dat uw organisatie in 2025 heeft laten zien een aansprekend voorbeeld te zijn op het gebied van culturele diversiteit wilt u dan beschrijven waarom? (max 200 woorden)</label>
-            <textarea name="voorbeeld_organisatie" rows="5" placeholder="Beschrijf wat uw organisatie onderscheidt..."></textarea>
+            <div class="contenteditable-wrapper">
+              <div class="contenteditable-field" id="voorbeeld-organisatie-editor" contenteditable="true" data-placeholder="Beschrijf wat uw organisatie onderscheidt..."></div>
+              <input type="hidden" name="voorbeeld_organisatie" id="voorbeeld-organisatie-hidden">
+            </div>
             <span class="word-counter" id="word-counter-voorbeeld">0 / 200 woorden</span>
           </div>
 
