@@ -132,6 +132,7 @@
     setupInputListeners();
     setupAutoSave();
     loadSavedFormData();
+    setupWordCounter(); // After loadSavedFormData so counter shows saved word count
     updateIndexStatus(); // Initialize progress bar
     calculateStableCardDimensions();
     showStep(0);
@@ -987,6 +988,47 @@
       });
       input.addEventListener('change', saveFormData);
     });
+  }
+
+  /**
+   * Setup word counter for textarea fields with word limits
+   */
+  function setupWordCounter() {
+    const textarea = document.querySelector('[name="voorbeeld_organisatie"]');
+    const counter = document.getElementById('word-counter-voorbeeld');
+    if (!textarea || !counter) return;
+
+    const softLimit = 200;
+    const hardLimit = 220; // 10% margin as hidden "delight"
+
+    function countWords(text) {
+      const trimmed = text.trim();
+      if (!trimmed) return 0;
+      return trimmed.split(/\s+/).length;
+    }
+
+    function updateCounter() {
+      const wordCount = countWords(textarea.value);
+      counter.textContent = `${wordCount} / ${softLimit} woorden`;
+
+      // Remove all state classes
+      counter.classList.remove('warning', 'error');
+
+      if (wordCount > hardLimit) {
+        // Over hard limit - show error and trim to hard limit
+        counter.classList.add('error');
+        const words = textarea.value.trim().split(/\s+/);
+        textarea.value = words.slice(0, hardLimit).join(' ');
+        counter.textContent = `${hardLimit} / ${softLimit} woorden`;
+      } else if (wordCount > softLimit) {
+        // In the grace zone (201-220) - show warning
+        counter.classList.add('warning');
+      }
+    }
+
+    textarea.addEventListener('input', updateCounter);
+    // Initialize counter on page load
+    updateCounter();
   }
 
   /**
