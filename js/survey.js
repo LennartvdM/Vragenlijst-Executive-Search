@@ -242,7 +242,9 @@
       resizeTimeout = setTimeout(function() {
         // Reset min-width before recalculating
         const content = document.querySelector('.content');
+        const steps = document.querySelectorAll('.step');
         if (content) content.style.minWidth = '';
+        steps.forEach(step => step.style.minWidth = '');
         calculateStableCardDimensions();
       }, 250);
     });
@@ -493,9 +495,13 @@
       }
     });
 
-    // Set minimum width on content to prevent horizontal resizing
+    // Set minimum width on content and all steps to prevent horizontal resizing
     if (maxWidth > 0) {
       content.style.minWidth = maxWidth + 'px';
+      // Also set minWidth on each step to ensure they all maintain the same width
+      steps.forEach(step => {
+        step.style.minWidth = maxWidth + 'px';
+      });
     }
   }
 
