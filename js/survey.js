@@ -228,6 +228,9 @@
     // Initialize mobile Likert controls
     initMobileLikert();
 
+    // Initialize Flatpickr date picker
+    initDatePicker();
+
     // Listen for scroll events to save position (debounced in handleScroll)
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -1765,13 +1768,15 @@
             <textarea name="review_${fieldName}" rows="3" data-original="${fieldName}" placeholder="Vul hier in...">${currentValue}</textarea>
           </div>
         `;
-      } else if (originalField.type === 'date') {
-        // Date input
+      } else if (originalField.type === 'date' || fieldName === 'datum') {
+        // Date input - render with Flatpickr wrapper
         const currentValue = originalField.value || '';
         fieldsHtml += `
           <div class="review-field">
             <label class="review-field-label">${label}</label>
-            <input type="date" name="review_${fieldName}" value="${currentValue}" data-original="${fieldName}">
+            <div class="date-input-wrapper">
+              <input type="text" name="review_${fieldName}" id="review_datumPicker" value="${currentValue}" data-original="${fieldName}" readonly placeholder="Selecteer datum">
+            </div>
           </div>
         `;
       } else if (originalField.type === 'number') {
@@ -1882,6 +1887,49 @@
         originalInput.value = input.value;
         originalInput.dispatchEvent(new Event('input', { bubbles: true }));
         saveFormData();
+      }
+    });
+
+    // Initialize Flatpickr for review date field
+    initReviewDatePicker();
+  }
+
+  /**
+   * Initialize Flatpickr for the review page date field
+   */
+  function initReviewDatePicker() {
+    const reviewDateInput = document.getElementById('review_datumPicker');
+    if (!reviewDateInput || typeof flatpickr === 'undefined') return;
+
+    flatpickr(reviewDateInput, {
+      locale: 'nl',
+      dateFormat: 'd-m-Y',
+      altInput: true,
+      altFormat: 'j F Y',
+      disableMobile: true,
+      allowInput: false,
+      monthSelectorType: 'dropdown',
+      animate: true,
+      onChange: function(selectedDates, dateStr, instance) {
+        // Sync with original datum field
+        const originalInput = document.querySelector('[name="datum"]');
+        if (originalInput) {
+          originalInput.value = dateStr;
+          // Update the main Flatpickr instance if it exists
+          if (originalInput._flatpickr) {
+            originalInput._flatpickr.setDate(dateStr, false);
+          }
+          originalInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        saveFormData();
+        updateAllSections();
+        updateIndexStatus();
+
+        // Update accordion item status
+        const accordionContent = reviewDateInput.closest('.review-item-content');
+        if (accordionContent) {
+          updateAccordionItemStatus(reviewDateInput);
+        }
       }
     });
   }
@@ -2782,6 +2830,62 @@
     overlay.classList.remove('active');
     index.classList.remove('mobile-open');
     document.body.classList.remove('mobile-drawer-open');
+  }
+
+  /**
+   * Initialize Flatpickr date picker with custom styling
+   */
+  function initDatePicker() {
+    const datumInput = document.getElementById('datumPicker');
+    if (!datumInput || typeof flatpickr === 'undefined') return;
+
+    // Check if there's a saved date value (may be in different formats)
+    const savedValue = datumInput.value;
+    let defaultDate = 'today';
+
+    if (savedValue) {
+      // Try to parse existing value (could be YYYY-MM-DD, DD-MM-YYYY, or other)
+      const datePatterns = [
+        /^(\d{4})-(\d{2})-(\d{2})$/, // YYYY-MM-DD
+        /^(\d{2})-(\d{2})-(\d{4})$/  // DD-MM-YYYY
+      ];
+
+      for (const pattern of datePatterns) {
+        const match = savedValue.match(pattern);
+        if (match) {
+          if (pattern === datePatterns[0]) {
+            // YYYY-MM-DD format
+            defaultDate = new Date(match[1], match[2] - 1, match[3]);
+          } else {
+            // DD-MM-YYYY format
+            defaultDate = new Date(match[3], match[2] - 1, match[1]);
+          }
+          break;
+        }
+      }
+    }
+
+    flatpickr(datumInput, {
+      locale: 'nl',
+      dateFormat: 'd-m-Y',
+      altInput: true,
+      altFormat: 'j F Y',
+      disableMobile: true,
+      allowInput: false,
+      defaultDate: defaultDate,
+      monthSelectorType: 'dropdown',
+      animate: true,
+      onChange: function(selectedDates, dateStr, instance) {
+        // Trigger save when date changes
+        if (typeof saveFormData === 'function') {
+          saveFormData();
+        }
+      },
+      onReady: function(selectedDates, dateStr, instance) {
+        // Add custom class to the container for additional styling
+        instance.calendarContainer.classList.add('flatpickr-terracotta');
+      }
+    });
   }
 
   /**

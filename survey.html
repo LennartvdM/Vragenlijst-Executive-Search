@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitoring Cultureel Talent naar de Top 2025</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="/css/flatpickr-theme.css">
 </head>
 <body class="survey-body">
 
@@ -1110,7 +1112,9 @@
           </div>
           <div class="field">
             <label>Datum</label>
-            <input type="date" name="datum" required>
+            <div class="date-input-wrapper">
+              <input type="text" name="datum" id="datumPicker" required placeholder="Selecteer datum" readonly>
+            </div>
           </div>
           <div class="field">
             <label>Naam CEO/directeur</label>
@@ -1291,6 +1295,10 @@
     </div>
   </div>
 </div>
+
+<!-- Flatpickr date picker -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/nl.js"></script>
 
 <!-- Core modules (order matters) -->
 <script src="/js/config.js"></script>
