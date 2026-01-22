@@ -988,47 +988,166 @@
       });
       input.addEventListener('change', saveFormData);
     });
+
+    // Also listen to contenteditable editor for auto-save
+    const editor = document.getElementById('voorbeeld-organisatie-editor');
+    if (editor) {
+      editor.addEventListener('input', () => {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(saveFormData, CONSTANTS.TIMEOUTS.AUTO_SAVE_DELAY);
+      });
+    }
   }
 
   /**
-   * Setup word counter for textarea fields with word limits
+   * Setup word counter for contenteditable field with word limits
+   * Words beyond soft limit are shown in red/bold, hard limit blocks input
    */
   function setupWordCounter() {
-    const textarea = document.querySelector('[name="voorbeeld_organisatie"]');
+    const editor = document.getElementById('voorbeeld-organisatie-editor');
+    const hiddenInput = document.getElementById('voorbeeld-organisatie-hidden');
     const counter = document.getElementById('word-counter-voorbeeld');
-    if (!textarea || !counter) return;
+    if (!editor || !hiddenInput || !counter) return;
 
     const softLimit = 200;
     const hardLimit = 220; // 10% margin as hidden "delight"
 
-    function countWords(text) {
+    function getWords(text) {
       const trimmed = text.trim();
-      if (!trimmed) return 0;
-      return trimmed.split(/\s+/).length;
+      if (!trimmed) return [];
+      return trimmed.split(/\s+/);
     }
 
-    function updateCounter() {
-      const wordCount = countWords(textarea.value);
-      counter.textContent = `${wordCount} / ${softLimit} woorden`;
+    function getPlainText() {
+      // Get text content without HTML tags
+      return editor.textContent || '';
+    }
 
-      // Remove all state classes
-      counter.classList.remove('warning', 'error');
+    function saveCursorPosition() {
+      const sel = window.getSelection();
+      if (sel.rangeCount === 0) return null;
+      const range = sel.getRangeAt(0);
+      const preRange = range.cloneRange();
+      preRange.selectNodeContents(editor);
+      preRange.setEnd(range.startContainer, range.startOffset);
+      return preRange.toString().length;
+    }
 
-      if (wordCount > hardLimit) {
-        // Over hard limit - show error and trim to hard limit
-        counter.classList.add('error');
-        const words = textarea.value.trim().split(/\s+/);
-        textarea.value = words.slice(0, hardLimit).join(' ');
-        counter.textContent = `${hardLimit} / ${softLimit} woorden`;
-      } else if (wordCount > softLimit) {
-        // In the grace zone (201-220) - show warning
-        counter.classList.add('warning');
+    function restoreCursorPosition(pos) {
+      if (pos === null) return;
+      const sel = window.getSelection();
+      const range = document.createRange();
+
+      let currentPos = 0;
+      let found = false;
+
+      function walkNodes(node) {
+        if (found) return;
+        if (node.nodeType === Node.TEXT_NODE) {
+          const len = node.textContent.length;
+          if (currentPos + len >= pos) {
+            range.setStart(node, pos - currentPos);
+            range.collapse(true);
+            found = true;
+            return;
+          }
+          currentPos += len;
+        } else {
+          for (const child of node.childNodes) {
+            walkNodes(child);
+            if (found) return;
+          }
+        }
+      }
+
+      walkNodes(editor);
+      if (found) {
+        sel.removeAllRanges();
+        sel.addRange(range);
       }
     }
 
-    textarea.addEventListener('input', updateCounter);
-    // Initialize counter on page load
-    updateCounter();
+    function updateDisplay() {
+      const text = getPlainText();
+      const words = getWords(text);
+      const wordCount = words.length;
+
+      // Update counter
+      counter.textContent = `${wordCount} / ${softLimit} woorden`;
+      counter.classList.remove('warning', 'error');
+
+      // Sync to hidden input (plain text for form submission)
+      hiddenInput.value = text;
+
+      // If at or under soft limit, just show plain text
+      if (wordCount <= softLimit) {
+        // Only update if content changed (avoid cursor jump)
+        if (editor.textContent !== text) {
+          editor.textContent = text;
+        }
+        return;
+      }
+
+      // Over soft limit - format with red words
+      counter.classList.add(wordCount > hardLimit ? 'error' : 'warning');
+
+      // Save cursor position
+      const cursorPos = saveCursorPosition();
+
+      // Build HTML with excess words in red
+      const normalWords = words.slice(0, softLimit);
+      const excessWords = words.slice(softLimit, hardLimit);
+
+      let html = normalWords.join(' ');
+      if (excessWords.length > 0) {
+        html += ' <span class="word-excess">' + excessWords.join(' ') + '</span>';
+      }
+
+      editor.innerHTML = html;
+
+      // Restore cursor
+      restoreCursorPosition(cursorPos);
+
+      // Update hidden input with truncated text if over hard limit
+      if (wordCount > hardLimit) {
+        hiddenInput.value = words.slice(0, hardLimit).join(' ');
+      }
+    }
+
+    // Block input when at hard limit
+    editor.addEventListener('keydown', function(e) {
+      const words = getWords(getPlainText());
+      const atLimit = words.length >= hardLimit;
+
+      // Allow: backspace, delete, arrows, ctrl+a, ctrl+c, ctrl+v, ctrl+x
+      const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+      const isCtrlCombo = e.ctrlKey || e.metaKey;
+
+      if (atLimit && !allowedKeys.includes(e.key) && !isCtrlCombo) {
+        // Check if this would add a new word (space or character at end)
+        e.preventDefault();
+      }
+    });
+
+    // Handle paste - trim to hard limit
+    editor.addEventListener('paste', function(e) {
+      e.preventDefault();
+      const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+      const currentText = getPlainText();
+      const currentWords = getWords(currentText);
+      const pastedWords = getWords(pastedText);
+      const availableSlots = hardLimit - currentWords.length;
+
+      if (availableSlots <= 0) return;
+
+      const textToInsert = pastedWords.slice(0, availableSlots).join(' ');
+      document.execCommand('insertText', false, textToInsert);
+    });
+
+    editor.addEventListener('input', updateDisplay);
+
+    // Initialize display
+    updateDisplay();
   }
 
   /**
@@ -1898,6 +2017,11 @@
           const step = name.replace('opmerkingen_stap_', '');
           const field = document.getElementById(`comments-field-${step}`);
           if (field) field.classList.add(CONSTANTS.CSS.SHOW);
+        }
+        // Sync contenteditable editor for voorbeeld_organisatie
+        if (name === 'voorbeeld_organisatie') {
+          const editor = document.getElementById('voorbeeld-organisatie-editor');
+          if (editor) editor.textContent = value;
         }
       }
     });

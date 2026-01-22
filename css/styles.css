@@ -3401,3 +3401,42 @@ body:not(.survey-body) .logo-decor-top-right {
   color: var(--error);
   font-weight: 500;
 }
+
+/* Contenteditable field (textarea replacement for word limit styling) */
+.contenteditable-wrapper {
+  position: relative;
+}
+
+.contenteditable-field {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 14px;
+  border: 1px solid var(--sand-dark);
+  border-radius: 8px;
+  background: var(--cream-light);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  color: var(--text);
+  transition: all 0.2s;
+  overflow-y: auto;
+  resize: vertical;
+}
+
+.contenteditable-field:focus {
+  outline: none;
+  border-color: var(--salmon);
+  background: var(--cream);
+}
+
+.contenteditable-field:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-light);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.contenteditable-field .word-excess {
+  color: var(--error);
+  font-weight: 600;
+}
