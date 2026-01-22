@@ -235,21 +235,7 @@
     // Listen for scroll events to save position (debounced in handleScroll)
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Recalculate on window resize (debounced)
-    let resizeTimeout;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(function() {
-        // Reset flex properties before recalculating
-        const content = document.querySelector('.content');
-        if (content) {
-          content.style.flexBasis = '';
-          content.style.flexGrow = '';
-          content.style.flexShrink = '';
-        }
-        calculateStableCardDimensions();
-      }, 250);
-    });
+    // Width stability handled via CSS - no resize recalculation needed
   });
 
   /**
@@ -442,29 +428,11 @@
   }
 
   /**
-   * Lock the content area to a stable width to prevent horizontal resizing
-   * when navigating between steps. The width is determined by the flex layout
-   * and then locked so step content cannot change it.
+   * Placeholder - width stability now handled purely via CSS
+   * Container has fixed width, content area uses flex with min-width: 0
    */
   function calculateStableCardDimensions() {
-    const container = document.querySelector('.container');
-    const content = document.querySelector('.content');
-
-    if (!container || !content) return;
-
-    // First, ensure container is at its natural size
-    // Force a layout calculation
-    container.offsetWidth;
-
-    // Get the content area's natural width as determined by the flex layout
-    const contentWidth = content.getBoundingClientRect().width;
-
-    if (contentWidth > 0) {
-      // Lock the content area to exactly this width - no more, no less
-      content.style.flexBasis = contentWidth + 'px';
-      content.style.flexGrow = '0';
-      content.style.flexShrink = '0';
-    }
+    // No-op: CSS handles fixed container width
   }
 
   /**
