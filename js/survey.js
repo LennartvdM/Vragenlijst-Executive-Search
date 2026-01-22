@@ -240,9 +240,10 @@
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function() {
-        // Reset min-width before recalculating
+        // Reset all width constraints before recalculating
         const content = document.querySelector('.content');
         const steps = document.querySelectorAll('.step');
+        document.documentElement.style.removeProperty('--step-stable-width');
         if (content) content.style.minWidth = '';
         steps.forEach(step => step.style.minWidth = '');
         calculateStableCardDimensions();
@@ -456,33 +457,39 @@
       display: step.style.display,
       visibility: step.style.visibility,
       position: step.style.position,
+      width: step.style.width,
+      minWidth: step.style.minWidth,
+      whiteSpace: step.style.whiteSpace,
       hasActive: step.classList.contains(CONSTANTS.CSS.ACTIVE)
     }));
 
-    // Temporarily make all steps measurable
+    // Measure each step's natural content width
+    // Use white-space: nowrap temporarily to get the true unwrapped content width
+    let maxWidth = 0;
     steps.forEach(step => {
+      // Make step visible but positioned absolutely so it doesn't affect layout
       step.style.display = 'flex';
       step.style.visibility = 'hidden';
       step.style.position = 'absolute';
+      step.style.width = 'auto';
+      step.style.minWidth = '0';
       step.classList.remove(CONSTANTS.CSS.ACTIVE);
     });
 
     // Force layout recalculation
     content.offsetHeight;
 
-    // Measure each step's width
-    let maxWidth = 0;
+    // Now measure each step individually
     steps.forEach(step => {
-      // Temporarily make this step visible for measurement
       step.style.visibility = 'visible';
-      step.style.position = 'relative';
 
-      const width = step.scrollWidth;
-      if (width > maxWidth) maxWidth = width;
+      // Get the width the step wants to be (its natural content width)
+      const naturalWidth = step.scrollWidth;
+      if (naturalWidth > maxWidth) {
+        maxWidth = naturalWidth;
+      }
 
-      // Hide again for next measurement
       step.style.visibility = 'hidden';
-      step.style.position = 'absolute';
     });
 
     // Restore original states
@@ -490,15 +497,21 @@
       state.element.style.display = state.display;
       state.element.style.visibility = state.visibility;
       state.element.style.position = state.position;
+      state.element.style.width = state.width;
+      state.element.style.minWidth = state.minWidth;
+      state.element.style.whiteSpace = state.whiteSpace;
       if (state.hasActive) {
         state.element.classList.add(CONSTANTS.CSS.ACTIVE);
       }
     });
 
-    // Set minimum width on content and all steps to prevent horizontal resizing
+    // Apply the maximum width to ensure all steps are the same size
     if (maxWidth > 0) {
+      // Set as CSS custom property for flexibility
+      document.documentElement.style.setProperty('--step-stable-width', maxWidth + 'px');
+
+      // Also set inline styles as fallback
       content.style.minWidth = maxWidth + 'px';
-      // Also set minWidth on each step to ensure they all maintain the same width
       steps.forEach(step => {
         step.style.minWidth = maxWidth + 'px';
       });
