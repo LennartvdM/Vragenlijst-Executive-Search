@@ -1346,11 +1346,13 @@ h1 {
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
+  /* Use CSS custom property for stable width (set by JavaScript) */
+  min-width: var(--step-stable-width, auto);
 }
 
 .step.active {
   display: flex;
-  flex: 1 0 100%;
+  flex: 1 0 auto;
   width: 100%;
 }
 
