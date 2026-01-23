@@ -60,11 +60,9 @@ body {
   box-shadow:
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
-  outline: var(--outline-width) solid var(--cream);
-  outline-offset: 0;
   width: 100%;
   max-width: 420px;
-  overflow: hidden;
+  overflow: visible; /* Allow SVG outline to render outside */
 }
 
 .login-header {
@@ -494,8 +492,6 @@ body {
   box-shadow:
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
-  outline: var(--outline-width) solid var(--cream);
-  outline-offset: 0;
   width: 900px;
   max-width: calc(100vw - 40px);
   min-height: 540px;
