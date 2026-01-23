@@ -540,8 +540,13 @@
       highlighter.style.top = topPosition + 'px';
       highlighter.style.height = itemRect.height + 'px';
       highlighter.classList.add('active');
+
+      // Morph shape based on element type
+      const isDivider = activeItem.classList.contains('index-divider-clickable');
+      highlighter.classList.toggle('highlighter-divider', isDivider);
+      highlighter.classList.toggle('highlighter-item', !isDivider);
     } else {
-      highlighter.classList.remove('active');
+      highlighter.classList.remove('active', 'highlighter-divider', 'highlighter-item');
     }
   }
 

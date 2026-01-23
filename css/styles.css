@@ -2712,19 +2712,33 @@ h1 {
     right: 0;
     height: 48px;
     background: rgba(255, 255, 255, 0.85);
-    border-radius: 0 12px 12px 0; /* Flat left edge for outcrop effect */
+    border-radius: 12px; /* Default rounded */
     pointer-events: none;
     z-index: 0;
     opacity: 0;
     transition:
       top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.25s ease,
-      height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .mobile-highlighter.active {
     opacity: 1;
+  }
+
+  /* Highlighter shape for regular index items - outcrop on left */
+  .mobile-highlighter.highlighter-item {
+    left: 0;
+    border-radius: 0 12px 12px 0; /* Flat left edge for outcrop effect */
+  }
+
+  /* Highlighter shape for section dividers - fully rounded, aligned with divider */
+  .mobile-highlighter.highlighter-divider {
+    left: 24px; /* Match divider margin */
+    border-radius: 12px; /* Rounded on all sides */
   }
 
   /* When item is active, push status icon into the outcrop area */
