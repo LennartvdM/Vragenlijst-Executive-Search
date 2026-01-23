@@ -660,9 +660,9 @@ body {
   background: var(--terracotta);
 }
 
-/* Active AND complete - darker terracotta (keeps completion color) */
+/* Active AND complete - more saturated teal to show prominence */
 .index-item.active.complete .status {
-  background: var(--salmon-dark);
+  background: var(--teal-dark);
 }
 
 .index-item.partial .status {
