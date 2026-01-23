@@ -11,6 +11,7 @@
 }
 
 :root {
+  color-scheme: light only;
   --salmon: #e8a091;
   --salmon-light: #f5c4b8;
   --salmon-dark: #c47a6c;
