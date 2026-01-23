@@ -27,8 +27,8 @@
   --error-light: #fee;
   --success: #2d8a4e;
   --success-light: #e8f5e9;
-  --teal: #2d9a8c;
-  --teal-dark: #1f7268;
+  --teal: #2a9d8f;
+  --teal-dark: #1e7b70;
 
   /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
@@ -558,11 +558,11 @@ body {
   z-index: 0;
   opacity: 0;
   transition:
-    top 0.43s ease-in-out,
-    height 0.43s ease-in-out,
-    left 0.43s ease-in-out,
-    border-radius 0.43s ease-in-out,
-    opacity 0.25s ease;
+    top 0.35s ease-in-out,
+    height 0.35s ease-in-out,
+    left 0.35s ease-in-out,
+    border-radius 0.35s ease-in-out,
+    opacity 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -629,14 +629,14 @@ body {
   color: white;
   flex-shrink: 0;
   transition:
-    transform 0.43s ease-in-out,
-    background 0.43s ease-in-out;
+    transform 0.3s ease-out,
+    background 0.3s ease-out;
 }
 
 /* Push status icon into outcrop when active + enlarge + teal */
 .index-item.active .status {
-  transform: translateX(-36px) scale(1.15);
-  background: var(--teal, #2d9a8c);
+  transform: translateX(-42px) scale(1.15);
+  background: var(--teal);
 }
 
 /* Completed but not active - darker terracotta */
@@ -646,7 +646,7 @@ body {
 
 /* Active AND complete - darker teal */
 .index-item.active.complete .status {
-  background: var(--teal-dark, #1f7268);
+  background: var(--teal-dark);
 }
 
 .index-item.partial .status {
@@ -655,7 +655,7 @@ body {
 
 /* Active AND partial - teal */
 .index-item.active.partial .status {
-  background: var(--teal, #2d9a8c);
+  background: var(--teal);
 }
 
 .index-item.conditional-incomplete .status {
@@ -690,7 +690,7 @@ body {
 /* Clickable divider that navigates to a step */
 .index-divider-clickable {
   cursor: pointer;
-  transition: all 0.43s ease-in-out;
+  transition: all 0.35s ease-in-out;
   border-radius: 0;
   margin-left: -20px;
   margin-right: -20px;
