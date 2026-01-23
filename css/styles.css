@@ -785,14 +785,21 @@ body {
   position: relative;
   /* Much taller max-height - allows card to expand significantly */
   max-height: calc(100vh - 200px);
-  overflow-y: auto;
+  /* Overlay scrollbar - floats on top, takes no space */
+  overflow-y: auto; /* Fallback */
+  overflow-y: overlay; /* Ephemeral scrollbar - doesn't affect layout */
   overflow-x: hidden;
   scroll-behavior: smooth;
-  /* Push scrollbar far right into its own space - doesn't affect content width */
-  margin-right: -30px;
-  padding-right: 30px;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
+}
+
+/* Fallback for browsers without overlay support */
+@supports not (overflow-y: overlay) {
+  .content-scrollable {
+    overflow-y: auto;
+    padding-right: 0;
+  }
 }
 
 /* During step animation, allow content to overflow so slide animation isn't clipped */
