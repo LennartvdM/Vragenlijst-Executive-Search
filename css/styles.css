@@ -571,6 +571,17 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+/* Initial page load - suppress visibility until ready */
+.mobile-highlighter.initial-load {
+  opacity: 0 !important;
+  transition: none !important;
+}
+
+/* Fade in after initial load */
+.mobile-highlighter.fade-in {
+  transition: opacity 0.5s ease-in-out !important;
+}
+
 .mobile-highlighter.active {
   opacity: 1;
 }
