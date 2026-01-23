@@ -28,11 +28,8 @@
   --success: #2d8a4e;
   --success-light: #e8f5e9;
 
-  /* Negative outline - outer stroke using fill color */
-  --outline-color: var(--cream);
-  --outline-color-soft: var(--sand-light);
+  /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
-  --outline-width-sm: 4px;
 }
 
 body {
@@ -63,11 +60,9 @@ body {
   box-shadow:
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
-  outline: var(--outline-width) solid var(--cream);
-  outline-offset: 0;
   width: 100%;
   max-width: 420px;
-  overflow: hidden;
+  overflow: visible; /* Allow SVG outline to render outside */
 }
 
 .login-header {
@@ -86,7 +81,6 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .logo-icon svg {
@@ -109,9 +103,7 @@ body {
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .login-body {
@@ -155,7 +147,6 @@ body {
   font-weight: 600;
   text-align: center;
   margin-bottom: 16px;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .public-access {
@@ -228,7 +219,6 @@ body {
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 12px;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .privacy-note svg {
@@ -271,7 +261,6 @@ body {
   color: var(--text);
   transition: all 0.3s ease;
   opacity: 0.6;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .field input:not(:placeholder-shown),
@@ -285,9 +274,7 @@ body {
 .field select:focus {
   outline: none;
   border-color: var(--salmon);
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 0 0 8px rgba(232, 160, 145, 0.25);
+  box-shadow: 0 0 0 3px rgba(232, 160, 145, 0.25);
   opacity: 1;
 }
 
@@ -350,7 +337,6 @@ body {
   color: var(--text);
   transition: all 0.3s ease;
   opacity: 0.6;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .multi-input-group input:not(:placeholder-shown) {
@@ -360,9 +346,7 @@ body {
 .multi-input-group input:focus {
   outline: none;
   border-color: var(--salmon);
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 0 0 8px rgba(232, 160, 145, 0.25);
+  box-shadow: 0 0 0 3px rgba(232, 160, 145, 0.25);
   opacity: 1;
 }
 
@@ -393,7 +377,6 @@ body {
   background: var(--cream);
   border: 2px solid var(--sand-dark);
   color: var(--text);
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .btn-secondary:hover {
@@ -405,7 +388,6 @@ body {
   background: transparent;
   border: 2px solid var(--terracotta);
   color: var(--terracotta);
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .btn-tertiary:hover {
@@ -416,16 +398,12 @@ body {
   background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
   border: none;
   color: white;
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 4px 12px rgba(196, 120, 90, 0.3);
+  box-shadow: 0 4px 12px rgba(196, 120, 90, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 6px 16px rgba(196, 120, 90, 0.4);
+  box-shadow: 0 6px 16px rgba(196, 120, 90, 0.4);
 }
 
 .btn-primary:disabled {
@@ -475,7 +453,6 @@ body {
   margin-bottom: 16px;
   font-size: 13px;
   color: var(--error);
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .error-message svg {
@@ -495,7 +472,6 @@ body {
   margin-bottom: 16px;
   font-size: 13px;
   color: var(--success);
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 /* ==========================================================================
@@ -516,8 +492,6 @@ body {
   box-shadow:
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
-  outline: var(--outline-width) solid var(--cream);
-  outline-offset: 0;
   width: 900px;
   max-width: calc(100vw - 40px);
   min-height: 540px;
@@ -568,7 +542,6 @@ body {
 
 .index-item.active {
   background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color);
 }
 
 .index-item .status {
@@ -717,7 +690,6 @@ h1 {
   font-size: 13px;
   color: var(--text);
   border-radius: 0 8px 8px 0;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .info-box-link {
@@ -771,7 +743,6 @@ h1 {
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color);
 }
 
 .answer-categories-box h3 {
@@ -917,7 +888,6 @@ h1 {
   opacity: 0.6;
   flex-shrink: 0;
   transition: all 0.2s;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .option-card:hover {
@@ -930,27 +900,21 @@ h1 {
   border-color: var(--terracotta);
   background: var(--sand-light);
   opacity: 1;
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 4px 16px rgba(196, 120, 90, 0.15);
+  box-shadow: 0 4px 16px rgba(196, 120, 90, 0.15);
   transform: translateY(-2px);
 }
 
 /* Option card with unfilled conditional - waiting state */
 .option-card.selected.awaiting-conditional {
   border-color: var(--salmon);
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 2px 8px rgba(232, 160, 145, 0.2);
+  box-shadow: 0 2px 8px rgba(232, 160, 145, 0.2);
   transform: translateY(-1px);
 }
 
 /* Full completion - satisfied conditional */
 .option-card.selected.conditional-satisfied {
   border-color: var(--terracotta);
-  box-shadow:
-    0 0 0 var(--outline-width-sm) var(--outline-color),
-    0 6px 20px rgba(196, 120, 90, 0.2);
+  box-shadow: 0 6px 20px rgba(196, 120, 90, 0.2);
   transform: translateY(-3px);
 }
 
@@ -1194,7 +1158,6 @@ h1 {
   justify-content: space-between;
   transition: all 0.4s ease;
   opacity: 0.6;
-  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-color-soft);
 }
 
 .section-header .status-icon {

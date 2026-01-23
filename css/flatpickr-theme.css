@@ -10,8 +10,6 @@
   box-shadow:
     0 12px 40px rgba(139, 90, 60, 0.2),
     0 4px 12px rgba(139, 90, 60, 0.1);
-  outline: var(--outline-width, 6px) solid var(--cream, #fffbf7);
-  outline-offset: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   padding: 8px;
   width: 320px;
