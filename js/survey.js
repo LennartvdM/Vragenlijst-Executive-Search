@@ -177,10 +177,14 @@
       // Use requestAnimationFrame to ensure DOM has updated
       requestAnimationFrame(() => {
         scrollable.scrollTo({ top: savedPosition, behavior: 'smooth' });
+        // Update fade gradients after scroll completes
+        setTimeout(updateFadeGradients, 400);
       });
     } else {
       // No saved position for this step - scroll to top smoothly
       scrollable.scrollTo({ top: 0, behavior: 'smooth' });
+      // Update fade gradients after scroll completes
+      setTimeout(updateFadeGradients, 400);
     }
   }
 
@@ -196,6 +200,31 @@
     scrollSaveTimeout = setTimeout(() => {
       saveScrollPosition();
     }, 150);
+
+    // Update fade gradients immediately (not debounced)
+    updateFadeGradients();
+  }
+
+  /**
+   * Update fade gradient visibility based on scroll position
+   */
+  function updateFadeGradients() {
+    const scrollable = getScrollableContainer();
+    const wrapper = document.querySelector('.content-scrollable-wrapper');
+    if (!scrollable || !wrapper) return;
+
+    const scrollTop = scrollable.scrollTop;
+    const scrollHeight = scrollable.scrollHeight;
+    const clientHeight = scrollable.clientHeight;
+    const threshold = 5; // Small threshold for "near edge" detection
+
+    // At top - hide top gradient
+    const atTop = scrollTop <= threshold;
+    // At bottom - hide bottom gradient
+    const atBottom = scrollTop + clientHeight >= scrollHeight - threshold;
+
+    wrapper.classList.toggle('at-top', atTop);
+    wrapper.classList.toggle('at-bottom', atBottom);
   }
 
   /**
@@ -249,6 +278,9 @@
     if (scrollable) {
       scrollable.addEventListener('scroll', handleScroll, { passive: true });
     }
+
+    // Initialize fade gradients on load
+    setTimeout(updateFadeGradients, 100);
 
     // Width stability handled via CSS - no resize recalculation needed
   });

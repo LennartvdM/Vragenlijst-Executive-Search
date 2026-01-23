@@ -762,19 +762,23 @@ body {
 
 .content-header {
   flex-shrink: 0;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
 }
 
 .content-scrollable {
   position: relative;
-  max-height: 500px;
+  /* Much taller max-height - allows card to expand significantly */
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
   /* Scrollbar in its own space on the right */
   margin-right: -40px;
   padding-right: 40px;
+  /* More vertical spacing */
+  padding-top: 8px;
+  padding-bottom: 24px;
 }
 
 /* Terracotta minimalist scrollbar */
@@ -820,17 +824,30 @@ body {
 .content-scrollable-wrapper::before {
   top: 0;
   background: linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 .content-scrollable-wrapper::after {
   bottom: 0;
   background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide gradients when at scroll limits */
+.content-scrollable-wrapper.at-top::before {
+  opacity: 0;
+}
+
+.content-scrollable-wrapper.at-bottom::after {
+  opacity: 0;
 }
 
 .content-footer {
   flex-shrink: 0;
-  margin-top: 24px;
-  padding-top: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
 }
 
 h1 {
@@ -847,7 +864,7 @@ h1 {
   color: var(--text-light);
   font-size: 14px;
   line-height: 1.6;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   flex-shrink: 0;
 }
 
@@ -1436,6 +1453,7 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 24px;
+  padding-top: 32px; /* More space from breadcrumbs above */
   padding-bottom: 16px;
   border-bottom: 1px solid var(--sand-dark);
 }
