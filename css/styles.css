@@ -762,21 +762,75 @@ body {
 
 .content-header {
   flex-shrink: 0;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
 }
 
 .content-scrollable {
+  position: relative;
   max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 12px;
-  margin-right: -12px;
   scroll-behavior: smooth;
+  /* Scrollbar in its own space on the right */
+  margin-right: -40px;
+  padding-right: 40px;
+}
+
+/* Terracotta minimalist scrollbar */
+.content-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content-scrollable::-webkit-scrollbar-thumb {
+  background: var(--terracotta);
+  border-radius: 3px;
+}
+
+.content-scrollable::-webkit-scrollbar-thumb:hover {
+  background: var(--salmon-dark);
+}
+
+/* Firefox scrollbar */
+.content-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: var(--terracotta) transparent;
+}
+
+/* Gradient fade mask container */
+.content-scrollable-wrapper {
+  position: relative;
+}
+
+.content-scrollable-wrapper::before,
+.content-scrollable-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 40px; /* Don't cover scrollbar */
+  height: 32px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.content-scrollable-wrapper::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
+}
+
+.content-scrollable-wrapper::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
 }
 
 .content-footer {
   flex-shrink: 0;
-  margin-top: 16px;
+  margin-top: 24px;
+  padding-top: 16px;
 }
 
 h1 {
