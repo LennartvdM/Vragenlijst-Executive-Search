@@ -55,15 +55,27 @@ body {
 }
 
 .login-card {
-  background: var(--cream);
-  backdrop-filter: blur(20px);
+  position: relative;
   border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  /* No overflow:hidden - header needs explicit border-radius */
+}
+
+/* Compound shape: unified background + outer stroke as single pseudo-element */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--outline-width));
+  left: calc(-1 * var(--outline-width));
+  right: calc(-1 * var(--outline-width));
+  bottom: calc(-1 * var(--outline-width));
+  background: var(--cream);
+  border-radius: calc(16px + var(--outline-width));
   box-shadow:
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
-  width: 100%;
-  max-width: 420px;
-  overflow: hidden;
+  z-index: -1;
 }
 
 .login-header {
@@ -71,6 +83,7 @@ body {
   padding: 40px 32px;
   text-align: center;
   color: white;
+  border-radius: 16px 16px 0 0;
 }
 
 .logo-icon {
@@ -487,18 +500,29 @@ body {
 }
 
 .container {
-  background: var(--cream);
-  backdrop-filter: blur(20px);
+  position: relative;
   border-radius: 12px;
-  box-shadow:
-    0 8px 32px rgba(139, 90, 60, 0.15),
-    0 2px 8px rgba(139, 90, 60, 0.1);
   width: 900px;
   max-width: calc(100vw - 40px);
   min-height: 540px;
   display: flex;
-  overflow: hidden;
-  position: relative;
+  /* No overflow:hidden - sidebar needs explicit border-radius */
+}
+
+/* Compound shape: unified background + outer stroke as single pseudo-element */
+.container::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--outline-width));
+  left: calc(-1 * var(--outline-width));
+  right: calc(-1 * var(--outline-width));
+  bottom: calc(-1 * var(--outline-width));
+  background: var(--cream);
+  border-radius: calc(12px + var(--outline-width));
+  box-shadow:
+    0 8px 32px rgba(139, 90, 60, 0.15),
+    0 2px 8px rgba(139, 90, 60, 0.1);
+  z-index: -1;
 }
 
 /* ==========================================================================
@@ -511,6 +535,7 @@ body {
   background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
   display: flex;
   flex-direction: column;
+  border-radius: 12px 0 0 12px;
 }
 
 .index h2 {
@@ -1627,6 +1652,12 @@ h1 {
     min-height: auto !important;
   }
 
+  /* Hide compound shape pseudo-elements for print */
+  .container::before,
+  .login-card::before {
+    display: none !important;
+  }
+
   .content {
     padding: 20px !important;
     min-height: auto !important;
@@ -2140,6 +2171,7 @@ h1 {
   .index {
     flex: none;
     padding: 20px;
+    border-radius: 12px 12px 0 0;
   }
 
   .content {
@@ -2709,6 +2741,11 @@ h1 {
     /* Remove backdrop-filter to prevent stacking context that traps sidebar z-index */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+
+  /* Update pseudo-element border-radius to match */
+  .container::before {
+    border-radius: calc(16px + var(--outline-width));
   }
 
   /* Content area - full width on mobile */
