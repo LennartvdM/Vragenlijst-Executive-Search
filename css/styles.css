@@ -681,10 +681,12 @@ body {
 .index-item .label {
   font-size: 13px;
   color: var(--text);
+  transition: transform 0.3s ease-in-out;
 }
 
 .index-item.active .label {
   font-weight: 600;
+  transform: translateX(-20px);
 }
 
 /* Index dividers for grouping navigation items */
@@ -2868,6 +2870,7 @@ h1 {
 
   .index-item .label {
     font-size: 14px;
+    transform: none; /* Reset desktop transform */
   }
 
   .index-item .status {
