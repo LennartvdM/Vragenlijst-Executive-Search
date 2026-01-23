@@ -791,6 +791,11 @@ body {
   padding-bottom: 24px;
 }
 
+/* During step animation, allow content to overflow so slide animation isn't clipped */
+.content-scrollable.animating {
+  overflow: visible;
+}
+
 /* Terracotta minimalist scrollbar */
 .content-scrollable::-webkit-scrollbar {
   width: 6px;
