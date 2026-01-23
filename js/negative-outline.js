@@ -86,12 +86,36 @@
   }
 
   /**
+   * Create a unique ID for gradient
+   */
+  let gradientCounter = 0;
+  function createGradientId() {
+    return 'neg-outline-grad-' + (++gradientCounter);
+  }
+
+  /**
+   * Get gradient colors from CSS variables
+   */
+  function getGradientColors() {
+    const root = getComputedStyle(document.documentElement);
+    // Use design system colors for subtle gradient
+    const cream = root.getPropertyValue('--cream').trim() || '#fffbf7';
+    const sandLight = root.getPropertyValue('--sand-light').trim() || '#faf4eb';
+    const salmonLight = root.getPropertyValue('--salmon-light').trim() || '#f5c4b8';
+
+    return {
+      start: cream,
+      mid: sandLight,
+      end: salmonLight
+    };
+  }
+
+  /**
    * Apply negative outline to an element
    * Inserts SVG as a sibling, positioned behind the element
    */
   function applyOutline(element) {
     const outlineWidth = getOutlineWidth(element);
-    const outlineColor = getOutlineColor(element);
     const baseRadius = getBorderRadius(element);
 
     // Get element's position relative to its offset parent
@@ -138,6 +162,55 @@
       z-index: 0;
     `;
 
+    // Get or create defs for gradient
+    let defs = svg.querySelector('defs');
+    if (!defs) {
+      defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      svg.appendChild(defs);
+    }
+
+    // Create gradient with unique ID
+    const gradientId = svg.dataset.gradientId || createGradientId();
+    svg.dataset.gradientId = gradientId;
+
+    let gradient = defs.querySelector('#' + gradientId);
+    if (!gradient) {
+      gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      gradient.setAttribute('id', gradientId);
+      defs.appendChild(gradient);
+    }
+
+    // Subtle diagonal gradient (135deg like the body background)
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '100%');
+    gradient.setAttribute('y2', '100%');
+
+    // Get colors from design system
+    const colors = getGradientColors();
+
+    // Clear existing stops
+    gradient.innerHTML = '';
+
+    // Very subtle gradient - mostly cream with hint of warmth
+    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', colors.start);
+
+    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2.setAttribute('offset', '50%');
+    stop2.setAttribute('stop-color', colors.mid);
+    stop2.setAttribute('stop-opacity', '0.5'); // Blend subtly
+
+    const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop3.setAttribute('offset', '100%');
+    stop3.setAttribute('stop-color', colors.end);
+    stop3.setAttribute('stop-opacity', '0.15'); // Very subtle pink hint
+
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    gradient.appendChild(stop3);
+
     // Update or create path
     let path = svg.querySelector('path');
     if (!path) {
@@ -145,7 +218,7 @@
       svg.appendChild(path);
     }
     path.setAttribute('d', createRoundedRectPath(totalWidth, totalHeight, outerRadius));
-    path.setAttribute('fill', outlineColor);
+    path.setAttribute('fill', `url(#${gradientId})`);
 
     // Ensure element is above SVG
     const currentZIndex = getComputedStyle(element).zIndex;
