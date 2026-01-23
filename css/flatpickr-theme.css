@@ -8,7 +8,7 @@
   border: 2px solid var(--sand-dark, #d4c4a8);
   border-radius: 16px;
   box-shadow:
-    0 0 0 var(--outline-width, 1px) var(--outline-light, rgba(255, 255, 255, 0.6)),
+    0 0 0 var(--outline-width, 2px) var(--outline-light, rgba(255, 255, 255, 0.95)),
     0 12px 40px rgba(139, 90, 60, 0.2),
     0 4px 12px rgba(139, 90, 60, 0.1);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;

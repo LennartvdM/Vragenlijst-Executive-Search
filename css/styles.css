@@ -29,10 +29,10 @@
   --success-light: #e8f5e9;
 
   /* Negative outline effect variables */
-  --outline-light: rgba(255, 255, 255, 0.6);
-  --outline-medium: rgba(255, 255, 255, 0.4);
-  --outline-subtle: rgba(255, 255, 255, 0.25);
-  --outline-width: 1px;
+  --outline-light: rgba(255, 255, 255, 0.95);
+  --outline-medium: rgba(255, 255, 255, 0.8);
+  --outline-subtle: rgba(255, 255, 255, 0.6);
+  --outline-width: 2px;
 }
 
 body {
