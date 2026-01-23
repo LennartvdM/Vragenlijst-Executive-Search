@@ -123,18 +123,21 @@
   </div>
 
   <div class="content">
-    <div class="progress-dots-top-container">
-      <div class="progress-dots progress-dots-top" id="progressDotsTop"></div>
-    </div>
-    <div class="top-bar">
-      <div class="nav-buttons nav-buttons-top" id="navButtonsTop">
-        <button type="button" class="btn btn-secondary btn-small" id="btnPrevTop" data-action="prevStep" style="display:none;">Vorige</button>
-        <button type="button" class="btn btn-tertiary btn-small" id="btnGoToReviewTop" data-action="goToReview" style="display:none;">Controle</button>
-        <button type="button" class="btn btn-primary btn-small" id="btnNextTop" data-action="nextStep">Volgende</button>
+    <div class="content-header">
+      <div class="progress-dots-top-container">
+        <div class="progress-dots progress-dots-top" id="progressDotsTop"></div>
+      </div>
+      <div class="top-bar">
+        <div class="nav-buttons nav-buttons-top" id="navButtonsTop">
+          <button type="button" class="btn btn-secondary btn-small" id="btnPrevTop" data-action="prevStep" style="display:none;">Vorige</button>
+          <button type="button" class="btn btn-tertiary btn-small" id="btnGoToReviewTop" data-action="goToReview" style="display:none;">Controle</button>
+          <button type="button" class="btn btn-primary btn-small" id="btnNextTop" data-action="nextStep">Volgende</button>
+        </div>
       </div>
     </div>
 
-    <form id="monitoringForm">
+    <div class="content-scrollable" id="contentScrollable">
+      <form id="monitoringForm">
 
       <!-- Step 0: Welcome -->
       <div class="step active" data-step="0">
@@ -1172,24 +1175,27 @@
         </div>
       </div>
 
-    </form>
-
-    <div class="bottom-bar">
-      <button type="button" class="btn btn-print btn-print-small" id="btnPrint" data-action="printForm" title="Print formulier">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>
-      </button>
-      <div class="nav-buttons" id="navButtons">
-        <button type="button" class="btn btn-secondary btn-small" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
-        <button type="button" class="btn btn-tertiary btn-small" id="btnGoToReview" data-action="goToReview" style="display:none;">Controle</button>
-        <button type="button" class="btn btn-primary btn-small" id="btnNext" data-action="nextStep">Volgende</button>
-      </div>
+      </form>
     </div>
-    <div class="progress-dots-bottom-container">
-      <div class="progress-dots progress-dots-bottom" id="progressDots"></div>
+
+    <div class="content-footer">
+      <div class="bottom-bar">
+        <button type="button" class="btn btn-print btn-print-small" id="btnPrint" data-action="printForm" title="Print formulier">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+        </button>
+        <div class="nav-buttons" id="navButtons">
+          <button type="button" class="btn btn-secondary btn-small" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
+          <button type="button" class="btn btn-tertiary btn-small" id="btnGoToReview" data-action="goToReview" style="display:none;">Controle</button>
+          <button type="button" class="btn btn-primary btn-small" id="btnNext" data-action="nextStep">Volgende</button>
+        </div>
+      </div>
+      <div class="progress-dots-bottom-container">
+        <div class="progress-dots progress-dots-bottom" id="progressDots"></div>
+      </div>
     </div>
   </div>
 </div>

@@ -649,9 +649,9 @@ body {
   background: var(--terracotta);
 }
 
-/* Active AND complete - darker teal */
+/* Active AND complete - darker terracotta (keeps completion color) */
 .index-item.active.complete .status {
-  background: var(--teal-dark);
+  background: var(--salmon-dark);
 }
 
 .index-item.partial .status {
@@ -754,13 +754,29 @@ body {
 .content {
   flex: 1;
   min-width: 0;
-  padding: 50px 60px 50px 20px;
+  padding: 20px 60px 20px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  position: relative;
+}
+
+.content-header {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.content-scrollable {
+  max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
-  position: relative;
+  padding-right: 12px;
+  margin-right: -12px;
+  scroll-behavior: smooth;
+}
+
+.content-footer {
+  flex-shrink: 0;
+  margin-top: 16px;
 }
 
 h1 {
@@ -2855,8 +2871,24 @@ h1 {
 
   /* Content area - full width on mobile */
   .content {
-    padding: 20px 16px 24px;
+    padding: 0;
     width: 100%;
+    height: 100%;
+  }
+
+  .content-header {
+    display: none; /* Hide header on mobile - using drawer instead */
+  }
+
+  .content-scrollable {
+    max-height: none; /* No height limit on mobile - page scrolls naturally */
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+  }
+
+  .content-footer {
+    margin-top: 24px;
   }
 
   /* Hide progress dots at top on mobile - we have the drawer */
@@ -2922,9 +2954,10 @@ h1 {
     font-weight: 600;
   }
 
-  /* Add bottom padding to content so it's not hidden behind fixed nav */
-  .content {
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+  /* Reset scrollable on mobile - page scrolls normally */
+  .content-scrollable {
+    max-height: none;
+    overflow: visible;
   }
 
   /* Form fields - larger touch targets */
@@ -3392,9 +3425,9 @@ h1 {
     padding: 12px 8px;
   }
 
-  .content {
-    padding: 16px 12px 20px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+  .content-scrollable {
+    max-height: none;
+    overflow: visible;
   }
 
   h1 {
