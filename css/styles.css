@@ -27,6 +27,8 @@
   --error-light: #fee;
   --success: #2d8a4e;
   --success-light: #e8f5e9;
+  --teal: #2d9a8c;
+  --teal-dark: #1f7268;
 
   /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
@@ -548,17 +550,19 @@ body {
   top: 0;
   right: 8px;
   height: 38px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 19px 8px 8px 19px; /* Fully rounded left, normal right */
   pointer-events: none;
   z-index: 0;
   opacity: 0;
   transition:
-    top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-radius 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.2s ease;
+    top 0.43s ease-in-out,
+    height 0.43s ease-in-out,
+    left 0.43s ease-in-out,
+    border-radius 0.43s ease-in-out,
+    opacity 0.25s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -572,10 +576,11 @@ body {
   border-radius: 19px 8px 8px 19px;
 }
 
-/* Highlighter shape for section dividers - indented, normal rounded */
+/* Highlighter shape for section dividers - full width, normal rounded */
 .mobile-highlighter.highlighter-divider {
-  left: 8px; /* Indented, no outcrop */
-  border-radius: 8px;
+  left: -20px;
+  right: -20px;
+  border-radius: 0;
 }
 
 .index h2 {
@@ -623,20 +628,34 @@ body {
   font-size: 10px;
   color: white;
   flex-shrink: 0;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.43s ease-in-out,
+    background 0.43s ease-in-out;
 }
 
-/* Push status icon into outcrop when active */
+/* Push status icon into outcrop when active + enlarge + teal */
 .index-item.active .status {
-  transform: translateX(-32px);
+  transform: translateX(-36px) scale(1.15);
+  background: var(--teal, #2d9a8c);
 }
 
+/* Completed but not active - darker terracotta */
 .index-item.complete .status {
   background: var(--terracotta);
 }
 
+/* Active AND complete - darker teal */
+.index-item.active.complete .status {
+  background: var(--teal-dark, #1f7268);
+}
+
 .index-item.partial .status {
   background: var(--salmon);
+}
+
+/* Active AND partial - teal */
+.index-item.active.partial .status {
+  background: var(--teal, #2d9a8c);
 }
 
 .index-item.conditional-incomplete .status {
@@ -671,11 +690,11 @@ body {
 /* Clickable divider that navigates to a step */
 .index-divider-clickable {
   cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 4px;
-  margin-left: 16px; /* Indented from outcrop area */
-  margin-right: -8px;
-  padding: 8px 12px;
+  transition: all 0.43s ease-in-out;
+  border-radius: 0;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding: 12px 20px;
   position: relative;
   z-index: 1; /* Above highlighter */
 }
@@ -691,7 +710,7 @@ body {
 }
 
 .org-info {
-  margin-top: auto;
+  margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid var(--sand-dark);
 }
