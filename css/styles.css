@@ -788,8 +788,9 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  /* Reserve space for scrollbar to prevent width shifts on paging */
-  scrollbar-gutter: stable;
+  /* Push scrollbar far right into its own space - doesn't affect content width */
+  margin-right: -30px;
+  padding-right: 30px;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
 }
