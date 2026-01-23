@@ -660,9 +660,9 @@ body {
   background: var(--terracotta);
 }
 
-/* Active AND complete - darker terracotta (keeps completion color) */
+/* Active AND complete - more saturated teal to show prominence */
 .index-item.active.complete .status {
-  background: var(--salmon-dark);
+  background: var(--teal-dark);
 }
 
 .index-item.partial .status {
@@ -686,7 +686,7 @@ body {
 
 .index-item.active .label {
   font-weight: 600;
-  transform: translateX(-20px);
+  transform: translateX(-32px) scale(1.1);
 }
 
 /* Index dividers for grouping navigation items */
