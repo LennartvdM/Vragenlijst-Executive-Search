@@ -86,46 +86,16 @@
   }
 
   /**
-   * Create a unique ID for gradient
-   */
-  let gradientCounter = 0;
-  function createGradientId() {
-    return 'neg-outline-grad-' + (++gradientCounter);
-  }
-
-  /**
-   * Get gradient colors from CSS variables
-   */
-  function getGradientColors() {
-    const root = getComputedStyle(document.documentElement);
-    // Use design system colors for subtle gradient
-    const cream = root.getPropertyValue('--cream').trim() || '#fffbf7';
-    const sandLight = root.getPropertyValue('--sand-light').trim() || '#faf4eb';
-    const salmonLight = root.getPropertyValue('--salmon-light').trim() || '#f5c4b8';
-
-    return {
-      start: cream,
-      mid: sandLight,
-      end: salmonLight
-    };
-  }
-
-  /**
    * Apply negative outline to an element
    * Inserts SVG as a sibling, positioned behind the element
    */
   function applyOutline(element) {
     const outlineWidth = getOutlineWidth(element);
+    const outlineColor = getOutlineColor(element);
     const baseRadius = getBorderRadius(element);
 
-    // Get element's position relative to its offset parent
+    // Get element dimensions
     const rect = element.getBoundingClientRect();
-    const parentRect = element.offsetParent
-      ? element.offsetParent.getBoundingClientRect()
-      : { left: 0, top: 0 };
-
-    const offsetLeft = rect.left - parentRect.left;
-    const offsetTop = rect.top - parentRect.top;
 
     // Total dimensions including outline
     const totalWidth = rect.width + (outlineWidth * 2);
@@ -148,82 +118,31 @@
       element.parentNode.insertBefore(svg, element);
     }
 
-    // Update SVG attributes
+    // Update SVG - position relative to the element using margin
     svg.setAttribute('width', totalWidth);
     svg.setAttribute('height', totalHeight);
     svg.setAttribute('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
     svg.style.cssText = `
       position: absolute;
-      left: ${offsetLeft - outlineWidth}px;
-      top: ${offsetTop - outlineWidth}px;
+      margin-left: -${outlineWidth}px;
+      margin-top: -${outlineWidth}px;
       width: ${totalWidth}px;
       height: ${totalHeight}px;
       pointer-events: none;
-      z-index: 0;
     `;
 
-    // Get or create defs for gradient
-    let defs = svg.querySelector('defs');
-    if (!defs) {
-      defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      svg.appendChild(defs);
-    }
-
-    // Create gradient with unique ID
-    const gradientId = svg.dataset.gradientId || createGradientId();
-    svg.dataset.gradientId = gradientId;
-
-    let gradient = defs.querySelector('#' + gradientId);
-    if (!gradient) {
-      gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-      gradient.setAttribute('id', gradientId);
-      defs.appendChild(gradient);
-    }
-
-    // Subtle diagonal gradient (135deg like the body background)
-    gradient.setAttribute('x1', '0%');
-    gradient.setAttribute('y1', '0%');
-    gradient.setAttribute('x2', '100%');
-    gradient.setAttribute('y2', '100%');
-
-    // Get colors from design system
-    const colors = getGradientColors();
-
-    // Clear existing stops
-    gradient.innerHTML = '';
-
-    // Very subtle gradient - solid colors from design system
-    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-    stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', colors.start); // cream
-
-    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-    stop2.setAttribute('offset', '60%');
-    stop2.setAttribute('stop-color', colors.mid); // sand-light
-
-    const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-    stop3.setAttribute('offset', '100%');
-    stop3.setAttribute('stop-color', colors.end); // salmon-light
-
-    gradient.appendChild(stop1);
-    gradient.appendChild(stop2);
-    gradient.appendChild(stop3);
-
-    // Update or create path
+    // Update or create path with solid fill
     let path = svg.querySelector('path');
     if (!path) {
       path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       svg.appendChild(path);
     }
     path.setAttribute('d', createRoundedRectPath(totalWidth, totalHeight, outerRadius));
-    path.setAttribute('fill', `url(#${gradientId})`);
+    path.setAttribute('fill', '#fffbf7'); // Hardcoded cream color
 
     // Ensure element is above SVG
-    const currentZIndex = getComputedStyle(element).zIndex;
-    if (currentZIndex === 'auto' || parseInt(currentZIndex) < 1) {
-      element.style.position = element.style.position || 'relative';
-      element.style.zIndex = '1';
-    }
+    element.style.position = 'relative';
+    element.style.zIndex = '1';
   }
 
   /**
