@@ -2708,21 +2708,21 @@ h1 {
     display: block; /* Override desktop display: none */
     position: absolute;
     left: 0;
-    top: 0;
+    top: 100px; /* Debug: visible starting position */
     right: 0;
     height: 48px;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(196, 120, 90, 0.5); /* Debug: terracotta color to see it */
     border-radius: 12px; /* Default rounded */
     pointer-events: none;
     z-index: 0;
-    opacity: 0;
+    opacity: 1; /* Debug: always visible */
     transition:
       top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.25s ease,
       height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
       left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
       border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   .mobile-highlighter.active {
