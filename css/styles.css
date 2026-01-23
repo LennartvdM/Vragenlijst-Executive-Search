@@ -546,6 +546,7 @@ body {
   border-radius: 12px 0 0 12px;
   position: relative; /* For highlighter positioning */
   overflow: visible; /* Allow outcrop to extend left */
+  user-select: none;
 }
 
 /* Desktop Highlighter - moves behind active item */
@@ -777,6 +778,7 @@ body {
   flex-shrink: 0;
   margin-bottom: 32px;
   padding-bottom: 24px;
+  user-select: none;
 }
 
 .content-scrollable {
@@ -865,6 +867,7 @@ body {
   flex-shrink: 0;
   margin-top: 32px;
   padding-top: 24px;
+  user-select: none;
 }
 
 h1 {
