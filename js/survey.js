@@ -827,11 +827,25 @@
 
       // Apply slide animation based on navigation direction
       if (previousStep !== -1 && previousStep !== step) {
+        const scrollableContainer = getScrollableContainer();
+
+        // Temporarily allow overflow so animation isn't clipped
+        if (scrollableContainer) {
+          scrollableContainer.classList.add('animating');
+        }
+
         if (step > previousStep) {
           stepEl.classList.add('slide-up');
         } else {
           stepEl.classList.add('slide-down');
         }
+
+        // Remove animating class after animation completes (0.35s + buffer)
+        setTimeout(() => {
+          if (scrollableContainer) {
+            scrollableContainer.classList.remove('animating');
+          }
+        }, 400);
       }
 
       // Restore saved scroll position for this step (or scroll to top if none saved)
