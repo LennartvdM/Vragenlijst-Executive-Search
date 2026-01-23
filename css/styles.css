@@ -27,11 +27,15 @@
   --error-light: #fee;
   --success: #2d8a4e;
   --success-light: #e8f5e9;
-  --teal: #2a9d8f;
-  --teal-dark: #1e7b70;
+  --teal: #7cc5c0;
+  --teal-dark: #5aada8;
 
   /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
+}
+
+html {
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -40,6 +44,7 @@ body {
   min-height: 100vh;
   color: var(--text);
   line-height: 1.5;
+  transition: background 0.5s ease;
 }
 
 /* ==========================================================================

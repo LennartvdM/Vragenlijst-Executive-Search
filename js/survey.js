@@ -164,11 +164,11 @@
     if (typeof savedPosition === 'number' && savedPosition > 0) {
       // Use requestAnimationFrame to ensure DOM has updated
       requestAnimationFrame(() => {
-        window.scrollTo({ top: savedPosition, behavior: 'instant' });
+        window.scrollTo({ top: savedPosition, behavior: 'smooth' });
       });
     } else {
-      // No saved position for this step - scroll to top
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      // No saved position for this step - scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
