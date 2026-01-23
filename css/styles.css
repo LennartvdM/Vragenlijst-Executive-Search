@@ -30,9 +30,10 @@
 
   /* Negative outline effect variables */
   --outline-light: rgba(255, 255, 255, 0.95);
-  --outline-medium: rgba(255, 255, 255, 0.8);
-  --outline-subtle: rgba(255, 255, 255, 0.6);
-  --outline-width: 2px;
+  --outline-medium: rgba(255, 255, 255, 0.85);
+  --outline-subtle: rgba(255, 255, 255, 0.7);
+  --outline-width: 6px;
+  --outline-width-sm: 4px;
 }
 
 body {
@@ -85,7 +86,7 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .logo-icon svg {
@@ -109,7 +110,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-light),
+    0 0 0 var(--outline-width-sm) var(--outline-light),
     0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
@@ -154,7 +155,7 @@ body {
   font-weight: 600;
   text-align: center;
   margin-bottom: 16px;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .public-access {
@@ -227,7 +228,7 @@ body {
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 12px;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .privacy-note svg {
@@ -270,7 +271,7 @@ body {
   color: var(--text);
   transition: all 0.3s ease;
   opacity: 0.6;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .field input:not(:placeholder-shown),
@@ -285,8 +286,8 @@ body {
   outline: none;
   border-color: var(--salmon);
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-medium),
-    0 0 0 4px rgba(232, 160, 145, 0.25);
+    0 0 0 var(--outline-width-sm) var(--outline-medium),
+    0 0 0 8px rgba(232, 160, 145, 0.25);
   opacity: 1;
 }
 
@@ -349,7 +350,7 @@ body {
   color: var(--text);
   transition: all 0.3s ease;
   opacity: 0.6;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .multi-input-group input:not(:placeholder-shown) {
@@ -360,8 +361,8 @@ body {
   outline: none;
   border-color: var(--salmon);
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-medium),
-    0 0 0 4px rgba(232, 160, 145, 0.25);
+    0 0 0 var(--outline-width-sm) var(--outline-medium),
+    0 0 0 8px rgba(232, 160, 145, 0.25);
   opacity: 1;
 }
 
@@ -392,7 +393,7 @@ body {
   background: var(--cream);
   border: 2px solid var(--sand-dark);
   color: var(--text);
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .btn-secondary:hover {
@@ -404,7 +405,7 @@ body {
   background: transparent;
   border: 2px solid var(--terracotta);
   color: var(--terracotta);
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .btn-tertiary:hover {
@@ -416,14 +417,14 @@ body {
   border: none;
   color: white;
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-medium),
+    0 0 0 var(--outline-width-sm) var(--outline-medium),
     0 4px 12px rgba(196, 120, 90, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-light),
+    0 0 0 var(--outline-width-sm) var(--outline-light),
     0 6px 16px rgba(196, 120, 90, 0.4);
 }
 
@@ -474,7 +475,7 @@ body {
   margin-bottom: 16px;
   font-size: 13px;
   color: var(--error);
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .error-message svg {
@@ -494,7 +495,7 @@ body {
   margin-bottom: 16px;
   font-size: 13px;
   color: var(--success);
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 /* ==========================================================================
@@ -566,7 +567,7 @@ body {
 
 .index-item.active {
   background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-medium);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-medium);
 }
 
 .index-item .status {
@@ -715,7 +716,7 @@ h1 {
   font-size: 13px;
   color: var(--text);
   border-radius: 0 8px 8px 0;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .info-box-link {
@@ -769,7 +770,7 @@ h1 {
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-medium);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-medium);
 }
 
 .answer-categories-box h3 {
@@ -915,7 +916,7 @@ h1 {
   opacity: 0.6;
   flex-shrink: 0;
   transition: all 0.2s;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .option-card:hover {
@@ -929,7 +930,7 @@ h1 {
   background: var(--sand-light);
   opacity: 1;
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-medium),
+    0 0 0 var(--outline-width-sm) var(--outline-medium),
     0 4px 16px rgba(196, 120, 90, 0.15);
   transform: translateY(-2px);
 }
@@ -938,7 +939,7 @@ h1 {
 .option-card.selected.awaiting-conditional {
   border-color: var(--salmon);
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-medium),
+    0 0 0 var(--outline-width-sm) var(--outline-medium),
     0 2px 8px rgba(232, 160, 145, 0.2);
   transform: translateY(-1px);
 }
@@ -947,7 +948,7 @@ h1 {
 .option-card.selected.conditional-satisfied {
   border-color: var(--terracotta);
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-light),
+    0 0 0 var(--outline-width-sm) var(--outline-light),
     0 6px 20px rgba(196, 120, 90, 0.2);
   transform: translateY(-3px);
 }
@@ -1192,7 +1193,7 @@ h1 {
   justify-content: space-between;
   transition: all 0.4s ease;
   opacity: 0.6;
-  box-shadow: 0 0 0 var(--outline-width) var(--outline-subtle);
+  box-shadow: 0 0 0 var(--outline-width-sm) var(--outline-subtle);
 }
 
 .section-header .status-icon {
