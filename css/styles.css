@@ -537,6 +537,12 @@ body {
   display: flex;
   flex-direction: column;
   border-radius: 12px 0 0 12px;
+  position: relative; /* For mobile highlighter positioning */
+}
+
+/* Hide mobile highlighter on desktop */
+.mobile-highlighter {
+  display: none;
 }
 
 .index h2 {
@@ -2677,8 +2683,11 @@ h1 {
   .index-item {
     padding: 14px 16px;
     margin-bottom: 6px;
+    margin-left: 24px; /* Space for outcrop on left */
     min-height: 48px;
     border-radius: 12px;
+    position: relative;
+    z-index: 1; /* Above the mobile highlighter */
   }
 
   .index-item .label {
@@ -2689,19 +2698,72 @@ h1 {
     width: 24px;
     height: 24px;
     font-size: 11px;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Mobile Highlighter - moves behind active item */
+  .mobile-highlighter {
+    display: block; /* Override desktop display: none */
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 0 12px 12px 0; /* Flat left edge for outcrop effect */
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition:
+      top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease,
+      height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .mobile-highlighter.active {
+    opacity: 1;
+  }
+
+  /* When item is active, push status icon into the outcrop area */
+  .index-item.active .status {
+    transform: translateX(-24px);
+  }
+
+  /* Remove default background from active items - highlighter handles this */
+  .index-item.active {
+    background: transparent;
+  }
+
+  .index-item:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
 
   .index-divider {
     padding: 16px 16px 8px;
     margin-top: 12px;
+    margin-left: 24px; /* Align with items */
+    margin-right: 0;
+    padding-left: 16px;
+    padding-right: 16px;
     font-size: 11px;
   }
 
   .index-divider-clickable {
     padding: 14px 16px;
+    margin-left: 24px; /* Space for outcrop on left */
     min-height: 44px;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 1; /* Above the mobile highlighter */
+  }
+
+  /* Remove background on active dividers - highlighter handles this */
+  .index-divider-clickable.active {
+    background: transparent;
   }
 
   /* Progress bar in drawer */

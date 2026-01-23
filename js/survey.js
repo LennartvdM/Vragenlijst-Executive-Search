@@ -512,6 +512,37 @@
       const step = parseInt(divider.dataset.step);
       divider.classList.toggle(CONSTANTS.CSS.ACTIVE, step === currentStep);
     });
+
+    // Update mobile highlighter position
+    updateMobileHighlighter();
+  }
+
+  /**
+   * Update mobile highlighter position to match active item
+   */
+  function updateMobileHighlighter() {
+    const highlighter = document.getElementById('mobileHighlighter');
+    const indexContainer = document.querySelector('.index');
+    if (!highlighter || !indexContainer) return;
+
+    // Find the active item (could be index-item or index-divider-clickable)
+    const activeItem = indexContainer.querySelector('.index-item.active, .index-divider-clickable.active');
+
+    if (activeItem) {
+      // Get position relative to index container
+      const indexRect = indexContainer.getBoundingClientRect();
+      const itemRect = activeItem.getBoundingClientRect();
+
+      // Calculate top position relative to index (accounting for scroll)
+      const topPosition = itemRect.top - indexRect.top + indexContainer.scrollTop;
+
+      // Update highlighter position and size
+      highlighter.style.top = topPosition + 'px';
+      highlighter.style.height = itemRect.height + 'px';
+      highlighter.classList.add('active');
+    } else {
+      highlighter.classList.remove('active');
+    }
   }
 
   /**
@@ -2761,6 +2792,11 @@
       }
     });
 
+    // Update highlighter position when index is scrolled
+    index.addEventListener('scroll', function() {
+      updateMobileHighlighter();
+    }, { passive: true });
+
     // Handle swipe gestures on mobile
     let touchStartX = 0;
     let touchEndX = 0;
@@ -2817,6 +2853,10 @@
     overlay.classList.add('active');
     index.classList.add('mobile-open');
     document.body.classList.add('mobile-drawer-open');
+
+    // Update mobile highlighter position after drawer opens
+    // Small delay to ensure layout is complete
+    requestAnimationFrame(updateMobileHighlighter);
   }
 
   /**
