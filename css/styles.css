@@ -549,7 +549,7 @@ body {
   right: 8px;
   height: 38px;
   background: rgba(255, 255, 255, 0.85);
-  border-radius: 0 8px 8px 0; /* Flat left edge for outcrop */
+  border-radius: 19px; /* Fully rounded pill shape */
   pointer-events: none;
   z-index: 0;
   opacity: 0;
@@ -566,16 +566,16 @@ body {
   opacity: 1;
 }
 
-/* Highlighter shape for regular items - outcrop on left */
+/* Highlighter shape for regular items - fully rounded pill */
 .mobile-highlighter.highlighter-item {
   left: -20px; /* Extend beyond sidebar left edge */
-  border-radius: 0 8px 8px 0;
+  border-radius: 19px;
 }
 
 /* Highlighter shape for section dividers - indented, fully rounded */
 .mobile-highlighter.highlighter-divider {
   left: 8px; /* Indented, no outcrop */
-  border-radius: 8px;
+  border-radius: 19px;
 }
 
 .index h2 {
