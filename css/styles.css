@@ -533,7 +533,6 @@ body {
 .index {
   flex: 0 0 260px;
   padding: 40px 20px;
-  padding-left: 44px; /* Extra space for highlighter outcrop */
   background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
   display: flex;
   flex-direction: column;
@@ -545,9 +544,9 @@ body {
 /* Desktop Highlighter - moves behind active item */
 .mobile-highlighter {
   position: absolute;
-  left: 0;
+  left: -20px; /* Extend into outcrop area beyond sidebar */
   top: 0;
-  right: 20px; /* Match right padding */
+  right: 8px;
   height: 38px;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 0 8px 8px 0; /* Flat left edge for outcrop */
@@ -569,13 +568,13 @@ body {
 
 /* Highlighter shape for regular items - outcrop on left */
 .mobile-highlighter.highlighter-item {
-  left: 0;
+  left: -20px; /* Extend beyond sidebar left edge */
   border-radius: 0 8px 8px 0;
 }
 
 /* Highlighter shape for section dividers - indented, fully rounded */
 .mobile-highlighter.highlighter-divider {
-  left: 24px;
+  left: 8px; /* Indented, no outcrop */
   border-radius: 8px;
 }
 
@@ -629,7 +628,7 @@ body {
 
 /* Push status icon into outcrop when active */
 .index-item.active .status {
-  transform: translateX(-24px);
+  transform: translateX(-32px);
 }
 
 .index-item.complete .status {
