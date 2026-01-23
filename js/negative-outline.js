@@ -192,20 +192,18 @@
     // Clear existing stops
     gradient.innerHTML = '';
 
-    // Very subtle gradient - mostly cream with hint of warmth
+    // Very subtle gradient - solid colors from design system
     const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', colors.start);
+    stop1.setAttribute('stop-color', colors.start); // cream
 
     const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-    stop2.setAttribute('offset', '50%');
-    stop2.setAttribute('stop-color', colors.mid);
-    stop2.setAttribute('stop-opacity', '0.5'); // Blend subtly
+    stop2.setAttribute('offset', '60%');
+    stop2.setAttribute('stop-color', colors.mid); // sand-light
 
     const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
     stop3.setAttribute('offset', '100%');
-    stop3.setAttribute('stop-color', colors.end);
-    stop3.setAttribute('stop-opacity', '0.15'); // Very subtle pink hint
+    stop3.setAttribute('stop-color', colors.end); // salmon-light
 
     gradient.appendChild(stop1);
     gradient.appendChild(stop2);
