@@ -788,9 +788,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  /* Scrollbar in its own space on the right */
-  margin-right: -40px;
-  padding-right: 40px;
+  /* Reserve space for scrollbar to prevent width shifts on paging */
+  scrollbar-gutter: stable;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
 }
@@ -800,7 +799,7 @@ body {
   overflow: visible;
 }
 
-/* Terracotta minimalist scrollbar */
+/* Brighter terracotta minimalist scrollbar */
 .content-scrollable::-webkit-scrollbar {
   width: 6px;
 }
@@ -810,18 +809,18 @@ body {
 }
 
 .content-scrollable::-webkit-scrollbar-thumb {
-  background: var(--terracotta);
+  background: var(--salmon);
   border-radius: 3px;
 }
 
 .content-scrollable::-webkit-scrollbar-thumb:hover {
-  background: var(--salmon-dark);
+  background: var(--terracotta);
 }
 
 /* Firefox scrollbar */
 .content-scrollable {
   scrollbar-width: thin;
-  scrollbar-color: var(--terracotta) transparent;
+  scrollbar-color: var(--salmon) transparent;
 }
 
 /* Gradient fade mask container */
