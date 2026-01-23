@@ -147,10 +147,19 @@
   }
 
   /**
+   * Get the scrollable content container
+   */
+  function getScrollableContainer() {
+    return document.getElementById('contentScrollable');
+  }
+
+  /**
    * Save the current scroll position for the current step
    */
   function saveScrollPosition() {
-    const scrollY = window.scrollY || window.pageYOffset;
+    const scrollable = getScrollableContainer();
+    if (!scrollable) return;
+    const scrollY = scrollable.scrollTop;
     scrollPositions[currentStep] = scrollY;
     persistScrollPositions();
   }
@@ -160,15 +169,18 @@
    * @param {number} step - The step to restore scroll position for
    */
   function restoreScrollPosition(step) {
+    const scrollable = getScrollableContainer();
+    if (!scrollable) return;
+
     const savedPosition = scrollPositions[step];
     if (typeof savedPosition === 'number' && savedPosition > 0) {
       // Use requestAnimationFrame to ensure DOM has updated
       requestAnimationFrame(() => {
-        window.scrollTo({ top: savedPosition, behavior: 'smooth' });
+        scrollable.scrollTo({ top: savedPosition, behavior: 'smooth' });
       });
     } else {
       // No saved position for this step - scroll to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollable.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
@@ -232,8 +244,11 @@
     // Initialize Flatpickr date picker
     initDatePicker();
 
-    // Listen for scroll events to save position (debounced in handleScroll)
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Listen for scroll events on content container to save position
+    const scrollable = document.getElementById('contentScrollable');
+    if (scrollable) {
+      scrollable.addEventListener('scroll', handleScroll, { passive: true });
+    }
 
     // Width stability handled via CSS - no resize recalculation needed
   });
