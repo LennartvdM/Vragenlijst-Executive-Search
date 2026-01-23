@@ -28,7 +28,7 @@
   --success: #2d8a4e;
   --success-light: #e8f5e9;
 
-  /* Negative outline effect - uses cream tones from design system */
+  /* Negative outline - outer stroke using fill color */
   --outline-color: var(--cream);
   --outline-color-soft: var(--sand-light);
   --outline-width: 6px;
@@ -57,13 +57,14 @@ body {
 }
 
 .login-card {
-  background: rgba(255, 251, 247, 0.95);
+  background: var(--cream);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-color),
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
+  outline: var(--outline-width) solid var(--cream);
+  outline-offset: 0;
   width: 100%;
   max-width: 420px;
   overflow: hidden;
@@ -509,13 +510,14 @@ body {
 }
 
 .container {
-  background: rgba(255, 251, 247, 0.92);
+  background: var(--cream);
   backdrop-filter: blur(20px);
   border-radius: 12px;
   box-shadow:
-    0 0 0 var(--outline-width) var(--outline-color),
     0 8px 32px rgba(139, 90, 60, 0.15),
     0 2px 8px rgba(139, 90, 60, 0.1);
+  outline: var(--outline-width) solid var(--cream);
+  outline-offset: 0;
   width: 900px;
   max-width: calc(100vw - 40px);
   min-height: 540px;
