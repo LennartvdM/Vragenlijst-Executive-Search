@@ -533,16 +533,50 @@ body {
 .index {
   flex: 0 0 260px;
   padding: 40px 20px;
+  padding-left: 44px; /* Extra space for highlighter outcrop */
   background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
   display: flex;
   flex-direction: column;
   border-radius: 12px 0 0 12px;
-  position: relative; /* For mobile highlighter positioning */
+  position: relative; /* For highlighter positioning */
+  overflow: visible; /* Allow outcrop to extend left */
 }
 
-/* Hide mobile highlighter on desktop */
+/* Desktop Highlighter - moves behind active item */
 .mobile-highlighter {
-  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 20px; /* Match right padding */
+  height: 38px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 0 8px 8px 0; /* Flat left edge for outcrop */
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition:
+    top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.mobile-highlighter.active {
+  opacity: 1;
+}
+
+/* Highlighter shape for regular items - outcrop on left */
+.mobile-highlighter.highlighter-item {
+  left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Highlighter shape for section dividers - indented, fully rounded */
+.mobile-highlighter.highlighter-divider {
+  left: 24px;
+  border-radius: 8px;
 }
 
 .index h2 {
@@ -567,14 +601,16 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s;
+  position: relative;
+  z-index: 1; /* Above highlighter */
 }
 
 .index-item:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .index-item.active {
-  background: rgba(255, 255, 255, 0.7);
+  background: transparent; /* Highlighter handles this */
 }
 
 .index-item .status {
@@ -588,6 +624,12 @@ body {
   font-size: 10px;
   color: white;
   flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Push status icon into outcrop when active */
+.index-item.active .status {
+  transform: translateX(-24px);
 }
 
 .index-item.complete .status {
@@ -632,19 +674,20 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 4px;
-  margin-left: -8px;
+  margin-left: 16px; /* Indented from outcrop area */
   margin-right: -8px;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 8px 12px;
+  position: relative;
+  z-index: 1; /* Above highlighter */
 }
 
 .index-divider-clickable:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
   color: var(--terracotta);
 }
 
 .index-divider-clickable.active {
-  background: rgba(255, 255, 255, 0.7);
+  background: transparent; /* Highlighter handles this */
   color: var(--terracotta);
 }
 
@@ -2679,15 +2722,22 @@ h1 {
     opacity: 0.7;
   }
 
+  /* Hide highlighter on mobile - use simple backgrounds instead */
+  .mobile-highlighter {
+    display: none;
+  }
+
+  /* Reset desktop outcrop padding on mobile */
+  .index {
+    padding-left: 20px;
+  }
+
   /* Make index items more touch-friendly */
   .index-item {
     padding: 14px 16px;
     margin-bottom: 6px;
-    margin-left: 24px; /* Space for outcrop on left */
     min-height: 48px;
     border-radius: 12px;
-    position: relative;
-    z-index: 1; /* Above the mobile highlighter */
   }
 
   .index-item .label {
@@ -2698,86 +2748,41 @@ h1 {
     width: 24px;
     height: 24px;
     font-size: 11px;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    z-index: 2;
+    transform: none; /* Reset desktop transform */
   }
 
-  /* Mobile Highlighter - moves behind active item */
-  .mobile-highlighter {
-    display: block; /* Override desktop display: none */
-    position: absolute;
-    left: 0;
-    top: 100px; /* Debug: visible starting position */
-    right: 0;
-    height: 48px;
-    background: rgba(196, 120, 90, 0.5); /* Debug: terracotta color to see it */
-    border-radius: 12px; /* Default rounded */
-    pointer-events: none;
-    z-index: 0;
-    opacity: 1; /* Debug: always visible */
-    transition:
-      top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.25s ease,
-      height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .mobile-highlighter.active {
-    opacity: 1;
-  }
-
-  /* Highlighter shape for regular index items - outcrop on left */
-  .mobile-highlighter.highlighter-item {
-    left: 0;
-    border-radius: 0 12px 12px 0; /* Flat left edge for outcrop effect */
-  }
-
-  /* Highlighter shape for section dividers - fully rounded, aligned with divider */
-  .mobile-highlighter.highlighter-divider {
-    left: 24px; /* Match divider margin */
-    border-radius: 12px; /* Rounded on all sides */
-  }
-
-  /* When item is active, push status icon into the outcrop area */
-  .index-item.active .status {
-    transform: translateX(-24px);
-  }
-
-  /* Remove default background from active items - highlighter handles this */
+  /* Simple background highlighting on mobile */
   .index-item.active {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .index-item.active .status {
+    transform: none; /* No outcrop on mobile */
   }
 
   .index-item:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
   }
 
   .index-divider {
     padding: 16px 16px 8px;
     margin-top: 12px;
-    margin-left: 24px; /* Align with items */
+    margin-left: 0;
     margin-right: 0;
-    padding-left: 16px;
-    padding-right: 16px;
     font-size: 11px;
   }
 
   .index-divider-clickable {
     padding: 14px 16px;
-    margin-left: 24px; /* Space for outcrop on left */
+    margin-left: 0;
     min-height: 44px;
     display: flex;
     align-items: center;
-    position: relative;
-    z-index: 1; /* Above the mobile highlighter */
   }
 
-  /* Remove background on active dividers - highlighter handles this */
+  /* Simple background on active dividers for mobile */
   .index-divider-clickable.active {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.7);
   }
 
   /* Progress bar in drawer */
