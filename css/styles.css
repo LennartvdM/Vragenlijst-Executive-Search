@@ -776,8 +776,7 @@ body {
   /* Scrollbar in its own space on the right */
   margin-right: -40px;
   padding-right: 40px;
-  /* More vertical spacing */
-  padding-top: 8px;
+  /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
 }
 
@@ -1452,7 +1451,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 24px;
+  margin-bottom: 12px; /* Tighter gap to content below */
   padding-top: 32px; /* More space from breadcrumbs above */
   padding-bottom: 16px;
   border-bottom: 1px solid var(--sand-dark);
