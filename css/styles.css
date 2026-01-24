@@ -786,10 +786,11 @@ body {
   /* Much taller max-height - allows card to expand significantly */
   max-height: calc(100vh - 200px);
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip; /* Clip but allow positioned elements to paint outside */
   scroll-behavior: smooth;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
+  padding-right: 40px; /* Space for checkmarks to overflow into */
   /* Hide native scrollbar - we use custom one */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
@@ -1013,6 +1014,7 @@ h1 {
   justify-content: flex-start;
   width: 100%;
   min-width: 0;
+  overflow: visible; /* Allow checkmarks to overflow */
 }
 
 .form-section > * {
