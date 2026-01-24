@@ -35,7 +35,7 @@
 
   /* Sidebar/Content alignment system - ensures divider aligns with progress bar center */
   --sidebar-padding-top: 40px;
-  --sidebar-h2-line-height: 24px;
+  --sidebar-h2-height: 48px; /* "Monitoring Cultureel" wraps to 2 lines × 24px */
   --divider-margin: 12px;
   --divider-height: 1px;
   --progress-bar-height: 8px;
@@ -46,7 +46,7 @@
   /* Calculated: Y position of progress bar center from container top */
   --progress-bar-center-y: calc(
     var(--sidebar-padding-top) +
-    var(--sidebar-h2-line-height) +
+    var(--sidebar-h2-height) +
     var(--divider-margin) +
     var(--divider-height) +
     var(--divider-margin) +
@@ -643,7 +643,6 @@ body {
 .index h2 {
   font-size: 16px;
   font-weight: 600;
-  line-height: var(--sidebar-h2-line-height);
   color: var(--text);
   opacity: 0.55;
   margin-bottom: 0;
