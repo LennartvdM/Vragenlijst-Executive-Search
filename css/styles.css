@@ -610,7 +610,7 @@ body {
   margin-right: -20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-bottom: 1px solid rgba(180, 160, 140, 0.4);
+  border-bottom: 1px solid rgba(180, 160, 140, 0.3);
 }
 
 .index-item {
@@ -765,9 +765,8 @@ body {
 }
 
 .org-info {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--sand-dark);
+  margin-top: 12px;
+  padding-top: 12px;
 }
 
 .org-info .org-name {
