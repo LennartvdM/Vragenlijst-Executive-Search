@@ -863,23 +863,29 @@ body {
 .content-scrollable-wrapper::before {
   top: 0;
   background: linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
-  opacity: 1;
+  opacity: 0; /* Start hidden until user scrolls */
   transition: opacity 0.3s ease;
 }
 
 .content-scrollable-wrapper::after {
   bottom: 0;
   background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
-  opacity: 1;
+  opacity: 0; /* Start hidden until user scrolls */
   transition: opacity 0.3s ease;
 }
 
+/* Show gradients once user has scrolled */
+.content-scrollable-wrapper.has-scrolled::before,
+.content-scrollable-wrapper.has-scrolled::after {
+  opacity: 1;
+}
+
 /* Hide gradients when at scroll limits */
-.content-scrollable-wrapper.at-top::before {
+.content-scrollable-wrapper.has-scrolled.at-top::before {
   opacity: 0;
 }
 
-.content-scrollable-wrapper.at-bottom::after {
+.content-scrollable-wrapper.has-scrolled.at-bottom::after {
   opacity: 0;
 }
 
