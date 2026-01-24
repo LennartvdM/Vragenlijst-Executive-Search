@@ -1351,12 +1351,12 @@ h1 {
 .likert-table tbody tr.answered::before {
   content: '';
   position: absolute;
-  right: 0;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  width: 55%; /* Matches the combined width of the 4 option columns */
-  height: calc(100% - 8px);
-  background: rgba(180, 160, 140, 0.15);
+  width: 52%;
+  height: 36px;
+  background: rgba(180, 160, 140, 0.2);
   border-radius: 100px;
   pointer-events: none;
   z-index: 0;
