@@ -1254,7 +1254,7 @@ h1 {
 }
 
 .likert-table th.likert-header-label {
-  color: var(--terracotta);
+  color: var(--salmon-dark);
 }
 
 .likert-table th:last-child {
