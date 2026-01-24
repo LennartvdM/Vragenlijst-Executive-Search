@@ -1254,7 +1254,7 @@ h1 {
 }
 
 .likert-table th.likert-header-label {
-  color: var(--salmon-dark);
+  color: #995544; /* Much darker terracotta to counter anti-aliasing */
 }
 
 .likert-table th:last-child {
