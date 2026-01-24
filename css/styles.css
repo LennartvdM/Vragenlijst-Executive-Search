@@ -1337,12 +1337,17 @@ h1 {
 
 .likert-table tbody tr {
   opacity: 0.85;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, background 0.2s ease;
   position: relative;
 }
 
 .likert-table tbody tr.answered {
   opacity: 1;
+}
+
+/* Highlight the option cells when answered */
+.likert-table tbody tr.answered td:not(:first-child) {
+  background: rgba(180, 160, 140, 0.15);
 }
 
 .likert-table tbody tr.answered::after {
