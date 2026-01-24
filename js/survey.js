@@ -937,34 +937,35 @@
 
     const stepEl = document.querySelector(`.step[data-step="${step}"]`);
     if (stepEl) {
-      stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
-
       // Apply slide animation based on navigation direction
       if (previousStep !== -1 && previousStep !== step) {
         const scrollableContainer = getScrollableContainer();
 
-        // Set scroll position INSTANTLY before animation starts
+        // 1. Hide step with inline opacity BEFORE making it visible
+        stepEl.style.opacity = '0';
+
+        // 2. Make step active (display: flex, but hidden by inline opacity)
+        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
+
+        // 3. Set scroll position while content is hidden
         if (scrollableContainer) {
           const savedPosition = scrollPositions[step];
           const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
 
-          // Temporarily disable CSS smooth scrolling so scrollTop takes effect immediately
-          const beforeScroll = scrollableContainer.scrollTop;
           scrollableContainer.style.scrollBehavior = 'auto';
           scrollableContainer.scrollTop = targetPosition;
-          const afterScroll = scrollableContainer.scrollTop;
-          scrollableContainer.style.scrollBehavior = '';  // Restore CSS default
-
-          console.log('[SCROLL FIX]', { targetPosition, beforeScroll, afterScroll, worked: afterScroll === targetPosition });
+          scrollableContainer.style.scrollBehavior = '';
 
           scrollableContainer.classList.add('animating');
         }
 
+        // 4. Add animation class (starts at opacity 0) and remove inline opacity
         if (step > previousStep) {
           stepEl.classList.add('slide-up');
         } else {
           stepEl.classList.add('slide-down');
         }
+        stepEl.style.opacity = '';  // Remove inline, let animation control opacity
 
         // Remove animating class and update gradients after animation completes
         setTimeout(() => {
@@ -974,7 +975,8 @@
           updateFadeGradients();
         }, 400);
       } else {
-        // No animation - use normal restore with smooth scroll
+        // No animation - just show step and restore scroll position
+        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
         restoreScrollPosition(step);
       }
     }
