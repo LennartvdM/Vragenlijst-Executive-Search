@@ -321,6 +321,11 @@
     const clientHeight = scrollable.clientHeight;
     const threshold = 5; // Small threshold for "near edge" detection
 
+    // Only show gradients once user has scrolled (avoid jarring appearance on load)
+    if (scrollTop > threshold && !wrapper.classList.contains('has-scrolled')) {
+      wrapper.classList.add('has-scrolled');
+    }
+
     // At top - hide top gradient
     const atTop = scrollTop <= threshold;
     // At bottom - hide bottom gradient
