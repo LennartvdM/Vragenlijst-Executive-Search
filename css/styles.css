@@ -728,6 +728,41 @@ body {
   color: var(--terracotta);
 }
 
+/* Full-width divider line */
+.index-divider-full {
+  height: 1px;
+  background: rgba(180, 160, 140, 0.3);
+  margin: 12px -20px;
+}
+
+/* Subsection divider - 80% width */
+.index-divider-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 0 6px;
+  margin-top: 8px;
+  width: 80%;
+  border-top: 1px solid rgba(180, 160, 140, 0.3);
+}
+
+.index-divider-sub.index-divider-clickable {
+  cursor: pointer;
+  transition: all 0.35s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+.index-divider-sub.index-divider-clickable:hover {
+  color: var(--terracotta);
+}
+
+.index-divider-sub.index-divider-clickable.active {
+  color: var(--terracotta);
+}
+
 .org-info {
   margin-top: 24px;
   padding-top: 20px;
