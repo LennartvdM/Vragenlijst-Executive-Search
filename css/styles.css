@@ -1361,8 +1361,9 @@ h1 {
   z-index: 0;
 }
 
-.likert-table td:nth-child(2) {
+.likert-table input[type="radio"] {
   position: relative;
+  z-index: 2;
 }
 
 .likert-table tbody tr.answered::after {
