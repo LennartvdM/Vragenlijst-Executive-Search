@@ -650,15 +650,15 @@ body {
 /* Highlighter hover effect - scale up when hovering on active item */
 .index:has(.index-item.active:hover) .mobile-highlighter.highlighter-item,
 .index:has(.index-divider-clickable.active:hover) .mobile-highlighter:not(.highlighter-item) {
-  transform: scale(1.04);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: scale(1.015);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* Subsection highlighter hover - needs different transform-origin */
 .index:has(.index-divider-sub.active:hover) .mobile-highlighter.highlighter-subsection {
-  transform: translateX(-50%) scale(1.04);
+  transform: translateX(-50%) scale(1.015);
   transform-origin: center center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .index h2 {
