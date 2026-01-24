@@ -643,6 +643,21 @@ body {
   margin-top: 5px;
 }
 
+/* Highlighter hover effect - scale up when hovering on active item */
+.index:has(.index-item.active:hover) .mobile-highlighter.highlighter-item,
+.index:has(.index-divider-clickable.active:hover) .mobile-highlighter:not(.highlighter-item) {
+  transform: scale(1.05);
+  transform-origin: left center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Subsection highlighter hover - needs different transform-origin */
+.index:has(.index-divider-sub.active:hover) .mobile-highlighter.highlighter-subsection {
+  transform: translateX(-50%) scale(1.08);
+  transform-origin: center center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
 .index h2 {
   font-size: 16px;
   font-weight: 600;
@@ -699,6 +714,11 @@ body {
   background: var(--teal);
 }
 
+/* Scale up icon further on hover */
+.index-item.active:hover .status {
+  transform: translateX(-42px) scale(1.25);
+}
+
 /* Completed but not active - darker terracotta */
 .index-item.complete .status {
   background: var(--terracotta);
@@ -731,6 +751,11 @@ body {
 .index-item.active .label {
   font-weight: 600;
   transform: translateX(-32px) scale(1.1);
+}
+
+/* Scale up label further on hover */
+.index-item.active:hover .label {
+  transform: translateX(-32px) scale(1.18);
 }
 
 /* Index dividers for grouping navigation items */
@@ -805,6 +830,11 @@ body {
 
 .index-divider-sub.index-divider-clickable.active {
   color: var(--terracotta);
+}
+
+/* Scale up subsection text on hover when active */
+.index-divider-sub.index-divider-clickable.active:hover {
+  transform: scale(1.08);
 }
 
 .org-info {
