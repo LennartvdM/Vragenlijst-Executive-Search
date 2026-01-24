@@ -1208,9 +1208,12 @@
     table.querySelectorAll('tr.answered').forEach(row => {
       row.classList.remove(CONSTANTS.CSS.ANSWERED);
       row.classList.remove('just-answered');
-      // Remove pill highlight element
+      // Fade out and remove pill highlight element
       const pill = row.querySelector('.likert-pill-highlight');
-      if (pill) pill.remove();
+      if (pill) {
+        pill.classList.add('fade-out');
+        setTimeout(() => pill.remove(), 200);
+      }
     });
 
     // Remove arrow indicators
