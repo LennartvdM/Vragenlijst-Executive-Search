@@ -617,13 +617,11 @@ body {
   font-weight: 600;
   color: var(--text);
   opacity: 0.55;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
+  margin-bottom: 0;
   margin-left: -20px;
   margin-right: -20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-bottom: 1px solid rgba(180, 160, 140, 0.3);
 }
 
 .index-item {
