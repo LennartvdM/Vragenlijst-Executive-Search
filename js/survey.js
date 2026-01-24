@@ -930,6 +930,9 @@
    * @param {number} step - Step index to show
    */
   function showStep(step) {
+    // DEBUG: verify code is running
+    console.log('[SCROLL DEBUG]', { step, previousStep, savedPos: scrollPositions[step] });
+
     // Remove active class and animation classes from all steps
     document.querySelectorAll('.step').forEach(s => {
       s.classList.remove(CONSTANTS.CSS.ACTIVE, 'slide-up', 'slide-down');
@@ -948,7 +951,9 @@
         if (scrollableContainer) {
           const savedPosition = scrollPositions[step];
           const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
+          console.log('[SCROLL DEBUG] Setting scrollTop:', { savedPosition, targetPosition, currentScrollTop: scrollableContainer.scrollTop });
           scrollableContainer.scrollTop = targetPosition;
+          console.log('[SCROLL DEBUG] After set:', { newScrollTop: scrollableContainer.scrollTop });
           scrollableContainer.classList.add('animating');
         }
 
