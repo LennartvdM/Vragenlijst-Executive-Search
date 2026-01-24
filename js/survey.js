@@ -1131,6 +1131,16 @@
    * @param {number} step - Step index to navigate to
    */
   function goToStep(step) {
+    // If clicking on current step, scroll to top
+    if (step === currentStep) {
+      const scrollable = getScrollableContainer();
+      if (scrollable) {
+        scrollable.scrollTo({ top: 0, behavior: 'smooth' });
+        // Update fade gradients after scroll
+        setTimeout(updateFadeGradients, 400);
+      }
+      return;
+    }
     // Save scroll position before leaving current step
     saveScrollPosition();
     currentStep = step;
