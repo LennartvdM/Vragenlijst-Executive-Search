@@ -366,25 +366,33 @@
 
   /**
    * Likert pill rig: creates pill element positioned based on actual cell measurements
-   * Spans from first radio cell to last radio cell
+   * Spans from first radio cell to last radio cell, centered on radio buttons
    */
   function createLikertPill(row) {
     if (row.querySelector('.likert-pill-highlight')) return; // Already exists
 
     const firstRadioCell = row.querySelector('td:nth-child(2)');
     const lastRadioCell = row.querySelector('td:last-child');
-    if (!firstRadioCell || !lastRadioCell) return;
+    const firstRadio = row.querySelector('input[type="radio"]');
+    if (!firstRadioCell || !lastRadioCell || !firstRadio) return;
 
     const pill = document.createElement('span');
     pill.className = 'likert-pill-highlight';
 
-    // Measure actual positions relative to the first cell
-    const firstRect = firstRadioCell.getBoundingClientRect();
-    const lastRect = lastRadioCell.getBoundingClientRect();
+    // Measure actual positions
+    const firstCellRect = firstRadioCell.getBoundingClientRect();
+    const lastCellRect = lastRadioCell.getBoundingClientRect();
+    const radioRect = firstRadio.getBoundingClientRect();
 
-    // Position pill to span from first radio cell to end of last radio cell
+    // Width spans from first to last radio cell
+    pill.style.width = `${lastCellRect.right - firstCellRect.left}px`;
     pill.style.left = '0';
-    pill.style.width = `${lastRect.right - firstRect.left}px`;
+
+    // Vertical position: center pill on the radio button
+    const pillHeight = 36;
+    const radioCenter = radioRect.top + (radioRect.height / 2) - firstCellRect.top;
+    pill.style.top = `${radioCenter - (pillHeight / 2)}px`;
+    pill.style.transform = 'none'; // Override CSS transform
 
     firstRadioCell.appendChild(pill);
   }

@@ -1613,7 +1613,8 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 6px; /* Tighter gap to content below */
+  padding-bottom: 20px; /* Space below divider line */
+  margin-bottom: 6px;
   /* No border - divider is drawn by .container::after alignment rig */
 }
 
