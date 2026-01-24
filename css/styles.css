@@ -1629,8 +1629,8 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 20px; /* Space from breadcrumb dots */
-  padding-bottom: 8px; /* Space to divider line - closer */
+  padding-top: 48px; /* Push buttons down, away from dots */
+  padding-bottom: 8px; /* Close to divider line */
   margin-bottom: 6px;
   /* No border - divider is drawn by .container::after alignment rig */
 }
