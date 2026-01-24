@@ -376,11 +376,14 @@
     const firstRadio = row.querySelector('input[type="radio"]');
     if (!firstRadioCell || !lastRadioCell || !firstRadio) return;
 
+    // Skip if element is not visible (getBoundingClientRect returns 0)
+    const firstCellRect = firstRadioCell.getBoundingClientRect();
+    if (firstCellRect.width === 0) return;
+
     const pill = document.createElement('span');
     pill.className = 'likert-pill-highlight';
 
     // Measure actual positions
-    const firstCellRect = firstRadioCell.getBoundingClientRect();
     const lastCellRect = lastRadioCell.getBoundingClientRect();
     const radioRect = firstRadio.getBoundingClientRect();
 
@@ -395,6 +398,16 @@
     pill.style.transform = 'none'; // Override CSS transform
 
     firstRadioCell.appendChild(pill);
+  }
+
+  /**
+   * Refresh likert pills for all visible answered rows
+   * Called after step transitions to ensure pills are created for rows that were hidden
+   */
+  function refreshLikertPills() {
+    document.querySelectorAll('.likert-table tbody tr.answered').forEach(row => {
+      createLikertPill(row);
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -1031,6 +1044,9 @@
           restoreScrollPosition(step);
         }
       }
+
+      // Refresh likert pills after step becomes visible (with delay for layout)
+      setTimeout(refreshLikertPills, 50);
     }
 
     // Update previous step tracker

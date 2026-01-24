@@ -1386,7 +1386,7 @@ h1 {
   top: 50%;
   transform: translateY(-50%);
   height: 36px;
-  background: rgba(180, 160, 140, 0.2);
+  background: rgba(180, 160, 140, 0.6);
   border-radius: 100px;
   pointer-events: none;
   z-index: 0;
