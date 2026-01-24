@@ -1380,13 +1380,9 @@ h1 {
   opacity: 1;
 }
 
-/* Pill rig: pseudo-element spans radio columns using table's fixed percentages */
-/* Column widths: 45% question, 4 × 13.75% radio = 55% total for radio area */
-.likert-table tbody tr.answered::before {
-  content: '';
+/* Pill highlight - positioned by JS in first radio cell */
+.likert-pill-highlight {
   position: absolute;
-  left: 45%; /* Start after question column */
-  right: 0;
   top: 50%;
   transform: translateY(-50%);
   height: 36px;
@@ -1394,6 +1390,7 @@ h1 {
   border-radius: 100px;
   pointer-events: none;
   z-index: 0;
+  /* left and width set by JS based on actual measurements */
 }
 
 .likert-table input[type="radio"] {

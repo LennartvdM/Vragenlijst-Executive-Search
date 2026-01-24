@@ -348,6 +348,47 @@
   }
 
   // Initialize on DOM ready
+  /**
+   * Alignment rig: measures actual progress bar position and sets CSS variable
+   * This ensures the content divider aligns perfectly with the progress bar center
+   */
+  function updateAlignmentRig() {
+    const progressBar = document.querySelector('.progress-bar');
+    const container = document.querySelector('.container');
+    if (!progressBar || !container) return;
+
+    const barRect = progressBar.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const centerY = barRect.top + (barRect.height / 2) - containerRect.top;
+
+    container.style.setProperty('--progress-bar-center-y', `${centerY}px`);
+  }
+
+  /**
+   * Likert pill rig: creates pill element positioned based on actual cell measurements
+   * Spans from first radio cell to last radio cell
+   */
+  function createLikertPill(row) {
+    if (row.querySelector('.likert-pill-highlight')) return; // Already exists
+
+    const firstRadioCell = row.querySelector('td:nth-child(2)');
+    const lastRadioCell = row.querySelector('td:last-child');
+    if (!firstRadioCell || !lastRadioCell) return;
+
+    const pill = document.createElement('span');
+    pill.className = 'likert-pill-highlight';
+
+    // Measure actual positions relative to the first cell
+    const firstRect = firstRadioCell.getBoundingClientRect();
+    const lastRect = lastRadioCell.getBoundingClientRect();
+
+    // Position pill to span from first radio cell to end of last radio cell
+    pill.style.left = '0';
+    pill.style.width = `${lastRect.right - firstRect.left}px`;
+
+    firstRadioCell.appendChild(pill);
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
     session = Storage.getSession();
@@ -359,6 +400,10 @@
     // Initialize UI
     initializeOrganizationInfo();
     initProgress();
+
+    // Initialize alignment rig (must run after layout is stable)
+    setTimeout(updateAlignmentRig, 50);
+    window.addEventListener('resize', updateAlignmentRig);
     setupEventDelegation();
     setupInputListeners();
     setupAutoSave();
@@ -1139,7 +1184,9 @@
     table.querySelectorAll('tr.answered').forEach(row => {
       row.classList.remove(CONSTANTS.CSS.ANSWERED);
       row.classList.remove('just-answered');
-      // Pill highlight is now CSS-only via ::before, removed automatically with class
+      // Remove pill highlight element
+      const pill = row.querySelector('.likert-pill-highlight');
+      if (pill) pill.remove();
     });
 
     // Remove arrow indicators
@@ -1216,7 +1263,7 @@
       radio.addEventListener('change', function() {
         const row = this.closest('tr');
         row.classList.add(CONSTANTS.CSS.ANSWERED);
-        // Pill highlight is now CSS-only via ::before pseudo-element
+        createLikertPill(row);
 
         // Add animation class for pop effect (only on user interaction)
         row.classList.remove('just-answered');
@@ -2404,7 +2451,7 @@
           const row = radio.closest('tr');
           if (row) {
             row.classList.add(CONSTANTS.CSS.ANSWERED);
-            // Pill highlight is now CSS-only via ::before pseudo-element
+            createLikertPill(row);
             const table = radio.closest('.likert-table');
             if (table && table.id) {
               const header = document.getElementById(`header-${table.id}`);
