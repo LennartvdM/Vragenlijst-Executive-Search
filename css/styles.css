@@ -809,7 +809,7 @@ body {
 .custom-scrollbar {
   position: absolute;
   top: 80px; /* Below header area */
-  right: -25px; /* Positioned outside the content area */
+  right: -40px; /* Positioned well outside the content area */
   bottom: 80px; /* Above footer area */
   width: 4px;
   background: rgba(0, 0, 0, 0.05);
