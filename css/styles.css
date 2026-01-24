@@ -717,9 +717,9 @@ body {
   background: var(--teal);
 }
 
-/* Scale up icon further on hover */
+/* Scale up icon further on hover - shift left to follow highlighter expansion */
 .index-item.active:hover .status {
-  transform: translateX(-42px) scale(1.18);
+  transform: translateX(-46px) scale(1.18);
 }
 
 /* Completed but not active - darker terracotta */
@@ -756,9 +756,9 @@ body {
   transform: translateX(-32px) scale(1.1);
 }
 
-/* Scale up label further on hover */
+/* Scale up label further on hover - shift left to follow highlighter expansion */
 .index-item.active:hover .label {
-  transform: translateX(-32px) scale(1.12);
+  transform: translateX(-36px) scale(1.12);
 }
 
 /* Index dividers for grouping navigation items */
