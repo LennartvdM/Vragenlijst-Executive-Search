@@ -540,7 +540,7 @@ body {
   content: '';
   position: absolute;
   top: var(--progress-bar-center-y);
-  left: 260px; /* After sidebar */
+  left: calc(260px + (100% - 260px) * 0.1); /* Centered in content area (10% margin each side) */
   width: calc((100% - 260px) * 0.8); /* 80% of content area width */
   height: var(--divider-height);
   background: rgba(212, 196, 168, 0.33); /* --sand-dark at 33% opacity (2/3 transparent) */
