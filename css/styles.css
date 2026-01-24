@@ -604,12 +604,12 @@ body {
 .mobile-highlighter.highlighter-subsection {
   left: 50%;
   right: auto;
-  width: 100px;
+  width: 120px;
   transform: translateX(-50%);
   border-radius: 6px;
   height: 28px !important;
-  /* Offset to center on text: skip border-top (1px) + padding-top (12px), center on content */
-  margin-top: 9px;
+  /* Offset to center on text: border-top (1px) + padding-top (12px) - half padding difference */
+  margin-top: 5px;
 }
 
 .index h2 {
