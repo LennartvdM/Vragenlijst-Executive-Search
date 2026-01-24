@@ -599,7 +599,9 @@ body {
     height 0.35s ease-in-out,
     left 0.35s ease-in-out,
     border-radius 0.35s ease-in-out,
-    opacity 0.2s ease;
+    opacity 0.2s ease,
+    transform 0.3s ease-out,
+    box-shadow 0.3s ease-out;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -646,14 +648,14 @@ body {
 /* Highlighter hover effect - scale up when hovering on active item */
 .index:has(.index-item.active:hover) .mobile-highlighter.highlighter-item,
 .index:has(.index-divider-clickable.active:hover) .mobile-highlighter:not(.highlighter-item) {
-  transform: scale(1.05);
+  transform: scale(1.18);
   transform-origin: left center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Subsection highlighter hover - needs different transform-origin */
 .index:has(.index-divider-sub.active:hover) .mobile-highlighter.highlighter-subsection {
-  transform: translateX(-50%) scale(1.08);
+  transform: translateX(-50%) scale(1.18);
   transform-origin: center center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
