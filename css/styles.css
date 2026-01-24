@@ -3260,44 +3260,6 @@ h1 {
     box-shadow: 0 2px 8px rgba(196, 120, 90, 0.15);
   }
 
-  /* Mobile reset button for individual rows */
-  .likert-row-reset {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-    border: none;
-    border-radius: 50%;
-    background: var(--sand);
-    color: var(--text-light);
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .likert-table tbody tr.answered .likert-row-reset {
-    opacity: 0.6;
-    pointer-events: auto;
-  }
-
-  .likert-row-reset:active {
-    transform: scale(0.9);
-    background: var(--sand-dark, #d4c4b0);
-  }
-
-  /* Ensure card has relative positioning for reset button */
-  .likert-table tbody tr {
-    position: relative;
-  }
-
   /* Statement text - first cell */
   .likert-table tbody td:first-child {
     display: block;
