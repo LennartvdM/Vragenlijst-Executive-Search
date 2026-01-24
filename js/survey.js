@@ -937,37 +937,28 @@
 
     const stepEl = document.querySelector(`.step[data-step="${step}"]`);
     if (stepEl) {
-      // Apply slide animation based on navigation direction
-      if (previousStep !== -1 && previousStep !== step) {
-        const scrollableContainer = getScrollableContainer();
+      const scrollableContainer = getScrollableContainer();
+      const savedPosition = scrollPositions[step];
+      const hasSavedPosition = typeof savedPosition === 'number' && savedPosition > 0;
+      const shouldAnimate = previousStep !== -1 && previousStep !== step && !hasSavedPosition;
 
-        // 1. Hide step with inline opacity BEFORE making it visible
-        stepEl.style.opacity = '0';
-
-        // 2. Make step active (display: flex, but hidden by inline opacity)
+      if (shouldAnimate) {
+        // No saved scroll position - use slide animation
         stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
 
-        // 3. Set scroll position while content is hidden
         if (scrollableContainer) {
-          const savedPosition = scrollPositions[step];
-          const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
-
           scrollableContainer.style.scrollBehavior = 'auto';
-          scrollableContainer.scrollTop = targetPosition;
+          scrollableContainer.scrollTop = 0;
           scrollableContainer.style.scrollBehavior = '';
-
           scrollableContainer.classList.add('animating');
         }
 
-        // 4. Add animation class (starts at opacity 0) and remove inline opacity
         if (step > previousStep) {
           stepEl.classList.add('slide-up');
         } else {
           stepEl.classList.add('slide-down');
         }
-        stepEl.style.opacity = '';  // Remove inline, let animation control opacity
 
-        // Remove animating class and update gradients after animation completes
         setTimeout(() => {
           if (scrollableContainer) {
             scrollableContainer.classList.remove('animating');
@@ -975,9 +966,17 @@
           updateFadeGradients();
         }, 400);
       } else {
-        // No animation - just show step and restore scroll position
+        // Has saved scroll position OR no animation needed - skip animation, just restore position
         stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
-        restoreScrollPosition(step);
+
+        if (scrollableContainer && hasSavedPosition) {
+          scrollableContainer.style.scrollBehavior = 'auto';
+          scrollableContainer.scrollTop = savedPosition;
+          scrollableContainer.style.scrollBehavior = '';
+          updateFadeGradients();
+        } else {
+          restoreScrollPosition(step);
+        }
       }
     }
 
