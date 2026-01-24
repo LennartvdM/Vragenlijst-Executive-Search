@@ -600,6 +600,18 @@ body {
   border-radius: 19px 8px 8px 19px;
 }
 
+/* Highlighter shape for subsection headers - centered pill around text */
+.mobile-highlighter.highlighter-subsection {
+  left: 50%;
+  right: auto;
+  width: 100px;
+  transform: translateX(-50%);
+  border-radius: 14px;
+  height: 28px !important;
+  /* Offset to center on text: skip border-top (1px) + padding-top (12px), center on content */
+  margin-top: 9px;
+}
+
 .index h2 {
   font-size: 14px;
   font-weight: 600;

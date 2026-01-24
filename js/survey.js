@@ -716,10 +716,12 @@
 
       // Morph shape based on element type
       const isDivider = activeItem.classList.contains('index-divider-clickable');
-      highlighter.classList.toggle('highlighter-divider', isDivider);
+      const isSubsection = activeItem.classList.contains('index-divider-sub');
+      highlighter.classList.toggle('highlighter-divider', isDivider && !isSubsection);
+      highlighter.classList.toggle('highlighter-subsection', isSubsection);
       highlighter.classList.toggle('highlighter-item', !isDivider);
     } else {
-      highlighter.classList.remove('active', 'highlighter-divider', 'highlighter-item');
+      highlighter.classList.remove('active', 'highlighter-divider', 'highlighter-subsection', 'highlighter-item');
     }
   }
 
