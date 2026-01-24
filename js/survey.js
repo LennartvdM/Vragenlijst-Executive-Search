@@ -930,9 +930,6 @@
    * @param {number} step - Step index to show
    */
   function showStep(step) {
-    // DEBUG: verify code is running
-    console.log('[SCROLL DEBUG]', { step, previousStep, savedPos: scrollPositions[step] });
-
     // Remove active class and animation classes from all steps
     document.querySelectorAll('.step').forEach(s => {
       s.classList.remove(CONSTANTS.CSS.ACTIVE, 'slide-up', 'slide-down');
@@ -948,19 +945,14 @@
 
         // Set scroll position INSTANTLY before animation starts
         if (scrollableContainer) {
-          // Force reflow on scroll container to calculate new content height
-          const scrollHeight = scrollableContainer.scrollHeight;
-          const clientHeight = scrollableContainer.clientHeight;
-          const maxScroll = scrollHeight - clientHeight;
-
           const savedPosition = scrollPositions[step];
           const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
-          console.log('[SCROLL DEBUG] Setting scrollTop:', {
-            savedPosition, targetPosition, currentScrollTop: scrollableContainer.scrollTop,
-            scrollHeight, clientHeight, maxScroll
-          });
+
+          // Temporarily disable CSS smooth scrolling so scrollTop takes effect immediately
+          scrollableContainer.style.scrollBehavior = 'auto';
           scrollableContainer.scrollTop = targetPosition;
-          console.log('[SCROLL DEBUG] After set:', { newScrollTop: scrollableContainer.scrollTop });
+          scrollableContainer.style.scrollBehavior = '';  // Restore CSS default
+
           scrollableContainer.classList.add('animating');
         }
 
