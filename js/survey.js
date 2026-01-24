@@ -2416,6 +2416,16 @@
           const row = radio.closest('tr');
           if (row) {
             row.classList.add(CONSTANTS.CSS.ANSWERED);
+            // Create pill highlight element if it doesn't exist
+            if (!row.querySelector('.likert-pill-highlight')) {
+              const pill = document.createElement('span');
+              pill.className = 'likert-pill-highlight';
+              // Insert into the first radio button cell
+              const firstRadioCell = row.querySelector('td:nth-child(2)');
+              if (firstRadioCell) {
+                firstRadioCell.appendChild(pill);
+              }
+            }
             const table = radio.closest('.likert-table');
             if (table && table.id) {
               const header = document.getElementById(`header-${table.id}`);
