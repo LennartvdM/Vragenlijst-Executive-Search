@@ -593,18 +593,18 @@ body {
   border-radius: 19px 8px 8px 19px;
 }
 
-/* Highlighter shape for section dividers - full width, normal rounded */
+/* Highlighter shape for section dividers - matches hover element style */
 .mobile-highlighter.highlighter-divider {
   left: -20px;
-  right: -20px;
-  border-radius: 0;
+  right: 8px;
+  border-radius: 19px 8px 8px 19px;
 }
 
 .index h2 {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   padding-bottom: 12px;
   margin-left: -20px;
   margin-right: -20px;
@@ -1791,7 +1791,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   margin-left: -20px;
   margin-right: -20px;
   padding-left: 20px;
