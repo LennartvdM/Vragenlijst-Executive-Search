@@ -1348,18 +1348,21 @@ h1 {
 }
 
 /* Pill-shaped highlight behind the dots when answered */
-.likert-table tbody tr.answered::before {
-  content: '';
+.likert-pill-highlight {
   position: absolute;
-  right: 8px;
+  left: -8px;
   top: 50%;
   transform: translateY(-50%);
-  width: 52%;
+  width: calc(400% + 24px); /* Spans 4 cells */
   height: 36px;
   background: rgba(180, 160, 140, 0.2);
   border-radius: 100px;
   pointer-events: none;
   z-index: 0;
+}
+
+.likert-table td:nth-child(2) {
+  position: relative;
 }
 
 .likert-table tbody tr.answered::after {
