@@ -937,12 +937,22 @@
 
     const stepEl = document.querySelector(`.step[data-step="${step}"]`);
     if (stepEl) {
-      stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
-
       // Apply slide animation based on navigation direction
       const hasAnimation = previousStep !== -1 && previousStep !== step;
+
       if (hasAnimation) {
         const scrollableContainer = getScrollableContainer();
+
+        // Set scroll position INSTANTLY before animation starts
+        // This way content slides in already at the correct position - no jarring jump
+        if (scrollableContainer) {
+          const savedPosition = scrollPositions[step];
+          const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
+          scrollableContainer.scrollTop = targetPosition;
+        }
+
+        // Now make step visible and start animation
+        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
 
         // Temporarily allow overflow so animation isn't clipped
         if (scrollableContainer) {
@@ -960,14 +970,11 @@
           if (scrollableContainer) {
             scrollableContainer.classList.remove('animating');
           }
+          updateFadeGradients();
         }, 400);
-      }
-
-      // Restore saved scroll position for this step (or scroll to top if none saved)
-      // Wait for animation to complete before restoring scroll position to avoid jarring jump
-      if (hasAnimation) {
-        setTimeout(() => restoreScrollPosition(step), 350);
       } else {
+        // No animation - just show step and restore scroll position
+        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
         restoreScrollPosition(step);
       }
     }
