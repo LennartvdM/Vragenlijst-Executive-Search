@@ -1643,8 +1643,8 @@ h1 {
 .progress-dots-top-container {
   position: absolute;
   top: 12px;
-  left: 0;
-  right: 0;
+  left: 20px;  /* Match .content padding-left */
+  right: 60px; /* Match .content padding-right */
   display: flex;
   justify-content: center;
 }
