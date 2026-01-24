@@ -33,32 +33,22 @@
   /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
 
-  /* Sidebar/Content alignment system - ensures divider aligns with progress bar center */
+  /* Alignment rig: defines position of progress bar center from container top */
+  /* The divider (.container::after) is positioned at this Y coordinate */
   --sidebar-padding-top: 40px;
-  --sidebar-h2-line-height: 24px;
+  --sidebar-h2-height: 48px; /* Fixed height - "Monitoring Cultureel" on 2 lines */
   --divider-margin: 12px;
   --divider-height: 1px;
   --progress-bar-height: 8px;
-  --content-padding-top: 20px;
-  --nav-button-height: 32px;
-  --top-bar-padding-bottom: 16px;
 
-  /* Calculated: Y position of progress bar center from container top */
+  /* Calculated: Y position where progress bar center AND content divider sit */
   --progress-bar-center-y: calc(
     var(--sidebar-padding-top) +
-    var(--sidebar-h2-line-height) +
+    var(--sidebar-h2-height) +
     var(--divider-margin) +
     var(--divider-height) +
     var(--divider-margin) +
     (var(--progress-bar-height) / 2)
-  );
-
-  /* Calculated: top-bar padding-top to align border with progress bar center */
-  --top-bar-padding-top: calc(
-    var(--progress-bar-center-y) -
-    var(--content-padding-top) -
-    var(--nav-button-height) -
-    var(--top-bar-padding-bottom)
   );
 }
 
@@ -545,6 +535,19 @@ body {
   /* No overflow:hidden - sidebar needs explicit border-radius */
 }
 
+/* Alignment rig: Single divider line that guarantees alignment with progress bar */
+.container::after {
+  content: '';
+  position: absolute;
+  top: var(--progress-bar-center-y);
+  left: 260px; /* After sidebar */
+  right: 0;
+  height: var(--divider-height);
+  background: var(--sand-dark);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Compound shape: unified background + outer stroke as single pseudo-element */
 .container::before {
   content: '';
@@ -643,7 +646,7 @@ body {
 .index h2 {
   font-size: 16px;
   font-weight: 600;
-  line-height: var(--sidebar-h2-line-height);
+  height: var(--sidebar-h2-height); /* Fixed height for alignment rig */
   color: var(--text);
   opacity: 0.55;
   margin-bottom: 0;
@@ -843,7 +846,7 @@ body {
 .content {
   flex: 1;
   min-width: 0;
-  padding: var(--content-padding-top) 60px 20px 20px;
+  padding: 20px 60px 20px 20px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -1317,6 +1320,7 @@ h1 {
   border-collapse: collapse;
   margin-bottom: 16px;
   overflow: visible;
+  table-layout: fixed; /* Ensures column widths are respected for pill rig */
 }
 
 .likert-table tbody {
@@ -1376,13 +1380,15 @@ h1 {
   opacity: 1;
 }
 
-/* Pill-shaped highlight behind the dots when answered */
-.likert-pill-highlight {
+/* Pill rig: pseudo-element spans radio columns using table's fixed percentages */
+/* Column widths: 45% question, 4 × 13.75% radio = 55% total for radio area */
+.likert-table tbody tr.answered::before {
+  content: '';
   position: absolute;
-  left: 0;
+  left: 45%; /* Start after question column */
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 400%; /* Spans 4 cells */
   height: 36px;
   background: rgba(180, 160, 140, 0.2);
   border-radius: 100px;
@@ -1611,9 +1617,7 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 6px; /* Tighter gap to content below */
-  padding-top: var(--top-bar-padding-top);
-  padding-bottom: var(--top-bar-padding-bottom);
-  border-bottom: var(--divider-height) solid var(--sand-dark);
+  /* No border - divider is drawn by .container::after alignment rig */
 }
 
 .bottom-bar {
@@ -1639,7 +1643,7 @@ h1 {
 .btn-small {
   padding: 6px 16px;
   font-size: 12px;
-  height: var(--nav-button-height);
+  height: 32px;
   min-width: 80px;
 }
 

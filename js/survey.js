@@ -1139,9 +1139,7 @@
     table.querySelectorAll('tr.answered').forEach(row => {
       row.classList.remove(CONSTANTS.CSS.ANSWERED);
       row.classList.remove('just-answered');
-      // Remove pill highlight element
-      const pill = row.querySelector('.likert-pill-highlight');
-      if (pill) pill.remove();
+      // Pill highlight is now CSS-only via ::before, removed automatically with class
     });
 
     // Remove arrow indicators
@@ -1218,17 +1216,7 @@
       radio.addEventListener('change', function() {
         const row = this.closest('tr');
         row.classList.add(CONSTANTS.CSS.ANSWERED);
-
-        // Create pill highlight element if it doesn't exist
-        if (!row.querySelector('.likert-pill-highlight')) {
-          const pill = document.createElement('span');
-          pill.className = 'likert-pill-highlight';
-          // Insert into the first radio button cell
-          const firstRadioCell = row.querySelector('td:nth-child(2)');
-          if (firstRadioCell) {
-            firstRadioCell.appendChild(pill);
-          }
-        }
+        // Pill highlight is now CSS-only via ::before pseudo-element
 
         // Add animation class for pop effect (only on user interaction)
         row.classList.remove('just-answered');
@@ -2416,16 +2404,7 @@
           const row = radio.closest('tr');
           if (row) {
             row.classList.add(CONSTANTS.CSS.ANSWERED);
-            // Create pill highlight element if it doesn't exist
-            if (!row.querySelector('.likert-pill-highlight')) {
-              const pill = document.createElement('span');
-              pill.className = 'likert-pill-highlight';
-              // Insert into the first radio button cell
-              const firstRadioCell = row.querySelector('td:nth-child(2)');
-              if (firstRadioCell) {
-                firstRadioCell.appendChild(pill);
-              }
-            }
+            // Pill highlight is now CSS-only via ::before pseudo-element
             const table = radio.closest('.likert-table');
             if (table && table.id) {
               const header = document.getElementById(`header-${table.id}`);
