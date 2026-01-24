@@ -943,15 +943,10 @@
       if (hasAnimation) {
         const scrollableContainer = getScrollableContainer();
 
-        // 1. Add animation class FIRST - this ensures content starts at opacity: 0
-        //    (from the keyframe) so user doesn't see a flash at wrong position
-        if (step > previousStep) {
-          stepEl.classList.add('slide-up');
-        } else {
-          stepEl.classList.add('slide-down');
-        }
+        // 1. Hide step with inline opacity (prevents flash)
+        stepEl.style.opacity = '0';
 
-        // 2. Now make step visible - content is at opacity: 0 from animation start
+        // 2. Make step visible (display: flex, but opacity 0)
         stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
 
         // 3. Set scroll position while content is invisible
@@ -962,7 +957,15 @@
           scrollableContainer.classList.add('animating');
         }
 
-        // 4. Animation plays, fading in at correct scroll position
+        // 4. On next frame, remove inline opacity and start animation
+        requestAnimationFrame(() => {
+          stepEl.style.opacity = '';
+          if (step > previousStep) {
+            stepEl.classList.add('slide-up');
+          } else {
+            stepEl.classList.add('slide-down');
+          }
+        });
 
         // Remove animating class after animation completes (0.35s + buffer)
         setTimeout(() => {
