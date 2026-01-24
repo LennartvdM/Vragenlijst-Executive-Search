@@ -650,13 +650,13 @@ body {
 /* Highlighter hover effect - scale up when hovering on active item */
 .index:has(.index-item.active:hover) .mobile-highlighter.highlighter-item,
 .index:has(.index-divider-clickable.active:hover) .mobile-highlighter:not(.highlighter-item) {
-  transform: scale(1.18);
+  transform: scale(1.04);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Subsection highlighter hover - needs different transform-origin */
 .index:has(.index-divider-sub.active:hover) .mobile-highlighter.highlighter-subsection {
-  transform: translateX(-50%) scale(1.18);
+  transform: translateX(-50%) scale(1.04);
   transform-origin: center center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
@@ -719,7 +719,7 @@ body {
 
 /* Scale up icon further on hover */
 .index-item.active:hover .status {
-  transform: translateX(-42px) scale(1.25);
+  transform: translateX(-42px) scale(1.18);
 }
 
 /* Completed but not active - darker terracotta */
@@ -758,7 +758,7 @@ body {
 
 /* Scale up label further on hover */
 .index-item.active:hover .label {
-  transform: translateX(-32px) scale(1.18);
+  transform: translateX(-32px) scale(1.12);
 }
 
 /* Index dividers for grouping navigation items */
@@ -837,7 +837,7 @@ body {
 
 /* Scale up subsection text on hover when active */
 .index-divider-sub.index-divider-clickable.active:hover {
-  transform: scale(1.08);
+  transform: scale(1.03);
 }
 
 .org-info {
