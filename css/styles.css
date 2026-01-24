@@ -1581,7 +1581,7 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 6px; /* Tighter gap to content below */
-  padding-top: 32px; /* More space from breadcrumbs above */
+  padding-top: 20px; /* Aligned with sidebar progress bar center */
   padding-bottom: 16px;
   border-bottom: 1px solid var(--sand-dark);
 }
