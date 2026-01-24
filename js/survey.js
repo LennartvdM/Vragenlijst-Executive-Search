@@ -949,9 +949,13 @@
           const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
 
           // Temporarily disable CSS smooth scrolling so scrollTop takes effect immediately
+          const beforeScroll = scrollableContainer.scrollTop;
           scrollableContainer.style.scrollBehavior = 'auto';
           scrollableContainer.scrollTop = targetPosition;
+          const afterScroll = scrollableContainer.scrollTop;
           scrollableContainer.style.scrollBehavior = '';  // Restore CSS default
+
+          console.log('[SCROLL FIX]', { targetPosition, beforeScroll, afterScroll, worked: afterScroll === targetPosition });
 
           scrollableContainer.classList.add('animating');
         }
