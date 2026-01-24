@@ -203,6 +203,109 @@
 
     // Update fade gradients immediately (not debounced)
     updateFadeGradients();
+
+    // Update custom scrollbar position
+    updateCustomScrollbar();
+  }
+
+  /**
+   * Update custom scrollbar thumb position and size
+   */
+  function updateCustomScrollbar() {
+    const scrollable = getScrollableContainer();
+    const thumb = document.getElementById('customScrollbarThumb');
+    const track = document.getElementById('customScrollbar');
+    const wrapper = document.querySelector('.content-scrollable-wrapper');
+
+    if (!scrollable || !thumb || !track) return;
+
+    const scrollTop = scrollable.scrollTop;
+    const scrollHeight = scrollable.scrollHeight;
+    const clientHeight = scrollable.clientHeight;
+    const trackHeight = track.offsetHeight;
+
+    // Calculate thumb size proportional to visible content
+    const thumbHeight = Math.max(30, (clientHeight / scrollHeight) * trackHeight);
+
+    // Calculate thumb position
+    const scrollRatio = scrollTop / (scrollHeight - clientHeight);
+    const thumbTop = scrollRatio * (trackHeight - thumbHeight);
+
+    thumb.style.height = thumbHeight + 'px';
+    thumb.style.transform = `translateY(${thumbTop}px)`;
+
+    // Show scrollbar while scrolling
+    if (wrapper) {
+      wrapper.classList.add('scrolling');
+      clearTimeout(wrapper.scrollingTimeout);
+      wrapper.scrollingTimeout = setTimeout(() => {
+        wrapper.classList.remove('scrolling');
+      }, 1000);
+    }
+
+    // Hide scrollbar if content doesn't overflow
+    if (scrollHeight <= clientHeight) {
+      track.style.display = 'none';
+    } else {
+      track.style.display = 'block';
+    }
+  }
+
+  /**
+   * Initialize custom scrollbar drag functionality
+   */
+  function initCustomScrollbarDrag() {
+    const thumb = document.getElementById('customScrollbarThumb');
+    const track = document.getElementById('customScrollbar');
+    const scrollable = getScrollableContainer();
+
+    if (!thumb || !track || !scrollable) return;
+
+    let isDragging = false;
+    let startY = 0;
+    let startScrollTop = 0;
+
+    thumb.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startY = e.clientY;
+      startScrollTop = scrollable.scrollTop;
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      const deltaY = e.clientY - startY;
+      const trackHeight = track.offsetHeight;
+      const thumbHeight = thumb.offsetHeight;
+      const scrollHeight = scrollable.scrollHeight;
+      const clientHeight = scrollable.clientHeight;
+
+      const scrollRatio = deltaY / (trackHeight - thumbHeight);
+      const scrollDelta = scrollRatio * (scrollHeight - clientHeight);
+
+      scrollable.scrollTop = startScrollTop + scrollDelta;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+
+    // Click on track to jump
+    track.addEventListener('click', (e) => {
+      if (e.target === thumb) return;
+
+      const trackRect = track.getBoundingClientRect();
+      const clickY = e.clientY - trackRect.top;
+      const trackHeight = track.offsetHeight;
+      const scrollHeight = scrollable.scrollHeight;
+      const clientHeight = scrollable.clientHeight;
+
+      const scrollRatio = clickY / trackHeight;
+      scrollable.scrollTop = scrollRatio * (scrollHeight - clientHeight);
+    });
   }
 
   /**
@@ -279,8 +382,12 @@
       scrollable.addEventListener('scroll', handleScroll, { passive: true });
     }
 
-    // Initialize fade gradients on load
+    // Initialize fade gradients and custom scrollbar on load
     setTimeout(updateFadeGradients, 100);
+    setTimeout(updateCustomScrollbar, 100);
+
+    // Setup custom scrollbar drag functionality
+    initCustomScrollbarDrag();
 
     // Fade in highlighter after initial page load (not during navigation)
     const highlighter = document.getElementById('mobileHighlighter');

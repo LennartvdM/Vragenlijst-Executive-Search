@@ -785,21 +785,19 @@ body {
   position: relative;
   /* Much taller max-height - allows card to expand significantly */
   max-height: calc(100vh - 200px);
-  /* Overlay scrollbar - floats on top, takes no space */
-  overflow-y: auto; /* Fallback */
-  overflow-y: overlay; /* Ephemeral scrollbar - doesn't affect layout */
+  overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
+  /* Hide native scrollbar - we use custom one */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
-/* Fallback for browsers without overlay support */
-@supports not (overflow-y: overlay) {
-  .content-scrollable {
-    overflow-y: auto;
-    padding-right: 0;
-  }
+/* Hide WebKit scrollbar */
+.content-scrollable::-webkit-scrollbar {
+  display: none;
 }
 
 /* During step animation, allow content to overflow so slide animation isn't clipped */
@@ -807,28 +805,42 @@ body {
   overflow: visible;
 }
 
-/* Brighter terracotta minimalist scrollbar */
-.content-scrollable::-webkit-scrollbar {
-  width: 6px;
+/* Custom scrollbar - completely decoupled, position anywhere */
+.custom-scrollbar {
+  position: absolute;
+  top: 80px; /* Below header area */
+  right: -25px; /* Positioned outside the content area */
+  bottom: 80px; /* Above footer area */
+  width: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
 }
 
-.content-scrollable::-webkit-scrollbar-track {
-  background: transparent;
+/* Show scrollbar when content is scrollable */
+.content-scrollable-wrapper:hover .custom-scrollbar,
+.content-scrollable-wrapper.scrolling .custom-scrollbar {
+  opacity: 1;
 }
 
-.content-scrollable::-webkit-scrollbar-thumb {
+.custom-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 30px;
   background: var(--salmon);
-  border-radius: 3px;
+  border-radius: 2px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.2s ease;
 }
 
-.content-scrollable::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar-thumb:hover {
   background: var(--terracotta);
-}
-
-/* Firefox scrollbar */
-.content-scrollable {
-  scrollbar-width: thin;
-  scrollbar-color: var(--salmon) transparent;
 }
 
 /* Gradient fade mask container */
