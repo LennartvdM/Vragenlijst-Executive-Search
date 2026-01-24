@@ -947,8 +947,11 @@
         const scrollableContainer = getScrollableContainer();
 
         // Set scroll position INSTANTLY before animation starts
-        // This must happen synchronously after ACTIVE is added but before animation class
         if (scrollableContainer) {
+          // Force reflow so browser calculates the new step's layout
+          // Without this, scrollTop assignment is ignored because content height is unknown
+          void stepEl.offsetHeight;
+
           const savedPosition = scrollPositions[step];
           const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
           console.log('[SCROLL DEBUG] Setting scrollTop:', { savedPosition, targetPosition, currentScrollTop: scrollableContainer.scrollTop });
