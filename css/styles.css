@@ -32,6 +32,34 @@
 
   /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
+
+  /* Sidebar/Content alignment system - ensures divider aligns with progress bar center */
+  --sidebar-padding-top: 40px;
+  --sidebar-h2-line-height: 24px;
+  --divider-margin: 12px;
+  --divider-height: 1px;
+  --progress-bar-height: 8px;
+  --content-padding-top: 20px;
+  --nav-button-height: 32px;
+  --top-bar-padding-bottom: 16px;
+
+  /* Calculated: Y position of progress bar center from container top */
+  --progress-bar-center-y: calc(
+    var(--sidebar-padding-top) +
+    var(--sidebar-h2-line-height) +
+    var(--divider-margin) +
+    var(--divider-height) +
+    var(--divider-margin) +
+    (var(--progress-bar-height) / 2)
+  );
+
+  /* Calculated: top-bar padding-top to align border with progress bar center */
+  --top-bar-padding-top: calc(
+    var(--progress-bar-center-y) -
+    var(--content-padding-top) -
+    var(--nav-button-height) -
+    var(--top-bar-padding-bottom)
+  );
 }
 
 html {
@@ -539,7 +567,7 @@ body {
 
 .index {
   flex: 0 0 260px;
-  padding: 40px 20px;
+  padding: var(--sidebar-padding-top) 20px;
   background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
   display: flex;
   flex-direction: column;
@@ -615,6 +643,7 @@ body {
 .index h2 {
   font-size: 16px;
   font-weight: 600;
+  line-height: var(--sidebar-h2-line-height);
   color: var(--text);
   opacity: 0.55;
   margin-bottom: 0;
@@ -741,9 +770,9 @@ body {
 
 /* Full-width divider line */
 .index-divider-full {
-  height: 1px;
+  height: var(--divider-height);
   background: rgba(180, 160, 140, 0.3);
-  margin: 12px -20px;
+  margin: var(--divider-margin) -20px;
 }
 
 /* Subsection divider - 80% width, centered */
@@ -814,7 +843,7 @@ body {
 .content {
   flex: 1;
   min-width: 0;
-  padding: 20px 60px 20px 20px;
+  padding: var(--content-padding-top) 60px 20px 20px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -1582,9 +1611,9 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 6px; /* Tighter gap to content below */
-  padding-top: 25px; /* Aligned with sidebar progress bar center */
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--sand-dark);
+  padding-top: var(--top-bar-padding-top);
+  padding-bottom: var(--top-bar-padding-bottom);
+  border-bottom: var(--divider-height) solid var(--sand-dark);
 }
 
 .bottom-bar {
@@ -1610,7 +1639,7 @@ h1 {
 .btn-small {
   padding: 6px 16px;
   font-size: 12px;
-  height: 32px;
+  height: var(--nav-button-height);
   min-width: 80px;
 }
 
@@ -1839,7 +1868,7 @@ h1 {
 
 .progress-bar {
   flex: 1;
-  height: 8px;
+  height: var(--progress-bar-height);
   background: var(--sand-dark);
   border-radius: 4px;
   overflow: hidden;
