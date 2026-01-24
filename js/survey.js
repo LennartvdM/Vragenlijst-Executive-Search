@@ -943,19 +943,19 @@
       if (hasAnimation) {
         const scrollableContainer = getScrollableContainer();
 
-        // Set scroll position INSTANTLY before animation starts
-        // This way content slides in already at the correct position - no jarring jump
+        // 1. Make step visible first (needed for scroll to work)
+        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
+
+        // 2. Set scroll position INSTANTLY before animation starts
         if (scrollableContainer) {
           const savedPosition = scrollPositions[step];
           const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
           scrollableContainer.scrollTop = targetPosition;
-        }
 
-        // Now make step visible and start animation
-        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
+          // 3. Force reflow so browser registers the scroll position
+          void scrollableContainer.offsetHeight;
 
-        // Temporarily allow overflow so animation isn't clipped
-        if (scrollableContainer) {
+          // 4. Now add animation class - content will slide in at correct scroll position
           scrollableContainer.classList.add('animating');
         }
 
