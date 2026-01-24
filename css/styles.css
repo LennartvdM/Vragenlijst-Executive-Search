@@ -1253,6 +1253,10 @@ h1 {
   border-radius: 8px 0 0 0;
 }
 
+.likert-table th.likert-header-label {
+  color: var(--terracotta);
+}
+
 .likert-table th:last-child {
   border-radius: 0 8px 0 0;
 }
