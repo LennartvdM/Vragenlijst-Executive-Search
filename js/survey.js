@@ -940,7 +940,8 @@
       stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
 
       // Apply slide animation based on navigation direction
-      if (previousStep !== -1 && previousStep !== step) {
+      const hasAnimation = previousStep !== -1 && previousStep !== step;
+      if (hasAnimation) {
         const scrollableContainer = getScrollableContainer();
 
         // Temporarily allow overflow so animation isn't clipped
@@ -963,7 +964,12 @@
       }
 
       // Restore saved scroll position for this step (or scroll to top if none saved)
-      restoreScrollPosition(step);
+      // Wait for animation to complete before restoring scroll position to avoid jarring jump
+      if (hasAnimation) {
+        setTimeout(() => restoreScrollPosition(step), 350);
+      } else {
+        restoreScrollPosition(step);
+      }
     }
 
     // Update previous step tracker
