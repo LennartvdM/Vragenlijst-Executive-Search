@@ -735,7 +735,7 @@ body {
   margin: 12px -20px;
 }
 
-/* Subsection divider - 80% width */
+/* Subsection divider - 80% width, centered */
 .index-divider-sub {
   font-size: 10px;
   font-weight: 600;
@@ -743,9 +743,10 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 12px 0 6px;
-  margin-top: 8px;
+  margin: 8px auto 0;
   width: 80%;
   border-top: 1px solid rgba(180, 160, 140, 0.3);
+  text-align: center;
 }
 
 .index-divider-sub.index-divider-clickable {
