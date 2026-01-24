@@ -1139,6 +1139,9 @@
     table.querySelectorAll('tr.answered').forEach(row => {
       row.classList.remove(CONSTANTS.CSS.ANSWERED);
       row.classList.remove('just-answered');
+      // Remove pill highlight element
+      const pill = row.querySelector('.likert-pill-highlight');
+      if (pill) pill.remove();
     });
 
     // Remove arrow indicators
@@ -1215,6 +1218,18 @@
       radio.addEventListener('change', function() {
         const row = this.closest('tr');
         row.classList.add(CONSTANTS.CSS.ANSWERED);
+
+        // Create pill highlight element if it doesn't exist
+        if (!row.querySelector('.likert-pill-highlight')) {
+          const pill = document.createElement('span');
+          pill.className = 'likert-pill-highlight';
+          // Insert into the first radio button cell
+          const firstRadioCell = row.querySelector('td:nth-child(2)');
+          if (firstRadioCell) {
+            firstRadioCell.appendChild(pill);
+          }
+        }
+
         // Add animation class for pop effect (only on user interaction)
         row.classList.remove('just-answered');
         void row.offsetWidth; // Force reflow to restart animation
