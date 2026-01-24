@@ -943,27 +943,26 @@
       if (hasAnimation) {
         const scrollableContainer = getScrollableContainer();
 
-        // 1. Make step visible first (needed for scroll to work)
-        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
-
-        // 2. Set scroll position INSTANTLY before animation starts
-        if (scrollableContainer) {
-          const savedPosition = scrollPositions[step];
-          const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
-          scrollableContainer.scrollTop = targetPosition;
-
-          // 3. Force reflow so browser registers the scroll position
-          void scrollableContainer.offsetHeight;
-
-          // 4. Now add animation class - content will slide in at correct scroll position
-          scrollableContainer.classList.add('animating');
-        }
-
+        // 1. Add animation class FIRST - this ensures content starts at opacity: 0
+        //    (from the keyframe) so user doesn't see a flash at wrong position
         if (step > previousStep) {
           stepEl.classList.add('slide-up');
         } else {
           stepEl.classList.add('slide-down');
         }
+
+        // 2. Now make step visible - content is at opacity: 0 from animation start
+        stepEl.classList.add(CONSTANTS.CSS.ACTIVE);
+
+        // 3. Set scroll position while content is invisible
+        if (scrollableContainer) {
+          const savedPosition = scrollPositions[step];
+          const targetPosition = (typeof savedPosition === 'number' && savedPosition > 0) ? savedPosition : 0;
+          scrollableContainer.scrollTop = targetPosition;
+          scrollableContainer.classList.add('animating');
+        }
+
+        // 4. Animation plays, fading in at correct scroll position
 
         // Remove animating class after animation completes (0.35s + buffer)
         setTimeout(() => {
