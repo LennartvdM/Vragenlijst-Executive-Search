@@ -1350,10 +1350,10 @@ h1 {
 /* Pill-shaped highlight behind the dots when answered */
 .likert-pill-highlight {
   position: absolute;
-  left: -8px;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: calc(400% + 24px); /* Spans 4 cells */
+  width: 400%; /* Spans 4 cells */
   height: 36px;
   background: rgba(180, 160, 140, 0.2);
   border-radius: 100px;
