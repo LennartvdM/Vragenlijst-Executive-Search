@@ -1328,6 +1328,8 @@ h1 {
   border-bottom: 1px solid var(--sand);
   text-align: center;
   color: var(--text);
+  position: relative;
+  z-index: 1;
 }
 
 .likert-table td:first-child {
@@ -1345,9 +1347,19 @@ h1 {
   opacity: 1;
 }
 
-/* Highlight the option cells when answered */
-.likert-table tbody tr.answered td:not(:first-child) {
+/* Pill-shaped highlight behind the dots when answered */
+.likert-table tbody tr.answered::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 55%; /* Matches the combined width of the 4 option columns */
+  height: calc(100% - 8px);
   background: rgba(180, 160, 140, 0.15);
+  border-radius: 100px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .likert-table tbody tr.answered::after {
