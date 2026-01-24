@@ -906,6 +906,10 @@ h1 {
   flex-shrink: 0;
 }
 
+.section-num {
+  color: #995544; /* Dark terracotta to match Likert header */
+}
+
 .subtitle {
   color: var(--text-light);
   font-size: 14px;
