@@ -742,6 +742,9 @@
     updateMobileHighlighter();
   }
 
+  // Track if highlighter has been positioned initially
+  let highlighterInitialized = false;
+
   /**
    * Update mobile highlighter position to match active item
    */
@@ -761,9 +764,20 @@
       // Calculate top position relative to index (accounting for scroll)
       const topPosition = itemRect.top - indexRect.top + indexContainer.scrollTop;
 
-      // Update highlighter position and size
-      highlighter.style.top = topPosition + 'px';
-      highlighter.style.height = itemRect.height + 'px';
+      // On first positioning, disable transition to prevent "falling from sky"
+      if (!highlighterInitialized) {
+        highlighter.style.transition = 'none';
+        highlighter.style.top = topPosition + 'px';
+        highlighter.style.height = itemRect.height + 'px';
+        // Force reflow, then restore transitions
+        highlighter.offsetHeight;
+        highlighter.style.transition = '';
+        highlighterInitialized = true;
+      } else {
+        // Normal animated positioning
+        highlighter.style.top = topPosition + 'px';
+        highlighter.style.height = itemRect.height + 'px';
+      }
       highlighter.classList.add('active');
 
       // Morph shape based on element type
