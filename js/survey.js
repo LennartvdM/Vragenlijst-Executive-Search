@@ -1142,8 +1142,8 @@
       return;
     }
 
-    // Agitate items between current and target step
-    agitateItemsBetween(currentStep, step);
+    // Trigger passing effect on items as highlighter travels over them
+    triggerPassingEffect(currentStep, step);
 
     // Save scroll position before leaving current step
     saveScrollPosition();
@@ -1152,13 +1152,14 @@
   }
 
   /**
-   * Briefly agitate sidebar items as highlighter passes over them
+   * Trigger passing effect on sidebar items as highlighter travels over them
    * @param {number} fromStep - Starting step
    * @param {number} toStep - Target step
    */
-  function agitateItemsBetween(fromStep, toStep) {
+  function triggerPassingEffect(fromStep, toStep) {
     const direction = toStep > fromStep ? 1 : -1;
     const travelTime = 350; // matches CSS transition duration (0.35s)
+    const passingDuration = 80; // how long each item stays in passing state
 
     // Get all items between source and destination (exclusive of both)
     const start = Math.min(fromStep, toStep) + 1;
@@ -1179,9 +1180,9 @@
       const delay = delayPerItem * (position + 1);
 
       setTimeout(() => {
-        item.classList.add('agitated');
-        // Remove class after animation completes
-        setTimeout(() => item.classList.remove('agitated'), 150);
+        item.classList.add('passing');
+        // Remove class quickly as highlighter passes
+        setTimeout(() => item.classList.remove('passing'), passingDuration);
       }, delay);
     }
   }

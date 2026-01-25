@@ -703,18 +703,6 @@ body {
   z-index: 1; /* Above highlighter */
 }
 
-/* Brief agitation when highlighter passes over during travel */
-.index-item.agitated {
-  animation: agitate 0.15s ease-out;
-}
-
-@keyframes agitate {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(3px); }
-  75% { transform: translateX(-2px); }
-  100% { transform: translateX(0); }
-}
-
 .index-item:hover {
   background: rgba(255, 255, 255, 0.3);
 }
@@ -789,6 +777,17 @@ body {
 .index-item.active:hover .label {
   transform: translateX(-36px) scale(1.12);
   transition: transform 0.15s ease-out;
+}
+
+/* Passing state - triggered briefly as highlighter travels over item */
+.index-item.passing .status {
+  transform: translateX(-42px) scale(1.15);
+  transition: transform 0.1s ease-out;
+}
+
+.index-item.passing .label {
+  transform: translateX(-32px) scale(1.1);
+  transition: transform 0.1s ease-out;
 }
 
 /* Index dividers for grouping navigation items */
