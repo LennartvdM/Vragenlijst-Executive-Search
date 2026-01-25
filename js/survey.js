@@ -470,8 +470,8 @@
         // Remove fade-in class after animation completes to restore normal transitions
         setTimeout(() => {
           highlighter.classList.remove('fade-in');
-        }, 600);
-      }, 1000);
+        }, 250);
+      }, 200);
     }
 
     // Width stability handled via CSS - no resize recalculation needed

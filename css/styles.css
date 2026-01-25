@@ -615,7 +615,7 @@ body {
 
 /* Fade in after initial load */
 .mobile-highlighter.fade-in {
-  transition: opacity 0.5s ease-in-out !important;
+  transition: opacity 0.2s ease-out !important;
 }
 
 .mobile-highlighter.active {
