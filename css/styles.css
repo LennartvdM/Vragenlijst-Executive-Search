@@ -1616,6 +1616,37 @@ h1 {
   display: none;
 }
 
+/* Hover ring - darkened stroke that persists through click */
+.likert-radio-overlay .hover-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--text);
+  border-radius: 50%;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.likert-radio-overlay.hovered .hover-ring {
+  opacity: 1;
+}
+
+/* Keep hover ring visible briefly during selection animation */
+.likert-radio-overlay.selected .hover-ring {
+  opacity: 1;
+  animation: hover-ring-fade 0.25s ease-out forwards;
+}
+
+@keyframes hover-ring-fade {
+  0% { opacity: 1; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* White background circle for contrast when selected */
 .likert-radio-overlay .bg-circle {
   position: absolute;
