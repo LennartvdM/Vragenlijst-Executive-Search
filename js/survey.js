@@ -410,6 +410,61 @@
     });
   }
 
+  /**
+   * Create overlay elements for Likert radio buttons
+   * Provides hover ghost dot and selection target-lock animation
+   */
+  function initLikertRadioOverlays() {
+    document.querySelectorAll('.likert-table input[type="radio"]').forEach(radio => {
+      const td = radio.closest('td');
+      if (!td || td.querySelector('.likert-radio-overlay')) return;
+
+      // Make td position relative for overlay positioning
+      td.style.position = 'relative';
+
+      // Create overlay element
+      const overlay = document.createElement('span');
+      overlay.className = 'likert-radio-overlay';
+      overlay.innerHTML = '<span class="ghost-dot"></span><span class="target-ring"></span><span class="inner-dot"></span>';
+
+      // Position overlay centered on radio
+      td.appendChild(overlay);
+
+      // Position the overlay over the radio button
+      const updateOverlayPosition = () => {
+        const radioRect = radio.getBoundingClientRect();
+        const tdRect = td.getBoundingClientRect();
+        overlay.style.left = `${radioRect.left - tdRect.left}px`;
+        overlay.style.top = `${radioRect.top - tdRect.top}px`;
+      };
+      updateOverlayPosition();
+
+      // Hover: show ghost dot
+      radio.addEventListener('mouseenter', () => {
+        if (!radio.checked) {
+          overlay.classList.add('hovered');
+        }
+      });
+      radio.addEventListener('mouseleave', () => {
+        overlay.classList.remove('hovered');
+      });
+
+      // Selection: trigger animation
+      radio.addEventListener('change', () => {
+        // Clear all overlays in this row first
+        const row = radio.closest('tr');
+        row.querySelectorAll('.likert-radio-overlay').forEach(ov => {
+          ov.classList.remove('selected', 'hovered');
+        });
+
+        // Animate this one
+        overlay.classList.remove('selected');
+        void overlay.offsetWidth; // Force reflow
+        overlay.classList.add('selected');
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
     session = Storage.getSession();
@@ -443,6 +498,9 @@
 
     // Initialize mobile Likert controls
     initMobileLikert();
+
+    // Initialize Likert radio overlays for hover/selection effects
+    initLikertRadioOverlays();
 
     // Initialize Flatpickr date picker
     initDatePicker();
