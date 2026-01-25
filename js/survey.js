@@ -460,20 +460,6 @@
     // Setup custom scrollbar drag functionality
     initCustomScrollbarDrag();
 
-    // Fade in highlighter after initial page load (not during navigation)
-    const highlighter = document.getElementById('mobileHighlighter');
-    if (highlighter) {
-      highlighter.classList.add('initial-load');
-      setTimeout(() => {
-        highlighter.classList.remove('initial-load');
-        highlighter.classList.add('fade-in');
-        // Remove fade-in class after animation completes to restore normal transitions
-        setTimeout(() => {
-          highlighter.classList.remove('fade-in');
-        }, 250);
-      }, 200);
-    }
-
     // Width stability handled via CSS - no resize recalculation needed
   });
 
