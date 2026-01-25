@@ -1316,6 +1316,11 @@
       }
     });
 
+    // Clear radio overlay selection states
+    table.querySelectorAll('.likert-radio-overlay').forEach(overlay => {
+      overlay.classList.remove('selected', 'hovered');
+    });
+
     // Remove arrow indicators
     table.classList.remove('has-missing');
 
