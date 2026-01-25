@@ -1141,10 +1141,49 @@
       }
       return;
     }
+
+    // Agitate items between current and target step
+    agitateItemsBetween(currentStep, step);
+
     // Save scroll position before leaving current step
     saveScrollPosition();
     currentStep = step;
     showStep(step);
+  }
+
+  /**
+   * Briefly agitate sidebar items as highlighter passes over them
+   * @param {number} fromStep - Starting step
+   * @param {number} toStep - Target step
+   */
+  function agitateItemsBetween(fromStep, toStep) {
+    const direction = toStep > fromStep ? 1 : -1;
+    const travelTime = 350; // matches CSS transition duration (0.35s)
+
+    // Get all items between source and destination (exclusive of both)
+    const start = Math.min(fromStep, toStep) + 1;
+    const end = Math.max(fromStep, toStep);
+    const itemCount = end - start;
+
+    if (itemCount <= 0) return;
+
+    // Calculate delay per item based on travel time
+    const delayPerItem = travelTime / (itemCount + 1);
+
+    for (let i = start; i < end; i++) {
+      const item = document.querySelector(`.index-item[data-step="${i}"], .index-divider-clickable[data-step="${i}"]`);
+      if (!item) continue;
+
+      // Calculate delay based on position in travel path
+      const position = direction > 0 ? (i - start) : (end - 1 - i - start);
+      const delay = delayPerItem * (position + 1);
+
+      setTimeout(() => {
+        item.classList.add('agitated');
+        // Remove class after animation completes
+        setTimeout(() => item.classList.remove('agitated'), 150);
+      }, delay);
+    }
   }
 
   /**
