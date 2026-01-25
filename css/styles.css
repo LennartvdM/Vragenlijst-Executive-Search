@@ -1563,7 +1563,7 @@ h1 {
   }
 }
 
-/* Likert radio buttons - native styling, hidden when checked */
+/* Likert radio buttons - native styling stays visible */
 .likert-table input[type="radio"] {
   width: 18px;
   height: 18px;
@@ -1571,10 +1571,6 @@ h1 {
   accent-color: var(--terracotta);
   position: relative;
   z-index: 1;
-}
-
-.likert-table input[type="radio"]:checked {
-  opacity: 0;
 }
 
 /* Radio wrapper for overlay positioning */
