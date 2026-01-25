@@ -1563,11 +1563,74 @@ h1 {
   }
 }
 
+/* Custom styled Likert radio buttons */
 .likert-table input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: var(--terracotta);
+  border: 2px solid var(--text-light);
+  border-radius: 50%;
+  background: transparent;
+  position: relative;
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover shade */
+.likert-table input[type="radio"]:hover {
+  background: rgba(196, 120, 90, 0.12);
+  border-color: var(--salmon);
+}
+
+/* Contracting outer ring */
+.likert-table input[type="radio"]:checked {
+  border-color: transparent;
+  background: transparent;
+}
+
+.likert-table input[type="radio"]:checked::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--terracotta);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: likert-ring-contract 0.25s ease-out forwards;
+}
+
+/* Inner dot rapid fade in */
+.likert-table input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  animation: likert-dot-fade 0.12s ease-out forwards;
+}
+
+@keyframes likert-ring-contract {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes likert-dot-fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 .likert-header {
