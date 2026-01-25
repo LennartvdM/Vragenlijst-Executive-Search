@@ -1159,7 +1159,7 @@
   function triggerPassingEffect(fromStep, toStep) {
     const direction = toStep > fromStep ? 1 : -1;
     const travelTime = 350; // matches CSS transition duration (0.35s)
-    const passingDuration = 80; // how long each item stays in passing state
+    const passingDuration = 40; // brief moment before item "realizes" it's not the target
 
     // Get all items between source and destination (exclusive of both)
     const start = Math.min(fromStep, toStep) + 1;
