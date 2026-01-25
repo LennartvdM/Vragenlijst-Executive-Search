@@ -653,6 +653,11 @@ body {
   transform: scale(1.015);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   transition:
+    top 0.35s ease-in-out,
+    height 0.35s ease-in-out,
+    left 0.35s ease-in-out,
+    border-radius 0.35s ease-in-out,
+    opacity 0.2s ease,
     transform 0.15s ease-out,
     box-shadow 0.15s ease-out;
 }
@@ -663,6 +668,11 @@ body {
   transform-origin: center center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   transition:
+    top 0.35s ease-in-out,
+    height 0.35s ease-in-out,
+    left 0.35s ease-in-out,
+    border-radius 0.35s ease-in-out,
+    opacity 0.2s ease,
     transform 0.15s ease-out,
     box-shadow 0.15s ease-out;
 }
