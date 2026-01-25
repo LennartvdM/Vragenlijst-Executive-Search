@@ -779,6 +779,17 @@ body {
   transition: transform 0.15s ease-out;
 }
 
+/* Passing state - triggered briefly as highlighter travels over item */
+.index-item.passing .status {
+  transform: translateX(-42px) scale(1.15);
+  transition: transform 0.1s ease-out;
+}
+
+.index-item.passing .label {
+  transform: translateX(-32px) scale(1.1);
+  transition: transform 0.1s ease-out;
+}
+
 /* Index dividers for grouping navigation items */
 .index-divider {
   font-size: 10px;

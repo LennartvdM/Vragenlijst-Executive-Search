@@ -1141,10 +1141,50 @@
       }
       return;
     }
+
+    // Trigger passing effect on items as highlighter travels over them
+    triggerPassingEffect(currentStep, step);
+
     // Save scroll position before leaving current step
     saveScrollPosition();
     currentStep = step;
     showStep(step);
+  }
+
+  /**
+   * Trigger passing effect on sidebar items as highlighter travels over them
+   * @param {number} fromStep - Starting step
+   * @param {number} toStep - Target step
+   */
+  function triggerPassingEffect(fromStep, toStep) {
+    const direction = toStep > fromStep ? 1 : -1;
+    const travelTime = 350; // matches CSS transition duration (0.35s)
+    const passingDuration = 80; // how long each item stays in passing state
+
+    // Get all items between source and destination (exclusive of both)
+    const start = Math.min(fromStep, toStep) + 1;
+    const end = Math.max(fromStep, toStep);
+    const itemCount = end - start;
+
+    if (itemCount <= 0) return;
+
+    // Calculate delay per item based on travel time
+    const delayPerItem = travelTime / (itemCount + 1);
+
+    for (let i = start; i < end; i++) {
+      const item = document.querySelector(`.index-item[data-step="${i}"], .index-divider-clickable[data-step="${i}"]`);
+      if (!item) continue;
+
+      // Calculate delay based on position in travel path
+      const position = direction > 0 ? (i - start) : (end - 1 - i - start);
+      const delay = delayPerItem * (position + 1);
+
+      setTimeout(() => {
+        item.classList.add('passing');
+        // Remove class quickly as highlighter passes
+        setTimeout(() => item.classList.remove('passing'), passingDuration);
+      }, delay);
+    }
   }
 
   /**
