@@ -1309,20 +1309,39 @@ h1 {
 }
 
 .option-card.selected .option-radio {
-  border-color: var(--terracotta);
+  border-color: transparent;
   background: transparent;
 }
 
-/* Homing beacon target lock effect */
-@keyframes radio-target-lock {
+/* Contracting outer ring - target lock effect */
+@keyframes ring-contract {
   0% {
     opacity: 0;
-    transform: scale(2.2);
+    transform: translate(-50%, -50%) scale(1.8);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
+}
+
+/* Inner dot rapid fade in */
+@keyframes dot-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.option-card.selected .option-radio::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--terracotta);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: ring-contract 0.25s ease-out forwards;
 }
 
 .option-card.selected .option-radio::after {
@@ -1331,7 +1350,7 @@ h1 {
   height: 10px;
   background: var(--terracotta);
   border-radius: 50%;
-  animation: radio-target-lock 0.25s ease-out forwards;
+  animation: dot-fade-in 0.12s ease-out forwards;
 }
 
 .option-content h3 {
