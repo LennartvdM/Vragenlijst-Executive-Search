@@ -1563,7 +1563,7 @@ h1 {
   }
 }
 
-/* Likert radio buttons - native styling preserved */
+/* Likert radio buttons - native styling, hidden when checked */
 .likert-table input[type="radio"] {
   width: 18px;
   height: 18px;
@@ -1571,16 +1571,31 @@ h1 {
   accent-color: var(--terracotta);
 }
 
-/* Animated overlay for radio selection effects - positioned by JS */
+.likert-table input[type="radio"]:checked {
+  opacity: 0;
+}
+
+/* Radio wrapper for overlay positioning */
+.likert-radio-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+/* Animated overlay - sits on top of radio */
 .likert-radio-overlay {
   position: absolute;
+  top: 0;
+  left: 0;
   pointer-events: none;
   width: 18px;
   height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3;
 }
 
 /* Ghost dot on hover */
@@ -1611,7 +1626,6 @@ h1 {
   border-radius: 50%;
   box-sizing: border-box;
   opacity: 0;
-  pointer-events: none;
 }
 
 .likert-radio-overlay.selected .target-ring {
