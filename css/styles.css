@@ -1299,10 +1299,49 @@ h1 {
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
+  position: relative;
+}
+
+/* Hover shade on radio dot */
+.option-card:hover .option-radio {
+  background: rgba(196, 120, 90, 0.12);
+  border-color: var(--salmon);
 }
 
 .option-card.selected .option-radio {
-  border-color: var(--terracotta);
+  border-color: transparent;
+  background: transparent;
+}
+
+/* Contracting outer ring - target lock effect */
+@keyframes ring-contract {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Inner dot rapid fade in */
+@keyframes dot-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.option-card.selected .option-radio::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--terracotta);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: ring-contract 0.25s ease-out forwards;
 }
 
 .option-card.selected .option-radio::after {
@@ -1311,6 +1350,7 @@ h1 {
   height: 10px;
   background: var(--terracotta);
   border-radius: 50%;
+  animation: dot-fade-in 0.12s ease-out forwards;
 }
 
 .option-content h3 {
