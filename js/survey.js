@@ -428,7 +428,7 @@
       // Create overlay element inside wrapper
       const overlay = document.createElement('span');
       overlay.className = 'likert-radio-overlay';
-      overlay.innerHTML = '<span class="ghost-dot"></span><span class="bg-circle"></span><span class="target-ring"></span><span class="inner-dot"></span>';
+      overlay.innerHTML = '<span class="hover-ring"></span><span class="ghost-dot"></span><span class="bg-circle"></span><span class="target-ring"></span><span class="inner-dot"></span>';
       wrapper.appendChild(overlay);
 
       // Hover: show ghost dot
