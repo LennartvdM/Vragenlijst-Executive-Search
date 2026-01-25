@@ -748,7 +748,7 @@ body {
 .index-item .label {
   font-size: 13px;
   color: var(--text);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-out;
 }
 
 .index-item.active .label {
