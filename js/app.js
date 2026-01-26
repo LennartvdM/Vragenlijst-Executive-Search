@@ -304,7 +304,7 @@ var App = (function() {
     void container.offsetWidth;
 
     // Animate clip-path to reveal full container
-    container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
+    container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms ease-out';
     container.style.clipPath = 'inset(0 round 12px)';
 
     // ========================================
