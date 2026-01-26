@@ -608,6 +608,7 @@
         break;
 
       case 'logout':
+        event.preventDefault();
         logout();
         break;
 
