@@ -358,79 +358,34 @@ var App = (function() {
 
   /**
    * Transition from survey to login view with crossfade
-   * Called when user logs out (session should already be cleared by caller)
    */
   function transitionToLogin() {
     var FADE_DURATION = 500;
-    var surveyContainer = elements.surveyView.querySelector('.container');
 
-    // ========================================
-    // PHASE 1: SETUP (completely invisible to user)
-    // ========================================
-    document.body.style.visibility = 'hidden';
-
-    // Freeze survey container at current position
-    if (surveyContainer) {
-      var rect = surveyContainer.getBoundingClientRect();
-      surveyContainer.style.position = 'fixed';
-      surveyContainer.style.top = rect.top + 'px';
-      surveyContainer.style.left = rect.left + 'px';
-      surveyContainer.style.width = rect.width + 'px';
-      surveyContainer.style.height = rect.height + 'px';
-      surveyContainer.style.margin = '0';
-      surveyContainer.style.zIndex = '100';
-    }
-
-    // Safe to change layout now - survey is frozen, page is invisible
-    document.body.classList.remove('survey-body');
-
-    // Prepare login underneath, starting transparent
-    elements.loginView.style.opacity = '0';
+    // Show login (starts invisible via CSS .view class)
     elements.loginView.style.display = '';
     elements.loginView.classList.add('view-active');
 
-    // Force reflow to complete all layout work
+    // Force reflow
     void elements.loginView.offsetWidth;
 
-    // Make page visible again - ready for clean crossfade
-    document.body.style.visibility = '';
+    // Crossfade: survey out, login in
+    elements.surveyView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.surveyView.style.opacity = '0';
 
-    // ========================================
-    // PHASE 2: CROSSFADE (only opacity changes)
-    // ========================================
     elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
     elements.loginView.style.opacity = '1';
 
-    if (surveyContainer) {
-      surveyContainer.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
-      surveyContainer.style.opacity = '0';
-    }
-
-    // ========================================
-    // PHASE 3: CLEANUP (after fade complete)
-    // ========================================
+    // After fade: cleanup
     setTimeout(function() {
-      // Hide survey
       elements.surveyView.style.display = 'none';
+      elements.surveyView.style.opacity = '';
+      elements.surveyView.style.transition = '';
       elements.surveyView.classList.remove('view-active');
 
-      // Reset survey container
-      if (surveyContainer) {
-        surveyContainer.style.position = '';
-        surveyContainer.style.top = '';
-        surveyContainer.style.left = '';
-        surveyContainer.style.width = '';
-        surveyContainer.style.height = '';
-        surveyContainer.style.margin = '';
-        surveyContainer.style.zIndex = '';
-        surveyContainer.style.opacity = '';
-        surveyContainer.style.transition = '';
-      }
-
-      // Reset login transition
       elements.loginView.style.transition = '';
 
-      // Update state
+      document.body.classList.remove('survey-body');
       currentView = 'login';
       document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
     }, FADE_DURATION);
