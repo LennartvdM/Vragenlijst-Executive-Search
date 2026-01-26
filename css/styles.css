@@ -1586,20 +1586,16 @@ h1 {
 /* Animated overlay - sits on top of radio */
 .likert-radio-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   pointer-events: none;
-  width: 18px;
-  height: 18px;
   z-index: 2;
 }
 
-/* Ghost dot on hover - centered */
+/* Ghost dot on hover - pixel-perfect centering */
 .likert-radio-overlay .ghost-dot {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 8px;
   height: 8px;
   background: var(--text-light);
@@ -1619,9 +1615,8 @@ h1 {
 /* Hover ring - darkened stroke that persists through click */
 .likert-radio-overlay .hover-ring {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 18px;
   height: 18px;
   border: 1px solid var(--text);
@@ -1650,9 +1645,8 @@ h1 {
 /* White background circle for contrast when selected */
 .likert-radio-overlay .bg-circle {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 16px;
   height: 16px;
   background: white;
@@ -1664,30 +1658,29 @@ h1 {
   opacity: 1;
 }
 
-/* Contracting ring on selection - centered */
+/* Contracting ring on selection */
 .likert-radio-overlay .target-ring {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 18px;
   height: 18px;
   border: 1px solid var(--terracotta);
   border-radius: 50%;
   box-sizing: border-box;
   opacity: 0;
+  transform-origin: center;
 }
 
 .likert-radio-overlay.selected .target-ring {
   animation: likert-ring-contract 0.25s ease-out forwards;
 }
 
-/* Inner dot on selection - centered */
+/* Inner dot on selection */
 .likert-radio-overlay .inner-dot {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 8px;
   height: 8px;
   background: var(--terracotta);
@@ -1702,11 +1695,11 @@ h1 {
 @keyframes likert-ring-contract {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.8);
+    transform: scale(1.8);
   }
   100% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
 }
 
