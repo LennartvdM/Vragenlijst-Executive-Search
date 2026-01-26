@@ -313,7 +313,7 @@ var App = (function() {
     // Fade in content during second half of transition
     setTimeout(function() {
       for (var i = 0; i < containerChildren.length; i++) {
-        containerChildren[i].style.transition = 'opacity ' + (TRANSFORM_DURATION / 2) + 'ms ease-out';
+        containerChildren[i].style.transition = 'opacity ' + (TRANSFORM_DURATION / 2) + 'ms linear';
         containerChildren[i].style.opacity = '1';
       }
     }, TRANSFORM_DURATION / 2);
