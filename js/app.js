@@ -284,6 +284,12 @@ var App = (function() {
     elements.surveyView.classList.add('view-active');
     // NOTE: Do NOT add survey-body class here - it affects login layout!
 
+    // Hide content inside container (will fade in during second half)
+    var containerChildren = container.children;
+    for (var i = 0; i < containerChildren.length; i++) {
+      containerChildren[i].style.opacity = '0';
+    }
+
     // Position container at button location
     container.style.position = 'fixed';
     container.style.left = startLeft + 'px';
@@ -304,11 +310,25 @@ var App = (function() {
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
 
+    // Fade in content during second half of transition
+    setTimeout(function() {
+      for (var i = 0; i < containerChildren.length; i++) {
+        containerChildren[i].style.transition = 'opacity ' + (TRANSFORM_DURATION / 2) + 'ms ease-out';
+        containerChildren[i].style.opacity = '1';
+      }
+    }, TRANSFORM_DURATION / 2);
+
     // ========================================
     // PHASE 3: CLEANUP
     // After expansion, fade login, then settle into normal flow
     // ========================================
     setTimeout(function() {
+      // Reset content styles
+      for (var i = 0; i < containerChildren.length; i++) {
+        containerChildren[i].style.opacity = '';
+        containerChildren[i].style.transition = '';
+      }
+
       // Fade out login
       elements.loginView.style.transition = 'opacity 300ms ease-out';
       elements.loginView.style.opacity = '0';
