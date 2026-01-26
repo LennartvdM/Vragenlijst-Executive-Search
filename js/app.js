@@ -16,13 +16,11 @@ var App = (function() {
   // DOM elements (cached after init)
   var elements = {
     loginView: null,
-    surveyView: null,
-    expandOverlay: null
+    surveyView: null
   };
 
-  // Animation durations in ms
-  var EXPAND_DURATION = 450;
-  var CONTENT_FADE_DURATION = 300;
+  // Animation duration in ms
+  var TRANSFORM_DURATION = 500;
 
   /**
    * Initialize the application
@@ -37,9 +35,6 @@ var App = (function() {
       console.error('App: Required view containers not found');
       return;
     }
-
-    // Create expand overlay element
-    createExpandOverlay();
 
     // Check for logout parameter
     if (window.location.search.includes('logout=1')) {
@@ -57,17 +52,6 @@ var App = (function() {
 
     // Setup popstate handler for browser back/forward
     window.addEventListener('popstate', handlePopState);
-  }
-
-  /**
-   * Create the expand overlay element used for container transform animation
-   */
-  function createExpandOverlay() {
-    var overlay = document.createElement('div');
-    overlay.id = 'expand-overlay';
-    overlay.className = 'expand-overlay';
-    document.body.appendChild(overlay);
-    elements.expandOverlay = overlay;
   }
 
   /**
@@ -185,46 +169,28 @@ var App = (function() {
 
   /**
    * Transition from login to survey view with container transform animation
-   * Called by auth.js after successful login
+   * The survey card expands from the button position with content visible
    * @param {HTMLElement} originElement - The element to expand from (usually the login button)
    */
   function transitionToSurvey(originElement) {
-    // Get origin rect (button position) or use center of screen as fallback
+    // Get origin rect (button position)
     var originRect;
     if (originElement && originElement.getBoundingClientRect) {
       originRect = originElement.getBoundingClientRect();
     } else {
       // Fallback: center of screen
-      var centerX = window.innerWidth / 2;
-      var centerY = window.innerHeight / 2;
       originRect = {
-        left: centerX - 50,
-        top: centerY - 25,
+        left: window.innerWidth / 2 - 50,
+        top: window.innerHeight / 2 - 25,
         width: 100,
         height: 50
       };
     }
 
-    // Position overlay at button location
-    var overlay = elements.expandOverlay;
-    overlay.style.left = originRect.left + 'px';
-    overlay.style.top = originRect.top + 'px';
-    overlay.style.width = originRect.width + 'px';
-    overlay.style.height = originRect.height + 'px';
-    overlay.style.borderRadius = '8px';
-    overlay.style.display = 'block';
-    overlay.style.opacity = '1';
-
-    // Force reflow
-    void overlay.offsetWidth;
-
-    // Start expand animation
-    overlay.classList.add('expanding');
-
-    // Load survey content during animation
-    var surveyLoadPromise;
+    // Load survey content first
+    var loadPromise;
     if (!surveyLoaded) {
-      surveyLoadPromise = fetch('/views/survey.html')
+      loadPromise = fetch('/views/survey.html')
         .then(function(response) {
           if (!response.ok) {
             throw new Error('Failed to load survey');
@@ -236,64 +202,112 @@ var App = (function() {
           surveyLoaded = true;
         });
     } else {
-      surveyLoadPromise = Promise.resolve();
+      loadPromise = Promise.resolve();
     }
 
-    // After expand animation completes
-    setTimeout(function() {
-      // Ensure survey is loaded before proceeding
-      surveyLoadPromise
-        .then(function() {
-          completeExpandTransition();
-        })
-        .catch(function(error) {
-          console.error('App: Error loading survey:', error);
-          // Reset overlay and fallback
-          overlay.classList.remove('expanding');
-          overlay.style.display = 'none';
-          window.location.href = '/survey.html';
-        });
-    }, EXPAND_DURATION);
+    loadPromise
+      .then(function() {
+        performContainerTransform(originRect);
+      })
+      .catch(function(error) {
+        console.error('App: Error loading survey:', error);
+        window.location.href = '/survey.html';
+      });
   }
 
   /**
-   * Complete the expand transition - show survey content
+   * Perform the container transform animation
+   * @param {DOMRect} originRect - The starting position (button)
    */
-  function completeExpandTransition() {
-    var overlay = elements.expandOverlay;
-
-    // Hide login view
-    elements.loginView.style.display = 'none';
-    elements.loginView.classList.remove('view-active');
-
+  function performContainerTransform(originRect) {
     // Update state
     currentView = 'survey';
     document.title = 'Monitoring Cultureel Talent naar de Top 2025';
     document.body.classList.add('survey-body');
 
-    // Show survey view (invisible initially for fade-in)
+    // Show survey view (needed to get container dimensions)
     elements.surveyView.style.display = '';
-    elements.surveyView.style.opacity = '0';
-    void elements.surveyView.offsetWidth;
-
-    // Fade in survey content
+    elements.surveyView.style.visibility = 'hidden';
     elements.surveyView.classList.add('view-active');
-    elements.surveyView.style.opacity = '';
 
-    // Initialize survey
-    initializeSurvey();
+    // Get the survey container element
+    var container = elements.surveyView.querySelector('.container');
+    if (!container) {
+      // Fallback: just show without animation
+      elements.surveyView.style.visibility = '';
+      elements.loginView.style.display = 'none';
+      initializeSurvey();
+      return;
+    }
 
-    // Fade out and remove overlay
-    overlay.classList.add('fade-out');
+    // Force layout to get accurate measurements
+    void container.offsetWidth;
 
+    // Get the container's final position
+    var containerRect = container.getBoundingClientRect();
+
+    // Calculate the transform to move container from button position to final position
+    // We need to find what scale and translate would make the container appear at button position
+    var scaleX = originRect.width / containerRect.width;
+    var scaleY = originRect.height / containerRect.height;
+    var scale = Math.min(scaleX, scaleY, 0.1); // Cap at 0.1 to keep content somewhat visible
+
+    // Calculate translation to move scaled container's center to button's center
+    var originCenterX = originRect.left + originRect.width / 2;
+    var originCenterY = originRect.top + originRect.height / 2;
+    var containerCenterX = containerRect.left + containerRect.width / 2;
+    var containerCenterY = containerRect.top + containerRect.height / 2;
+
+    var translateX = originCenterX - containerCenterX;
+    var translateY = originCenterY - containerCenterY;
+
+    // Apply initial transform (container appears at button position)
+    container.style.transformOrigin = 'center center';
+    container.style.transform = 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')';
+    container.style.opacity = '0.9';
+    container.classList.add('container-transform-active');
+
+    // Hide login and make survey visible
+    elements.loginView.style.opacity = '0';
+    elements.surveyView.style.visibility = '';
+
+    // Force reflow
+    void container.offsetWidth;
+
+    // Animate to final position
+    container.style.transition = 'transform ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1), opacity ' + TRANSFORM_DURATION + 'ms ease-out';
+    container.style.transform = 'translate(0, 0) scale(1)';
+    container.style.opacity = '1';
+
+    // Fade out login card during animation
+    var loginCard = elements.loginView.querySelector('.login-card');
+    if (loginCard) {
+      loginCard.style.transition = 'opacity 200ms ease-out';
+      loginCard.style.opacity = '0';
+    }
+
+    // Cleanup after animation
     setTimeout(function() {
-      overlay.classList.remove('expanding', 'fade-out');
-      overlay.style.display = 'none';
-      overlay.style.left = '';
-      overlay.style.top = '';
-      overlay.style.width = '';
-      overlay.style.height = '';
-    }, CONTENT_FADE_DURATION);
+      // Remove inline styles
+      container.style.transform = '';
+      container.style.transition = '';
+      container.style.transformOrigin = '';
+      container.style.opacity = '';
+      container.classList.remove('container-transform-active');
+
+      // Hide login completely
+      elements.loginView.style.display = 'none';
+      elements.loginView.style.opacity = '';
+      elements.loginView.classList.remove('view-active');
+
+      if (loginCard) {
+        loginCard.style.transition = '';
+        loginCard.style.opacity = '';
+      }
+
+      // Initialize survey
+      initializeSurvey();
+    }, TRANSFORM_DURATION);
   }
 
   /**
@@ -313,7 +327,7 @@ var App = (function() {
 
       // Show login
       showLogin();
-    }, CONTENT_FADE_DURATION);
+    }, 300);
   }
 
   // Public API
