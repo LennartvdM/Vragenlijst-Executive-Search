@@ -460,12 +460,22 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
+  /**
+   * Initialize the survey module
+   * Can be called by App.js after dynamically loading survey content
+   */
+  function initSurvey() {
+    // Check if survey form exists in DOM
+    var form = document.getElementById('monitoringForm');
+    if (!form) {
+      return false;
+    }
+
+    // Get session (App.js should have already validated this)
     session = Storage.getSession();
     if (!session || !session.orgCode) {
-      window.location.href = '/index.html';
-      return;
+      // Let App.js handle the redirect
+      return false;
     }
 
     // Initialize UI
@@ -501,7 +511,7 @@
     initDatePicker();
 
     // Listen for scroll events on content container to save position
-    const scrollable = document.getElementById('contentScrollable');
+    var scrollable = document.getElementById('contentScrollable');
     if (scrollable) {
       scrollable.addEventListener('scroll', handleScroll, { passive: true });
     }
@@ -513,8 +523,28 @@
     // Setup custom scrollbar drag functionality
     initCustomScrollbarDrag();
 
-    // Width stability handled via CSS - no resize recalculation needed
+    return true;
+  }
+
+  // Auto-initialize on DOMContentLoaded if survey form is already in DOM
+  // (for direct survey.html access as fallback)
+  document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('monitoringForm');
+    if (form) {
+      // Direct access to survey.html - check auth and initialize
+      session = Storage.getSession();
+      if (!session || !session.orgCode) {
+        window.location.href = '/index.html';
+        return;
+      }
+      initSurvey();
+    }
   });
+
+  // Export Survey module for use by App.js
+  window.Survey = {
+    init: initSurvey
+  };
 
   /**
    * Setup event delegation for all interactive elements
@@ -2899,8 +2929,13 @@
    */
   function logout() {
     Storage.clearSession();
-    // Redirect with logout parameter as extra safety
-    window.location.href = '/index.html?logout=1';
+    // Use SPA transition if available, otherwise redirect
+    if (typeof App !== 'undefined' && App.transitionToLogin) {
+      App.transitionToLogin();
+    } else {
+      // Fallback for direct survey.html access
+      window.location.href = '/index.html?logout=1';
+    }
   }
 
   /**
