@@ -3078,11 +3078,19 @@ h1 {
   border: 2px solid rgba(180, 93, 70, 0.5);
   border-radius: 4px;
   opacity: 0.7;
-  margin-right: auto; /* Push other elements (buttons) to the right */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-70%); /* Offset to account for buttons on right */
 }
 
 .preview-info-box.visible {
   display: block;
+}
+
+/* Ensure bars have relative positioning for absolute children */
+.top-bar,
+.bottom-bar {
+  position: relative;
 }
 
 /* Hide print button when preview box is visible to make room */
