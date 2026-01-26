@@ -304,6 +304,13 @@ var App = (function() {
       highlighter.style.opacity = '0';
     }
 
+    // Scale content from 50% to 100% (card stays stable, content grows)
+    var containerChildren = container.children;
+    for (var i = 0; i < containerChildren.length; i++) {
+      containerChildren[i].style.transform = 'scale(0.5)';
+      containerChildren[i].style.transformOrigin = 'center center';
+    }
+
     // Start: full width (120%), 10% height centered at button
     container.style.clipPath = 'inset(' + clipTop + 'px ' + (-shadowPadding) + 'px ' + clipBottom + 'px ' + (-shadowPadding) + 'px round 12px)';
 
@@ -314,6 +321,12 @@ var App = (function() {
     var expandDuration = TRANSFORM_DURATION * 1.2;
     container.style.transition = 'clip-path ' + expandDuration + 'ms ease-out';
     container.style.clipPath = 'inset(' + (-shadowPadding) + 'px)';
+
+    // Animate content scale from 50% to 100%
+    for (var j = 0; j < containerChildren.length; j++) {
+      containerChildren[j].style.transition = 'transform ' + expandDuration + 'ms ease-out';
+      containerChildren[j].style.transform = 'scale(1)';
+    }
 
     // Fade in highlighter after clip-path animation + extra delay
     setTimeout(function() {
@@ -358,6 +371,13 @@ var App = (function() {
         if (highlighter) {
           highlighter.style.opacity = '';
           highlighter.style.transition = '';
+        }
+
+        // Reset content transform styles
+        for (var k = 0; k < containerChildren.length; k++) {
+          containerChildren[k].style.transform = '';
+          containerChildren[k].style.transformOrigin = '';
+          containerChildren[k].style.transition = '';
         }
 
         // Remove fixed overlay from survey-view
