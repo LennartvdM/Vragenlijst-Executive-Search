@@ -232,7 +232,46 @@ var App = (function() {
       return;
     }
 
-    // STEP 1: Make survey-view a fixed overlay (login stays 100% untouched)
+    // ========================================
+    // PHASE 1: INVISIBLE MEASUREMENT
+    // Measure final position without user seeing anything
+    // ========================================
+    document.body.style.visibility = 'hidden';
+
+    // Set up TRUE final state: login hidden, survey in normal flow with survey-body
+    elements.loginView.style.display = 'none';
+    document.body.classList.add('survey-body');
+    elements.surveyView.style.display = '';
+    elements.surveyView.classList.add('view-active');
+
+    // Measure the TRUE final position
+    void container.offsetWidth;
+    var containerRect = container.getBoundingClientRect();
+    var finalLeft = containerRect.left;
+    var finalTop = containerRect.top;
+    var finalWidth = containerRect.width;
+    var finalHeight = containerRect.height;
+
+    // Reset everything back to starting state
+    elements.loginView.style.display = '';
+    elements.surveyView.style.display = 'none';
+    elements.surveyView.classList.remove('view-active');
+    document.body.classList.remove('survey-body');
+
+    // Make page visible - login is exactly as before, user saw nothing
+    document.body.style.visibility = '';
+
+    // ========================================
+    // PHASE 2: ANIMATION
+    // Login stays stable, container floats on top
+    // ========================================
+
+    // Calculate starting scale and position (centered on button)
+    var scale = Math.max(originRect.width / finalWidth, 0.05);
+    var startLeft = originRect.left + originRect.width / 2 - (finalWidth * scale) / 2;
+    var startTop = originRect.top + originRect.height / 2 - (finalHeight * scale) / 2;
+
+    // Show survey as invisible fixed overlay (doesn't affect login layout)
     elements.surveyView.style.position = 'fixed';
     elements.surveyView.style.top = '0';
     elements.surveyView.style.left = '0';
@@ -243,22 +282,9 @@ var App = (function() {
     elements.surveyView.style.overflow = 'visible';
     elements.surveyView.style.display = '';
     elements.surveyView.classList.add('view-active');
-    document.body.classList.add('survey-body');
+    // NOTE: Do NOT add survey-body class here - it affects login layout!
 
-    // STEP 2: Measure container's natural position within the overlay
-    void container.offsetWidth;
-    var containerRect = container.getBoundingClientRect();
-    var finalLeft = containerRect.left;
-    var finalTop = containerRect.top;
-    var finalWidth = containerRect.width;
-    var finalHeight = containerRect.height;
-
-    // Calculate starting scale and position (centered on button)
-    var scale = Math.max(originRect.width / finalWidth, 0.05);
-    var startLeft = originRect.left + originRect.width / 2 - (finalWidth * scale) / 2;
-    var startTop = originRect.top + originRect.height / 2 - (finalHeight * scale) / 2;
-
-    // STEP 3: Position container at button location
+    // Position container at button location
     container.style.position = 'fixed';
     container.style.left = startLeft + 'px';
     container.style.top = startTop + 'px';
@@ -272,25 +298,31 @@ var App = (function() {
     // Force reflow before animation
     void container.offsetWidth;
 
-    // STEP 4: Animate container to final position
+    // Animate container to final position
     container.style.transition = 'all ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
     container.style.left = finalLeft + 'px';
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
 
-    // STEP 5: After expansion completes, fade out login
+    // ========================================
+    // PHASE 3: CLEANUP
+    // After expansion, fade login, then settle into normal flow
+    // ========================================
     setTimeout(function() {
-      // Fade out login (login was stable until now)
+      // Fade out login
       elements.loginView.style.transition = 'opacity 300ms ease-out';
       elements.loginView.style.opacity = '0';
 
-      // After login fade completes, cleanup everything
+      // After login fade completes
       setTimeout(function() {
         // Hide login completely
         elements.loginView.style.display = 'none';
         elements.loginView.style.opacity = '';
         elements.loginView.style.transition = '';
         elements.loginView.classList.remove('view-active');
+
+        // NOW add survey-body class (login is gone, safe to change body layout)
+        document.body.classList.add('survey-body');
 
         // Remove fixed positioning from container
         container.style.position = '';
