@@ -373,8 +373,9 @@
 
     const firstRadioCell = row.querySelector('td:nth-child(2)');
     const lastRadioCell = row.querySelector('td:last-child');
-    const firstRadio = row.querySelector('input[type="radio"]');
-    if (!firstRadioCell || !lastRadioCell || !firstRadio) return;
+    // Use custom radio element for positioning (native input is hidden)
+    const firstCustomRadio = row.querySelector('.likert-radio');
+    if (!firstRadioCell || !lastRadioCell || !firstCustomRadio) return;
 
     // Skip if element is not visible (getBoundingClientRect returns 0)
     const firstCellRect = firstRadioCell.getBoundingClientRect();
@@ -385,13 +386,13 @@
 
     // Measure actual positions
     const lastCellRect = lastRadioCell.getBoundingClientRect();
-    const radioRect = firstRadio.getBoundingClientRect();
+    const radioRect = firstCustomRadio.getBoundingClientRect();
 
     // Width spans from first to last radio cell
     pill.style.width = `${lastCellRect.right - firstCellRect.left}px`;
     pill.style.left = '0';
 
-    // Vertical position: center pill on the radio button
+    // Vertical position: center pill on the custom radio button
     const pillHeight = 36;
     const radioCenter = radioRect.top + (radioRect.height / 2) - firstCellRect.top;
     pill.style.top = `${radioCenter - (pillHeight / 2)}px`;
