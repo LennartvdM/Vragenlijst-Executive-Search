@@ -297,6 +297,12 @@ var App = (function() {
     container.style.zIndex = '1000';
     container.classList.add('container-transform-active');
 
+    // Hide sidebar highlighter initially (will fade in at end of transition)
+    var highlighter = container.querySelector('.mobile-highlighter');
+    if (highlighter) {
+      highlighter.style.opacity = '0';
+    }
+
     // Start with clip-path showing only button-sized area
     container.style.clipPath = 'inset(' + clipTop + 'px ' + clipRight + 'px ' + clipBottom + 'px ' + clipLeft + 'px round 12px)';
 
@@ -306,6 +312,14 @@ var App = (function() {
     // Animate clip-path just beyond card edge (~10px padding) to avoid border calculation
     container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms ease-out';
     container.style.clipPath = 'inset(-10px)';
+
+    // Fade in highlighter at end of clip-path animation
+    setTimeout(function() {
+      if (highlighter) {
+        highlighter.style.transition = 'opacity 300ms ease-out';
+        highlighter.style.opacity = '1';
+      }
+    }, TRANSFORM_DURATION);
 
     // ========================================
     // PHASE 3: CLEANUP
@@ -337,6 +351,12 @@ var App = (function() {
         container.style.clipPath = '';
         container.style.zIndex = '';
         container.classList.remove('container-transform-active');
+
+        // Reset highlighter styles
+        if (highlighter) {
+          highlighter.style.opacity = '';
+          highlighter.style.transition = '';
+        }
 
         // Remove fixed overlay from survey-view
         elements.surveyView.style.position = '';
