@@ -303,9 +303,9 @@ var App = (function() {
     // Force reflow before animation
     void container.offsetWidth;
 
-    // Animate clip-path to reveal full container
+    // Animate clip-path way beyond card - mask expands to screen edge, never hits complex border
     container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms ease-out';
-    container.style.clipPath = 'inset(0 round 12px)';
+    container.style.clipPath = 'inset(-9999px)';
 
     // ========================================
     // PHASE 3: CLEANUP
