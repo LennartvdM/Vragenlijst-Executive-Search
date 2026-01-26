@@ -82,44 +82,9 @@ body {
   opacity: 0;
 }
 
-/* Container Transform Animation (expand from button) */
-.expand-overlay {
-  position: fixed;
-  display: none;
-  background: var(--cream);
-  z-index: 9999;
-  pointer-events: none;
-  box-shadow: 0 8px 32px rgba(139, 90, 60, 0.2);
-}
-
-.expand-overlay.expanding {
-  animation: expandToFullscreen 450ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.expand-overlay.fade-out {
-  animation: overlayFadeOut 300ms ease-out forwards;
-}
-
-@keyframes expandToFullscreen {
-  0% {
-    /* Starting position is set via inline styles */
-  }
-  100% {
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-  }
-}
-
-@keyframes overlayFadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+/* Container Transform Animation - survey card expands from button */
+.container-transform-active {
+  will-change: transform, opacity;
 }
 
 /* ==========================================================================
