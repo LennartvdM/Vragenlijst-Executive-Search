@@ -284,7 +284,7 @@ var App = (function() {
     elements.surveyView.classList.add('view-active');
     // NOTE: Do NOT add survey-body class here - it affects login layout!
 
-    // Position container at button location (starts invisible)
+    // Position container at button location
     container.style.position = 'fixed';
     container.style.left = startLeft + 'px';
     container.style.top = startTop + 'px';
@@ -293,22 +293,16 @@ var App = (function() {
     container.style.transform = 'scale(' + scale + ')';
     container.style.transformOrigin = 'top left';
     container.style.zIndex = '1000';
-    container.style.opacity = '0';
     container.classList.add('container-transform-active');
 
     // Force reflow before animation
     void container.offsetWidth;
 
-    // Animate container to final position with short fade-in
-    var FADE_IN_DURATION = TRANSFORM_DURATION / 2;
-    container.style.transition = 'transform ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1), ' +
-                                 'left ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1), ' +
-                                 'top ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1), ' +
-                                 'opacity ' + FADE_IN_DURATION + 'ms ease-out';
+    // Animate container to final position
+    container.style.transition = 'all ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
     container.style.left = finalLeft + 'px';
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
-    container.style.opacity = '1';
 
     // ========================================
     // PHASE 3: CLEANUP
