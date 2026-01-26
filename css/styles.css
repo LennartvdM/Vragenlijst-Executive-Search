@@ -1584,6 +1584,7 @@ h1 {
   height: 18px;
   position: relative;
   cursor: pointer;
+  z-index: 1;
 }
 
 /* Base circle - the stable dot */
