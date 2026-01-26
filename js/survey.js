@@ -416,20 +416,26 @@
    */
   function initLikertRadioOverlays() {
     document.querySelectorAll('.likert-table input[type="radio"]').forEach(radio => {
-      // Skip if already wrapped
-      if (radio.parentElement.classList.contains('likert-radio-wrapper')) return;
+      const td = radio.closest('td');
+      if (!td || td.querySelector('.likert-radio-overlay')) return;
 
-      // Wrap radio in container
-      const wrapper = document.createElement('span');
-      wrapper.className = 'likert-radio-wrapper';
-      radio.parentNode.insertBefore(wrapper, radio);
-      wrapper.appendChild(radio);
-
-      // Create overlay element inside wrapper
+      // Create overlay element as sibling in td
       const overlay = document.createElement('span');
       overlay.className = 'likert-radio-overlay';
       overlay.innerHTML = '<span class="hover-ring"></span><span class="ghost-dot"></span><span class="bg-circle"></span><span class="target-ring"></span><span class="inner-dot"></span>';
-      wrapper.appendChild(overlay);
+      td.appendChild(overlay);
+
+      // Position overlay exactly on top of radio
+      const positionOverlay = () => {
+        const radioRect = radio.getBoundingClientRect();
+        const tdRect = td.getBoundingClientRect();
+        overlay.style.left = `${radio.offsetLeft}px`;
+        overlay.style.top = `${radio.offsetTop}px`;
+      };
+      positionOverlay();
+
+      // Store reference for event handlers
+      radio._overlay = overlay;
 
       // Hover: show ghost dot
       radio.addEventListener('mouseenter', () => {
