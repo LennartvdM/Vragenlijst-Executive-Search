@@ -313,13 +313,13 @@ var App = (function() {
     container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms ease-out';
     container.style.clipPath = 'inset(-10px)';
 
-    // Fade in highlighter at end of clip-path animation
+    // Fade in highlighter after clip-path animation + extra delay
     setTimeout(function() {
       if (highlighter) {
         highlighter.style.transition = 'opacity 300ms ease-out';
         highlighter.style.opacity = '1';
       }
-    }, TRANSFORM_DURATION);
+    }, TRANSFORM_DURATION + 500);
 
     // ========================================
     // PHASE 3: CLEANUP
