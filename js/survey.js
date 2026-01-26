@@ -480,6 +480,7 @@
 
     // Initialize UI
     initializeOrganizationInfo();
+    initPreviewMode(); // Show preview info boxes for public sessions
     initProgress();
 
     // Initialize alignment rig (must run after layout is stable)
@@ -662,6 +663,10 @@
 
       case 'closeErrorModal':
         hideErrorModal();
+        break;
+
+      case 'closePreviewModal':
+        hidePreviewModal();
         break;
     }
   }
@@ -2560,6 +2565,12 @@
    * Handle confirm submit action from review page
    */
   function handleConfirmSubmit() {
+    // Check if this is a public preview session
+    if (session && session.isPublic) {
+      showPreviewModal();
+      return;
+    }
+
     // If incomplete, check that checkbox is checked
     const checkbox = document.getElementById('confirmIncomplete');
     if (checkbox && !checkbox.checked) {
@@ -3124,6 +3135,49 @@
     if (modal) {
       modal.style.display = 'none';
       document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Show the preview mode modal (for public access submission attempt)
+   */
+  function showPreviewModal() {
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  /**
+   * Hide the preview mode modal
+   */
+  function hidePreviewModal() {
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Initialize preview mode UI elements
+   * Shows info boxes when session is public (inkijkexemplaar)
+   */
+  function initPreviewMode() {
+    if (!session || !session.isPublic) {
+      return;
+    }
+
+    // Show preview info boxes
+    const topBox = document.getElementById('previewInfoBoxTop');
+    const bottomBox = document.getElementById('previewInfoBoxBottom');
+
+    if (topBox) {
+      topBox.classList.add('visible');
+    }
+    if (bottomBox) {
+      bottomBox.classList.add('visible');
     }
   }
 
