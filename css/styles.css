@@ -3074,23 +3074,26 @@ h1 {
 .preview-info-box {
   display: none; /* Hidden by default, shown via JS for public sessions */
   text-align: center;
-  margin: 0 auto;
-  padding: 8px 24px;
+  padding: 6px 20px;
   border: 2px solid rgba(180, 93, 70, 0.5);
   border-radius: 4px;
-  transform: rotate(-2deg);
   opacity: 0.7;
-  max-width: fit-content;
+  margin-right: auto; /* Push other elements (buttons) to the right */
 }
 
 .preview-info-box.visible {
   display: block;
 }
 
+/* Hide print button when preview box is visible to make room */
+.bottom-bar:has(.preview-info-box.visible) .btn-print {
+  display: none;
+}
+
 .preview-info-box-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--terracotta);
   margin: 0;
@@ -3098,7 +3101,7 @@ h1 {
 }
 
 .preview-info-box-subtitle {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.5px;
   color: var(--terracotta);
@@ -3106,30 +3109,19 @@ h1 {
   opacity: 0.8;
 }
 
-/* Top preview box positioning */
-.preview-info-box-top {
-  margin-bottom: 8px;
-}
-
-/* Bottom preview box positioning */
-.preview-info-box-bottom {
-  margin-top: 8px;
-}
-
 /* Mobile responsive */
 @media (max-width: 768px) {
   .preview-info-box {
-    padding: 6px 16px;
-    transform: rotate(-1deg);
+    padding: 5px 14px;
   }
 
   .preview-info-box-title {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 1px;
   }
 
   .preview-info-box-subtitle {
-    font-size: 10px;
+    font-size: 9px;
   }
 }
 
