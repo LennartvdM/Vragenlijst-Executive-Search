@@ -3087,15 +3087,15 @@ h1 {
   display: block;
 }
 
-/* Ensure bars have relative positioning for absolute children */
+/* Ensure containers have relative positioning for absolute children */
 .top-bar,
-.bottom-bar {
+.content-footer {
   position: relative;
 }
 
-/* Hide print button when preview box is visible to make room */
-.bottom-bar:has(.preview-info-box.visible) .btn-print {
-  display: none;
+/* Position bottom box relative to content-footer */
+.preview-info-box-bottom {
+  top: 8px;
 }
 
 .preview-info-box-title {
