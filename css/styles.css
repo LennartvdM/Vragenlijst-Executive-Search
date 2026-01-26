@@ -3994,30 +3994,6 @@ body.mobile-drawer-open {
   animation: float-3 22s ease-in-out infinite;
 }
 
-/* Login page specific - larger and more visible */
-body:not(.survey-body) .logo-decor-shape {
-  width: 550px;
-  height: 640px;
-  opacity: 0.2;
-}
-
-body:not(.survey-body) .logo-decor-bottom-left {
-  bottom: -220px;
-  left: -140px;
-}
-
-body:not(.survey-body) .logo-decor-top-right {
-  top: -240px;
-  right: -160px;
-}
-
-body:not(.survey-body) .logo-decor-center-right {
-  width: 400px;
-  height: 460px;
-  right: -180px;
-  opacity: 0.12;
-}
-
 /* Smaller on mobile screens */
 @media (max-width: 600px) {
   .logo-decor-shape {
