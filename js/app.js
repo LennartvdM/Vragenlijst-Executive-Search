@@ -361,46 +361,64 @@ var App = (function() {
    * Called when user logs out (session should already be cleared by caller)
    */
   function transitionToLogin() {
-    var FADE_DURATION = 400;
+    var FADE_DURATION = 500;
 
-    // Get survey's current position before any layout changes
-    var surveyRect = elements.surveyView.getBoundingClientRect();
+    // Get survey container's current position (the actual card, not the wrapper)
+    var container = elements.surveyView.querySelector('.container');
+    var containerRect = container ? container.getBoundingClientRect() : elements.surveyView.getBoundingClientRect();
 
-    // Make survey fixed so it stays visually stable during layout change
-    elements.surveyView.style.position = 'fixed';
-    elements.surveyView.style.top = surveyRect.top + 'px';
-    elements.surveyView.style.left = surveyRect.left + 'px';
-    elements.surveyView.style.width = surveyRect.width + 'px';
-    elements.surveyView.style.height = surveyRect.height + 'px';
-    elements.surveyView.style.zIndex = '100';
+    // Freeze survey container at its current position
+    if (container) {
+      container.style.position = 'fixed';
+      container.style.top = containerRect.top + 'px';
+      container.style.left = containerRect.left + 'px';
+      container.style.width = containerRect.width + 'px';
+      container.style.height = containerRect.height + 'px';
+      container.style.zIndex = '100';
+      container.style.margin = '0';
+    }
 
-    // NOW safe to change body layout - survey won't move
+    // NOW safe to change body layout - survey container won't move
     document.body.classList.remove('survey-body');
 
-    // Show login underneath (in normal document flow)
+    // Show login underneath, starting invisible
     elements.loginView.style.display = '';
+    elements.loginView.style.opacity = '0';
     elements.loginView.classList.add('view-active');
 
-    // Force reflow
+    // Force reflow before starting transitions
     void elements.loginView.offsetWidth;
 
-    // Fade out survey - login is visible underneath
-    elements.surveyView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
-    elements.surveyView.style.opacity = '0';
+    // TRUE CROSSFADE: both fade simultaneously
+    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.loginView.style.opacity = '1';
 
-    // Cleanup after fade completes
+    if (container) {
+      container.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+      container.style.opacity = '0';
+    }
+
+    // Cleanup after crossfade completes
     setTimeout(function() {
-      // Hide survey completely and reset all styles
+      // Hide survey completely
       elements.surveyView.style.display = 'none';
-      elements.surveyView.style.position = '';
-      elements.surveyView.style.top = '';
-      elements.surveyView.style.left = '';
-      elements.surveyView.style.width = '';
-      elements.surveyView.style.height = '';
-      elements.surveyView.style.zIndex = '';
-      elements.surveyView.style.opacity = '';
-      elements.surveyView.style.transition = '';
       elements.surveyView.classList.remove('view-active');
+
+      // Reset container styles
+      if (container) {
+        container.style.position = '';
+        container.style.top = '';
+        container.style.left = '';
+        container.style.width = '';
+        container.style.height = '';
+        container.style.zIndex = '';
+        container.style.margin = '';
+        container.style.opacity = '';
+        container.style.transition = '';
+      }
+
+      // Clean up login transition
+      elements.loginView.style.transition = '';
 
       // Update state
       currentView = 'login';
