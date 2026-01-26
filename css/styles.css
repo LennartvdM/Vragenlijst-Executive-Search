@@ -1563,136 +1563,104 @@ h1 {
   }
 }
 
-/* Likert radio buttons - native styling stays visible */
+/* ==========================================================================
+   Custom Likert Radio - Built from scratch
+   ========================================================================== */
+
+/* Hide native radio but keep it functional for form data */
 .likert-table input[type="radio"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--terracotta);
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
   margin: 0;
   padding: 0;
 }
 
-/* Table cells containing radios need positioning context */
-.likert-table td:not(:first-child) {
-  position: relative;
-}
-
-/* Animated overlay - positioned to match radio exactly */
-.likert-radio-overlay {
-  position: absolute;
+/* Custom radio container */
+.likert-radio {
+  display: inline-block;
   width: 18px;
   height: 18px;
-  aspect-ratio: 1;
-  pointer-events: none;
-  z-index: 2;
-  /* Position set by JS to match radio location */
+  position: relative;
+  cursor: pointer;
 }
 
-/* All overlay children: force perfect circles */
-.likert-radio-overlay > span {
+/* Base circle - the stable dot */
+.likert-radio::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  margin: auto;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--text-light);
   border-radius: 50%;
-  aspect-ratio: 1;
-  transform-origin: center center;
+  background: white;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+/* Hover: darken border */
+.likert-radio:hover::before {
+  border-color: var(--text);
 }
 
 /* Ghost dot on hover */
-.likert-radio-overlay .ghost-dot {
+.likert-radio::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
   width: 8px;
   height: 8px;
+  border-radius: 50%;
   background: var(--text-light);
   opacity: 0;
   transition: opacity 0.15s ease;
 }
 
-.likert-radio-overlay.hovered .ghost-dot {
-  opacity: 0.5;
+.likert-radio:hover::after {
+  opacity: 0.4;
 }
 
-.likert-radio-overlay.selected .ghost-dot {
-  display: none;
-}
-
-/* Hover ring - darkened stroke that persists through click */
-.likert-radio-overlay .hover-ring {
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--text);
-  box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.likert-radio-overlay.hovered .hover-ring {
+/* Selected state - hide ghost, show fill */
+.likert-radio.selected::after {
+  background: var(--terracotta);
   opacity: 1;
 }
 
-/* Keep hover ring visible briefly during selection animation */
-.likert-radio-overlay.selected .hover-ring {
-  opacity: 1;
-  animation: hover-ring-fade 0.25s ease-out forwards;
+.likert-radio.selected::before {
+  border-color: var(--terracotta);
 }
 
-@keyframes hover-ring-fade {
-  0% { opacity: 1; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-/* White background circle for contrast when selected */
-.likert-radio-overlay .bg-circle {
-  width: 16px;
-  height: 16px;
-  background: white;
-  opacity: 0;
-}
-
-.likert-radio-overlay.selected .bg-circle {
-  opacity: 1;
-}
-
-/* Contracting ring on selection */
-.likert-radio-overlay .target-ring {
+/* Target ring element for homing animation */
+.likert-radio .target-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 18px;
   height: 18px;
   border: 1px solid var(--terracotta);
+  border-radius: 50%;
   box-sizing: border-box;
   opacity: 0;
+  pointer-events: none;
 }
 
-.likert-radio-overlay.selected .target-ring {
+.likert-radio.selected .target-ring {
   animation: likert-ring-contract 0.25s ease-out forwards;
-}
-
-/* Inner dot on selection */
-.likert-radio-overlay .inner-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--terracotta);
-  opacity: 0;
-}
-
-.likert-radio-overlay.selected .inner-dot {
-  animation: likert-dot-fade 0.12s ease-out forwards;
 }
 
 @keyframes likert-ring-contract {
   0% {
-    opacity: 0;
+    opacity: 1;
     transform: scale(1.8);
   }
   100% {
-    opacity: 1;
+    opacity: 0;
     transform: scale(1);
   }
-}
-
-@keyframes likert-dot-fade {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
 }
 
 .likert-header {
