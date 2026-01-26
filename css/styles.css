@@ -1573,21 +1573,19 @@ h1 {
   padding: 0;
 }
 
-/* Radio wrapper for overlay positioning */
-.likert-radio-wrapper {
+/* Table cells containing radios need positioning context */
+.likert-table td:not(:first-child) {
   position: relative;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  vertical-align: middle;
 }
 
-/* Animated overlay - sits on top of radio */
+/* Animated overlay - positioned to match radio exactly */
 .likert-radio-overlay {
   position: absolute;
-  inset: 0;
+  width: 18px;
+  height: 18px;
   pointer-events: none;
   z-index: 2;
+  /* Position set by JS to match radio location */
 }
 
 /* Ghost dot on hover - pixel-perfect centering */
