@@ -266,15 +266,16 @@ var App = (function() {
     // Login stays stable, container revealed via clip-path mask
     // ========================================
 
-    // Calculate button center relative to container's final position
-    var buttonCenterX = originRect.left + originRect.width / 2 - finalLeft;
+    // Shadow padding: 10% extra on each side = 120% total visible area
+    var shadowPadding = Math.max(finalWidth, finalHeight) * 0.1;
+
+    // Calculate button Y position relative to container
     var buttonCenterY = originRect.top + originRect.height / 2 - finalTop;
 
-    // Calculate initial clip-path insets (shows only button-sized rectangle)
-    var clipTop = Math.max(0, buttonCenterY - originRect.height / 2);
-    var clipBottom = Math.max(0, finalHeight - (buttonCenterY + originRect.height / 2));
-    var clipLeft = Math.max(0, buttonCenterX - originRect.width / 2);
-    var clipRight = Math.max(0, finalWidth - (buttonCenterX + originRect.width / 2));
+    // Initial clip: full width (with shadow padding), but only 10% height centered at button
+    var initialVisibleHeight = finalHeight * 0.1;
+    var clipTop = Math.max(0, buttonCenterY - initialVisibleHeight / 2);
+    var clipBottom = Math.max(0, finalHeight - (buttonCenterY + initialVisibleHeight / 2));
 
     // Show survey as fixed overlay
     elements.surveyView.style.position = 'fixed';
@@ -303,15 +304,16 @@ var App = (function() {
       highlighter.style.opacity = '0';
     }
 
-    // Start with clip-path showing only button-sized area
-    container.style.clipPath = 'inset(' + clipTop + 'px ' + clipRight + 'px ' + clipBottom + 'px ' + clipLeft + 'px round 12px)';
+    // Start: full width (120%), 10% height centered at button
+    container.style.clipPath = 'inset(' + clipTop + 'px ' + (-shadowPadding) + 'px ' + clipBottom + 'px ' + (-shadowPadding) + 'px round 12px)';
 
     // Force reflow before animation
     void container.offsetWidth;
 
-    // Animate clip-path just beyond card edge (~10px padding) to avoid border calculation
-    container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms ease-out';
-    container.style.clipPath = 'inset(-10px)';
+    // Transition 120% longer (600ms) - mainly height expansion
+    var expandDuration = TRANSFORM_DURATION * 1.2;
+    container.style.transition = 'clip-path ' + expandDuration + 'ms ease-out';
+    container.style.clipPath = 'inset(' + (-shadowPadding) + 'px)';
 
     // Fade in highlighter after clip-path animation + extra delay
     setTimeout(function() {
@@ -319,7 +321,7 @@ var App = (function() {
         highlighter.style.transition = 'opacity 300ms ease-out';
         highlighter.style.opacity = '1';
       }
-    }, TRANSFORM_DURATION + 500);
+    }, expandDuration + 500);
 
     // ========================================
     // PHASE 3: CLEANUP
@@ -375,7 +377,7 @@ var App = (function() {
         // Initialize survey
         initializeSurvey();
       }, 300); // Login fade duration
-    }, TRANSFORM_DURATION);
+    }, expandDuration);
   }
 
   /**
