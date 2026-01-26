@@ -456,14 +456,17 @@ var App = (function() {
       surveyContainer.style.zIndex = '100';
     }
 
-    // Remove survey-body class and show login UNDERNEATH (instant, no fade)
+    // Remove survey-body class and show login UNDERNEATH (starts at opacity 0)
     document.body.classList.remove('survey-body');
     elements.loginView.style.display = '';
-    elements.loginView.style.opacity = '1';
-    elements.loginView.classList.add('view-active');
 
-    // Force reflow
+    // Force reflow so browser registers the element at opacity 0
     void elements.loginView.offsetWidth;
+
+    // Set transition to match survey fade-out, then trigger fade-in
+    // This creates a crossfade: login fades in while survey fades out
+    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.loginView.classList.add('view-active');
 
     // Fade OUT survey container (reveals login underneath)
     if (surveyContainer) {
@@ -489,6 +492,9 @@ var App = (function() {
         surveyContainer.style.opacity = '';
         surveyContainer.style.transition = '';
       }
+
+      // Reset login's inline transition (return to CSS default for future use)
+      elements.loginView.style.transition = '';
 
       currentView = 'login';
       document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
