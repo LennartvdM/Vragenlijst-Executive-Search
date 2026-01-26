@@ -363,32 +363,44 @@ var App = (function() {
   function transitionToLogin() {
     var FADE_DURATION = 400;
 
-    // Prepare login underneath (invisible, but in position)
+    // Get survey's current position before any layout changes
+    var surveyRect = elements.surveyView.getBoundingClientRect();
+
+    // Make survey fixed so it stays visually stable during layout change
+    elements.surveyView.style.position = 'fixed';
+    elements.surveyView.style.top = surveyRect.top + 'px';
+    elements.surveyView.style.left = surveyRect.left + 'px';
+    elements.surveyView.style.width = surveyRect.width + 'px';
+    elements.surveyView.style.height = surveyRect.height + 'px';
+    elements.surveyView.style.zIndex = '100';
+
+    // NOW safe to change body layout - survey won't move
     document.body.classList.remove('survey-body');
+
+    // Show login underneath (in normal document flow)
     elements.loginView.style.display = '';
-    elements.loginView.style.opacity = '0';
     elements.loginView.classList.add('view-active');
 
     // Force reflow
     void elements.loginView.offsetWidth;
 
-    // Start crossfade: login fades in, survey fades out simultaneously
-    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
-    elements.loginView.style.opacity = '1';
-
+    // Fade out survey - login is visible underneath
     elements.surveyView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
     elements.surveyView.style.opacity = '0';
 
-    // Cleanup after crossfade completes
+    // Cleanup after fade completes
     setTimeout(function() {
-      // Hide survey completely
+      // Hide survey completely and reset all styles
       elements.surveyView.style.display = 'none';
+      elements.surveyView.style.position = '';
+      elements.surveyView.style.top = '';
+      elements.surveyView.style.left = '';
+      elements.surveyView.style.width = '';
+      elements.surveyView.style.height = '';
+      elements.surveyView.style.zIndex = '';
       elements.surveyView.style.opacity = '';
       elements.surveyView.style.transition = '';
       elements.surveyView.classList.remove('view-active');
-
-      // Clean up login transition
-      elements.loginView.style.transition = '';
 
       // Update state
       currentView = 'login';
