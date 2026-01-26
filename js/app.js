@@ -311,11 +311,21 @@ var App = (function() {
       containerChildren[i].style.transformOrigin = 'left center';
     }
 
+    // Sidebar needs to be on top of main content and have a fill to mask it
+    var sidebar = container.querySelector('.index');
+    if (sidebar) {
+      sidebar.style.position = 'relative';
+      sidebar.style.zIndex = '10';
+      sidebar.style.backgroundColor = 'var(--cream, #fffbf7)'; // Temporary fill to cover content
+    }
+
     // Main content slides out from under sidebar (translateX -100% to 0)
     var mainContent = container.querySelector('.content');
     if (mainContent) {
       mainContent.style.transform = 'scale(0.5) translateX(-100%)';
       mainContent.style.transformOrigin = 'left center';
+      mainContent.style.position = 'relative';
+      mainContent.style.zIndex = '5';
     }
 
     // Start: full width (120%), 10% height centered at button
@@ -391,6 +401,19 @@ var App = (function() {
           containerChildren[k].style.transform = '';
           containerChildren[k].style.transformOrigin = '';
           containerChildren[k].style.transition = '';
+        }
+
+        // Reset sidebar temporary styles
+        if (sidebar) {
+          sidebar.style.position = '';
+          sidebar.style.zIndex = '';
+          sidebar.style.backgroundColor = '';
+        }
+
+        // Reset main content z-index
+        if (mainContent) {
+          mainContent.style.position = '';
+          mainContent.style.zIndex = '';
         }
 
         // Remove fixed overlay from survey-view
