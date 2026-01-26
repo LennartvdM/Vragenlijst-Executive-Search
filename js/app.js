@@ -357,23 +357,43 @@ var App = (function() {
   }
 
   /**
-   * Transition from survey to login view
+   * Transition from survey to login view with crossfade
    * Called when user logs out (session should already be cleared by caller)
    */
   function transitionToLogin() {
-    // Start fade out of survey
-    elements.surveyView.classList.add('view-fade-out');
-    elements.surveyView.classList.remove('view-active');
+    var FADE_DURATION = 400;
 
+    // Prepare login underneath (invisible, but in position)
+    document.body.classList.remove('survey-body');
+    elements.loginView.style.display = '';
+    elements.loginView.style.opacity = '0';
+    elements.loginView.classList.add('view-active');
+
+    // Force reflow
+    void elements.loginView.offsetWidth;
+
+    // Start crossfade: login fades in, survey fades out simultaneously
+    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.loginView.style.opacity = '1';
+
+    elements.surveyView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.surveyView.style.opacity = '0';
+
+    // Cleanup after crossfade completes
     setTimeout(function() {
-      // Hide survey
+      // Hide survey completely
       elements.surveyView.style.display = 'none';
-      elements.surveyView.classList.remove('view-fade-out');
-      document.body.classList.remove('survey-body');
+      elements.surveyView.style.opacity = '';
+      elements.surveyView.style.transition = '';
+      elements.surveyView.classList.remove('view-active');
 
-      // Show login
-      showLogin();
-    }, 300);
+      // Clean up login transition
+      elements.loginView.style.transition = '';
+
+      // Update state
+      currentView = 'login';
+      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
+    }, FADE_DURATION);
   }
 
   // Public API
