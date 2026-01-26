@@ -220,6 +220,9 @@ var App = (function() {
    * @param {DOMRect} originRect - The starting position (button)
    */
   function performContainerTransform(originRect) {
+    // IMPORTANT: Add survey-body class FIRST so we measure the correct final layout
+    document.body.classList.add('survey-body');
+
     // Get the survey container element first (before showing)
     elements.surveyView.style.display = '';
     elements.surveyView.style.visibility = 'hidden';
@@ -230,12 +233,11 @@ var App = (function() {
       // Fallback: just show without animation
       elements.surveyView.style.visibility = '';
       elements.loginView.style.display = 'none';
-      document.body.classList.add('survey-body');
       initializeSurvey();
       return;
     }
 
-    // Force layout to get accurate final dimensions
+    // Force layout to get accurate final dimensions (now with correct body class)
     void container.offsetWidth;
     var containerRect = container.getBoundingClientRect();
 
@@ -264,7 +266,7 @@ var App = (function() {
     container.style.zIndex = '1000';
     container.classList.add('container-transform-active');
 
-    // Now make survey visible (container floats above everything)
+    // Now make survey visible (container floats above login)
     elements.surveyView.style.visibility = '';
 
     // Force reflow
@@ -276,17 +278,7 @@ var App = (function() {
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
 
-    // Fade out login card during animation
-    var loginCard = elements.loginView.querySelector('.login-card');
-    var loginInfo = elements.loginView.querySelector('.login-info');
-    if (loginCard) {
-      loginCard.style.transition = 'opacity 250ms ease-out';
-      loginCard.style.opacity = '0';
-    }
-    if (loginInfo) {
-      loginInfo.style.transition = 'opacity 250ms ease-out';
-      loginInfo.style.opacity = '0';
-    }
+    // No need to fade login - the card floats above it
 
     // Cleanup after animation
     setTimeout(function() {
@@ -306,20 +298,10 @@ var App = (function() {
       // Update state
       currentView = 'survey';
       document.title = 'Monitoring Cultureel Talent naar de Top 2025';
-      document.body.classList.add('survey-body');
 
       // Hide login completely
       elements.loginView.style.display = 'none';
       elements.loginView.classList.remove('view-active');
-
-      if (loginCard) {
-        loginCard.style.transition = '';
-        loginCard.style.opacity = '';
-      }
-      if (loginInfo) {
-        loginInfo.style.transition = '';
-        loginInfo.style.opacity = '';
-      }
 
       // Initialize survey
       initializeSurvey();
