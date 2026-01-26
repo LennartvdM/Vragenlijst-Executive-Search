@@ -217,6 +217,7 @@ var App = (function() {
 
   /**
    * Perform the container transform animation
+   * Login stays 100% stable, survey card expands on top, then login fades out
    * @param {DOMRect} originRect - The starting position (button)
    */
   function performContainerTransform(originRect) {
@@ -231,14 +232,20 @@ var App = (function() {
       return;
     }
 
-    // STEP 1: Set up the TRUE final state to measure accurate position
-    // Hide login completely so it doesn't affect layout
-    elements.loginView.style.display = 'none';
-    document.body.classList.add('survey-body');
+    // STEP 1: Make survey-view a fixed overlay (login stays 100% untouched)
+    elements.surveyView.style.position = 'fixed';
+    elements.surveyView.style.top = '0';
+    elements.surveyView.style.left = '0';
+    elements.surveyView.style.width = '100%';
+    elements.surveyView.style.height = '100%';
+    elements.surveyView.style.background = 'transparent';
+    elements.surveyView.style.zIndex = '100';
+    elements.surveyView.style.overflow = 'visible';
     elements.surveyView.style.display = '';
     elements.surveyView.classList.add('view-active');
+    document.body.classList.add('survey-body');
 
-    // Force layout and measure the TRUE final position
+    // STEP 2: Measure container's natural position within the overlay
     void container.offsetWidth;
     var containerRect = container.getBoundingClientRect();
     var finalLeft = containerRect.left;
@@ -246,19 +253,12 @@ var App = (function() {
     var finalWidth = containerRect.width;
     var finalHeight = containerRect.height;
 
-    // STEP 2: Reset to starting state for animation
-    // Show login again, hide survey
-    elements.loginView.style.display = '';
-    elements.surveyView.style.visibility = 'hidden';
-
-    // Calculate starting scale (how small should it be at button)
+    // Calculate starting scale and position (centered on button)
     var scale = Math.max(originRect.width / finalWidth, 0.05);
-
-    // Calculate where the container should start (centered on button)
     var startLeft = originRect.left + originRect.width / 2 - (finalWidth * scale) / 2;
     var startTop = originRect.top + originRect.height / 2 - (finalHeight * scale) / 2;
 
-    // STEP 3: Position container at button location with fixed positioning
+    // STEP 3: Position container at button location
     container.style.position = 'fixed';
     container.style.left = startLeft + 'px';
     container.style.top = startTop + 'px';
@@ -266,47 +266,61 @@ var App = (function() {
     container.style.height = finalHeight + 'px';
     container.style.transform = 'scale(' + scale + ')';
     container.style.transformOrigin = 'top left';
-    container.style.opacity = '1';
     container.style.zIndex = '1000';
     container.classList.add('container-transform-active');
 
-    // Make survey visible (container floats above login)
-    elements.surveyView.style.visibility = '';
-
-    // Force reflow before starting animation
+    // Force reflow before animation
     void container.offsetWidth;
 
-    // STEP 4: Animate to the TRUE final position
+    // STEP 4: Animate container to final position
     container.style.transition = 'all ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
     container.style.left = finalLeft + 'px';
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
 
-    // STEP 5: Cleanup after animation completes
+    // STEP 5: After expansion completes, fade out login
     setTimeout(function() {
-      // Remove fixed positioning - return to normal document flow
-      container.style.position = '';
-      container.style.left = '';
-      container.style.top = '';
-      container.style.width = '';
-      container.style.height = '';
-      container.style.transform = '';
-      container.style.transition = '';
-      container.style.transformOrigin = '';
-      container.style.opacity = '';
-      container.style.zIndex = '';
-      container.classList.remove('container-transform-active');
+      // Fade out login (login was stable until now)
+      elements.loginView.style.transition = 'opacity 300ms ease-out';
+      elements.loginView.style.opacity = '0';
 
-      // Update state
-      currentView = 'survey';
-      document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+      // After login fade completes, cleanup everything
+      setTimeout(function() {
+        // Hide login completely
+        elements.loginView.style.display = 'none';
+        elements.loginView.style.opacity = '';
+        elements.loginView.style.transition = '';
+        elements.loginView.classList.remove('view-active');
 
-      // Hide login completely - container is now exactly where it should be
-      elements.loginView.style.display = 'none';
-      elements.loginView.classList.remove('view-active');
+        // Remove fixed positioning from container
+        container.style.position = '';
+        container.style.left = '';
+        container.style.top = '';
+        container.style.width = '';
+        container.style.height = '';
+        container.style.transform = '';
+        container.style.transition = '';
+        container.style.transformOrigin = '';
+        container.style.zIndex = '';
+        container.classList.remove('container-transform-active');
 
-      // Initialize survey
-      initializeSurvey();
+        // Remove fixed overlay from survey-view
+        elements.surveyView.style.position = '';
+        elements.surveyView.style.top = '';
+        elements.surveyView.style.left = '';
+        elements.surveyView.style.width = '';
+        elements.surveyView.style.height = '';
+        elements.surveyView.style.background = '';
+        elements.surveyView.style.zIndex = '';
+        elements.surveyView.style.overflow = '';
+
+        // Update state
+        currentView = 'survey';
+        document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+
+        // Initialize survey
+        initializeSurvey();
+      }, 300); // Login fade duration
     }, TRANSFORM_DURATION);
   }
 
