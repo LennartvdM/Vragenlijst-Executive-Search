@@ -1583,20 +1583,27 @@ h1 {
   position: absolute;
   width: 18px;
   height: 18px;
+  aspect-ratio: 1;
   pointer-events: none;
   z-index: 2;
   /* Position set by JS to match radio location */
 }
 
-/* Ghost dot on hover - pixel-perfect centering */
-.likert-radio-overlay .ghost-dot {
+/* All overlay children: force perfect circles */
+.likert-radio-overlay > span {
   position: absolute;
   inset: 0;
   margin: auto;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  transform-origin: center center;
+}
+
+/* Ghost dot on hover */
+.likert-radio-overlay .ghost-dot {
   width: 8px;
   height: 8px;
   background: var(--text-light);
-  border-radius: 50%;
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -1611,13 +1618,9 @@ h1 {
 
 /* Hover ring - darkened stroke that persists through click */
 .likert-radio-overlay .hover-ring {
-  position: absolute;
-  inset: 0;
-  margin: auto;
   width: 18px;
   height: 18px;
   border: 1px solid var(--text);
-  border-radius: 50%;
   box-sizing: border-box;
   opacity: 0;
   transition: opacity 0.15s ease;
@@ -1641,13 +1644,9 @@ h1 {
 
 /* White background circle for contrast when selected */
 .likert-radio-overlay .bg-circle {
-  position: absolute;
-  inset: 0;
-  margin: auto;
   width: 16px;
   height: 16px;
   background: white;
-  border-radius: 50%;
   opacity: 0;
 }
 
@@ -1657,16 +1656,11 @@ h1 {
 
 /* Contracting ring on selection */
 .likert-radio-overlay .target-ring {
-  position: absolute;
-  inset: 0;
-  margin: auto;
   width: 18px;
   height: 18px;
   border: 1px solid var(--terracotta);
-  border-radius: 50%;
   box-sizing: border-box;
   opacity: 0;
-  transform-origin: center;
 }
 
 .likert-radio-overlay.selected .target-ring {
@@ -1675,13 +1669,9 @@ h1 {
 
 /* Inner dot on selection */
 .likert-radio-overlay .inner-dot {
-  position: absolute;
-  inset: 0;
-  margin: auto;
   width: 8px;
   height: 8px;
   background: var(--terracotta);
-  border-radius: 50%;
   opacity: 0;
 }
 
