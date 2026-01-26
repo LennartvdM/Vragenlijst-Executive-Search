@@ -311,6 +311,13 @@ var App = (function() {
       containerChildren[i].style.transformOrigin = 'left center';
     }
 
+    // Main content slides out from under sidebar (translateX -100% to 0)
+    var mainContent = container.querySelector('.content');
+    if (mainContent) {
+      mainContent.style.transform = 'scale(0.5) translateX(-100%)';
+      mainContent.style.transformOrigin = 'left center';
+    }
+
     // Start: full width (120%), 10% height centered at button
     container.style.clipPath = 'inset(' + clipTop + 'px ' + (-shadowPadding) + 'px ' + clipBottom + 'px ' + (-shadowPadding) + 'px round 12px)';
 
@@ -326,6 +333,12 @@ var App = (function() {
     for (var j = 0; j < containerChildren.length; j++) {
       containerChildren[j].style.transition = 'transform ' + expandDuration + 'ms ease-out';
       containerChildren[j].style.transform = 'scale(1)';
+    }
+
+    // Main content also slides from under sidebar
+    if (mainContent) {
+      mainContent.style.transition = 'transform ' + expandDuration + 'ms ease-out';
+      mainContent.style.transform = 'scale(1) translateX(0)';
     }
 
     // Fade in highlighter after clip-path animation + extra delay
