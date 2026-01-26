@@ -220,32 +220,36 @@ var App = (function() {
    * @param {DOMRect} originRect - The starting position (button)
    */
   function performContainerTransform(originRect) {
-    // IMPORTANT: Add survey-body class FIRST so we measure the correct final layout
-    document.body.classList.add('survey-body');
-
-    // Get the survey container element first (before showing)
-    elements.surveyView.style.display = '';
-    elements.surveyView.style.visibility = 'hidden';
-    elements.surveyView.classList.add('view-active');
-
     var container = elements.surveyView.querySelector('.container');
     if (!container) {
       // Fallback: just show without animation
-      elements.surveyView.style.visibility = '';
+      document.body.classList.add('survey-body');
+      elements.surveyView.style.display = '';
+      elements.surveyView.classList.add('view-active');
       elements.loginView.style.display = 'none';
       initializeSurvey();
       return;
     }
 
-    // Force layout to get accurate final dimensions (now with correct body class)
+    // STEP 1: Set up the TRUE final state to measure accurate position
+    // Hide login completely so it doesn't affect layout
+    elements.loginView.style.display = 'none';
+    document.body.classList.add('survey-body');
+    elements.surveyView.style.display = '';
+    elements.surveyView.classList.add('view-active');
+
+    // Force layout and measure the TRUE final position
     void container.offsetWidth;
     var containerRect = container.getBoundingClientRect();
-
-    // Store final dimensions for later
     var finalLeft = containerRect.left;
     var finalTop = containerRect.top;
     var finalWidth = containerRect.width;
     var finalHeight = containerRect.height;
+
+    // STEP 2: Reset to starting state for animation
+    // Show login again, hide survey
+    elements.loginView.style.display = '';
+    elements.surveyView.style.visibility = 'hidden';
 
     // Calculate starting scale (how small should it be at button)
     var scale = Math.max(originRect.width / finalWidth, 0.05);
@@ -254,7 +258,7 @@ var App = (function() {
     var startLeft = originRect.left + originRect.width / 2 - (finalWidth * scale) / 2;
     var startTop = originRect.top + originRect.height / 2 - (finalHeight * scale) / 2;
 
-    // Make container fixed positioned (out of document flow)
+    // STEP 3: Position container at button location with fixed positioning
     container.style.position = 'fixed';
     container.style.left = startLeft + 'px';
     container.style.top = startTop + 'px';
@@ -266,23 +270,21 @@ var App = (function() {
     container.style.zIndex = '1000';
     container.classList.add('container-transform-active');
 
-    // Now make survey visible (container floats above login)
+    // Make survey visible (container floats above login)
     elements.surveyView.style.visibility = '';
 
-    // Force reflow
+    // Force reflow before starting animation
     void container.offsetWidth;
 
-    // Animate to final position
+    // STEP 4: Animate to the TRUE final position
     container.style.transition = 'all ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
     container.style.left = finalLeft + 'px';
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
 
-    // No need to fade login - the card floats above it
-
-    // Cleanup after animation
+    // STEP 5: Cleanup after animation completes
     setTimeout(function() {
-      // Remove fixed positioning - return to normal flow
+      // Remove fixed positioning - return to normal document flow
       container.style.position = '';
       container.style.left = '';
       container.style.top = '';
@@ -299,7 +301,7 @@ var App = (function() {
       currentView = 'survey';
       document.title = 'Monitoring Cultureel Talent naar de Top 2025';
 
-      // Hide login completely
+      // Hide login completely - container is now exactly where it should be
       elements.loginView.style.display = 'none';
       elements.loginView.classList.remove('view-active');
 
