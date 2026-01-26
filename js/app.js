@@ -362,43 +362,42 @@ var App = (function() {
   function transitionToLogin() {
     var FADE_DURATION = 500;
 
-    // Make survey fixed so it floats above, allowing login to appear underneath
-    elements.surveyView.style.position = 'fixed';
-    elements.surveyView.style.top = '0';
-    elements.surveyView.style.left = '0';
-    elements.surveyView.style.width = '100%';
-    elements.surveyView.style.height = '100%';
-    elements.surveyView.style.zIndex = '100';
-
-    // Now safe to change body and show login
-    document.body.classList.remove('survey-body');
+    // Keep survey exactly as is (don't touch it)
+    // Make login a fixed overlay that fades in ON TOP of survey
+    elements.loginView.style.position = 'fixed';
+    elements.loginView.style.top = '0';
+    elements.loginView.style.left = '0';
+    elements.loginView.style.width = '100%';
+    elements.loginView.style.height = '100%';
+    elements.loginView.style.zIndex = '200';
+    elements.loginView.style.opacity = '0';
     elements.loginView.style.display = '';
     elements.loginView.classList.add('view-active');
 
     // Force reflow
     void elements.loginView.offsetWidth;
 
-    // Crossfade: survey out, login in
-    elements.surveyView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
-    elements.surveyView.style.opacity = '0';
-
+    // Fade in login (covers survey)
     elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
     elements.loginView.style.opacity = '1';
 
     // After fade: cleanup
     setTimeout(function() {
+      // Hide survey
       elements.surveyView.style.display = 'none';
-      elements.surveyView.style.position = '';
-      elements.surveyView.style.top = '';
-      elements.surveyView.style.left = '';
-      elements.surveyView.style.width = '';
-      elements.surveyView.style.height = '';
-      elements.surveyView.style.zIndex = '';
-      elements.surveyView.style.opacity = '';
-      elements.surveyView.style.transition = '';
       elements.surveyView.classList.remove('view-active');
 
+      // Remove fixed from login, put in normal flow
+      elements.loginView.style.position = '';
+      elements.loginView.style.top = '';
+      elements.loginView.style.left = '';
+      elements.loginView.style.width = '';
+      elements.loginView.style.height = '';
+      elements.loginView.style.zIndex = '';
       elements.loginView.style.transition = '';
+
+      // Now safe to change body class
+      document.body.classList.remove('survey-body');
 
       currentView = 'login';
       document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
