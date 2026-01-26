@@ -362,7 +362,16 @@ var App = (function() {
   function transitionToLogin() {
     var FADE_DURATION = 500;
 
-    // Show login (starts invisible via CSS .view class)
+    // Make survey fixed so it floats above, allowing login to appear underneath
+    elements.surveyView.style.position = 'fixed';
+    elements.surveyView.style.top = '0';
+    elements.surveyView.style.left = '0';
+    elements.surveyView.style.width = '100%';
+    elements.surveyView.style.height = '100%';
+    elements.surveyView.style.zIndex = '100';
+
+    // Now safe to change body and show login
+    document.body.classList.remove('survey-body');
     elements.loginView.style.display = '';
     elements.loginView.classList.add('view-active');
 
@@ -379,13 +388,18 @@ var App = (function() {
     // After fade: cleanup
     setTimeout(function() {
       elements.surveyView.style.display = 'none';
+      elements.surveyView.style.position = '';
+      elements.surveyView.style.top = '';
+      elements.surveyView.style.left = '';
+      elements.surveyView.style.width = '';
+      elements.surveyView.style.height = '';
+      elements.surveyView.style.zIndex = '';
       elements.surveyView.style.opacity = '';
       elements.surveyView.style.transition = '';
       elements.surveyView.classList.remove('view-active');
 
       elements.loginView.style.transition = '';
 
-      document.body.classList.remove('survey-body');
       currentView = 'login';
       document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
     }, FADE_DURATION);
