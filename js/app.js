@@ -263,15 +263,20 @@ var App = (function() {
 
     // ========================================
     // PHASE 2: ANIMATION
-    // Login stays stable, container floats on top
+    // Login stays stable, container revealed via clip-path mask
     // ========================================
 
-    // Calculate starting scale and position (centered on button)
-    var scale = Math.max(originRect.width / finalWidth, 0.05);
-    var startLeft = originRect.left + originRect.width / 2 - (finalWidth * scale) / 2;
-    var startTop = originRect.top + originRect.height / 2 - (finalHeight * scale) / 2;
+    // Calculate button center relative to container's final position
+    var buttonCenterX = originRect.left + originRect.width / 2 - finalLeft;
+    var buttonCenterY = originRect.top + originRect.height / 2 - finalTop;
 
-    // Show survey as invisible fixed overlay (doesn't affect login layout)
+    // Calculate initial clip-path insets (shows only button-sized rectangle)
+    var clipTop = Math.max(0, buttonCenterY - originRect.height / 2);
+    var clipBottom = Math.max(0, finalHeight - (buttonCenterY + originRect.height / 2));
+    var clipLeft = Math.max(0, buttonCenterX - originRect.width / 2);
+    var clipRight = Math.max(0, finalWidth - (buttonCenterX + originRect.width / 2));
+
+    // Show survey as fixed overlay
     elements.surveyView.style.position = 'fixed';
     elements.surveyView.style.top = '0';
     elements.surveyView.style.left = '0';
@@ -282,54 +287,31 @@ var App = (function() {
     elements.surveyView.style.overflow = 'visible';
     elements.surveyView.style.display = '';
     elements.surveyView.classList.add('view-active');
-    // NOTE: Do NOT add survey-body class here - it affects login layout!
 
-    // Hide content inside container (will fade in during second half)
-    var containerChildren = container.children;
-    for (var i = 0; i < containerChildren.length; i++) {
-      containerChildren[i].style.opacity = '0';
-    }
-
-    // Position container at button location
+    // Position container at FINAL position and size (no scaling)
     container.style.position = 'fixed';
-    container.style.left = startLeft + 'px';
-    container.style.top = startTop + 'px';
+    container.style.left = finalLeft + 'px';
+    container.style.top = finalTop + 'px';
     container.style.width = finalWidth + 'px';
     container.style.height = finalHeight + 'px';
-    container.style.transform = 'scale(' + scale + ')';
-    container.style.transformOrigin = 'top left';
     container.style.zIndex = '1000';
     container.classList.add('container-transform-active');
+
+    // Start with clip-path showing only button-sized area
+    container.style.clipPath = 'inset(' + clipTop + 'px ' + clipRight + 'px ' + clipBottom + 'px ' + clipLeft + 'px round 12px)';
 
     // Force reflow before animation
     void container.offsetWidth;
 
-    // Animate container to final position
-    container.style.transition = 'all ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
-    container.style.left = finalLeft + 'px';
-    container.style.top = finalTop + 'px';
-    container.style.transform = 'scale(1)';
-
-    // Fade in content starting at 25% of transition
-    setTimeout(function() {
-      var remainingTime = TRANSFORM_DURATION * 0.75;
-      for (var j = 0; j < containerChildren.length; j++) {
-        containerChildren[j].style.transition = 'opacity ' + remainingTime + 'ms linear';
-        containerChildren[j].style.opacity = '1';
-      }
-    }, TRANSFORM_DURATION * 0.25);
+    // Animate clip-path to reveal full container
+    container.style.transition = 'clip-path ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
+    container.style.clipPath = 'inset(0 round 12px)';
 
     // ========================================
     // PHASE 3: CLEANUP
     // After expansion, fade login, then settle into normal flow
     // ========================================
     setTimeout(function() {
-      // Reset content styles
-      for (var i = 0; i < containerChildren.length; i++) {
-        containerChildren[i].style.opacity = '';
-        containerChildren[i].style.transition = '';
-      }
-
       // Fade out login
       elements.loginView.style.transition = 'opacity 300ms ease-out';
       elements.loginView.style.opacity = '0';
@@ -345,15 +327,14 @@ var App = (function() {
         // NOW add survey-body class (login is gone, safe to change body layout)
         document.body.classList.add('survey-body');
 
-        // Remove fixed positioning from container
+        // Remove fixed positioning and clip-path from container
         container.style.position = '';
         container.style.left = '';
         container.style.top = '';
         container.style.width = '';
         container.style.height = '';
-        container.style.transform = '';
         container.style.transition = '';
-        container.style.transformOrigin = '';
+        container.style.clipPath = '';
         container.style.zIndex = '';
         container.classList.remove('container-transform-active');
 
