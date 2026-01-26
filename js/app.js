@@ -310,11 +310,14 @@ var App = (function() {
     container.style.top = finalTop + 'px';
     container.style.transform = 'scale(1)';
 
-    // Fade in content over entire transition (linear from start)
-    for (var j = 0; j < containerChildren.length; j++) {
-      containerChildren[j].style.transition = 'opacity ' + TRANSFORM_DURATION + 'ms linear';
-      containerChildren[j].style.opacity = '1';
-    }
+    // Fade in content starting at 25% of transition
+    setTimeout(function() {
+      var remainingTime = TRANSFORM_DURATION * 0.75;
+      for (var j = 0; j < containerChildren.length; j++) {
+        containerChildren[j].style.transition = 'opacity ' + remainingTime + 'ms linear';
+        containerChildren[j].style.opacity = '1';
+      }
+    }, TRANSFORM_DURATION * 0.25);
 
     // ========================================
     // PHASE 3: CLEANUP
