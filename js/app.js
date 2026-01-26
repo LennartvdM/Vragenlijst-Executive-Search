@@ -231,6 +231,9 @@ var App = (function() {
       return;
     }
 
+    // Make entire page invisible during measurement to prevent jitter
+    document.body.style.visibility = 'hidden';
+
     // STEP 1: Set up the TRUE final state to measure accurate position
     // Hide login completely so it doesn't affect layout
     elements.loginView.style.display = 'none';
@@ -250,6 +253,9 @@ var App = (function() {
     // Show login again, hide survey
     elements.loginView.style.display = '';
     elements.surveyView.style.visibility = 'hidden';
+
+    // Make page visible again - now login is back exactly as it was
+    document.body.style.visibility = '';
 
     // Calculate starting scale (how small should it be at button)
     var scale = Math.max(originRect.width / finalWidth, 0.05);
