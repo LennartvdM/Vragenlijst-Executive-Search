@@ -304,11 +304,11 @@ var App = (function() {
       highlighter.style.opacity = '0';
     }
 
-    // Scale content from 50% to 100% (card stays stable, content grows)
+    // Scale content from 50% to 100% - originates from left (sidebar) side
     var containerChildren = container.children;
     for (var i = 0; i < containerChildren.length; i++) {
       containerChildren[i].style.transform = 'scale(0.5)';
-      containerChildren[i].style.transformOrigin = 'center center';
+      containerChildren[i].style.transformOrigin = 'left center';
     }
 
     // Start: full width (120%), 10% height centered at button
