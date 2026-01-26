@@ -12,7 +12,6 @@
   document.addEventListener('DOMContentLoaded', function() {
     initDemoMode();
     setupEventListeners();
-    checkExistingSession();
   });
 
   /**
@@ -20,13 +19,13 @@
    */
   function setupEventListeners() {
     // Login form submission
-    const loginForm = document.getElementById('loginForm');
+    var loginForm = document.getElementById('loginForm');
     if (loginForm) {
       loginForm.addEventListener('submit', handleLogin);
     }
 
     // Public login button (demo mode)
-    const publicLoginBtn = document.getElementById('publicLoginBtn');
+    var publicLoginBtn = document.getElementById('publicLoginBtn');
     if (publicLoginBtn) {
       publicLoginBtn.addEventListener('click', publicLogin);
     }
@@ -37,42 +36,15 @@
    */
   function initDemoMode() {
     if (CONFIG.isDemoMode()) {
-      const demoBanner = document.getElementById('demoBanner');
-      const publicAccess = document.getElementById('publicAccess');
+      var demoBanner = document.getElementById('demoBanner');
+      var publicAccess = document.getElementById('publicAccess');
 
       if (demoBanner) demoBanner.style.display = 'block';
       if (publicAccess) publicAccess.style.display = 'block';
 
       // Make org code field not required in demo mode
-      const orgCodeInput = document.getElementById('orgCode');
+      var orgCodeInput = document.getElementById('orgCode');
       if (orgCodeInput) orgCodeInput.required = false;
-    }
-  }
-
-  /**
-   * Check for existing valid session
-   * Note: We no longer auto-redirect to survey - users can stay on login page
-   * even with an active session
-   */
-  function checkExistingSession() {
-    // Clear any expired session data (but don't redirect if valid)
-    if (!Storage.isSessionValid()) {
-      Storage.clearSession();
-    }
-  }
-
-  /**
-   * Fade out the login container and redirect to survey
-   */
-  function fadeOutAndRedirect() {
-    const loginContainer = document.querySelector('.login-container');
-    if (loginContainer) {
-      loginContainer.classList.add('fade-out');
-      setTimeout(function() {
-        window.location.href = '/survey.html';
-      }, 300);
-    } else {
-      window.location.href = '/survey.html';
     }
   }
 
@@ -92,8 +64,13 @@
       isPublic: true
     });
 
-    // Redirect to survey with fade animation
-    fadeOutAndRedirect();
+    // Transition to survey view (SPA navigation)
+    if (typeof App !== 'undefined' && App.transitionToSurvey) {
+      App.transitionToSurvey();
+    } else {
+      // Fallback for direct survey.html access
+      window.location.href = '/survey.html';
+    }
   }
 
   /**
@@ -103,13 +80,13 @@
   async function handleLogin(event) {
     event.preventDefault();
 
-    const codeInput = document.getElementById('orgCode');
-    const errorDiv = document.getElementById('loginError');
-    const loginBtn = document.getElementById('loginBtn');
-    const btnText = loginBtn.querySelector('.btn-text');
-    const btnLoading = loginBtn.querySelector('.btn-loading');
+    var codeInput = document.getElementById('orgCode');
+    var errorDiv = document.getElementById('loginError');
+    var loginBtn = document.getElementById('loginBtn');
+    var btnText = loginBtn.querySelector('.btn-text');
+    var btnLoading = loginBtn.querySelector('.btn-loading');
 
-    const code = codeInput.value.trim().toUpperCase();
+    var code = codeInput.value.trim().toUpperCase();
 
     if (!code) {
       showError(errorDiv, CONSTANTS.ERRORS.ENTER_CODE);
@@ -122,7 +99,7 @@
     codeInput.classList.remove(CONSTANTS.CSS.ERROR);
 
     try {
-      const result = await validateOrganizationCode(code);
+      var result = await validateOrganizationCode(code);
 
       if (result.success) {
         // Store session data
@@ -132,16 +109,21 @@
           timestamp: Date.now()
         });
 
-        // Redirect to survey with fade animation
-        fadeOutAndRedirect();
+        // Transition to survey view (SPA navigation)
+        if (typeof App !== 'undefined' && App.transitionToSurvey) {
+          App.transitionToSurvey();
+        } else {
+          // Fallback for direct survey.html access
+          window.location.href = '/survey.html';
+        }
       } else {
         showError(errorDiv, result.message || CONSTANTS.ERRORS.INVALID_CODE);
         codeInput.classList.add(CONSTANTS.CSS.ERROR);
         codeInput.focus();
+        setLoadingState(false, loginBtn, btnText, btnLoading);
       }
     } catch (error) {
       showError(errorDiv, CONSTANTS.ERRORS.NETWORK_ERROR);
-    } finally {
       setLoadingState(false, loginBtn, btnText, btnLoading);
     }
   }
@@ -209,7 +191,7 @@
    * @param {string} message - The error message to display
    */
   function showError(element, message) {
-    const span = element.querySelector('span');
+    var span = element.querySelector('span');
     if (span) {
       span.textContent = message;
     }
