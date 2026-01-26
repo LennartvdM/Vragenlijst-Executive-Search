@@ -62,6 +62,21 @@
   }
 
   /**
+   * Fade out the login container and redirect to survey
+   */
+  function fadeOutAndRedirect() {
+    const loginContainer = document.querySelector('.login-container');
+    if (loginContainer) {
+      loginContainer.classList.add('fade-out');
+      setTimeout(function() {
+        window.location.href = '/survey.html';
+      }, 300);
+    } else {
+      window.location.href = '/survey.html';
+    }
+  }
+
+  /**
    * Public login without organization code (demo mode only)
    */
   function publicLogin() {
@@ -77,8 +92,8 @@
       isPublic: true
     });
 
-    // Redirect to survey
-    window.location.href = '/survey.html';
+    // Redirect to survey with fade animation
+    fadeOutAndRedirect();
   }
 
   /**
@@ -117,8 +132,8 @@
           timestamp: Date.now()
         });
 
-        // Redirect to survey
-        window.location.href = '/survey.html';
+        // Redirect to survey with fade animation
+        fadeOutAndRedirect();
       } else {
         showError(errorDiv, result.message || CONSTANTS.ERRORS.INVALID_CODE);
         codeInput.classList.add(CONSTANTS.CSS.ERROR);
