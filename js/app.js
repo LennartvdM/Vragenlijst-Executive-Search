@@ -357,47 +357,58 @@ var App = (function() {
   }
 
   /**
-   * Transition from survey to login view with crossfade
+   * Transition from survey to login view
+   * Login is already underneath, survey fades out to reveal it
    */
   function transitionToLogin() {
     var FADE_DURATION = 500;
 
-    // Keep survey exactly as is (don't touch it)
-    // Make login a fixed overlay that fades in ON TOP of survey
-    elements.loginView.style.position = 'fixed';
-    elements.loginView.style.top = '0';
-    elements.loginView.style.left = '0';
-    elements.loginView.style.width = '100%';
-    elements.loginView.style.height = '100%';
-    elements.loginView.style.zIndex = '200';
-    elements.loginView.style.opacity = '0';
+    // Make survey fixed so it floats above everything during fade
+    var surveyContainer = elements.surveyView.querySelector('.container');
+    if (surveyContainer) {
+      var rect = surveyContainer.getBoundingClientRect();
+      surveyContainer.style.position = 'fixed';
+      surveyContainer.style.top = rect.top + 'px';
+      surveyContainer.style.left = rect.left + 'px';
+      surveyContainer.style.width = rect.width + 'px';
+      surveyContainer.style.height = rect.height + 'px';
+      surveyContainer.style.margin = '0';
+      surveyContainer.style.zIndex = '100';
+    }
+
+    // Remove survey-body class and show login UNDERNEATH (instant, no fade)
+    document.body.classList.remove('survey-body');
     elements.loginView.style.display = '';
+    elements.loginView.style.opacity = '1';
     elements.loginView.classList.add('view-active');
 
     // Force reflow
     void elements.loginView.offsetWidth;
 
-    // Fade in login (covers survey)
-    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
-    elements.loginView.style.opacity = '1';
+    // Fade OUT survey container (reveals login underneath)
+    if (surveyContainer) {
+      surveyContainer.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+      surveyContainer.style.opacity = '0';
+    }
 
     // After fade: cleanup
     setTimeout(function() {
-      // Hide survey
+      // Hide survey completely
       elements.surveyView.style.display = 'none';
       elements.surveyView.classList.remove('view-active');
 
-      // Remove fixed from login, put in normal flow
-      elements.loginView.style.position = '';
-      elements.loginView.style.top = '';
-      elements.loginView.style.left = '';
-      elements.loginView.style.width = '';
-      elements.loginView.style.height = '';
-      elements.loginView.style.zIndex = '';
-      elements.loginView.style.transition = '';
-
-      // Now safe to change body class
-      document.body.classList.remove('survey-body');
+      // Reset survey container styles
+      if (surveyContainer) {
+        surveyContainer.style.position = '';
+        surveyContainer.style.top = '';
+        surveyContainer.style.left = '';
+        surveyContainer.style.width = '';
+        surveyContainer.style.height = '';
+        surveyContainer.style.margin = '';
+        surveyContainer.style.zIndex = '';
+        surveyContainer.style.opacity = '';
+        surveyContainer.style.transition = '';
+      }
 
       currentView = 'login';
       document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
