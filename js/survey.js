@@ -411,54 +411,50 @@
   }
 
   /**
-   * Create overlay elements for Likert radio buttons
-   * Provides hover ghost dot and selection target-lock animation
+   * Create custom Likert radio buttons from scratch
+   * Native inputs are hidden, custom elements handle visuals
    */
   function initLikertRadioOverlays() {
     document.querySelectorAll('.likert-table input[type="radio"]').forEach(radio => {
       const td = radio.closest('td');
-      if (!td || td.querySelector('.likert-radio-overlay')) return;
+      if (!td || td.querySelector('.likert-radio')) return;
 
-      // Create overlay element as sibling in td
-      const overlay = document.createElement('span');
-      overlay.className = 'likert-radio-overlay';
-      overlay.innerHTML = '<span class="hover-ring"></span><span class="ghost-dot"></span><span class="bg-circle"></span><span class="target-ring"></span><span class="inner-dot"></span>';
-      td.appendChild(overlay);
+      // Create custom radio element
+      const customRadio = document.createElement('span');
+      customRadio.className = 'likert-radio';
+      customRadio.innerHTML = '<span class="target-ring"></span>';
+      td.appendChild(customRadio);
 
-      // Position overlay exactly on top of radio
-      const positionOverlay = () => {
-        const radioRect = radio.getBoundingClientRect();
-        const tdRect = td.getBoundingClientRect();
-        overlay.style.left = `${radio.offsetLeft}px`;
-        overlay.style.top = `${radio.offsetTop}px`;
-      };
-      positionOverlay();
+      // Store reference
+      radio._customRadio = customRadio;
 
-      // Store reference for event handlers
-      radio._overlay = overlay;
-
-      // Hover: show ghost dot
-      radio.addEventListener('mouseenter', () => {
-        if (!radio.checked) {
-          overlay.classList.add('hovered');
-        }
-      });
-      radio.addEventListener('mouseleave', () => {
-        overlay.classList.remove('hovered');
+      // Click on custom radio selects the native input
+      customRadio.addEventListener('click', () => {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
       });
 
-      // Selection: trigger animation
+      // Sync initial state
+      if (radio.checked) {
+        customRadio.classList.add('selected');
+      }
+
+      // Selection: update visual state and trigger animation
       radio.addEventListener('change', () => {
-        // Clear all overlays in this row first
+        // Clear all custom radios in this row
         const row = radio.closest('tr');
-        row.querySelectorAll('.likert-radio-overlay').forEach(ov => {
-          ov.classList.remove('selected', 'hovered');
+        row.querySelectorAll('.likert-radio').forEach(cr => {
+          cr.classList.remove('selected');
         });
 
-        // Animate this one
-        overlay.classList.remove('selected');
-        void overlay.offsetWidth; // Force reflow
-        overlay.classList.add('selected');
+        // Select this one with animation
+        customRadio.classList.add('selected');
+
+        // Restart animation
+        const ring = customRadio.querySelector('.target-ring');
+        ring.style.animation = 'none';
+        void ring.offsetWidth;
+        ring.style.animation = '';
       });
     });
   }
@@ -1322,9 +1318,9 @@
       }
     });
 
-    // Clear radio overlay selection states
-    table.querySelectorAll('.likert-radio-overlay').forEach(overlay => {
-      overlay.classList.remove('selected', 'hovered');
+    // Clear custom radio selection states
+    table.querySelectorAll('.likert-radio').forEach(customRadio => {
+      customRadio.classList.remove('selected');
     });
 
     // Remove arrow indicators
