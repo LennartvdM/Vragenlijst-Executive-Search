@@ -84,7 +84,9 @@ body {
 
 /* Container Transform Animation - survey card expands from button */
 .container-transform-active {
-  will-change: transform, opacity;
+  will-change: clip-path;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ==========================================================================
