@@ -362,62 +362,72 @@ var App = (function() {
    */
   function transitionToLogin() {
     var FADE_DURATION = 500;
+    var surveyContainer = elements.surveyView.querySelector('.container');
 
-    // Get survey container's current position (the actual card, not the wrapper)
-    var container = elements.surveyView.querySelector('.container');
-    var containerRect = container ? container.getBoundingClientRect() : elements.surveyView.getBoundingClientRect();
+    // ========================================
+    // PHASE 1: SETUP (completely invisible to user)
+    // ========================================
+    document.body.style.visibility = 'hidden';
 
-    // Freeze survey container at its current position
-    if (container) {
-      container.style.position = 'fixed';
-      container.style.top = containerRect.top + 'px';
-      container.style.left = containerRect.left + 'px';
-      container.style.width = containerRect.width + 'px';
-      container.style.height = containerRect.height + 'px';
-      container.style.zIndex = '100';
-      container.style.margin = '0';
+    // Freeze survey container at current position
+    if (surveyContainer) {
+      var rect = surveyContainer.getBoundingClientRect();
+      surveyContainer.style.position = 'fixed';
+      surveyContainer.style.top = rect.top + 'px';
+      surveyContainer.style.left = rect.left + 'px';
+      surveyContainer.style.width = rect.width + 'px';
+      surveyContainer.style.height = rect.height + 'px';
+      surveyContainer.style.margin = '0';
+      surveyContainer.style.zIndex = '100';
     }
 
-    // NOW safe to change body layout - survey container won't move
+    // Safe to change layout now - survey is frozen, page is invisible
     document.body.classList.remove('survey-body');
 
-    // Show login underneath, starting invisible
-    elements.loginView.style.display = '';
+    // Prepare login underneath, starting transparent
     elements.loginView.style.opacity = '0';
+    elements.loginView.style.display = '';
     elements.loginView.classList.add('view-active');
 
-    // Force reflow before starting transitions
+    // Force reflow to complete all layout work
     void elements.loginView.offsetWidth;
 
-    // TRUE CROSSFADE: both fade simultaneously
+    // Make page visible again - ready for clean crossfade
+    document.body.style.visibility = '';
+
+    // ========================================
+    // PHASE 2: CROSSFADE (only opacity changes)
+    // ========================================
     elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
     elements.loginView.style.opacity = '1';
 
-    if (container) {
-      container.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
-      container.style.opacity = '0';
+    if (surveyContainer) {
+      surveyContainer.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+      surveyContainer.style.opacity = '0';
     }
 
-    // Cleanup after crossfade completes
+    // ========================================
+    // PHASE 3: CLEANUP (after fade complete)
+    // ========================================
     setTimeout(function() {
-      // Hide survey completely
+      // Hide survey
       elements.surveyView.style.display = 'none';
       elements.surveyView.classList.remove('view-active');
 
-      // Reset container styles
-      if (container) {
-        container.style.position = '';
-        container.style.top = '';
-        container.style.left = '';
-        container.style.width = '';
-        container.style.height = '';
-        container.style.zIndex = '';
-        container.style.margin = '';
-        container.style.opacity = '';
-        container.style.transition = '';
+      // Reset survey container
+      if (surveyContainer) {
+        surveyContainer.style.position = '';
+        surveyContainer.style.top = '';
+        surveyContainer.style.left = '';
+        surveyContainer.style.width = '';
+        surveyContainer.style.height = '';
+        surveyContainer.style.margin = '';
+        surveyContainer.style.zIndex = '';
+        surveyContainer.style.opacity = '';
+        surveyContainer.style.transition = '';
       }
 
-      // Clean up login transition
+      // Reset login transition
       elements.loginView.style.transition = '';
 
       // Update state
