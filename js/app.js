@@ -220,89 +220,105 @@ var App = (function() {
    * @param {DOMRect} originRect - The starting position (button)
    */
   function performContainerTransform(originRect) {
-    // Update state
-    currentView = 'survey';
-    document.title = 'Monitoring Cultureel Talent naar de Top 2025';
-    document.body.classList.add('survey-body');
-
-    // Show survey view (needed to get container dimensions)
+    // Get the survey container element first (before showing)
     elements.surveyView.style.display = '';
     elements.surveyView.style.visibility = 'hidden';
     elements.surveyView.classList.add('view-active');
 
-    // Get the survey container element
     var container = elements.surveyView.querySelector('.container');
     if (!container) {
       // Fallback: just show without animation
       elements.surveyView.style.visibility = '';
       elements.loginView.style.display = 'none';
+      document.body.classList.add('survey-body');
       initializeSurvey();
       return;
     }
 
-    // Force layout to get accurate measurements
+    // Force layout to get accurate final dimensions
     void container.offsetWidth;
-
-    // Get the container's final position
     var containerRect = container.getBoundingClientRect();
 
-    // Calculate the transform to move container from button position to final position
-    // We need to find what scale and translate would make the container appear at button position
-    var scaleX = originRect.width / containerRect.width;
-    var scaleY = originRect.height / containerRect.height;
-    var scale = Math.min(scaleX, scaleY, 0.1); // Cap at 0.1 to keep content somewhat visible
+    // Store final dimensions for later
+    var finalLeft = containerRect.left;
+    var finalTop = containerRect.top;
+    var finalWidth = containerRect.width;
+    var finalHeight = containerRect.height;
 
-    // Calculate translation to move scaled container's center to button's center
-    var originCenterX = originRect.left + originRect.width / 2;
-    var originCenterY = originRect.top + originRect.height / 2;
-    var containerCenterX = containerRect.left + containerRect.width / 2;
-    var containerCenterY = containerRect.top + containerRect.height / 2;
+    // Calculate starting scale (how small should it be at button)
+    var scale = Math.max(originRect.width / finalWidth, 0.05);
 
-    var translateX = originCenterX - containerCenterX;
-    var translateY = originCenterY - containerCenterY;
+    // Calculate where the container should start (centered on button)
+    var startLeft = originRect.left + originRect.width / 2 - (finalWidth * scale) / 2;
+    var startTop = originRect.top + originRect.height / 2 - (finalHeight * scale) / 2;
 
-    // Apply initial transform (container appears at button position)
-    container.style.transformOrigin = 'center center';
-    container.style.transform = 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')';
-    container.style.opacity = '0.9';
+    // Make container fixed positioned (out of document flow)
+    container.style.position = 'fixed';
+    container.style.left = startLeft + 'px';
+    container.style.top = startTop + 'px';
+    container.style.width = finalWidth + 'px';
+    container.style.height = finalHeight + 'px';
+    container.style.transform = 'scale(' + scale + ')';
+    container.style.transformOrigin = 'top left';
+    container.style.opacity = '1';
+    container.style.zIndex = '1000';
     container.classList.add('container-transform-active');
 
-    // Hide login and make survey visible
-    elements.loginView.style.opacity = '0';
+    // Now make survey visible (container floats above everything)
     elements.surveyView.style.visibility = '';
 
     // Force reflow
     void container.offsetWidth;
 
     // Animate to final position
-    container.style.transition = 'transform ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1), opacity ' + TRANSFORM_DURATION + 'ms ease-out';
-    container.style.transform = 'translate(0, 0) scale(1)';
-    container.style.opacity = '1';
+    container.style.transition = 'all ' + TRANSFORM_DURATION + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
+    container.style.left = finalLeft + 'px';
+    container.style.top = finalTop + 'px';
+    container.style.transform = 'scale(1)';
 
     // Fade out login card during animation
     var loginCard = elements.loginView.querySelector('.login-card');
+    var loginInfo = elements.loginView.querySelector('.login-info');
     if (loginCard) {
-      loginCard.style.transition = 'opacity 200ms ease-out';
+      loginCard.style.transition = 'opacity 250ms ease-out';
       loginCard.style.opacity = '0';
+    }
+    if (loginInfo) {
+      loginInfo.style.transition = 'opacity 250ms ease-out';
+      loginInfo.style.opacity = '0';
     }
 
     // Cleanup after animation
     setTimeout(function() {
-      // Remove inline styles
+      // Remove fixed positioning - return to normal flow
+      container.style.position = '';
+      container.style.left = '';
+      container.style.top = '';
+      container.style.width = '';
+      container.style.height = '';
       container.style.transform = '';
       container.style.transition = '';
       container.style.transformOrigin = '';
       container.style.opacity = '';
+      container.style.zIndex = '';
       container.classList.remove('container-transform-active');
+
+      // Update state
+      currentView = 'survey';
+      document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+      document.body.classList.add('survey-body');
 
       // Hide login completely
       elements.loginView.style.display = 'none';
-      elements.loginView.style.opacity = '';
       elements.loginView.classList.remove('view-active');
 
       if (loginCard) {
         loginCard.style.transition = '';
         loginCard.style.opacity = '';
+      }
+      if (loginInfo) {
+        loginInfo.style.transition = '';
+        loginInfo.style.opacity = '';
       }
 
       // Initialize survey
