@@ -16,11 +16,13 @@ var App = (function() {
   // DOM elements (cached after init)
   var elements = {
     loginView: null,
-    surveyView: null
+    surveyView: null,
+    expandOverlay: null
   };
 
-  // Transition duration in ms (should match CSS)
-  var TRANSITION_DURATION = 300;
+  // Animation durations in ms
+  var EXPAND_DURATION = 450;
+  var CONTENT_FADE_DURATION = 300;
 
   /**
    * Initialize the application
@@ -35,6 +37,9 @@ var App = (function() {
       console.error('App: Required view containers not found');
       return;
     }
+
+    // Create expand overlay element
+    createExpandOverlay();
 
     // Check for logout parameter
     if (window.location.search.includes('logout=1')) {
@@ -52,6 +57,17 @@ var App = (function() {
 
     // Setup popstate handler for browser back/forward
     window.addEventListener('popstate', handlePopState);
+  }
+
+  /**
+   * Create the expand overlay element used for container transform animation
+   */
+  function createExpandOverlay() {
+    var overlay = document.createElement('div');
+    overlay.id = 'expand-overlay';
+    overlay.className = 'expand-overlay';
+    document.body.appendChild(overlay);
+    elements.expandOverlay = overlay;
   }
 
   /**
@@ -168,17 +184,47 @@ var App = (function() {
   }
 
   /**
-   * Transition from login to survey view
+   * Transition from login to survey view with container transform animation
    * Called by auth.js after successful login
+   * @param {HTMLElement} originElement - The element to expand from (usually the login button)
    */
-  function transitionToSurvey() {
-    // Start fade out of login
-    elements.loginView.classList.add('view-fade-out');
-    elements.loginView.classList.remove('view-active');
+  function transitionToSurvey(originElement) {
+    // Get origin rect (button position) or use center of screen as fallback
+    var originRect;
+    if (originElement && originElement.getBoundingClientRect) {
+      originRect = originElement.getBoundingClientRect();
+    } else {
+      // Fallback: center of screen
+      var centerX = window.innerWidth / 2;
+      var centerY = window.innerHeight / 2;
+      originRect = {
+        left: centerX - 50,
+        top: centerY - 25,
+        width: 100,
+        height: 50
+      };
+    }
 
-    // Load survey content while fading
+    // Position overlay at button location
+    var overlay = elements.expandOverlay;
+    overlay.style.left = originRect.left + 'px';
+    overlay.style.top = originRect.top + 'px';
+    overlay.style.width = originRect.width + 'px';
+    overlay.style.height = originRect.height + 'px';
+    overlay.style.borderRadius = '8px';
+    overlay.style.display = 'block';
+    overlay.style.opacity = '1';
+
+    // Force reflow
+    void overlay.offsetWidth;
+
+    // Start expand animation
+    overlay.classList.add('expanding');
+
+    // Load survey content during animation
+    var surveyLoadPromise;
     if (!surveyLoaded) {
-      fetch('/views/survey.html')
+      surveyLoadPromise = fetch('/views/survey.html')
         .then(function(response) {
           if (!response.ok) {
             throw new Error('Failed to load survey');
@@ -188,44 +234,66 @@ var App = (function() {
         .then(function(html) {
           elements.surveyView.innerHTML = html;
           surveyLoaded = true;
+        });
+    } else {
+      surveyLoadPromise = Promise.resolve();
+    }
 
-          // Wait for login fade out to complete
-          setTimeout(function() {
-            completeTransitionToSurvey();
-          }, TRANSITION_DURATION);
+    // After expand animation completes
+    setTimeout(function() {
+      // Ensure survey is loaded before proceeding
+      surveyLoadPromise
+        .then(function() {
+          completeExpandTransition();
         })
         .catch(function(error) {
           console.error('App: Error loading survey:', error);
+          // Reset overlay and fallback
+          overlay.classList.remove('expanding');
+          overlay.style.display = 'none';
           window.location.href = '/survey.html';
         });
-    } else {
-      // Survey already loaded, just wait for fade
-      setTimeout(function() {
-        completeTransitionToSurvey();
-      }, TRANSITION_DURATION);
-    }
+    }, EXPAND_DURATION);
   }
 
   /**
-   * Complete the transition to survey view
+   * Complete the expand transition - show survey content
    */
-  function completeTransitionToSurvey() {
-    // Hide login completely
-    elements.loginView.style.display = 'none';
-    elements.loginView.classList.remove('view-fade-out');
+  function completeExpandTransition() {
+    var overlay = elements.expandOverlay;
 
-    // Show and animate in survey
+    // Hide login view
+    elements.loginView.style.display = 'none';
+    elements.loginView.classList.remove('view-active');
+
+    // Update state
     currentView = 'survey';
     document.title = 'Monitoring Cultureel Talent naar de Top 2025';
     document.body.classList.add('survey-body');
 
+    // Show survey view (invisible initially for fade-in)
     elements.surveyView.style.display = '';
-    // Trigger reflow
+    elements.surveyView.style.opacity = '0';
     void elements.surveyView.offsetWidth;
+
+    // Fade in survey content
     elements.surveyView.classList.add('view-active');
+    elements.surveyView.style.opacity = '';
 
     // Initialize survey
     initializeSurvey();
+
+    // Fade out and remove overlay
+    overlay.classList.add('fade-out');
+
+    setTimeout(function() {
+      overlay.classList.remove('expanding', 'fade-out');
+      overlay.style.display = 'none';
+      overlay.style.left = '';
+      overlay.style.top = '';
+      overlay.style.width = '';
+      overlay.style.height = '';
+    }, CONTENT_FADE_DURATION);
   }
 
   /**
@@ -245,7 +313,7 @@ var App = (function() {
 
       // Show login
       showLogin();
-    }, TRANSITION_DURATION);
+    }, CONTENT_FADE_DURATION);
   }
 
   // Public API

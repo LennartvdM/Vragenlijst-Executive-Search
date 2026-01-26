@@ -56,6 +56,8 @@
       return;
     }
 
+    var publicLoginBtn = document.getElementById('publicLoginBtn');
+
     // Create a public session
     Storage.saveSession({
       orgCode: CONSTANTS.SESSION.PUBLIC_CODE,
@@ -64,9 +66,9 @@
       isPublic: true
     });
 
-    // Transition to survey view (SPA navigation)
+    // Transition to survey view (SPA navigation) - expand from button
     if (typeof App !== 'undefined' && App.transitionToSurvey) {
-      App.transitionToSurvey();
+      App.transitionToSurvey(publicLoginBtn);
     } else {
       // Fallback for direct survey.html access
       window.location.href = '/survey.html';
@@ -109,9 +111,9 @@
           timestamp: Date.now()
         });
 
-        // Transition to survey view (SPA navigation)
+        // Transition to survey view (SPA navigation) - expand from button
         if (typeof App !== 'undefined' && App.transitionToSurvey) {
-          App.transitionToSurvey();
+          App.transitionToSurvey(loginBtn);
         } else {
           // Fallback for direct survey.html access
           window.location.href = '/survey.html';
