@@ -1569,18 +1569,17 @@ h1 {
   height: 18px;
   cursor: pointer;
   accent-color: var(--terracotta);
-  position: relative;
-  z-index: 1;
+  margin: 0;
+  padding: 0;
 }
 
 /* Radio wrapper for overlay positioning */
 .likert-radio-wrapper {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   width: 18px;
   height: 18px;
+  vertical-align: middle;
 }
 
 /* Animated overlay - sits on top of radio */
