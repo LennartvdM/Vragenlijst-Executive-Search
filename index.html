@@ -135,56 +135,55 @@
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
         <div class="privacy-section">
-          <h3 class="privacy-title">Geen cookiebanner — dit is waarom</h3>
-          <p class="privacy-intro">Wij gebruiken geen tracking, analytics of advertenties. Wat we wél opslaan dient uitsluitend de werking van dit formulier.</p>
-
-          <h4 class="privacy-subtitle">Lokale opslag (in uw browser):</h4>
-          <table class="privacy-table">
-            <thead>
-              <tr>
-                <th>Wat</th>
-                <th>Doel</th>
-                <th>Bewaartermijn</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Organisatiecode</td>
-                <td>Sessie behouden</td>
-                <td>Tot uitloggen of 24 uur</td>
-              </tr>
-              <tr>
-                <td>Ingevulde antwoorden</td>
-                <td>Voorkomen van dataverlies</td>
-                <td>Tot verzenden of handmatig wissen</td>
-              </tr>
-              <tr>
-                <td>Kopie na verzenden</td>
-                <td>Uw eigen administratie</td>
-                <td>Onbeperkt (lokaal)</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="privacy-note-inline">Deze gegevens verlaten uw apparaat niet.</p>
-
-          <p class="privacy-server"><strong>Na verzenden:</strong> Uw antwoorden worden beveiligd opgeslagen en zijn uitsluitend toegankelijk voor de beheerder van deze monitoring.</p>
-
-          <div class="privacy-legal">
-            <h4>Geen toestemming nodig</h4>
-            <p>Alle opslag valt onder "noodzakelijk voor de uitvoering" of "gerechtvaardigd belang". Informeren volstaat — vandaar deze tekst, zonder vinkje.</p>
+          <div class="privacy-header">
+            <span class="privacy-badge">Geen cookies</span>
+            <span class="privacy-badge">Geen tracking</span>
           </div>
 
-          <details class="privacy-details">
-            <summary>Wat we niet doen</summary>
-            <p>Geen bezoekersstatistieken, geen gedragsanalyse, geen data delen met derden. Wij weten niet wie deze pagina bezoekt, tenzij u inlogt én verzendt.</p>
-          </details>
+          <p class="privacy-summary">Uw gegevens blijven in uw browser tot u ze verzendt. <button type="button" class="privacy-trigger" data-privacy="storage">Wat we opslaan</button></p>
 
-          <details class="privacy-details">
-            <summary>Uw rechten</summary>
-            <p>Inzage, correctie, verwijdering en overdracht: mail naar <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a>. Klachten kunnen ook bij de Autoriteit Persoonsgegevens.</p>
-          </details>
+          <div class="privacy-links">
+            <button type="button" class="privacy-trigger" data-privacy="legal">Waarom geen cookiebanner?</button>
+            <span class="privacy-divider">·</span>
+            <button type="button" class="privacy-trigger" data-privacy="rights">Uw rechten</button>
+            <span class="privacy-divider">·</span>
+            <a href="mailto:monitoring@talentnaartop.nl" class="privacy-trigger">Contact</a>
+          </div>
+        </div>
 
-          <p class="privacy-contact">Vragen? <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a></p>
+        <!-- Privacy Popovers -->
+        <div class="privacy-popover" id="popover-storage">
+          <div class="popover-content">
+            <h4>Lokale opslag</h4>
+            <p class="popover-subtitle">Deze gegevens verlaten uw apparaat niet</p>
+            <table class="popover-table">
+              <tr><td>Organisatiecode</td><td>24 uur</td></tr>
+              <tr><td>Ingevulde antwoorden</td><td>Tot verzenden</td></tr>
+              <tr><td>Kopie na verzenden</td><td>Onbeperkt</td></tr>
+            </table>
+            <p class="popover-note">Na verzenden worden uw antwoorden beveiligd opgeslagen bij de beheerder.</p>
+          </div>
+        </div>
+
+        <div class="privacy-popover" id="popover-legal">
+          <div class="popover-content">
+            <h4>Geen toestemming nodig</h4>
+            <p>Alles wat we opslaan is noodzakelijk voor de werking van dit formulier. Dat valt onder <em>"noodzakelijk voor de uitvoering"</em> — de AVG vereist dan geen toestemming, alleen transparantie.</p>
+            <p class="popover-note">Daarom deze uitleg in plaats van een vinkje.</p>
+          </div>
+        </div>
+
+        <div class="privacy-popover" id="popover-rights">
+          <div class="popover-content">
+            <h4>Uw rechten</h4>
+            <ul class="popover-list">
+              <li><strong>Inzage</strong> — vraag op wat we van u hebben</li>
+              <li><strong>Correctie</strong> — laat fouten aanpassen</li>
+              <li><strong>Verwijdering</strong> — laat uw gegevens wissen</li>
+              <li><strong>Overdracht</strong> — ontvang uw data in een bruikbaar formaat</li>
+            </ul>
+            <p class="popover-contact">Mail <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a> of dien een klacht in bij de <a href="https://autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a>.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -192,6 +191,9 @@
 
   <!-- Survey View (loaded dynamically) -->
   <div id="survey-view" class="view" style="display: none;"></div>
+
+  <!-- Popover backdrop -->
+  <div class="popover-backdrop" id="popoverBackdrop"></div>
 
   <!-- Flatpickr date picker -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -205,5 +207,84 @@
   <script src="/js/auth.js"></script>
   <script src="/js/survey.js"></script>
   <script src="/js/app.js"></script>
+
+  <!-- Privacy Popovers -->
+  <script>
+  (function() {
+    const backdrop = document.getElementById('popoverBackdrop');
+    let activePopover = null;
+
+    function positionPopover(popover, trigger) {
+      const rect = trigger.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+      const padding = 12;
+
+      // Center horizontally relative to trigger, but keep within viewport
+      let left = rect.left + (rect.width / 2) - (popoverRect.width / 2);
+      left = Math.max(padding, Math.min(left, window.innerWidth - popoverRect.width - padding));
+
+      // Position above or below trigger
+      let top = rect.bottom + 8;
+      if (top + popoverRect.height > window.innerHeight - padding) {
+        top = rect.top - popoverRect.height - 8;
+      }
+      top = Math.max(padding, top);
+
+      popover.style.left = left + 'px';
+      popover.style.top = top + 'px';
+    }
+
+    function openPopover(id, trigger) {
+      closeAllPopovers();
+      const popover = document.getElementById('popover-' + id);
+      if (!popover) return;
+
+      popover.classList.add('is-active');
+      backdrop.classList.add('is-active');
+      activePopover = popover;
+
+      // Position after making visible (needs dimensions)
+      requestAnimationFrame(() => positionPopover(popover, trigger));
+    }
+
+    function closeAllPopovers() {
+      document.querySelectorAll('.privacy-popover.is-active').forEach(p => {
+        p.classList.remove('is-active');
+      });
+      backdrop.classList.remove('is-active');
+      activePopover = null;
+    }
+
+    // Trigger clicks
+    document.querySelectorAll('.privacy-trigger[data-privacy]').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = trigger.dataset.privacy;
+        if (activePopover && activePopover.id === 'popover-' + id) {
+          closeAllPopovers();
+        } else {
+          openPopover(id, trigger);
+        }
+      });
+    });
+
+    // Close on backdrop click
+    backdrop.addEventListener('click', closeAllPopovers);
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllPopovers();
+    });
+
+    // Reposition on resize
+    window.addEventListener('resize', () => {
+      if (activePopover) {
+        const trigger = document.querySelector(`[data-privacy="${activePopover.id.replace('popover-', '')}"]`);
+        if (trigger) positionPopover(activePopover, trigger);
+      }
+    });
+  })();
+  </script>
 </body>
 </html>

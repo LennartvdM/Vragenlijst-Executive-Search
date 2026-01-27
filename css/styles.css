@@ -275,153 +275,210 @@ body {
   font-weight: bold;
 }
 
-/* Privacy Section - GDPR Compliant Disclosure */
+/* Privacy Section - Modern Popover Design */
 .privacy-section {
-  background: rgba(255, 255, 255, 0.6);
-  padding: 16px;
-  border-radius: 8px;
   font-size: 12px;
-  margin-top: 16px;
+  margin-top: 20px;
+  text-align: center;
 }
 
-.privacy-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0 0 8px 0;
-}
-
-.privacy-intro {
-  margin: 0 0 16px 0;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.privacy-subtitle {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 8px 0;
-}
-
-/* Privacy data table */
-.privacy-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 8px;
-  font-size: 11px;
-}
-
-.privacy-table th,
-.privacy-table td {
-  text-align: left;
-  padding: 6px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.privacy-table th {
-  font-weight: 600;
-  color: var(--text-light);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.privacy-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.privacy-table td:first-child {
-  font-weight: 500;
-}
-
-.privacy-note-inline {
-  margin: 0 0 12px 0;
-  color: var(--text-light);
-  font-style: italic;
-  line-height: 1.4;
-}
-
-.privacy-server {
-  margin: 0 0 12px 0;
-  line-height: 1.5;
-}
-
-/* Legal basis box */
-.privacy-legal {
-  background: rgba(196, 120, 90, 0.08);
-  border-radius: 4px;
-  padding: 10px 12px;
+.privacy-header {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
-.privacy-legal h4 {
+.privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.privacy-summary {
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.privacy-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
   font-size: 12px;
-  font-weight: 600;
   color: var(--terracotta);
-  margin: 0 0 4px 0;
-}
-
-.privacy-legal p {
-  margin: 0;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-/* Expandable details */
-.privacy-details {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding-top: 8px;
-  margin-top: 8px;
-}
-
-.privacy-details summary {
   cursor: pointer;
-  color: var(--terracotta);
-  font-weight: 500;
-  user-select: none;
-  list-style: none;
-  padding: 4px 0;
-}
-
-.privacy-details summary::-webkit-details-marker {
-  display: none;
-}
-
-.privacy-details summary::before {
-  content: '+ ';
-  font-family: monospace;
-}
-
-.privacy-details[open] summary::before {
-  content: '− ';
-}
-
-.privacy-details summary:hover {
   text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: all 0.15s ease;
 }
 
-.privacy-details > p {
-  margin: 8px 0 0 0;
+.privacy-trigger:hover {
+  text-decoration-style: solid;
+  color: var(--terracotta-dark, #a5624a);
+}
+
+a.privacy-trigger {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.privacy-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.privacy-divider {
+  color: var(--text-light);
+  opacity: 0.5;
+}
+
+/* Privacy Popovers */
+.privacy-popover {
+  position: fixed;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.privacy-popover.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.popover-content {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 10px 20px -5px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  max-width: 320px;
+  font-size: 13px;
   line-height: 1.5;
+  text-align: left;
+}
+
+.popover-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text);
 }
 
-.privacy-details a {
-  color: var(--terracotta);
+.popover-content > p {
+  margin: 0 0 12px 0;
+  color: var(--text);
 }
 
-.privacy-contact {
-  margin: 12px 0 0 0;
-  padding-top: 8px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+.popover-content > p:last-child {
+  margin-bottom: 0;
 }
 
-.privacy-contact a {
-  color: var(--terracotta);
+.popover-subtitle {
+  color: var(--text-light) !important;
+  font-size: 12px;
+  margin-bottom: 12px !important;
+}
+
+.popover-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.popover-table td {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.popover-table tr:last-child td {
+  border-bottom: none;
+}
+
+.popover-table td:first-child {
   font-weight: 500;
+  color: var(--text);
+}
+
+.popover-table td:last-child {
+  text-align: right;
+  color: var(--text-light);
+  font-size: 11px;
+}
+
+.popover-note {
+  font-size: 12px;
+  color: var(--text-light) !important;
+  font-style: italic;
+  margin-bottom: 0 !important;
+}
+
+.popover-list {
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.popover-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 12px;
+}
+
+.popover-list li:last-child {
+  border-bottom: none;
+}
+
+.popover-list strong {
+  color: var(--terracotta);
+  font-weight: 600;
+}
+
+.popover-contact {
+  font-size: 12px;
+  color: var(--text-light) !important;
+  margin-bottom: 0 !important;
+}
+
+.popover-contact a {
+  color: var(--terracotta);
+}
+
+/* Popover backdrop for click-outside */
+.popover-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.popover-backdrop.is-active {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* ==========================================================================
