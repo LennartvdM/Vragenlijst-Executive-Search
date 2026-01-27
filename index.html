@@ -135,65 +135,56 @@
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
         <div class="privacy-section">
-          <div class="privacy-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <span>Hoe wij met uw gegevens omgaan</span>
+          <p class="privacy-summary">
+            Uw gegevens blijven lokaal tot u ze verzendt.
+            <button type="button" class="privacy-chip" data-privacy="storage">Opslag</button>
+            <button type="button" class="privacy-chip" data-privacy="legal">Privacy</button>
+            <button type="button" class="privacy-chip" data-privacy="rights">Rechten</button>
+          </p>
+        </div>
+
+        <!-- Privacy Tooltips -->
+        <div class="privacy-tooltip" id="popover-storage">
+          <div class="tooltip-card">
+            <div class="tooltip-accent"></div>
+            <div class="tooltip-inner">
+              <h4>Lokale opslag</h4>
+              <p class="tooltip-subtitle">Deze gegevens verlaten uw apparaat niet</p>
+              <div class="tooltip-row"><span>Sessie</span><span class="tooltip-tag">24 uur</span></div>
+              <div class="tooltip-row"><span>Concept</span><span class="tooltip-tag">Tot verzenden</span></div>
+              <div class="tooltip-row"><span>Archief</span><span class="tooltip-tag">Lokaal bewaard</span></div>
+              <p class="tooltip-note">Na verzenden worden uw antwoorden beveiligd opgeslagen bij de beheerder.</p>
+            </div>
           </div>
+        </div>
 
-          <p class="privacy-intro">Geen cookies, geen tracking, geen gedoe. We slaan alleen op wat nodig is om het formulier te laten werken.</p>
+        <div class="privacy-tooltip" id="popover-legal">
+          <div class="tooltip-card">
+            <div class="tooltip-accent"></div>
+            <div class="tooltip-inner">
+              <h4>Geen cookiebanner?</h4>
+              <p class="tooltip-subtitle">Dit is waarom</p>
+              <p>Alles wat we opslaan is <em>noodzakelijk voor de werking</em> van dit formulier. Geen tracking, geen analytics, geen advertenties.</p>
+              <p>De AVG vereist dan geen toestemming — alleen transparantie. Vandaar deze uitleg in plaats van een vinkje.</p>
+            </div>
+          </div>
+        </div>
 
-          <details class="privacy-details">
-            <summary>Wat blijft in uw browser (en nergens anders)</summary>
-            <p>Deze gegevens verlaten uw apparaat niet. Ze bestaan alleen in uw browser:</p>
-            <ul>
-              <li><strong>Sessie</strong> — uw organisatiecode en wanneer u inlogde. Verloopt automatisch na 24 uur.</li>
-              <li><strong>Concept</strong> — alles wat u invult wordt direct opgeslagen, zodat u nooit werk verliest als u per ongeluk de pagina sluit.</li>
-              <li><strong>Archief</strong> — na verzenden bewaren we lokaal een kopie voor uw eigen administratie.</li>
-            </ul>
-            <p class="privacy-note-inline">Dit heet localStorage — het is van u, niet van ons. Wij kunnen er niet bij.</p>
-          </details>
-
-          <details class="privacy-details">
-            <summary>Wat we wel ontvangen na verzenden</summary>
-            <p>Pas als u op "Verzenden" klikt, sturen we uw antwoorden naar een beveiligde Google-omgeving:</p>
-            <ul>
-              <li>Uw antwoorden worden opgeslagen in Google Sheets</li>
-              <li>Er wordt automatisch een rapport gegenereerd in Google Docs</li>
-              <li>Alleen de beheerder van deze monitoring heeft toegang</li>
-            </ul>
-            <p class="privacy-note-inline">We gebruiken Google omdat het betrouwbaar en veilig is — niet omdat we uw gegevens willen delen. Google verwerkt deze data uitsluitend in onze opdracht.</p>
-          </details>
-
-          <details class="privacy-details">
-            <summary>Wat we bewust niet doen</summary>
-            <ul class="privacy-not-list">
-              <li>Geen cookies plaatsen</li>
-              <li>Geen analytics of tracking (geen Google Analytics, geen pixels)</li>
-              <li>Geen gegevens verkopen of delen met derden</li>
-              <li>Geen profiel van u opbouwen</li>
-              <li>Niet bijhouden hoe lang u ergens over doet</li>
-            </ul>
-            <p class="privacy-note-inline">We weten letterlijk niet wie deze pagina bezoekt, tenzij u inlogt en verzendt.</p>
-          </details>
-
-          <details class="privacy-details">
-            <summary>Uw rechten — en hoe u ze gebruikt</summary>
-            <p>Onder de AVG heeft u concrete rechten. Hier is hoe u ze uitoefent:</p>
-            <dl class="privacy-rights">
-              <dt>Inzage</dt>
-              <dd>Uw lokale gegevens kunt u zelf bekijken via uw browserinstellingen (localStorage). Uw ingediende gegevens kunt u bij ons opvragen.</dd>
-              <dt>Correctie</dt>
-              <dd>Fout gemaakt? Neem contact op, dan passen we het aan.</dd>
-              <dt>Verwijdering</dt>
-              <dd>Lokaal: uitloggen of browsergegevens wissen. Ingediend: mail ons en we verwijderen uw gegevens.</dd>
-              <dt>Overdracht</dt>
-              <dd>Wilt u uw gegevens in een bruikbaar formaat? We exporteren ze voor u.</dd>
-            </dl>
-            <p class="privacy-contact">Contact: <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a></p>
-          </details>
+        <div class="privacy-tooltip" id="popover-rights">
+          <div class="tooltip-card">
+            <div class="tooltip-accent"></div>
+            <div class="tooltip-inner">
+              <h4>Uw rechten onder de AVG</h4>
+              <div class="tooltip-row"><span>Inzage</span><span class="tooltip-tag">Opvragen</span></div>
+              <div class="tooltip-row"><span>Correctie</span><span class="tooltip-tag">Aanpassen</span></div>
+              <div class="tooltip-row"><span>Verwijdering</span><span class="tooltip-tag">Wissen</span></div>
+              <div class="tooltip-row"><span>Overdracht</span><span class="tooltip-tag">Exporteren</span></div>
+              <a href="mailto:monitoring@talentnaartop.nl" class="tooltip-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Contact opnemen
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -201,6 +192,9 @@
 
   <!-- Survey View (loaded dynamically) -->
   <div id="survey-view" class="view" style="display: none;"></div>
+
+  <!-- Popover backdrop -->
+  <div class="popover-backdrop" id="popoverBackdrop"></div>
 
   <!-- Flatpickr date picker -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -214,5 +208,99 @@
   <script src="/js/auth.js"></script>
   <script src="/js/survey.js"></script>
   <script src="/js/app.js"></script>
+
+  <!-- Privacy Tooltips -->
+  <script>
+  (function() {
+    const backdrop = document.getElementById('popoverBackdrop');
+    let activeTooltip = null;
+    let activeTrigger = null;
+
+    function positionTooltip(tooltip, trigger) {
+      const rect = trigger.getBoundingClientRect();
+      const padding = 16;
+
+      // Make visible to measure
+      tooltip.style.visibility = 'hidden';
+      tooltip.style.display = 'block';
+      const tooltipRect = tooltip.getBoundingClientRect();
+      tooltip.style.visibility = '';
+      tooltip.style.display = '';
+
+      // Position above trigger with slight offset
+      let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+      left = Math.max(padding, Math.min(left, window.innerWidth - tooltipRect.width - padding));
+
+      let top = rect.top - tooltipRect.height - 12;
+      // If no room above, position below
+      if (top < padding) {
+        top = rect.bottom + 12;
+        tooltip.classList.add('tooltip-below');
+      } else {
+        tooltip.classList.remove('tooltip-below');
+      }
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+    }
+
+    function openTooltip(id, trigger) {
+      closeAllTooltips();
+      const tooltip = document.getElementById('popover-' + id);
+      if (!tooltip) return;
+
+      tooltip.classList.add('is-active');
+      trigger.classList.add('is-active');
+      backdrop.classList.add('is-active');
+      activeTooltip = tooltip;
+      activeTrigger = trigger;
+
+      requestAnimationFrame(() => positionTooltip(tooltip, trigger));
+    }
+
+    function closeAllTooltips() {
+      document.querySelectorAll('.privacy-tooltip.is-active').forEach(t => {
+        t.classList.remove('is-active');
+      });
+      document.querySelectorAll('.privacy-chip.is-active').forEach(c => {
+        c.classList.remove('is-active');
+      });
+      backdrop.classList.remove('is-active');
+      activeTooltip = null;
+      activeTrigger = null;
+    }
+
+    // Chip clicks
+    document.querySelectorAll('.privacy-chip[data-privacy]').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = chip.dataset.privacy;
+        if (activeTooltip && activeTooltip.id === 'popover-' + id) {
+          closeAllTooltips();
+        } else {
+          openTooltip(id, chip);
+        }
+      });
+    });
+
+    // Close on backdrop click
+    backdrop.addEventListener('click', closeAllTooltips);
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllTooltips();
+    });
+
+    // Reposition on resize/scroll
+    const reposition = () => {
+      if (activeTooltip && activeTrigger) {
+        positionTooltip(activeTooltip, activeTrigger);
+      }
+    };
+    window.addEventListener('resize', reposition);
+    window.addEventListener('scroll', reposition, true);
+  })();
+  </script>
 </body>
 </html>
