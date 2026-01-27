@@ -134,72 +134,190 @@
           <li>Beantwoord vragen over diversiteitsbeleid</li>
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
-        <!-- Privacy Disclosure Card -->
-        <div class="privacy-card">
-          <div class="privacy-card-accent"></div>
-          <div class="privacy-card-content">
-            <!-- Header -->
-            <div class="privacy-card-header">
-              <div class="privacy-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
+        <!-- Privacy Panel - Sidebar + Content Pattern -->
+        <div class="privacy-panel" id="privacyPanel">
+          <!-- Icon Sidebar -->
+          <nav class="privacy-sidebar">
+            <div class="privacy-highlighter" id="privacyHighlighter"></div>
+            <!-- Storage -->
+            <div class="privacy-nav-item active" data-section="storage" title="Lokale opslag">
+              <svg viewBox="0 0 24 24"><path d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7"/><path d="M20 7H4l2-4h12l2 4z"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
+            </div>
+            <!-- After submit -->
+            <div class="privacy-nav-item" data-section="submit" title="Na verzenden">
+              <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <!-- Legal -->
+            <div class="privacy-nav-item" data-section="legal" title="Juridisch">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <!-- Rights -->
+            <div class="privacy-nav-item" data-section="rights" title="Uw rechten">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </nav>
+
+          <!-- Content Area -->
+          <div class="privacy-content">
+            <div class="privacy-sections">
+              <!-- Section: Storage -->
+              <div class="privacy-section active" data-section="storage">
+                <div class="privacy-section-header">
+                  <h3>Geen cookiebanner — dit is waarom</h3>
+                  <p>Wij gebruiken geen tracking, analytics of advertenties. Wat we wél opslaan dient uitsluitend de werking van dit formulier.</p>
+                </div>
+                <table class="privacy-data-table">
+                  <thead>
+                    <tr>
+                      <th>Wat</th>
+                      <th>Doel</th>
+                      <th>Bewaartermijn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="data-label">Organisatiecode</td>
+                      <td class="data-purpose">Sessie behouden</td>
+                      <td class="data-retention">Tot uitloggen of 24 uur</td>
+                    </tr>
+                    <tr>
+                      <td class="data-label">Ingevulde antwoorden</td>
+                      <td class="data-purpose">Voorkomen van dataverlies</td>
+                      <td class="data-retention">Tot verzenden of handmatig wissen</td>
+                    </tr>
+                    <tr>
+                      <td class="data-label">Kopie na verzenden</td>
+                      <td class="data-purpose">Uw eigen administratie</td>
+                      <td class="data-retention">Onbeperkt (lokaal)</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="privacy-callout">
+                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <p>Deze gegevens verlaten uw apparaat niet.</p>
+                </div>
               </div>
-              <div class="privacy-card-title">
-                <h3>Uw privacy</h3>
-                <p>Geen tracking, geen cookies, geen advertenties</p>
+
+              <!-- Section: After Submit -->
+              <div class="privacy-section" data-section="submit">
+                <div class="privacy-section-header">
+                  <h3>Na verzenden</h3>
+                  <p>Wat er gebeurt wanneer u het formulier verstuurt.</p>
+                </div>
+                <div class="privacy-text">
+                  <p>Uw antwoorden worden <strong>beveiligd opgeslagen</strong> en zijn uitsluitend toegankelijk voor de beheerder van deze monitoring.</p>
+                  <p>De gegevens worden gebruikt voor het samenstellen van de jaarlijkse rapportage over culturele diversiteit in de top van Nederlandse organisaties.</p>
+                </div>
+                <div class="privacy-callout">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <p>Uw gegevens worden niet gedeeld met derden en niet gebruikt voor andere doeleinden.</p>
+                </div>
+              </div>
+
+              <!-- Section: Legal -->
+              <div class="privacy-section" data-section="legal">
+                <div class="privacy-section-header">
+                  <h3>Geen toestemming nodig</h3>
+                  <p>Alle opslag valt onder "noodzakelijk voor de uitvoering" of "gerechtvaardigd belang". Informeren volstaat — vandaar deze tekst, zonder vinkje.</p>
+                </div>
+                <details class="privacy-details">
+                  <summary>
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                    Wat we niet doen
+                  </summary>
+                  <div class="privacy-details-content">
+                    Geen bezoekersstatistieken, geen gedragsanalyse, geen data delen met derden. Wij weten niet wie deze pagina bezoekt, tenzij u inlogt én verzendt.
+                  </div>
+                </details>
+                <details class="privacy-details">
+                  <summary>
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                    Juridische grondslag
+                  </summary>
+                  <div class="privacy-details-content">
+                    Verwerking op basis van AVG artikel 6.1.b (uitvoering overeenkomst) en 6.1.f (gerechtvaardigd belang). Voor de monitoring geldt daarnaast een bewaarplicht conform de archiefwet.
+                  </div>
+                </details>
+              </div>
+
+              <!-- Section: Rights -->
+              <div class="privacy-section" data-section="rights">
+                <div class="privacy-section-header">
+                  <h3>Uw rechten</h3>
+                  <p>Op grond van de AVG heeft u de volgende rechten:</p>
+                </div>
+                <div class="privacy-rights">
+                  <span class="privacy-right-tag">Inzage</span>
+                  <span class="privacy-right-tag">Correctie</span>
+                  <span class="privacy-right-tag">Verwijdering</span>
+                  <span class="privacy-right-tag">Overdracht</span>
+                </div>
+                <div class="privacy-text" style="margin-top: 16px;">
+                  <p>Klachten kunnen ook worden ingediend bij de <strong>Autoriteit Persoonsgegevens</strong>.</p>
+                </div>
               </div>
             </div>
 
-            <!-- Data Table -->
-            <div class="privacy-data-section">
-              <p class="privacy-data-label">Wat we lokaal opslaan (in uw browser):</p>
-              <table class="privacy-data-table">
-                <tbody>
-                  <tr>
-                    <td class="privacy-data-item">Inlogsessie</td>
-                    <td class="privacy-data-detail">vervalt na 24 uur</td>
-                  </tr>
-                  <tr>
-                    <td class="privacy-data-item">Uw antwoorden</td>
-                    <td class="privacy-data-detail">concept tot verzending</td>
-                  </tr>
-                  <tr>
-                    <td class="privacy-data-item">Voortgang</td>
-                    <td class="privacy-data-detail">scroll- en stappositie</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Expandable Legal Section -->
-            <details class="privacy-legal-section">
-              <summary class="privacy-legal-toggle">
-                <span>Waarom geen cookiebanner?</span>
-                <svg class="privacy-legal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              </summary>
-              <div class="privacy-legal-content">
-                <p>Deze opslag is <strong>strikt noodzakelijk</strong> voor de werking van het formulier. Onder de AVG (artikel 6.1.b) is hiervoor geen toestemming vereist — alleen transparantie.</p>
-                <p class="privacy-legal-highlight">Pas bij verzenden gaan uw gegevens naar de beheerder voor verwerking.</p>
-              </div>
-            </details>
-
-            <!-- Rights Footer -->
-            <div class="privacy-rights-footer">
-              <span class="privacy-rights-label">Uw AVG-rechten:</span>
-              <span class="privacy-rights-list">inzage · correctie · verwijdering · overdracht</span>
-              <a href="mailto:monitoring@talentnaartop.nl" class="privacy-rights-contact">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                Contact
+            <!-- Contact Footer -->
+            <div class="privacy-contact">
+              <span class="privacy-contact-label">Vragen?</span>
+              <a href="mailto:monitoring@talentnaartop.nl" class="privacy-contact-link">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                monitoring@talentnaartop.nl
               </a>
             </div>
           </div>
         </div>
+
+        <script>
+        // Privacy panel navigation
+        (function() {
+          const panel = document.getElementById('privacyPanel');
+          if (!panel) return;
+
+          const highlighter = panel.querySelector('.privacy-highlighter');
+          const sidebar = panel.querySelector('.privacy-sidebar');
+          const navItems = panel.querySelectorAll('.privacy-nav-item');
+          const sections = panel.querySelectorAll('.privacy-section');
+          let initialized = false;
+
+          function updateHighlighter() {
+            const activeItem = panel.querySelector('.privacy-nav-item.active');
+            if (!activeItem || !highlighter || !sidebar) return;
+
+            const sidebarRect = sidebar.getBoundingClientRect();
+            const itemRect = activeItem.getBoundingClientRect();
+            const topPosition = itemRect.top - sidebarRect.top;
+
+            if (!initialized) {
+              highlighter.style.transition = 'none';
+              highlighter.style.top = topPosition + 'px';
+              highlighter.offsetHeight;
+              highlighter.style.transition = '';
+              initialized = true;
+            } else {
+              highlighter.style.top = topPosition + 'px';
+            }
+            highlighter.classList.add('active');
+          }
+
+          function showSection(sectionId) {
+            navItems.forEach(item => {
+              item.classList.toggle('active', item.dataset.section === sectionId);
+            });
+            sections.forEach(section => {
+              section.classList.toggle('active', section.dataset.section === sectionId);
+            });
+            updateHighlighter();
+          }
+
+          navItems.forEach(item => {
+            item.addEventListener('click', () => showSection(item.dataset.section));
+          });
+
+          updateHighlighter();
+        })();
+        </script>
       </div>
     </div>
   </div>
