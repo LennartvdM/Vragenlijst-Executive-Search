@@ -134,54 +134,68 @@
           <li>Beantwoord vragen over diversiteitsbeleid</li>
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
-        <div class="privacy-section">
-          <p class="privacy-summary">
-            Uw gegevens blijven lokaal tot u ze verzendt.
-            <button type="button" class="privacy-chip" data-privacy="storage">Opslag</button>
-            <button type="button" class="privacy-chip" data-privacy="legal">Privacy</button>
-            <button type="button" class="privacy-chip" data-privacy="rights">Rechten</button>
-          </p>
-        </div>
-
-        <!-- Privacy Tooltips -->
-        <div class="privacy-tooltip" id="popover-storage">
-          <div class="tooltip-card">
-            <div class="tooltip-accent"></div>
-            <div class="tooltip-inner">
-              <h4>Lokale opslag</h4>
-              <p class="tooltip-subtitle">Deze gegevens verlaten uw apparaat niet</p>
-              <div class="tooltip-row"><span>Sessie</span><span class="tooltip-tag">24 uur</span></div>
-              <div class="tooltip-row"><span>Concept</span><span class="tooltip-tag">Tot verzenden</span></div>
-              <div class="tooltip-row"><span>Archief</span><span class="tooltip-tag">Lokaal bewaard</span></div>
-              <p class="tooltip-note">Na verzenden worden uw antwoorden beveiligd opgeslagen bij de beheerder.</p>
+        <!-- Privacy Disclosure Card -->
+        <div class="privacy-card">
+          <div class="privacy-card-accent"></div>
+          <div class="privacy-card-content">
+            <!-- Header -->
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div class="privacy-card-title">
+                <h3>Uw privacy</h3>
+                <p>Geen tracking, geen cookies, geen advertenties</p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="privacy-tooltip" id="popover-legal">
-          <div class="tooltip-card">
-            <div class="tooltip-accent"></div>
-            <div class="tooltip-inner">
-              <h4>Geen cookiebanner?</h4>
-              <p class="tooltip-subtitle">Dit is waarom</p>
-              <p>Alles wat we opslaan is <em>noodzakelijk voor de werking</em> van dit formulier. Geen tracking, geen analytics, geen advertenties.</p>
-              <p>De AVG vereist dan geen toestemming — alleen transparantie. Vandaar deze uitleg in plaats van een vinkje.</p>
+            <!-- Data Table -->
+            <div class="privacy-data-section">
+              <p class="privacy-data-label">Wat we lokaal opslaan (in uw browser):</p>
+              <table class="privacy-data-table">
+                <tbody>
+                  <tr>
+                    <td class="privacy-data-item">Inlogsessie</td>
+                    <td class="privacy-data-detail">vervalt na 24 uur</td>
+                  </tr>
+                  <tr>
+                    <td class="privacy-data-item">Uw antwoorden</td>
+                    <td class="privacy-data-detail">concept tot verzending</td>
+                  </tr>
+                  <tr>
+                    <td class="privacy-data-item">Voortgang</td>
+                    <td class="privacy-data-detail">scroll- en stappositie</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </div>
-        </div>
 
-        <div class="privacy-tooltip" id="popover-rights">
-          <div class="tooltip-card">
-            <div class="tooltip-accent"></div>
-            <div class="tooltip-inner">
-              <h4>Uw rechten onder de AVG</h4>
-              <div class="tooltip-row"><span>Inzage</span><span class="tooltip-tag">Opvragen</span></div>
-              <div class="tooltip-row"><span>Correctie</span><span class="tooltip-tag">Aanpassen</span></div>
-              <div class="tooltip-row"><span>Verwijdering</span><span class="tooltip-tag">Wissen</span></div>
-              <div class="tooltip-row"><span>Overdracht</span><span class="tooltip-tag">Exporteren</span></div>
-              <a href="mailto:monitoring@talentnaartop.nl" class="tooltip-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Contact opnemen
+            <!-- Expandable Legal Section -->
+            <details class="privacy-legal-section">
+              <summary class="privacy-legal-toggle">
+                <span>Waarom geen cookiebanner?</span>
+                <svg class="privacy-legal-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </summary>
+              <div class="privacy-legal-content">
+                <p>Deze opslag is <strong>strikt noodzakelijk</strong> voor de werking van het formulier. Onder de AVG (artikel 6.1.b) is hiervoor geen toestemming vereist — alleen transparantie.</p>
+                <p class="privacy-legal-highlight">Pas bij verzenden gaan uw gegevens naar de beheerder voor verwerking.</p>
+              </div>
+            </details>
+
+            <!-- Rights Footer -->
+            <div class="privacy-rights-footer">
+              <span class="privacy-rights-label">Uw AVG-rechten:</span>
+              <span class="privacy-rights-list">inzage · correctie · verwijdering · overdracht</span>
+              <a href="mailto:monitoring@talentnaartop.nl" class="privacy-rights-contact">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Contact
               </a>
             </div>
           </div>
@@ -192,9 +206,6 @@
 
   <!-- Survey View (loaded dynamically) -->
   <div id="survey-view" class="view" style="display: none;"></div>
-
-  <!-- Popover backdrop -->
-  <div class="popover-backdrop" id="popoverBackdrop"></div>
 
   <!-- Flatpickr date picker -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -208,99 +219,5 @@
   <script src="/js/auth.js"></script>
   <script src="/js/survey.js"></script>
   <script src="/js/app.js"></script>
-
-  <!-- Privacy Tooltips -->
-  <script>
-  (function() {
-    const backdrop = document.getElementById('popoverBackdrop');
-    let activeTooltip = null;
-    let activeTrigger = null;
-
-    function positionTooltip(tooltip, trigger) {
-      const rect = trigger.getBoundingClientRect();
-      const padding = 16;
-
-      // Make visible to measure
-      tooltip.style.visibility = 'hidden';
-      tooltip.style.display = 'block';
-      const tooltipRect = tooltip.getBoundingClientRect();
-      tooltip.style.visibility = '';
-      tooltip.style.display = '';
-
-      // Position above trigger with slight offset
-      let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-      left = Math.max(padding, Math.min(left, window.innerWidth - tooltipRect.width - padding));
-
-      let top = rect.top - tooltipRect.height - 12;
-      // If no room above, position below
-      if (top < padding) {
-        top = rect.bottom + 12;
-        tooltip.classList.add('tooltip-below');
-      } else {
-        tooltip.classList.remove('tooltip-below');
-      }
-
-      tooltip.style.left = left + 'px';
-      tooltip.style.top = top + 'px';
-    }
-
-    function openTooltip(id, trigger) {
-      closeAllTooltips();
-      const tooltip = document.getElementById('popover-' + id);
-      if (!tooltip) return;
-
-      tooltip.classList.add('is-active');
-      trigger.classList.add('is-active');
-      backdrop.classList.add('is-active');
-      activeTooltip = tooltip;
-      activeTrigger = trigger;
-
-      requestAnimationFrame(() => positionTooltip(tooltip, trigger));
-    }
-
-    function closeAllTooltips() {
-      document.querySelectorAll('.privacy-tooltip.is-active').forEach(t => {
-        t.classList.remove('is-active');
-      });
-      document.querySelectorAll('.privacy-chip.is-active').forEach(c => {
-        c.classList.remove('is-active');
-      });
-      backdrop.classList.remove('is-active');
-      activeTooltip = null;
-      activeTrigger = null;
-    }
-
-    // Chip clicks
-    document.querySelectorAll('.privacy-chip[data-privacy]').forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = chip.dataset.privacy;
-        if (activeTooltip && activeTooltip.id === 'popover-' + id) {
-          closeAllTooltips();
-        } else {
-          openTooltip(id, chip);
-        }
-      });
-    });
-
-    // Close on backdrop click
-    backdrop.addEventListener('click', closeAllTooltips);
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAllTooltips();
-    });
-
-    // Reposition on resize/scroll
-    const reposition = () => {
-      if (activeTooltip && activeTrigger) {
-        positionTooltip(activeTooltip, activeTrigger);
-      }
-    };
-    window.addEventListener('resize', reposition);
-    window.addEventListener('scroll', reposition, true);
-  })();
-  </script>
 </body>
 </html>
