@@ -134,143 +134,131 @@
           <li>Beantwoord vragen over diversiteitsbeleid</li>
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
-        <!-- Privacy Panel - Sidebar + Content Pattern -->
+        <!-- Privacy Disclosure - Sidebar + Content with Deep Hierarchy -->
         <div class="privacy-panel" id="privacyPanel">
-          <!-- Icon Sidebar -->
+          <!-- Sidebar Navigation -->
           <nav class="privacy-sidebar">
             <div class="privacy-highlighter" id="privacyHighlighter"></div>
-            <!-- Storage -->
-            <div class="privacy-nav-item active" data-section="storage" title="Lokale opslag">
-              <svg viewBox="0 0 24 24"><path d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7"/><path d="M20 7H4l2-4h12l2 4z"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
+            <div class="privacy-nav-item active" data-section="premise">
+              <span class="nav-marker"></span>
             </div>
-            <!-- After submit -->
-            <div class="privacy-nav-item" data-section="submit" title="Na verzenden">
-              <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <div class="privacy-nav-item" data-section="local">
+              <span class="nav-marker"></span>
             </div>
-            <!-- Legal -->
-            <div class="privacy-nav-item" data-section="legal" title="Juridisch">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="privacy-nav-item" data-section="journey">
+              <span class="nav-marker"></span>
             </div>
-            <!-- Rights -->
-            <div class="privacy-nav-item" data-section="rights" title="Uw rechten">
-              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div class="privacy-nav-item" data-section="rights">
+              <span class="nav-marker"></span>
             </div>
           </nav>
 
           <!-- Content Area -->
           <div class="privacy-content">
-            <div class="privacy-sections">
-              <!-- Section: Storage -->
-              <div class="privacy-section active" data-section="storage">
-                <div class="privacy-section-header">
-                  <h3>Geen cookiebanner — dit is waarom</h3>
-                  <p>Wij gebruiken geen tracking, analytics of advertenties. Wat we wél opslaan dient uitsluitend de werking van dit formulier.</p>
-                </div>
-                <table class="privacy-data-table">
-                  <thead>
-                    <tr>
-                      <th>Wat</th>
-                      <th>Doel</th>
-                      <th>Bewaartermijn</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="data-label">Organisatiecode</td>
-                      <td class="data-purpose">Sessie behouden</td>
-                      <td class="data-retention">Tot uitloggen of 24 uur</td>
-                    </tr>
-                    <tr>
-                      <td class="data-label">Ingevulde antwoorden</td>
-                      <td class="data-purpose">Voorkomen van dataverlies</td>
-                      <td class="data-retention">Tot verzenden of handmatig wissen</td>
-                    </tr>
-                    <tr>
-                      <td class="data-label">Kopie na verzenden</td>
-                      <td class="data-purpose">Uw eigen administratie</td>
-                      <td class="data-retention">Onbeperkt (lokaal)</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="privacy-callout">
-                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  <p>Deze gegevens verlaten uw apparaat niet.</p>
-                </div>
-              </div>
+            <!-- Main scrollable content -->
+            <div class="privacy-scroll" id="privacyScroll">
 
-              <!-- Section: After Submit -->
-              <div class="privacy-section" data-section="submit">
-                <div class="privacy-section-header">
-                  <h3>Na verzenden</h3>
-                  <p>Wat er gebeurt wanneer u het formulier verstuurt.</p>
+              <!-- Section: Premise -->
+              <section class="privacy-section" data-section="premise">
+                <header class="section-header">
+                  <h3>Geen cookiebanner.</h3>
+                  <p class="section-lead">Omdat we u niet volgen.</p>
+                </header>
+                <div class="section-body">
+                  <p>Dat is geen marketingpraatje. Dat is architectuur. Dit formulier is gebouwd met één principe: <em>uw gegevens zijn van u</em>.</p>
+                  <aside class="section-aside">
+                    <p>Ze leven in uw browser — als een kladblok op uw bureau. Wij kijken niet mee. We <em>kunnen</em> niet meekijken. Dat hebben we zo ontworpen.</p>
+                  </aside>
                 </div>
-                <div class="privacy-text">
-                  <p>Uw antwoorden worden <strong>beveiligd opgeslagen</strong> en zijn uitsluitend toegankelijk voor de beheerder van deze monitoring.</p>
-                  <p>De gegevens worden gebruikt voor het samenstellen van de jaarlijkse rapportage over culturele diversiteit in de top van Nederlandse organisaties.</p>
-                </div>
-                <div class="privacy-callout">
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <p>Uw gegevens worden niet gedeeld met derden en niet gebruikt voor andere doeleinden.</p>
-                </div>
-              </div>
+              </section>
 
-              <!-- Section: Legal -->
-              <div class="privacy-section" data-section="legal">
-                <div class="privacy-section-header">
-                  <h3>Geen toestemming nodig</h3>
-                  <p>Alle opslag valt onder "noodzakelijk voor de uitvoering" of "gerechtvaardigd belang". Informeren volstaat — vandaar deze tekst, zonder vinkje.</p>
+              <!-- Section: Local Storage -->
+              <section class="privacy-section" data-section="local">
+                <header class="section-header">
+                  <h3>Tot u op verzenden klikt</h3>
+                  <p class="section-lead">Blijft alles hier. Op uw apparaat. Letterlijk.</p>
+                </header>
+                <div class="section-body">
+                  <dl class="data-list">
+                    <div class="data-item">
+                      <dt>Uw antwoorden</dt>
+                      <dd>Lokaal bewaard zodat u niet opnieuw hoeft te beginnen</dd>
+                    </div>
+                    <div class="data-item">
+                      <dt>Uw voortgang</dt>
+                      <dd>Zodat u morgen verder kunt waar u was gebleven</dd>
+                    </div>
+                    <div class="data-item">
+                      <dt>Uw sessie</dt>
+                      <dd>24 uur geldig, daarna opnieuw inloggen</dd>
+                    </div>
+                  </dl>
+                  <aside class="section-footnote">
+                    <p>Dit zijn geen cookies. Dit is uw browser die onthoudt wat u deed — zoals een tekstverwerker dat doet. Wij zien dit niet.</p>
+                  </aside>
                 </div>
-                <details class="privacy-details">
-                  <summary>
-                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                    Wat we niet doen
-                  </summary>
-                  <div class="privacy-details-content">
-                    Geen bezoekersstatistieken, geen gedragsanalyse, geen data delen met derden. Wij weten niet wie deze pagina bezoekt, tenzij u inlogt én verzendt.
-                  </div>
-                </details>
-                <details class="privacy-details">
-                  <summary>
-                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                    Juridische grondslag
-                  </summary>
-                  <div class="privacy-details-content">
-                    Verwerking op basis van AVG artikel 6.1.b (uitvoering overeenkomst) en 6.1.f (gerechtvaardigd belang). Voor de monitoring geldt daarnaast een bewaarplicht conform de archiefwet.
-                  </div>
-                </details>
-              </div>
+              </section>
+
+              <!-- Section: The Journey -->
+              <section class="privacy-section" data-section="journey">
+                <header class="section-header">
+                  <h3>Het moment van verzenden</h3>
+                  <p class="section-lead">Dan pas bestaat u voor ons.</p>
+                </header>
+                <div class="section-body">
+                  <p>Eén keer. Eén richting. Eén doel.</p>
+                  <p>Uw antwoorden reizen beveiligd naar de beheerder. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit. Dat is het.</p>
+                  <ul class="negation-list">
+                    <li>Niet gedeeld met partners</li>
+                    <li>Niet verkocht aan adverteerders</li>
+                    <li>Niet geanalyseerd door algoritmes</li>
+                  </ul>
+                  <details class="section-details">
+                    <summary>Na verzenden</summary>
+                    <div class="details-content">
+                      <p>Krijgt u een kopie in uw browser — voor uw eigen administratie. Die blijft van u, lokaal, zo lang u wilt.</p>
+                    </div>
+                  </details>
+                </div>
+              </section>
 
               <!-- Section: Rights -->
-              <div class="privacy-section" data-section="rights">
-                <div class="privacy-section-header">
-                  <h3>Uw rechten</h3>
-                  <p>Op grond van de AVG heeft u de volgende rechten:</p>
+              <section class="privacy-section" data-section="rights">
+                <header class="section-header">
+                  <h3>U blijft de eigenaar.</h3>
+                  <p class="section-lead">Altijd.</p>
+                </header>
+                <div class="section-body">
+                  <div class="rights-grid">
+                    <span class="right-item">Inzage</span>
+                    <span class="right-item">Correctie</span>
+                    <span class="right-item">Verwijdering</span>
+                    <span class="right-item">Overdracht</span>
+                  </div>
+                  <p>De AVG geeft u rechten. Wij respecteren ze niet omdat het moet — maar omdat het logisch is.</p>
+                  <details class="section-details">
+                    <summary>Juridische grondslag</summary>
+                    <div class="details-content">
+                      <p>Geen toestemming nodig voor de lokale opslag — het is noodzakelijk voor de werking (AVG 6.1.b). Maar transparantie is niet optioneel. Vandaar dit verhaal, zonder vinkje.</p>
+                    </div>
+                  </details>
                 </div>
-                <div class="privacy-rights">
-                  <span class="privacy-right-tag">Inzage</span>
-                  <span class="privacy-right-tag">Correctie</span>
-                  <span class="privacy-right-tag">Verwijdering</span>
-                  <span class="privacy-right-tag">Overdracht</span>
-                </div>
-                <div class="privacy-text" style="margin-top: 16px;">
-                  <p>Klachten kunnen ook worden ingediend bij de <strong>Autoriteit Persoonsgegevens</strong>.</p>
-                </div>
-              </div>
+              </section>
+
             </div>
 
-            <!-- Contact Footer -->
-            <div class="privacy-contact">
-              <span class="privacy-contact-label">Vragen?</span>
-              <a href="mailto:monitoring@talentnaartop.nl" class="privacy-contact-link">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                monitoring@talentnaartop.nl
+            <!-- Footer -->
+            <footer class="privacy-footer">
+              <a href="mailto:monitoring@talentnaartop.nl" class="footer-contact">
+                <span>Vragen?</span>
+                <strong>monitoring@talentnaartop.nl</strong>
               </a>
-            </div>
+            </footer>
           </div>
         </div>
 
         <script>
-        // Privacy panel navigation
+        // Privacy panel - sidebar navigation with scroll sync
         (function() {
           const panel = document.getElementById('privacyPanel');
           if (!panel) return;
@@ -279,14 +267,13 @@
           const sidebar = panel.querySelector('.privacy-sidebar');
           const navItems = panel.querySelectorAll('.privacy-nav-item');
           const sections = panel.querySelectorAll('.privacy-section');
+          const scrollContainer = document.getElementById('privacyScroll');
           let initialized = false;
 
-          function updateHighlighter() {
-            const activeItem = panel.querySelector('.privacy-nav-item.active');
-            if (!activeItem || !highlighter || !sidebar) return;
-
+          function updateHighlighter(navItem) {
+            if (!navItem || !highlighter || !sidebar) return;
             const sidebarRect = sidebar.getBoundingClientRect();
-            const itemRect = activeItem.getBoundingClientRect();
+            const itemRect = navItem.getBoundingClientRect();
             const topPosition = itemRect.top - sidebarRect.top;
 
             if (!initialized) {
@@ -301,21 +288,39 @@
             highlighter.classList.add('active');
           }
 
-          function showSection(sectionId) {
+          function setActiveSection(sectionId) {
             navItems.forEach(item => {
-              item.classList.toggle('active', item.dataset.section === sectionId);
+              const isActive = item.dataset.section === sectionId;
+              item.classList.toggle('active', isActive);
+              if (isActive) updateHighlighter(item);
             });
-            sections.forEach(section => {
-              section.classList.toggle('active', section.dataset.section === sectionId);
-            });
-            updateHighlighter();
           }
 
+          // Click nav items to scroll to section
           navItems.forEach(item => {
-            item.addEventListener('click', () => showSection(item.dataset.section));
+            item.addEventListener('click', () => {
+              const section = panel.querySelector(`.privacy-section[data-section="${item.dataset.section}"]`);
+              if (section && scrollContainer) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            });
           });
 
-          updateHighlighter();
+          // Scroll sync - update nav based on visible section
+          if (scrollContainer) {
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                  setActiveSection(entry.target.dataset.section);
+                }
+              });
+            }, { root: scrollContainer, threshold: 0.5 });
+
+            sections.forEach(section => observer.observe(section));
+          }
+
+          // Initialize
+          updateHighlighter(panel.querySelector('.privacy-nav-item.active'));
         })();
         </script>
       </div>
