@@ -135,54 +135,83 @@
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
         <div class="privacy-section">
-          <div class="privacy-header">
-            <span class="privacy-badge">Geen cookies</span>
-            <span class="privacy-badge">Geen tracking</span>
-          </div>
+          <p class="privacy-summary">
+            Uw gegevens blijven lokaal tot u ze verzendt.
+            <button type="button" class="privacy-chip" data-privacy="storage">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Opslag
+            </button>
+            <button type="button" class="privacy-chip" data-privacy="legal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Privacy
+            </button>
+            <button type="button" class="privacy-chip" data-privacy="rights">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+              Rechten
+            </button>
+          </p>
+        </div>
 
-          <p class="privacy-summary">Uw gegevens blijven in uw browser tot u ze verzendt. <button type="button" class="privacy-trigger" data-privacy="storage">Wat we opslaan</button></p>
-
-          <div class="privacy-links">
-            <button type="button" class="privacy-trigger" data-privacy="legal">Waarom geen cookiebanner?</button>
-            <span class="privacy-divider">·</span>
-            <button type="button" class="privacy-trigger" data-privacy="rights">Uw rechten</button>
-            <span class="privacy-divider">·</span>
-            <a href="mailto:monitoring@talentnaartop.nl" class="privacy-trigger">Contact</a>
+        <!-- Privacy Tooltips -->
+        <div class="privacy-tooltip" id="popover-storage">
+          <div class="tooltip-card">
+            <div class="tooltip-header">
+              <div class="tooltip-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="tooltip-title">
+                <h4>Lokale opslag</h4>
+                <span>Blijft in uw browser</span>
+              </div>
+            </div>
+            <div class="tooltip-body">
+              <div class="tooltip-row"><span>Sessie</span><span class="tooltip-tag">24 uur</span></div>
+              <div class="tooltip-row"><span>Concept</span><span class="tooltip-tag">Tot verzenden</span></div>
+              <div class="tooltip-row"><span>Archief</span><span class="tooltip-tag">Lokaal</span></div>
+            </div>
+            <div class="tooltip-footer">Na verzenden: beveiligd bij beheerder</div>
           </div>
         </div>
 
-        <!-- Privacy Popovers -->
-        <div class="privacy-popover" id="popover-storage">
-          <div class="popover-content">
-            <h4>Lokale opslag</h4>
-            <p class="popover-subtitle">Deze gegevens verlaten uw apparaat niet</p>
-            <table class="popover-table">
-              <tr><td>Organisatiecode</td><td>24 uur</td></tr>
-              <tr><td>Ingevulde antwoorden</td><td>Tot verzenden</td></tr>
-              <tr><td>Kopie na verzenden</td><td>Onbeperkt</td></tr>
-            </table>
-            <p class="popover-note">Na verzenden worden uw antwoorden beveiligd opgeslagen bij de beheerder.</p>
+        <div class="privacy-tooltip" id="popover-legal">
+          <div class="tooltip-card">
+            <div class="tooltip-header">
+              <div class="tooltip-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="tooltip-title">
+                <h4>Geen cookiebanner?</h4>
+                <span>Dit is waarom</span>
+              </div>
+            </div>
+            <div class="tooltip-body tooltip-body-text">
+              <p>Alles wat we opslaan is <em>noodzakelijk voor de werking</em>. Geen tracking, geen analytics.</p>
+              <p>De AVG vereist dan geen toestemming — alleen transparantie. Vandaar deze uitleg.</p>
+            </div>
           </div>
         </div>
 
-        <div class="privacy-popover" id="popover-legal">
-          <div class="popover-content">
-            <h4>Geen toestemming nodig</h4>
-            <p>Alles wat we opslaan is noodzakelijk voor de werking van dit formulier. Dat valt onder <em>"noodzakelijk voor de uitvoering"</em> — de AVG vereist dan geen toestemming, alleen transparantie.</p>
-            <p class="popover-note">Daarom deze uitleg in plaats van een vinkje.</p>
-          </div>
-        </div>
-
-        <div class="privacy-popover" id="popover-rights">
-          <div class="popover-content">
-            <h4>Uw rechten</h4>
-            <ul class="popover-list">
-              <li><strong>Inzage</strong> — vraag op wat we van u hebben</li>
-              <li><strong>Correctie</strong> — laat fouten aanpassen</li>
-              <li><strong>Verwijdering</strong> — laat uw gegevens wissen</li>
-              <li><strong>Overdracht</strong> — ontvang uw data in een bruikbaar formaat</li>
-            </ul>
-            <p class="popover-contact">Mail <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a> of dien een klacht in bij de <a href="https://autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">Autoriteit Persoonsgegevens</a>.</p>
+        <div class="privacy-tooltip" id="popover-rights">
+          <div class="tooltip-card">
+            <div class="tooltip-header">
+              <div class="tooltip-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+              </div>
+              <div class="tooltip-title">
+                <h4>Uw rechten</h4>
+                <span>Onder de AVG</span>
+              </div>
+            </div>
+            <div class="tooltip-body">
+              <div class="tooltip-row"><span>Inzage</span><span class="tooltip-tag tooltip-tag-action">Opvragen</span></div>
+              <div class="tooltip-row"><span>Correctie</span><span class="tooltip-tag tooltip-tag-action">Aanpassen</span></div>
+              <div class="tooltip-row"><span>Verwijdering</span><span class="tooltip-tag tooltip-tag-action">Wissen</span></div>
+              <div class="tooltip-row"><span>Overdracht</span><span class="tooltip-tag tooltip-tag-action">Exporteren</span></div>
+            </div>
+            <a href="mailto:monitoring@talentnaartop.nl" class="tooltip-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Contact opnemen
+            </a>
           </div>
         </div>
       </div>
@@ -208,82 +237,97 @@
   <script src="/js/survey.js"></script>
   <script src="/js/app.js"></script>
 
-  <!-- Privacy Popovers -->
+  <!-- Privacy Tooltips -->
   <script>
   (function() {
     const backdrop = document.getElementById('popoverBackdrop');
-    let activePopover = null;
+    let activeTooltip = null;
+    let activeTrigger = null;
 
-    function positionPopover(popover, trigger) {
+    function positionTooltip(tooltip, trigger) {
       const rect = trigger.getBoundingClientRect();
-      const popoverRect = popover.getBoundingClientRect();
-      const padding = 12;
+      const padding = 16;
 
-      // Center horizontally relative to trigger, but keep within viewport
-      let left = rect.left + (rect.width / 2) - (popoverRect.width / 2);
-      left = Math.max(padding, Math.min(left, window.innerWidth - popoverRect.width - padding));
+      // Make visible to measure
+      tooltip.style.visibility = 'hidden';
+      tooltip.style.display = 'block';
+      const tooltipRect = tooltip.getBoundingClientRect();
+      tooltip.style.visibility = '';
+      tooltip.style.display = '';
 
-      // Position above or below trigger
-      let top = rect.bottom + 8;
-      if (top + popoverRect.height > window.innerHeight - padding) {
-        top = rect.top - popoverRect.height - 8;
+      // Position above trigger with slight offset
+      let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+      left = Math.max(padding, Math.min(left, window.innerWidth - tooltipRect.width - padding));
+
+      let top = rect.top - tooltipRect.height - 12;
+      // If no room above, position below
+      if (top < padding) {
+        top = rect.bottom + 12;
+        tooltip.classList.add('tooltip-below');
+      } else {
+        tooltip.classList.remove('tooltip-below');
       }
-      top = Math.max(padding, top);
 
-      popover.style.left = left + 'px';
-      popover.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
     }
 
-    function openPopover(id, trigger) {
-      closeAllPopovers();
-      const popover = document.getElementById('popover-' + id);
-      if (!popover) return;
+    function openTooltip(id, trigger) {
+      closeAllTooltips();
+      const tooltip = document.getElementById('popover-' + id);
+      if (!tooltip) return;
 
-      popover.classList.add('is-active');
+      tooltip.classList.add('is-active');
+      trigger.classList.add('is-active');
       backdrop.classList.add('is-active');
-      activePopover = popover;
+      activeTooltip = tooltip;
+      activeTrigger = trigger;
 
-      // Position after making visible (needs dimensions)
-      requestAnimationFrame(() => positionPopover(popover, trigger));
+      requestAnimationFrame(() => positionTooltip(tooltip, trigger));
     }
 
-    function closeAllPopovers() {
-      document.querySelectorAll('.privacy-popover.is-active').forEach(p => {
-        p.classList.remove('is-active');
+    function closeAllTooltips() {
+      document.querySelectorAll('.privacy-tooltip.is-active').forEach(t => {
+        t.classList.remove('is-active');
+      });
+      document.querySelectorAll('.privacy-chip.is-active').forEach(c => {
+        c.classList.remove('is-active');
       });
       backdrop.classList.remove('is-active');
-      activePopover = null;
+      activeTooltip = null;
+      activeTrigger = null;
     }
 
-    // Trigger clicks
-    document.querySelectorAll('.privacy-trigger[data-privacy]').forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
+    // Chip clicks
+    document.querySelectorAll('.privacy-chip[data-privacy]').forEach(chip => {
+      chip.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const id = trigger.dataset.privacy;
-        if (activePopover && activePopover.id === 'popover-' + id) {
-          closeAllPopovers();
+        const id = chip.dataset.privacy;
+        if (activeTooltip && activeTooltip.id === 'popover-' + id) {
+          closeAllTooltips();
         } else {
-          openPopover(id, trigger);
+          openTooltip(id, chip);
         }
       });
     });
 
     // Close on backdrop click
-    backdrop.addEventListener('click', closeAllPopovers);
+    backdrop.addEventListener('click', closeAllTooltips);
 
     // Close on Escape
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAllPopovers();
+      if (e.key === 'Escape') closeAllTooltips();
     });
 
-    // Reposition on resize
-    window.addEventListener('resize', () => {
-      if (activePopover) {
-        const trigger = document.querySelector(`[data-privacy="${activePopover.id.replace('popover-', '')}"]`);
-        if (trigger) positionPopover(activePopover, trigger);
+    // Reposition on resize/scroll
+    const reposition = () => {
+      if (activeTooltip && activeTrigger) {
+        positionTooltip(activeTooltip, activeTrigger);
       }
-    });
+    };
+    window.addEventListener('resize', reposition);
+    window.addEventListener('scroll', reposition, true);
   })();
   </script>
 </body>
