@@ -442,6 +442,20 @@ var App = (function() {
    */
   function transitionToLogin() {
     var FADE_DURATION = 500;
+    var MOBILE_BREAKPOINT = 768;
+    var isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+    // On mobile, skip animation - just switch views instantly
+    if (isMobile) {
+      document.body.classList.remove('survey-body');
+      elements.surveyView.style.display = 'none';
+      elements.surveyView.classList.remove('view-active');
+      elements.loginView.style.display = '';
+      elements.loginView.classList.add('view-active');
+      currentView = 'login';
+      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
+      return;
+    }
 
     // Make survey fixed so it floats above everything during fade
     var surveyContainer = elements.surveyView.querySelector('.container');
@@ -456,14 +470,17 @@ var App = (function() {
       surveyContainer.style.zIndex = '100';
     }
 
-    // Remove survey-body class and show login UNDERNEATH (instant, no fade)
+    // Remove survey-body class and show login UNDERNEATH (starts at opacity 0)
     document.body.classList.remove('survey-body');
     elements.loginView.style.display = '';
-    elements.loginView.style.opacity = '1';
-    elements.loginView.classList.add('view-active');
 
-    // Force reflow
+    // Force reflow so browser registers the element at opacity 0
     void elements.loginView.offsetWidth;
+
+    // Set transition to match survey fade-out, then trigger fade-in
+    // This creates a crossfade: login fades in while survey fades out
+    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.loginView.classList.add('view-active');
 
     // Fade OUT survey container (reveals login underneath)
     if (surveyContainer) {
@@ -489,6 +506,9 @@ var App = (function() {
         surveyContainer.style.opacity = '';
         surveyContainer.style.transition = '';
       }
+
+      // Reset login's inline transition (return to CSS default for future use)
+      elements.loginView.style.transition = '';
 
       currentView = 'login';
       document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
