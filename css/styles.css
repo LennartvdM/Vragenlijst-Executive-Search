@@ -3117,17 +3117,28 @@ h1 {
 
 /* Mobile responsive */
 @media (max-width: 768px) {
-  .preview-info-box {
+  /* Hide bottom preview box on mobile - only show top as fixed banner */
+  .preview-info-box-bottom {
+    display: none !important;
+  }
+
+  /* Top preview box becomes fixed banner at top */
+  .preview-info-box-top {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 998;
     padding: 5px 14px;
   }
 
   .preview-info-box-title {
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 1px;
   }
 
   .preview-info-box-subtitle {
-    font-size: 9px;
+    font-size: 8px;
   }
 }
 
