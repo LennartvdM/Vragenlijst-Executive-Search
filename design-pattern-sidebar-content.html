@@ -86,6 +86,7 @@
       flex-direction: column;
       border-radius: var(--container-radius) 0 0 var(--container-radius);
       position: relative;
+      overflow: visible;
       user-select: none;
     }
 
@@ -105,12 +106,50 @@
       margin: 12px -20px;
     }
 
+    /* ==========================================================================
+       Highlighter - Animated background behind active item
+       ========================================================================== */
+    .highlighter {
+      position: absolute;
+      left: -20px;
+      top: 0;
+      right: 8px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 21px 8px 8px 21px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transform: scale(1);
+      transform-origin: right center;
+      transition:
+        top 0.35s ease-in-out,
+        height 0.35s ease-in-out,
+        opacity 0.2s ease,
+        transform 0.2s ease-out,
+        box-shadow 0.2s ease-out;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .highlighter.active {
+      opacity: 1;
+    }
+
+    /* Scale up on hover */
+    .sidebar:has(.nav-item.active:hover) .highlighter {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
     /* Navigation items */
     .sidebar-nav {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 4px;
+      position: relative;
     }
 
     .nav-item {
@@ -121,14 +160,12 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.2s;
+      position: relative;
+      z-index: 1;
     }
 
-    .nav-item:hover {
+    .nav-item:hover:not(.active) {
       background: rgba(255, 255, 255, 0.3);
-    }
-
-    .nav-item.active {
-      background: rgba(255, 255, 255, 0.6);
     }
 
     /* Status indicator */
@@ -143,11 +180,12 @@
       font-size: 10px;
       color: white;
       flex-shrink: 0;
-      transition: background 0.3s;
+      transition: all 0.35s ease-out;
     }
 
     .nav-item.active .status {
       background: var(--teal);
+      transform: translateX(-42px) scale(1.15);
     }
 
     .nav-item.complete .status {
@@ -158,10 +196,12 @@
     .nav-item .label {
       font-size: 13px;
       color: var(--text);
+      transition: all 0.35s ease-out;
     }
 
     .nav-item.active .label {
       font-weight: 600;
+      transform: translateX(-36px);
     }
 
     /* Section header */
@@ -173,6 +213,8 @@
       letter-spacing: 0.5px;
       padding: 12px 12px 6px;
       margin-top: 8px;
+      position: relative;
+      z-index: 1;
     }
 
     /* Footer info */
@@ -180,6 +222,8 @@
       margin-top: auto;
       padding-top: 16px;
       border-top: 1px solid rgba(180, 160, 140, 0.3);
+      position: relative;
+      z-index: 1;
     }
 
     .sidebar-footer .org-name {
@@ -346,34 +390,37 @@
   <div class="container">
     <!-- ====== SIDEBAR ====== -->
     <aside class="sidebar">
+      <!-- Highlighter element - moves behind active item -->
+      <div class="highlighter" id="highlighter"></div>
+
       <h2 class="sidebar-title">Titel Applicatie</h2>
       <div class="sidebar-divider"></div>
 
-      <nav class="sidebar-nav">
-        <div class="nav-item active">
+      <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-item active" data-step="0">
           <span class="status"></span>
           <span class="label">Welkom</span>
         </div>
-        <div class="nav-item complete">
-          <span class="status">✓</span>
+        <div class="nav-item complete" data-step="1">
+          <span class="status">&#10003;</span>
           <span class="label">Stap 1</span>
         </div>
-        <div class="nav-item">
+        <div class="nav-item" data-step="2">
           <span class="status"></span>
           <span class="label">Stap 2</span>
         </div>
 
         <div class="nav-section">Sectie B</div>
 
-        <div class="nav-item">
+        <div class="nav-item" data-step="3">
           <span class="status"></span>
           <span class="label">Stap 3</span>
         </div>
-        <div class="nav-item">
+        <div class="nav-item" data-step="4">
           <span class="status"></span>
           <span class="label">Stap 4</span>
         </div>
-        <div class="nav-item">
+        <div class="nav-item" data-step="5">
           <span class="status"></span>
           <span class="label">Stap 5</span>
         </div>
@@ -418,6 +465,60 @@
       </footer>
     </main>
   </div>
+
+  <script>
+    /* ==========================================================================
+       Highlighter Logic
+       ========================================================================== */
+    const highlighter = document.getElementById('highlighter');
+    const sidebar = document.querySelector('.sidebar');
+    const navItems = document.querySelectorAll('.nav-item');
+    let initialized = false;
+
+    /**
+     * Update highlighter position to match active item
+     */
+    function updateHighlighter() {
+      const activeItem = document.querySelector('.nav-item.active');
+      if (!activeItem || !highlighter || !sidebar) return;
+
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const itemRect = activeItem.getBoundingClientRect();
+      const topPosition = itemRect.top - sidebarRect.top;
+
+      // First time: no animation
+      if (!initialized) {
+        highlighter.style.transition = 'none';
+        highlighter.style.top = topPosition + 'px';
+        highlighter.style.height = itemRect.height + 'px';
+        highlighter.offsetHeight; // Force reflow
+        highlighter.style.transition = '';
+        initialized = true;
+      } else {
+        highlighter.style.top = topPosition + 'px';
+        highlighter.style.height = itemRect.height + 'px';
+      }
+
+      highlighter.classList.add('active');
+    }
+
+    /**
+     * Set active item and update highlighter
+     */
+    function setActiveItem(item) {
+      navItems.forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+      updateHighlighter();
+    }
+
+    // Click handlers for nav items
+    navItems.forEach(item => {
+      item.addEventListener('click', () => setActiveItem(item));
+    });
+
+    // Initialize on load
+    updateHighlighter();
+  </script>
 
 </body>
 </html>
