@@ -276,166 +276,115 @@ body {
 }
 
 /* ==========================================================================
-   Privacy Section - Modern Playful Tooltip Design
+   Privacy Section - Consistent with Form Design Language
    ========================================================================== */
 .privacy-section {
-  margin-top: 24px;
+  margin-top: 20px;
   text-align: center;
 }
 
 .privacy-summary {
   margin: 0;
   font-size: 12px;
-  line-height: 2.2;
+  line-height: 1.6;
   color: var(--text);
 }
 
-/* Floating Chip Buttons */
+/* Chip Buttons - matches option-card hover style */
 .privacy-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px 6px 10px;
-  margin: 4px 2px;
-  background: white;
-  border: none;
+  display: inline-block;
+  padding: 5px 12px;
+  margin: 6px 3px 0;
+  background: var(--cream);
+  border: 2px solid var(--sand-dark);
   border-radius: 100px;
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--terracotta);
   cursor: pointer;
-  box-shadow:
-    0 2px 4px rgba(196, 120, 90, 0.15),
-    0 4px 12px rgba(196, 120, 90, 0.1);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  vertical-align: middle;
-}
-
-.privacy-chip svg {
-  width: 14px;
-  height: 14px;
-  stroke-width: 2.5;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .privacy-chip:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 4px 8px rgba(196, 120, 90, 0.2),
-    0 8px 24px rgba(196, 120, 90, 0.15);
-}
-
-.privacy-chip:hover svg {
-  transform: scale(1.1);
+  border-color: var(--salmon);
+  background: var(--sand-light);
+  transform: translateY(-1px);
 }
 
 .privacy-chip.is-active {
-  background: linear-gradient(135deg, var(--terracotta) 0%, #d4896b 100%);
-  color: white;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow:
-    0 4px 12px rgba(196, 120, 90, 0.3),
-    0 8px 24px rgba(196, 120, 90, 0.2);
+  border-color: var(--terracotta);
+  background: var(--sand-light);
+  box-shadow: 0 4px 12px rgba(196, 120, 90, 0.15);
+  transform: translateY(-2px);
 }
 
-/* Tooltip Cards */
+/* Tooltip Cards - matches info-box style */
 .privacy-tooltip {
   position: fixed;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px) scale(0.96);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(6px);
+  transition: all 0.2s ease;
   pointer-events: none;
 }
 
 .privacy-tooltip.is-active {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
   pointer-events: auto;
 }
 
-.privacy-tooltip.tooltip-below {
-  transform: translateY(-8px) scale(0.96);
-}
-
-.privacy-tooltip.tooltip-below.is-active {
-  transform: translateY(0) scale(1);
-}
-
 .tooltip-card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
+  display: flex;
   width: 280px;
+  background: linear-gradient(135deg, var(--sand-light) 0%, var(--sand) 100%);
+  border-radius: 0 10px 10px 0;
+  overflow: hidden;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.08),
-    0 20px 40px -8px rgba(196, 120, 90, 0.25),
+    0 4px 16px rgba(196, 120, 90, 0.15),
     0 0 0 1px rgba(196, 120, 90, 0.08);
 }
 
-/* Gradient Header */
-.tooltip-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, var(--terracotta) 0%, #d4896b 50%, #e8a384 100%);
-  color: white;
-}
-
-.tooltip-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+/* Left accent bar - like info-box */
+.tooltip-accent {
+  width: 4px;
+  background: linear-gradient(180deg, var(--terracotta) 0%, var(--salmon) 100%);
   flex-shrink: 0;
 }
 
-.tooltip-icon svg {
-  width: 20px;
-  height: 20px;
-  stroke: white;
-  stroke-width: 2;
+.tooltip-inner {
+  flex: 1;
+  padding: 16px 18px;
 }
 
-.tooltip-title h4 {
-  margin: 0;
-  font-size: 15px;
+.tooltip-inner h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 1.2;
-}
-
-.tooltip-title span {
-  font-size: 12px;
-  opacity: 0.85;
-}
-
-/* Body Content */
-.tooltip-body {
-  padding: 16px 20px;
-}
-
-.tooltip-body-text {
-  font-size: 13px;
-  line-height: 1.6;
   color: var(--text);
 }
 
-.tooltip-body-text p {
-  margin: 0 0 10px 0;
+.tooltip-subtitle {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: var(--text-light);
 }
 
-.tooltip-body-text p:last-child {
+.tooltip-inner > p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.tooltip-inner > p:last-of-type {
   margin-bottom: 0;
 }
 
-.tooltip-body-text em {
+.tooltip-inner em {
   color: var(--terracotta);
   font-style: normal;
   font-weight: 500;
@@ -446,12 +395,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(196, 120, 90, 0.1);
   font-size: 13px;
 }
 
-.tooltip-row:last-child {
+.tooltip-row:last-of-type {
   border-bottom: none;
 }
 
@@ -460,60 +409,56 @@ body {
   font-weight: 500;
 }
 
-/* Tags */
+/* Tags - pill style */
 .tooltip-tag {
   display: inline-block;
-  padding: 4px 10px;
-  background: var(--sand);
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 100px;
   font-size: 11px;
   font-weight: 500;
   color: var(--text-light);
 }
 
-.tooltip-tag-action {
-  background: linear-gradient(135deg, rgba(196, 120, 90, 0.1) 0%, rgba(196, 120, 90, 0.05) 100%);
-  color: var(--terracotta);
+/* Note text */
+.tooltip-note {
+  margin: 12px 0 0 0 !important;
+  padding-top: 10px;
+  border-top: 1px solid rgba(196, 120, 90, 0.1);
+  font-size: 12px !important;
+  color: var(--text-light) !important;
+  font-style: italic;
 }
 
-/* Footer */
-.tooltip-footer {
-  padding: 12px 20px;
-  background: var(--sand);
-  font-size: 12px;
-  color: var(--text-light);
-  text-align: center;
-}
-
-/* CTA Button */
-.tooltip-cta {
-  display: flex;
+/* Contact link - matches btn-tertiary */
+.tooltip-link {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 0 16px 16px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, var(--terracotta) 0%, #d4896b 100%);
-  border-radius: 12px;
-  font-size: 13px;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 2px solid var(--terracotta);
+  border-radius: 8px;
+  font-size: 12px;
   font-weight: 600;
-  color: white;
+  color: var(--terracotta);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
-.tooltip-cta:hover {
+.tooltip-link:hover {
+  background: rgba(196, 120, 90, 0.1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(196, 120, 90, 0.3);
 }
 
-.tooltip-cta svg {
-  width: 16px;
-  height: 16px;
+.tooltip-link svg {
+  width: 14px;
+  height: 14px;
   stroke-width: 2;
 }
 
-/* Backdrop */
+/* Backdrop - subtle */
 .popover-backdrop {
   position: fixed;
   inset: 0;
@@ -521,7 +466,7 @@ body {
   background: transparent;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s;
+  transition: opacity 0.15s ease, visibility 0.15s;
 }
 
 .popover-backdrop.is-active {

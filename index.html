@@ -137,81 +137,53 @@
         <div class="privacy-section">
           <p class="privacy-summary">
             Uw gegevens blijven lokaal tot u ze verzendt.
-            <button type="button" class="privacy-chip" data-privacy="storage">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              Opslag
-            </button>
-            <button type="button" class="privacy-chip" data-privacy="legal">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Privacy
-            </button>
-            <button type="button" class="privacy-chip" data-privacy="rights">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
-              Rechten
-            </button>
+            <button type="button" class="privacy-chip" data-privacy="storage">Opslag</button>
+            <button type="button" class="privacy-chip" data-privacy="legal">Privacy</button>
+            <button type="button" class="privacy-chip" data-privacy="rights">Rechten</button>
           </p>
         </div>
 
         <!-- Privacy Tooltips -->
         <div class="privacy-tooltip" id="popover-storage">
           <div class="tooltip-card">
-            <div class="tooltip-header">
-              <div class="tooltip-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              </div>
-              <div class="tooltip-title">
-                <h4>Lokale opslag</h4>
-                <span>Blijft in uw browser</span>
-              </div>
-            </div>
-            <div class="tooltip-body">
+            <div class="tooltip-accent"></div>
+            <div class="tooltip-inner">
+              <h4>Lokale opslag</h4>
+              <p class="tooltip-subtitle">Deze gegevens verlaten uw apparaat niet</p>
               <div class="tooltip-row"><span>Sessie</span><span class="tooltip-tag">24 uur</span></div>
               <div class="tooltip-row"><span>Concept</span><span class="tooltip-tag">Tot verzenden</span></div>
-              <div class="tooltip-row"><span>Archief</span><span class="tooltip-tag">Lokaal</span></div>
+              <div class="tooltip-row"><span>Archief</span><span class="tooltip-tag">Lokaal bewaard</span></div>
+              <p class="tooltip-note">Na verzenden worden uw antwoorden beveiligd opgeslagen bij de beheerder.</p>
             </div>
-            <div class="tooltip-footer">Na verzenden: beveiligd bij beheerder</div>
           </div>
         </div>
 
         <div class="privacy-tooltip" id="popover-legal">
           <div class="tooltip-card">
-            <div class="tooltip-header">
-              <div class="tooltip-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <div class="tooltip-title">
-                <h4>Geen cookiebanner?</h4>
-                <span>Dit is waarom</span>
-              </div>
-            </div>
-            <div class="tooltip-body tooltip-body-text">
-              <p>Alles wat we opslaan is <em>noodzakelijk voor de werking</em>. Geen tracking, geen analytics.</p>
-              <p>De AVG vereist dan geen toestemming — alleen transparantie. Vandaar deze uitleg.</p>
+            <div class="tooltip-accent"></div>
+            <div class="tooltip-inner">
+              <h4>Geen cookiebanner?</h4>
+              <p class="tooltip-subtitle">Dit is waarom</p>
+              <p>Alles wat we opslaan is <em>noodzakelijk voor de werking</em> van dit formulier. Geen tracking, geen analytics, geen advertenties.</p>
+              <p>De AVG vereist dan geen toestemming — alleen transparantie. Vandaar deze uitleg in plaats van een vinkje.</p>
             </div>
           </div>
         </div>
 
         <div class="privacy-tooltip" id="popover-rights">
           <div class="tooltip-card">
-            <div class="tooltip-header">
-              <div class="tooltip-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
-              </div>
-              <div class="tooltip-title">
-                <h4>Uw rechten</h4>
-                <span>Onder de AVG</span>
-              </div>
+            <div class="tooltip-accent"></div>
+            <div class="tooltip-inner">
+              <h4>Uw rechten onder de AVG</h4>
+              <div class="tooltip-row"><span>Inzage</span><span class="tooltip-tag">Opvragen</span></div>
+              <div class="tooltip-row"><span>Correctie</span><span class="tooltip-tag">Aanpassen</span></div>
+              <div class="tooltip-row"><span>Verwijdering</span><span class="tooltip-tag">Wissen</span></div>
+              <div class="tooltip-row"><span>Overdracht</span><span class="tooltip-tag">Exporteren</span></div>
+              <a href="mailto:monitoring@talentnaartop.nl" class="tooltip-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Contact opnemen
+              </a>
             </div>
-            <div class="tooltip-body">
-              <div class="tooltip-row"><span>Inzage</span><span class="tooltip-tag tooltip-tag-action">Opvragen</span></div>
-              <div class="tooltip-row"><span>Correctie</span><span class="tooltip-tag tooltip-tag-action">Aanpassen</span></div>
-              <div class="tooltip-row"><span>Verwijdering</span><span class="tooltip-tag tooltip-tag-action">Wissen</span></div>
-              <div class="tooltip-row"><span>Overdracht</span><span class="tooltip-tag tooltip-tag-action">Exporteren</span></div>
-            </div>
-            <a href="mailto:monitoring@talentnaartop.nl" class="tooltip-cta">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              Contact opnemen
-            </a>
           </div>
         </div>
       </div>
