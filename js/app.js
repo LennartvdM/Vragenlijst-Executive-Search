@@ -442,6 +442,20 @@ var App = (function() {
    */
   function transitionToLogin() {
     var FADE_DURATION = 500;
+    var MOBILE_BREAKPOINT = 768;
+    var isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+    // On mobile, skip animation - just switch views instantly
+    if (isMobile) {
+      document.body.classList.remove('survey-body');
+      elements.surveyView.style.display = 'none';
+      elements.surveyView.classList.remove('view-active');
+      elements.loginView.style.display = '';
+      elements.loginView.classList.add('view-active');
+      currentView = 'login';
+      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
+      return;
+    }
 
     // Make survey fixed so it floats above everything during fade
     var surveyContainer = elements.surveyView.querySelector('.container');
