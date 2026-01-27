@@ -21,6 +21,9 @@ import * as print from './print.js';
  * Initialize the survey module
  */
 function initSurvey() {
+  // Always setup event delegation first so navigation works
+  setupEventDelegation();
+
   const formEl = document.getElementById('monitoringForm');
   if (!formEl) {
     return false;
@@ -41,8 +44,7 @@ function initSurvey() {
   setTimeout(progress.updateAlignmentRig, 50);
   window.addEventListener('resize', progress.updateAlignmentRig);
 
-  // Setup all functionality
-  setupEventDelegation();
+  // Setup remaining functionality
   setupInputListeners();
   setupAutoSave();
   form.loadSavedFormData();
