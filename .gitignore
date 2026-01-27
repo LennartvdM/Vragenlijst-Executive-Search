@@ -4,6 +4,7 @@ package-lock.json
 
 # Build outputs
 dist/
+views/survey-generated.html
 
 # IDE
 .idea/
