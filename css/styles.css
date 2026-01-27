@@ -284,39 +284,97 @@ body {
   margin-top: 16px;
 }
 
-.privacy-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
+.privacy-title {
   font-size: 13px;
+  font-weight: 600;
   color: var(--text);
-  margin-bottom: 8px;
-}
-
-.privacy-header svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  color: var(--terracotta);
+  margin: 0 0 8px 0;
 }
 
 .privacy-intro {
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   line-height: 1.5;
   color: var(--text);
 }
 
+.privacy-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px 0;
+}
+
+/* Privacy data table */
+.privacy-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+
+.privacy-table th,
+.privacy-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.privacy-table th {
+  font-weight: 600;
+  color: var(--text-light);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.privacy-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.privacy-table td:first-child {
+  font-weight: 500;
+}
+
+.privacy-note-inline {
+  margin: 0 0 12px 0;
+  color: var(--text-light);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.privacy-server {
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+/* Legal basis box */
+.privacy-legal {
+  background: rgba(196, 120, 90, 0.08);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.privacy-legal h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--terracotta);
+  margin: 0 0 4px 0;
+}
+
+.privacy-legal p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* Expandable details */
 .privacy-details {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding-top: 8px;
   margin-top: 8px;
-}
-
-.privacy-details:first-of-type {
-  border-top: none;
-  padding-top: 0;
-  margin-top: 0;
 }
 
 .privacy-details summary {
@@ -346,76 +404,13 @@ body {
 }
 
 .privacy-details > p {
-  margin: 8px 0;
+  margin: 8px 0 0 0;
   line-height: 1.5;
   color: var(--text);
 }
 
-.privacy-details ul {
-  margin: 8px 0;
-  padding-left: 4px;
-  list-style: none;
-}
-
-.privacy-details li {
-  position: relative;
-  padding-left: 16px;
-  margin-bottom: 6px;
-  line-height: 1.4;
-}
-
-.privacy-details li::before {
-  content: '•';
-  position: absolute;
-  left: 4px;
+.privacy-details a {
   color: var(--terracotta);
-}
-
-.privacy-details li strong {
-  font-weight: 600;
-}
-
-.privacy-note-inline {
-  margin: 8px 0 0 0;
-  padding: 8px 10px;
-  background: rgba(196, 120, 90, 0.08);
-  border-radius: 4px;
-  color: var(--text-light);
-  font-style: italic;
-  line-height: 1.4;
-}
-
-/* "What we don't do" list with X marks */
-.privacy-not-list {
-  margin: 8px 0;
-  padding-left: 4px;
-}
-
-.privacy-not-list li::before {
-  content: '✗';
-  color: var(--terracotta);
-  font-weight: bold;
-  font-style: normal;
-}
-
-/* Rights definition list */
-.privacy-rights {
-  margin: 8px 0;
-}
-
-.privacy-rights dt {
-  font-weight: 600;
-  color: var(--terracotta);
-  margin-top: 8px;
-}
-
-.privacy-rights dt:first-child {
-  margin-top: 0;
-}
-
-.privacy-rights dd {
-  margin: 2px 0 0 0;
-  line-height: 1.4;
 }
 
 .privacy-contact {
