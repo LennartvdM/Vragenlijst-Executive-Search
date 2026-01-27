@@ -276,224 +276,365 @@ body {
 }
 
 /* ==========================================================================
-   Privacy Disclosure Card - Hierarchical Structure
+   Privacy Disclosure - Sidebar + Content with Deep Hierarchy
    ========================================================================== */
-.privacy-card {
+.privacy-panel {
   display: flex;
   margin-top: 24px;
-  background: linear-gradient(135deg, var(--sand-light) 0%, var(--sand) 100%);
-  border-radius: 0 12px 12px 0;
+  background: var(--cream);
+  border-radius: 16px;
   overflow: hidden;
   box-shadow:
-    0 2px 8px rgba(196, 120, 90, 0.1),
-    0 0 0 1px rgba(196, 120, 90, 0.06);
+    0 4px 24px rgba(139, 90, 60, 0.12),
+    0 0 0 1px rgba(196, 120, 90, 0.08);
+  min-height: 380px;
+  max-height: 460px;
 }
 
-.privacy-card-accent {
-  width: 4px;
-  background: linear-gradient(180deg, var(--terracotta) 0%, var(--salmon) 100%);
-  flex-shrink: 0;
-}
-
-.privacy-card-content {
-  flex: 1;
-  padding: 20px;
-}
-
-/* Header - Primary Level */
-.privacy-card-header {
+/* ==========================================================================
+   Level 1: Sidebar Navigation
+   ========================================================================== */
+.privacy-sidebar {
+  flex: 0 0 48px;
+  padding: 20px 8px;
+  background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: visible;
 }
 
-.privacy-card-icon {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+/* Highlighter - floats behind active marker */
+.privacy-highlighter {
+  position: absolute;
+  left: -12px;
+  top: 0;
+  right: 4px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px 6px 6px 16px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: top 0.3s ease-in-out, opacity 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.privacy-highlighter.active {
+  opacity: 1;
+}
+
+/* Navigation markers */
+.privacy-nav-item {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(196, 120, 90, 0.12);
-  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
 }
 
-.privacy-card-icon svg {
-  width: 20px;
-  height: 20px;
-  stroke: var(--terracotta);
+.nav-marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sand-dark);
+  transition: all 0.3s ease;
 }
 
-.privacy-card-title h3 {
-  margin: 0 0 2px 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
+.privacy-nav-item:hover .nav-marker {
+  background: var(--terracotta);
+  transform: scale(1.2);
 }
 
-.privacy-card-title p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--terracotta);
-  font-weight: 500;
+.privacy-nav-item.active .nav-marker {
+  background: var(--teal);
+  transform: translateX(-10px) scale(1.4);
+  box-shadow: 0 0 8px rgba(124, 197, 192, 0.5);
 }
 
-/* Data Section - Secondary Level */
-.privacy-data-section {
-  margin-bottom: 16px;
+/* ==========================================================================
+   Level 2: Content Area
+   ========================================================================== */
+.privacy-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.privacy-data-label {
-  margin: 0 0 10px 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-light);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* Scrollable content */
+.privacy-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px 16px 20px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--salmon) transparent;
 }
 
-.privacy-data-table {
-  width: 100%;
-  border-collapse: collapse;
+.privacy-scroll::-webkit-scrollbar {
+  width: 4px;
 }
 
-.privacy-data-table tr {
-  border-bottom: 1px solid rgba(196, 120, 90, 0.1);
+.privacy-scroll::-webkit-scrollbar-thumb {
+  background: var(--salmon);
+  border-radius: 2px;
 }
 
-.privacy-data-table tr:last-child {
+/* ==========================================================================
+   Level 3: Sections
+   ========================================================================== */
+.privacy-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(212, 196, 168, 0.25);
+}
+
+.privacy-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
   border-bottom: none;
 }
 
-.privacy-data-table td {
-  padding: 10px 0;
-  font-size: 13px;
+/* Section header */
+.section-header {
+  margin-bottom: 12px;
 }
 
-.privacy-data-item {
+.section-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text);
+  line-height: 1.3;
+}
+
+.section-lead {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: var(--terracotta);
   font-weight: 500;
 }
 
-.privacy-data-detail {
-  text-align: right;
-  color: var(--text-light);
-  font-size: 12px;
-}
-
-/* Legal Section - Tertiary Level (Expandable) */
-.privacy-legal-section {
-  margin-bottom: 16px;
-  border-top: 1px solid rgba(196, 120, 90, 0.12);
-  padding-top: 12px;
-}
-
-.privacy-legal-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 8px 0;
+/* ==========================================================================
+   Level 4: Section Body - nested content
+   ========================================================================== */
+.section-body {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--terracotta);
-  cursor: pointer;
-  list-style: none;
-  transition: color 0.2s ease;
-}
-
-.privacy-legal-toggle::-webkit-details-marker {
-  display: none;
-}
-
-.privacy-legal-toggle:hover {
+  line-height: 1.65;
   color: var(--text);
 }
 
-.privacy-legal-arrow {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  transition: transform 0.25s ease;
-}
-
-.privacy-legal-section[open] .privacy-legal-arrow {
-  transform: rotate(180deg);
-}
-
-.privacy-legal-content {
-  padding-top: 12px;
-}
-
-.privacy-legal-content p {
+.section-body p {
   margin: 0 0 10px 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text);
 }
 
-.privacy-legal-content p:last-child {
+.section-body p:last-child {
   margin-bottom: 0;
 }
 
-.privacy-legal-content strong {
+.section-body em {
   color: var(--terracotta);
-  font-weight: 600;
+  font-style: normal;
+  font-weight: 500;
 }
 
-.privacy-legal-highlight {
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  font-size: 12px !important;
-  color: var(--text-light) !important;
+/* ==========================================================================
+   Level 5: Asides - secondary information
+   ========================================================================== */
+.section-aside {
+  margin: 12px 0;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(124, 197, 192, 0.08) 0%, rgba(124, 197, 192, 0.03) 100%);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
 }
 
-/* Rights Footer - Compact */
-.privacy-rights-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(196, 120, 90, 0.12);
+.section-aside p {
+  margin: 0;
   font-size: 12px;
+  color: var(--text);
+  line-height: 1.6;
 }
 
-.privacy-rights-label {
+.section-footnote {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(212, 196, 168, 0.3);
+}
+
+.section-footnote p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Level 5: Data List - structured info
+   ========================================================================== */
+.data-list {
+  margin: 0 0 12px 0;
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(212, 196, 168, 0.15);
+}
+
+.data-item:last-child {
+  border-bottom: none;
+}
+
+.data-item dt {
+  font-size: 12px;
   font-weight: 600;
   color: var(--text);
 }
 
-.privacy-rights-list {
+.data-item dd {
+  margin: 0;
+  font-size: 11px;
   color: var(--text-light);
-  flex: 1;
+  text-align: right;
+  max-width: 60%;
 }
 
-.privacy-rights-contact {
-  display: inline-flex;
+/* ==========================================================================
+   Level 5: Negation List - what we don't do
+   ========================================================================== */
+.negation-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.negation-list li {
+  position: relative;
+  padding: 4px 0 4px 18px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.negation-list li::before {
+  content: '×';
+  position: absolute;
+  left: 0;
+  color: var(--salmon);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Level 5: Rights Grid
+   ========================================================================== */
+.rights-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.right-item {
+  padding: 5px 10px;
+  background: rgba(124, 197, 192, 0.12);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--teal-dark);
+}
+
+/* ==========================================================================
+   Level 6: Expandable Details - deepest layer
+   ========================================================================== */
+.section-details {
+  margin-top: 12px;
+}
+
+.section-details summary {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  background: transparent;
-  border: 1.5px solid var(--terracotta);
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(212, 196, 168, 0.12);
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  list-style: none;
+  transition: all 0.2s;
+}
+
+.section-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-details summary::before {
+  content: '+';
+  font-size: 12px;
   color: var(--terracotta);
+  transition: transform 0.2s;
+}
+
+.section-details[open] summary::before {
+  content: '−';
+}
+
+.section-details summary:hover {
+  background: rgba(212, 196, 168, 0.2);
+  color: var(--text);
+}
+
+.details-content {
+  padding: 10px 10px 0 10px;
+}
+
+.details-content p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+/* ==========================================================================
+   Footer - persistent contact
+   ========================================================================== */
+.privacy-footer {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(212, 196, 168, 0.25);
+  background: rgba(245, 238, 230, 0.5);
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   text-decoration: none;
-  transition: all 0.2s ease;
+  font-size: 11px;
+  color: var(--text-light);
+  transition: color 0.2s;
 }
 
-.privacy-rights-contact:hover {
-  background: rgba(196, 120, 90, 0.1);
+.footer-contact:hover {
+  color: var(--text);
 }
 
-.privacy-rights-contact svg {
-  width: 12px;
-  height: 12px;
-  stroke: currentColor;
+.footer-contact strong {
+  color: var(--terracotta);
+  font-weight: 600;
 }
 
 /* ==========================================================================
