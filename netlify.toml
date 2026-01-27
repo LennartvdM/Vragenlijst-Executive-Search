@@ -1,6 +1,7 @@
 # Netlify configuration for Monitoring Cultureel Talent naar de Top
 
 [build]
+  command = "npm run build && npm run build:html"
   publish = "."
 
 # Headers for security
