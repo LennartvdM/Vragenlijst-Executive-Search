@@ -276,202 +276,224 @@ body {
 }
 
 /* ==========================================================================
-   Privacy Section - Consistent with Form Design Language
+   Privacy Disclosure Card - Hierarchical Structure
    ========================================================================== */
-.privacy-section {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.privacy-summary {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-/* Chip Buttons - matches option-card hover style */
-.privacy-chip {
-  display: inline-block;
-  padding: 5px 12px;
-  margin: 6px 3px 0;
-  background: var(--cream);
-  border: 2px solid var(--sand-dark);
-  border-radius: 100px;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--terracotta);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.privacy-chip:hover {
-  border-color: var(--salmon);
-  background: var(--sand-light);
-  transform: translateY(-1px);
-}
-
-.privacy-chip.is-active {
-  border-color: var(--terracotta);
-  background: var(--sand-light);
-  box-shadow: 0 4px 12px rgba(196, 120, 90, 0.15);
-  transform: translateY(-2px);
-}
-
-/* Tooltip Cards - matches info-box style */
-.privacy-tooltip {
-  position: fixed;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition: all 0.2s ease;
-  pointer-events: none;
-}
-
-.privacy-tooltip.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.tooltip-card {
+.privacy-card {
   display: flex;
-  width: 280px;
+  margin-top: 24px;
   background: linear-gradient(135deg, var(--sand-light) 0%, var(--sand) 100%);
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 12px 12px 0;
   overflow: hidden;
   box-shadow:
-    0 4px 16px rgba(196, 120, 90, 0.15),
-    0 0 0 1px rgba(196, 120, 90, 0.08);
+    0 2px 8px rgba(196, 120, 90, 0.1),
+    0 0 0 1px rgba(196, 120, 90, 0.06);
 }
 
-/* Left accent bar - like info-box */
-.tooltip-accent {
+.privacy-card-accent {
   width: 4px;
   background: linear-gradient(180deg, var(--terracotta) 0%, var(--salmon) 100%);
   flex-shrink: 0;
 }
 
-.tooltip-inner {
+.privacy-card-content {
   flex: 1;
-  padding: 16px 18px;
+  padding: 20px;
 }
 
-.tooltip-inner h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
+/* Header - Primary Level */
+.privacy-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.privacy-card-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(196, 120, 90, 0.12);
+  border-radius: 10px;
+}
+
+.privacy-card-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--terracotta);
+}
+
+.privacy-card-title h3 {
+  margin: 0 0 2px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.privacy-card-title p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--terracotta);
+  font-weight: 500;
+}
+
+/* Data Section - Secondary Level */
+.privacy-data-section {
+  margin-bottom: 16px;
+}
+
+.privacy-data-label {
+  margin: 0 0 10px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.privacy-data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.privacy-data-table tr {
+  border-bottom: 1px solid rgba(196, 120, 90, 0.1);
+}
+
+.privacy-data-table tr:last-child {
+  border-bottom: none;
+}
+
+.privacy-data-table td {
+  padding: 10px 0;
+  font-size: 13px;
+}
+
+.privacy-data-item {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.privacy-data-detail {
+  text-align: right;
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+/* Legal Section - Tertiary Level (Expandable) */
+.privacy-legal-section {
+  margin-bottom: 16px;
+  border-top: 1px solid rgba(196, 120, 90, 0.12);
+  padding-top: 12px;
+}
+
+.privacy-legal-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--terracotta);
+  cursor: pointer;
+  list-style: none;
+  transition: color 0.2s ease;
+}
+
+.privacy-legal-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.privacy-legal-toggle:hover {
+  color: var(--text);
+}
+
+.privacy-legal-arrow {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.privacy-legal-section[open] .privacy-legal-arrow {
+  transform: rotate(180deg);
+}
+
+.privacy-legal-content {
+  padding-top: 12px;
+}
+
+.privacy-legal-content p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.privacy-legal-content p:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-legal-content strong {
+  color: var(--terracotta);
+  font-weight: 600;
+}
+
+.privacy-legal-highlight {
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  font-size: 12px !important;
+  color: var(--text-light) !important;
+}
+
+/* Rights Footer - Compact */
+.privacy-rights-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(196, 120, 90, 0.12);
+  font-size: 12px;
+}
+
+.privacy-rights-label {
   font-weight: 600;
   color: var(--text);
 }
 
-.tooltip-subtitle {
-  margin: 0 0 12px 0;
-  font-size: 12px;
+.privacy-rights-list {
   color: var(--text-light);
+  flex: 1;
 }
 
-.tooltip-inner > p {
-  margin: 0 0 10px 0;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.tooltip-inner > p:last-of-type {
-  margin-bottom: 0;
-}
-
-.tooltip-inner em {
-  color: var(--terracotta);
-  font-style: normal;
-  font-weight: 500;
-}
-
-/* Data Rows */
-.tooltip-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(196, 120, 90, 0.1);
-  font-size: 13px;
-}
-
-.tooltip-row:last-of-type {
-  border-bottom: none;
-}
-
-.tooltip-row > span:first-child {
-  color: var(--text);
-  font-weight: 500;
-}
-
-/* Tags - pill style */
-.tooltip-tag {
-  display: inline-block;
-  padding: 3px 10px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-light);
-}
-
-/* Note text */
-.tooltip-note {
-  margin: 12px 0 0 0 !important;
-  padding-top: 10px;
-  border-top: 1px solid rgba(196, 120, 90, 0.1);
-  font-size: 12px !important;
-  color: var(--text-light) !important;
-  font-style: italic;
-}
-
-/* Contact link - matches btn-tertiary */
-.tooltip-link {
+.privacy-rights-contact {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  padding: 8px 14px;
+  gap: 5px;
+  padding: 6px 12px;
   background: transparent;
-  border: 2px solid var(--terracotta);
-  border-radius: 8px;
-  font-size: 12px;
+  border: 1.5px solid var(--terracotta);
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--terracotta);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
-.tooltip-link:hover {
+.privacy-rights-contact:hover {
   background: rgba(196, 120, 90, 0.1);
-  transform: translateY(-1px);
 }
 
-.tooltip-link svg {
-  width: 14px;
-  height: 14px;
-  stroke-width: 2;
-}
-
-/* Backdrop - subtle */
-.popover-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  background: transparent;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s ease, visibility 0.15s;
-}
-
-.popover-backdrop.is-active {
-  opacity: 1;
-  visibility: visible;
+.privacy-rights-contact svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
 }
 
 /* ==========================================================================
