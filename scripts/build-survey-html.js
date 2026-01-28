@@ -39,22 +39,35 @@ function renderLikertTable(likert) {
 }
 
 function renderRadioCards(field) {
-  const cards = field.options.map(opt => `
+  // Get trigger value for conditional - default to 'Ja' if not specified
+  const triggerValue = field.conditional?.trigger || 'Ja';
+
+  let conditionalHtml = '';
+  if (field.conditional) {
+    conditionalHtml = `
+            <div class="conditional" id="conditional-${field.name}">
+              ${field.conditional.fields.map(f => renderField(f)).join('')}
+            </div>`;
+  }
+
+  // Build cards with conditional inserted after the triggering option
+  const cards = field.options.map(opt => {
+    let cardHtml = `
             <label class="option-card">
               <input type="radio" name="${field.name}" value="${opt.value}">
               <div class="option-content">
                 <h3>${opt.label}</h3>${opt.description ? `
                 <p>${opt.description}</p>` : ''}
               </div>
-            </label>`).join('');
+            </label>`;
 
-  let conditionalHtml = '';
-  if (field.conditional) {
-    conditionalHtml = `
-          <div class="conditional" id="conditional-${field.name}">
-            ${field.conditional.fields.map(f => renderField(f)).join('')}
-          </div>`;
-  }
+    // Insert conditional directly after the triggering option (e.g., "Ja")
+    if (field.conditional && opt.value === triggerValue) {
+      cardHtml += conditionalHtml;
+    }
+
+    return cardHtml;
+  }).join('');
 
   return `
           <div class="question-header" id="header-${field.name}">${field.label ? `
@@ -62,7 +75,7 @@ function renderRadioCards(field) {
             <button type="button" class="reset-btn" data-action="resetGroup" data-name="${field.name}" title="Wis selectie">↺</button>
           </div>
           <div class="option-cards">${cards}
-          </div>${conditionalHtml}`;
+          </div>`;
 }
 
 function renderField(field) {
@@ -268,7 +281,6 @@ ${SURVEY_STEPS.map(renderStep).join('\n')}
     </div>
 
     <div class="content-footer">
-      <div class="progress-dots" id="progressDots"></div>
       <div class="nav-row">
         <div class="preview-info-box preview-info-box-bottom" id="previewInfoBoxBottom">
           <p class="preview-info-box-title">Inkijkexemplaar</p>
@@ -280,6 +292,7 @@ ${SURVEY_STEPS.map(renderStep).join('\n')}
           <button type="button" class="btn btn-primary" id="btnNext" data-action="nextStep">Volgende</button>
         </div>
       </div>
+      <div class="progress-dots" id="progressDots"></div>
     </div>
   </div>
 </div>
