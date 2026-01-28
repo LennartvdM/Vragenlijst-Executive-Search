@@ -294,9 +294,9 @@ ${SURVEY_STEPS.map(renderStep).join('\n')}
           <p class="preview-info-box-subtitle">Ingevulde gegevens worden niet verstuurd</p>
         </div>
         <div class="nav-buttons" id="navButtons">
-          <button type="button" class="btn btn-secondary" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
-          <button type="button" class="btn btn-tertiary" id="btnGoToReview" data-action="goToReview" style="display:none;">Ga naar controle</button>
-          <button type="button" class="btn btn-primary" id="btnNext" data-action="nextStep">Volgende</button>
+          <button type="button" class="btn btn-secondary btn-small" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
+          <button type="button" class="btn btn-tertiary btn-small" id="btnGoToReview" data-action="goToReview" style="display:none;">Controle</button>
+          <button type="button" class="btn btn-primary btn-small" id="btnNext" data-action="nextStep">Volgende</button>
         </div>
       </div>
       <div class="progress-dots progress-dots-bottom" id="progressDots"></div>
