@@ -1,8 +1,8 @@
 /**
- * Privacy Panel - Expandable Overlay Component
+ * Privacy Panel - Hover Popover Component
  *
- * A compact door that expands into generous overlay panels.
- * Navigation replaces content (no stacking).
+ * A compact door that expands into a card with hover-based popovers.
+ * Based on a "kamer" (room) metaphor with inline triggers.
  */
 
 /* ==========================================================================
@@ -17,9 +17,9 @@
   --pp-terracotta-light: #e8a091;
   --pp-text: #4a3728;
   --pp-text-light: #7a6555;
-  --pp-teal: #7cc5c0;
+  --pp-teal: #5aada8;
   --pp-teal-dark: #5aada8;
-  --pp-card-radius: 16px;
+  --pp-card-radius: 14px;
 }
 
 /* ==========================================================================
@@ -29,7 +29,7 @@
   position: relative;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.75;
   color: var(--pp-text);
   margin-top: 24px;
   -webkit-font-smoothing: antialiased;
@@ -42,450 +42,312 @@
 }
 
 /* ==========================================================================
-   De Deur - Compact trigger (always visible)
+   De Deur - Compact trigger (always visible initially)
    ========================================================================== */
 .pp-door {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: stretch;
   background: var(--pp-cream);
   border-radius: var(--pp-card-radius);
+  padding: 28px 32px;
   box-shadow:
-    0 2px 12px rgba(139, 90, 60, 0.1),
-    0 0 0 1px rgba(196, 120, 90, 0.1);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease, opacity 0.3s ease;
+    0 2px 12px rgba(139, 90, 60, 0.08),
+    0 0 0 1px rgba(196, 120, 90, 0.08);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.pp-door .pp-card-content {
-  flex: 1;
-  padding: 20px 16px 20px 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.pp-door:hover {
+  box-shadow:
+    0 4px 20px rgba(139, 90, 60, 0.12),
+    0 0 0 1px rgba(196, 120, 90, 0.15);
 }
 
 .pp-door h3 {
-  margin: 0;
+  margin: 0 0 4px 0;
   font-size: 15px;
   font-weight: 700;
   color: var(--pp-text);
-  line-height: 1.3;
 }
 
-.pp-lead {
-  margin: 6px 0 0 0;
+.pp-door .pp-lead {
+  margin: 0;
   font-size: 13px;
   color: var(--pp-terracotta);
   font-weight: 500;
 }
 
-/* Trigger button */
-.pp-trigger {
-  flex-shrink: 0;
-  width: 56px;
-  background: linear-gradient(135deg, rgba(196, 120, 90, 0.12) 0%, rgba(196, 120, 90, 0.06) 100%);
-  border: none;
-  border-left: 1px solid rgba(196, 120, 90, 0.15);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-}
-
-.pp-trigger:hover {
-  background: linear-gradient(135deg, rgba(196, 120, 90, 0.2) 0%, rgba(196, 120, 90, 0.12) 100%);
-}
-
-.pp-trigger:focus {
-  outline: none;
-}
-
-.pp-trigger:focus-visible {
-  outline: 2px solid var(--pp-teal);
-  outline-offset: -2px;
-}
-
-.pp-trigger-icon {
-  width: 24px;
-  height: 24px;
-  position: relative;
-}
-
-.pp-trigger-icon::before,
-.pp-trigger-icon::after {
-  content: '';
-  position: absolute;
-  background: var(--pp-terracotta);
-  border-radius: 1.5px;
-  transition: transform 0.2s ease;
-}
-
-.pp-trigger-icon::before {
-  width: 12px;
-  height: 2.5px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-75%, -5px) rotate(45deg);
-}
-
-.pp-trigger-icon::after {
-  width: 12px;
-  height: 2.5px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-75%, 2px) rotate(-45deg);
-}
-
-.pp-trigger:hover .pp-trigger-icon::before {
-  transform: translate(-60%, -5px) rotate(45deg);
-}
-
-.pp-trigger:hover .pp-trigger-icon::after {
-  transform: translate(-60%, 2px) rotate(-45deg);
-}
-
-/* Door fades when overlay is open */
-.privacy-panel.has-open .pp-door {
-  opacity: 0.4;
-  pointer-events: none;
+.pp-door.is-open {
+  display: none;
 }
 
 /* ==========================================================================
-   Room Panels - Large centered overlays
+   Kamer (Room) - Main expanded card
    ========================================================================== */
-.pp-room {
-  position: absolute;
-  z-index: 10;
-
-  /* Expand beyond door: negative margins for more space */
-  top: -20px;
-  left: -20px;
-  right: -20px;
-
-  /* Generous sizing */
-  min-height: 320px;
-  max-height: 520px;
-
+.pp-kamer {
+  display: none;
   background: var(--pp-cream);
   border-radius: var(--pp-card-radius);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  /* Hidden state - scale from center-bottom */
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(0.9) translateY(20px);
-  transform-origin: center bottom;
-
-  transition:
-    opacity 0.25s ease,
-    visibility 0.25s ease,
-    transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
-}
-
-/* Open state */
-.pp-room.is-open {
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1) translateY(0);
+  padding: 36px 40px;
   box-shadow:
-    0 20px 60px rgba(139, 90, 60, 0.2),
-    0 8px 24px rgba(139, 90, 60, 0.12),
-    0 0 0 1px rgba(196, 120, 90, 0.1);
+    0 4px 24px rgba(139, 90, 60, 0.1),
+    0 0 0 1px rgba(196, 120, 90, 0.08);
+  position: relative;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--pp-text);
+  overflow: visible;
 }
 
-/* Room content wrapper */
-.pp-room .pp-card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 28px 28px 24px;
-  overflow: hidden;
+.pp-kamer.is-open {
+  display: block;
+  animation: ppFadeIn 0.25s ease;
 }
 
-/* ==========================================================================
-   Close Button
-   ========================================================================== */
-.pp-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  background: rgba(245, 230, 211, 0.9);
-  border: 1px solid rgba(212, 196, 168, 0.4);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  z-index: 5;
+@keyframes ppFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.pp-close::before,
-.pp-close::after {
+/* Safe zone under the card for mouse tracking */
+.pp-kamer::after {
   content: '';
   position: absolute;
-  width: 14px;
-  height: 2px;
-  background: var(--pp-text-light);
-  border-radius: 1px;
-  transition: background 0.2s, transform 0.2s;
+  left: 0;
+  right: 0;
+  bottom: -60px;
+  height: 60px;
 }
 
-.pp-close::before { transform: rotate(45deg); }
-.pp-close::after { transform: rotate(-45deg); }
-
-.pp-close:hover {
-  background: rgba(232, 160, 145, 0.4);
-  border-color: rgba(196, 120, 90, 0.4);
-  transform: scale(1.05);
+.pp-kamer h3 {
+  margin: 0 0 16px 0;
+  font-size: 17px;
+  font-weight: 700;
 }
 
-.pp-close:hover::before,
-.pp-close:hover::after {
-  background: var(--pp-terracotta);
+.pp-kamer p {
+  margin-bottom: 14px;
 }
 
-.pp-close:focus { outline: none; }
-.pp-close:focus-visible {
-  outline: 2px solid var(--pp-teal);
-  outline-offset: 2px;
+.pp-kamer p:last-child {
+  margin-bottom: 0;
+}
+
+/* Blur effect when popover is active */
+.pp-kamer.has-popover .pp-kamer-content {
+  filter: blur(2px);
+  opacity: 0.6;
+  pointer-events: none;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.pp-kamer-content {
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+/* Hide the original trigger when popover is open */
+.pp-kamer.has-popover .pp-kamer-content .pp-trigger-inline {
+  opacity: 0;
+}
+
+/* Keep trigger area visible and interactive when popover is open */
+.pp-kamer.has-popover .pp-trigger-area {
+  filter: none;
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+  z-index: 101;
 }
 
 /* ==========================================================================
-   Room Header
+   Trigger Area - Navigation links section
    ========================================================================== */
-.pp-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-right: 44px;
+.pp-trigger-area {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--pp-sand);
 }
 
-.pp-room-label {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, var(--pp-teal) 0%, var(--pp-teal-dark) 100%);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.pp-trigger-area p {
+  margin-bottom: 8px;
 }
 
-.pp-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--pp-text);
-}
-
-/* ==========================================================================
-   Room Body - Scrollable content
-   ========================================================================== */
-.pp-body {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 8px;
-  margin-right: -8px;
-  font-size: 14px;
-  line-height: 1.7;
-
-  scrollbar-width: thin;
-  scrollbar-color: var(--pp-sand-dark) transparent;
-}
-
-.pp-body::-webkit-scrollbar { width: 5px; }
-.pp-body::-webkit-scrollbar-thumb {
-  background: var(--pp-sand-dark);
-  border-radius: 3px;
-}
-
-.pp-body p {
-  margin: 0 0 14px 0;
-}
-
-.pp-body p:last-child {
+.pp-trigger-area p:last-child {
   margin-bottom: 0;
 }
 
 /* ==========================================================================
-   Code Tags
+   Trigger - Inline link that opens popover
    ========================================================================== */
-.pp-body code {
-  background: rgba(212, 196, 168, 0.35);
-  padding: 3px 7px;
-  border-radius: 5px;
-  font-family: 'SF Mono', Monaco, 'Fira Code', monospace;
+.pp-trigger-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.pp-trigger-inline {
+  color: var(--pp-terracotta);
+  font-weight: 600;
+  border-bottom: 1px dashed var(--pp-terracotta);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pp-trigger-inline:hover {
+  border-bottom-style: solid;
+}
+
+.pp-trigger-inline.is-active {
+  color: var(--pp-text);
+  border-bottom-color: var(--pp-text);
+  border-bottom-style: solid;
+}
+
+/* ==========================================================================
+   Trigger Clone - Fixed position copy of inline trigger
+   ========================================================================== */
+.pp-trigger-clone {
+  position: fixed;
+  z-index: 101;
+  color: var(--pp-terracotta);
+  font-weight: 600;
+  border-bottom: 1px dashed var(--pp-terracotta);
+  cursor: pointer;
+  user-select: none;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  display: none;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.pp-trigger-clone:hover {
+  border-bottom-style: solid;
+}
+
+.pp-trigger-clone.is-visible {
+  display: inline;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Popover - Floating info panel
+   ========================================================================== */
+.pp-popover {
+  position: fixed;
+  width: 360px;
+  background: var(--pp-cream);
+  border-radius: var(--pp-card-radius);
+  padding: 28px 32px;
+  box-shadow:
+    0 8px 32px rgba(74, 55, 40, 0.22),
+    0 0 0 1px rgba(196, 120, 90, 0.12);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--pp-text);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.pp-popover.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Arrow pointing down (default, for popovers above triggers) */
+.pp-popover::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 40px;
+  width: 16px;
+  height: 16px;
+  background: var(--pp-cream);
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 4px rgba(74, 55, 40, 0.05);
+}
+
+/* Arrow pointing left (for popovers to the right of inline triggers) */
+.pp-popover.arrow-left::after {
+  bottom: auto;
+  top: 50%;
+  transform: rotate(45deg) translateY(-50%);
+  left: -8px;
+  right: auto;
+}
+
+.pp-popover h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.pp-popover p {
+  margin-bottom: 12px;
+}
+
+.pp-popover p:last-child {
+  margin-bottom: 0;
+}
+
+.pp-popover code {
+  background: rgba(212, 196, 168, 0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace;
   font-size: 0.85em;
   color: var(--pp-terracotta);
 }
 
-/* ==========================================================================
-   Details/Accordion (Nest)
-   ========================================================================== */
-.pp-details {
-  margin: 18px 0;
-  border: 1px solid rgba(212, 196, 168, 0.3);
-  border-radius: 10px;
-  overflow: hidden;
+.pp-popover a {
+  color: var(--pp-terracotta);
+  font-weight: 500;
+  text-decoration: none;
 }
 
-.pp-details summary {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  background: rgba(245, 230, 211, 0.5);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--pp-text);
-  cursor: pointer;
-  list-style: none;
-  transition: background 0.2s;
+.pp-popover a:hover {
+  text-decoration: underline;
 }
-
-.pp-details summary::-webkit-details-marker { display: none; }
-
-.pp-details summary::before {
-  content: '+';
-  width: 20px;
-  height: 20px;
-  background: var(--pp-terracotta);
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 700;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.pp-details[open] summary::before { content: '−'; }
-
-.pp-details summary:hover {
-  background: rgba(245, 230, 211, 0.8);
-}
-
-.pp-details-content {
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.6);
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--pp-text-light);
-}
-
-.pp-details-content p {
-  margin: 0 0 10px 0;
-}
-
-.pp-details-content p:last-child { margin-bottom: 0; }
 
 /* ==========================================================================
-   Rights Grid
+   Popover Safe Zone - Invisible area around popover
    ========================================================================== */
-.pp-rights {
+.pp-popover-safezone {
+  position: fixed;
+  z-index: 999;
+  display: none;
+  pointer-events: auto;
+}
+
+.pp-popover-safezone.is-visible {
+  display: block;
+}
+
+/* ==========================================================================
+   Popover Backdrop - Optional click-to-close area
+   ========================================================================== */
+.pp-popover-backdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   Rights Tags
+   ========================================================================== */
+.pp-rights-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 16px 0;
+  gap: 6px;
+  margin: 12px 0;
 }
 
-.pp-rights span {
-  padding: 8px 14px;
-  background: rgba(124, 197, 192, 0.18);
-  border-radius: 6px;
+.pp-rights-tags span {
+  padding: 6px 12px;
+  background: rgba(90, 173, 168, 0.15);
+  border-radius: 5px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--pp-teal-dark);
-}
-
-/* ==========================================================================
-   Room Footer
-   ========================================================================== */
-.pp-footer {
-  margin-top: auto;
-  padding-top: 18px;
-  border-top: 1px solid rgba(212, 196, 168, 0.25);
-}
-
-/* Navigation link to next room */
-.pp-nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 14px 18px;
-  background: linear-gradient(135deg, rgba(196, 120, 90, 0.1) 0%, rgba(196, 120, 90, 0.04) 100%);
-  border: 1px solid rgba(196, 120, 90, 0.15);
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--pp-terracotta);
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.pp-nav-link:hover {
-  background: linear-gradient(135deg, rgba(196, 120, 90, 0.18) 0%, rgba(196, 120, 90, 0.1) 100%);
-  border-color: rgba(196, 120, 90, 0.3);
-  transform: translateX(3px);
-}
-
-.pp-nav-link:focus { outline: none; }
-.pp-nav-link:focus-visible {
-  outline: 2px solid var(--pp-teal);
-  outline-offset: 2px;
-}
-
-.pp-nav-arrow {
-  font-size: 18px;
-  transition: transform 0.2s;
-}
-
-.pp-nav-link:hover .pp-nav-arrow {
-  transform: translateX(5px);
-}
-
-/* Contact link in footer */
-.pp-contact {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  font-size: 13px;
-  color: var(--pp-text-light);
-  transition: color 0.2s;
-}
-
-.pp-contact:hover { color: var(--pp-text); }
-
-.pp-contact strong {
-  color: var(--pp-terracotta);
-  font-weight: 600;
-}
-
-/* Email links in body */
-.pp-body a[href^="mailto:"] {
-  color: var(--pp-terracotta);
-  text-decoration: none;
-  font-weight: 500;
-  border-bottom: 1px dotted var(--pp-terracotta);
-  transition: border-color 0.2s;
-}
-
-.pp-body a[href^="mailto:"]:hover {
-  border-bottom-style: solid;
+  color: var(--pp-teal);
 }

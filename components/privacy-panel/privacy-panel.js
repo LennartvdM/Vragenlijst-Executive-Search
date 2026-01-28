@@ -1,14 +1,16 @@
 /**
- * Privacy Panel - Expandable Overlay Component
+ * Privacy Panel - Hover Popover Component
  *
- * A compact privacy disclosure that expands into larger overlay panels.
- * Navigation between rooms replaces content (no stacking required).
+ * A compact door that expands into a card with hover-based popovers.
+ * Mouse-driven interaction with safe zones and blur effects.
  *
  * Features:
- * - Single overlay at a time (new room replaces previous)
- * - Expand animation towards center
- * - Close button returns to door
- * - Escape key closes overlay
+ * - Door opens to reveal "kamer" (room) on click
+ * - Hover triggers open popovers with information
+ * - Blur effect on main content when popover is active
+ * - Safe zones prevent accidental closing
+ * - Clone trigger for inline links stays visible
+ * - Escape key closes everything
  * - No external dependencies
  */
 
@@ -28,121 +30,324 @@
       return null;
     }
 
-    var trigger = panel.querySelector('.pp-trigger');
-    var rooms = panel.querySelectorAll('.pp-room');
-    var navLinks = panel.querySelectorAll('.pp-nav-link[data-open]');
-    var closeButtons = panel.querySelectorAll('.pp-close[data-close]');
+    // Elements
+    var door = panel.querySelector('.pp-door');
+    var kamer = panel.querySelector('.pp-kamer');
+    var triggers = panel.querySelectorAll('.pp-trigger-inline[data-pop]');
+    var popovers = panel.querySelectorAll('.pp-popover');
+    var triggerClone = panel.querySelector('.pp-trigger-clone');
+    var popoverSafezone = panel.querySelector('.pp-popover-safezone');
+    var backdrop = panel.querySelector('.pp-popover-backdrop');
+    var triggerArea = panel.querySelector('.pp-trigger-area');
 
-    // State: single active room (no stacking)
-    var activeRoom = null;
+    // Find inline trigger (in kamer-content, not trigger-area)
+    var inlineTrigger = panel.querySelector('.pp-kamer-content .pp-trigger-inline[data-pop]');
+
+    // Timers
+    var closeTimeout = null;
+    var popoverCloseTimeout = null;
+
+    // State
+    var activePopover = null;
 
     /**
-     * Open a room (closes any currently open room first)
+     * Close all popovers and reset state
      */
-    function openRoom(roomId) {
-      var room = panel.querySelector('.pp-room[data-panel="' + roomId + '"]');
-      if (!room) return;
+    function closeAllPopovers() {
+      popovers.forEach(function(p) {
+        p.classList.remove('is-open', 'arrow-left');
+      });
+      triggers.forEach(function(t) {
+        t.classList.remove('is-active');
+      });
+      activePopover = null;
+    }
 
-      // Close current room if different
-      if (activeRoom && activeRoom !== roomId) {
-        var currentRoom = panel.querySelector('.pp-room[data-panel="' + activeRoom + '"]');
-        if (currentRoom) {
-          currentRoom.classList.remove('is-open');
-          currentRoom.removeAttribute('tabindex');
+    /**
+     * Hide the trigger clone
+     */
+    function hideClone() {
+      if (triggerClone) {
+        triggerClone.classList.remove('is-visible');
+      }
+    }
+
+    /**
+     * Close everything - popovers and kamer
+     */
+    function closeEverything() {
+      closeAllPopovers();
+      if (kamer) {
+        kamer.classList.remove('has-popover');
+      }
+      hideClone();
+      if (backdrop) {
+        backdrop.classList.remove('is-visible');
+      }
+      if (popoverSafezone) {
+        popoverSafezone.classList.remove('is-visible');
+      }
+    }
+
+    /**
+     * Show clone of inline trigger at its position
+     */
+    function showClone() {
+      if (!inlineTrigger || !triggerClone) return;
+
+      var rect = inlineTrigger.getBoundingClientRect();
+      triggerClone.style.left = rect.left + 'px';
+      triggerClone.style.top = rect.top + 'px';
+      triggerClone.style.width = rect.width + 'px';
+      triggerClone.style.height = rect.height + 'px';
+      triggerClone.classList.add('is-visible');
+    }
+
+    /**
+     * Position the safe zone around a popover
+     */
+    function positionSafezone(pop) {
+      if (!popoverSafezone) return;
+
+      var rect = pop.getBoundingClientRect();
+      var margin = 20;
+      popoverSafezone.style.left = (rect.left - margin) + 'px';
+      popoverSafezone.style.top = (rect.top - margin) + 'px';
+      popoverSafezone.style.width = (rect.width + margin * 2) + 'px';
+      popoverSafezone.style.height = (rect.height + margin * 2) + 'px';
+      popoverSafezone.classList.add('is-visible');
+    }
+
+    /**
+     * Position popover relative to trigger
+     */
+    function positionPopover(trigger, pop) {
+      var rect = trigger.getBoundingClientRect();
+      var isInlineLink = trigger.closest('.pp-kamer-content') !== null;
+
+      // Temporarily show to measure
+      pop.style.visibility = 'hidden';
+      pop.style.display = 'block';
+      var popHeight = pop.offsetHeight;
+      var popWidth = 360;
+      pop.style.display = '';
+      pop.style.visibility = '';
+
+      var left, top;
+
+      if (isInlineLink) {
+        // Position to the right of inline link, vertically centered
+        left = rect.right + 16;
+        top = rect.top + (rect.height / 2) - (popHeight / 2);
+        pop.classList.add('arrow-left');
+      } else {
+        // Position above trigger link, offset to the left
+        left = rect.left - 180;
+        top = rect.top - popHeight - 12;
+        pop.classList.remove('arrow-left');
+      }
+
+      // Viewport bounds
+      if (left + popWidth > window.innerWidth - 16) {
+        left = window.innerWidth - popWidth - 16;
+      }
+      if (left < 16) left = 16;
+      if (top < 16) top = 16;
+
+      pop.style.left = left + 'px';
+      pop.style.top = top + 'px';
+    }
+
+    /**
+     * Start timer to close everything (kamer + popovers)
+     */
+    function startCloseTimer() {
+      closeTimeout = setTimeout(function() {
+        closeEverything();
+        if (kamer) {
+          kamer.classList.remove('is-open');
         }
-      }
-
-      // Open new room
-      activeRoom = roomId;
-      room.classList.add('is-open');
-      panel.classList.add('has-open');
-
-      // Focus for accessibility
-      room.setAttribute('tabindex', '-1');
-      room.focus({ preventScroll: true });
+        if (door) {
+          door.classList.remove('is-open');
+        }
+      }, 150);
     }
 
     /**
-     * Close all rooms (return to door)
+     * Cancel the close timer
      */
-    function closeAll() {
-      if (!activeRoom) return;
-
-      var room = panel.querySelector('.pp-room[data-panel="' + activeRoom + '"]');
-      if (room) {
-        room.classList.remove('is-open');
-        room.removeAttribute('tabindex');
-      }
-
-      activeRoom = null;
-      panel.classList.remove('has-open');
-
-      // Return focus to trigger
-      if (trigger) {
-        trigger.focus({ preventScroll: true });
+    function cancelCloseTimer() {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
       }
     }
 
-    function handleTriggerClick(event) {
-      event.preventDefault();
-      var targetRoom = event.currentTarget.dataset.open;
-      if (targetRoom) {
-        openRoom(targetRoom);
+    /**
+     * Start timer to close just popovers
+     */
+    function startPopoverCloseTimer() {
+      popoverCloseTimeout = setTimeout(function() {
+        closeAllPopovers();
+        if (kamer) {
+          kamer.classList.remove('has-popover');
+        }
+        hideClone();
+        if (popoverSafezone) {
+          popoverSafezone.classList.remove('is-visible');
+        }
+      }, 100);
+    }
+
+    /**
+     * Cancel popover close timer
+     */
+    function cancelPopoverCloseTimer() {
+      if (popoverCloseTimeout) {
+        clearTimeout(popoverCloseTimeout);
+        popoverCloseTimeout = null;
       }
     }
 
-    function handleNavLinkClick(event) {
-      event.preventDefault();
-      var targetRoom = event.currentTarget.dataset.open;
-      if (targetRoom) {
-        openRoom(targetRoom);
+    /**
+     * Open a popover for a trigger
+     */
+    function openPopover(trigger) {
+      var popId = 'pp-pop-' + trigger.dataset.pop;
+      var pop = panel.querySelector('#' + popId);
+      if (!pop) return;
+
+      closeAllPopovers();
+      if (popoverSafezone) {
+        popoverSafezone.classList.remove('is-visible');
       }
-    }
 
-    function handleCloseClick(event) {
-      event.preventDefault();
-      closeAll();
-    }
-
-    function handleKeydown(event) {
-      if (event.key === 'Escape' && activeRoom) {
-        event.preventDefault();
-        closeAll();
+      trigger.classList.add('is-active');
+      if (kamer) {
+        kamer.classList.add('has-popover');
       }
+      if (backdrop) {
+        backdrop.classList.add('is-visible');
+      }
+
+      requestAnimationFrame(function() {
+        showClone();
+        positionPopover(trigger, pop);
+        pop.classList.add('is-open');
+        activePopover = pop;
+
+        // Position safezone after popover is visible
+        requestAnimationFrame(function() {
+          positionSafezone(pop);
+        });
+      });
     }
 
-    // Event listeners
-    if (trigger) {
-      trigger.addEventListener('click', handleTriggerClick);
+    // Door click handler
+    if (door) {
+      door.addEventListener('click', function() {
+        door.classList.add('is-open');
+        if (kamer) {
+          kamer.classList.add('is-open');
+        }
+      });
     }
 
-    navLinks.forEach(function(link) {
-      link.addEventListener('click', handleNavLinkClick);
+    // Backdrop click handler
+    if (backdrop) {
+      backdrop.addEventListener('click', function() {
+        closeEverything();
+      });
+    }
+
+    // Kamer mouse handlers
+    if (kamer) {
+      kamer.addEventListener('mouseenter', cancelCloseTimer);
+      kamer.addEventListener('mouseleave', startCloseTimer);
+    }
+
+    // Safe zone handlers for popovers and related elements
+    var popoverSafeZones = [triggerClone, popoverSafezone].filter(Boolean);
+    popovers.forEach(function(p) {
+      popoverSafeZones.push(p);
     });
 
-    closeButtons.forEach(function(btn) {
-      btn.addEventListener('click', handleCloseClick);
+    popoverSafeZones.forEach(function(zone) {
+      if (!zone) return;
+      zone.addEventListener('mouseenter', function() {
+        cancelCloseTimer();
+        cancelPopoverCloseTimer();
+      });
+      zone.addEventListener('mouseleave', startPopoverCloseTimer);
     });
 
-    panel.addEventListener('keydown', handleKeydown);
+    // Trigger area handlers
+    if (triggerArea) {
+      triggerArea.addEventListener('mouseenter', function() {
+        cancelCloseTimer();
+        cancelPopoverCloseTimer();
+      });
+      triggerArea.addEventListener('mouseleave', function(e) {
+        var toElement = e.relatedTarget;
+        if (toElement && (toElement.closest('.pp-popover') || toElement.closest('.pp-popover-safezone'))) {
+          return;
+        }
+        startPopoverCloseTimer();
+      });
+    }
 
+    // Trigger hover handlers
+    triggers.forEach(function(trigger) {
+      trigger.addEventListener('mouseenter', function() {
+        openPopover(trigger);
+      });
+    });
+
+    // Clone hover handler
+    if (triggerClone && inlineTrigger) {
+      triggerClone.addEventListener('mouseenter', function() {
+        openPopover(inlineTrigger);
+      });
+    }
+
+    // Escape key handler
+    function handleKeydown(e) {
+      if (e.key === 'Escape') {
+        closeEverything();
+      }
+    }
+    document.addEventListener('keydown', handleKeydown);
+
+    // Mark as initialized
     panel.dataset.privacyPanelInitialized = 'true';
 
     return {
-      open: function(roomId) { openRoom(roomId); },
-      close: function() { closeAll(); },
-      getActiveRoom: function() { return activeRoom; },
-      isOpen: function() { return activeRoom !== null; },
+      open: function() {
+        if (door) {
+          door.classList.add('is-open');
+        }
+        if (kamer) {
+          kamer.classList.add('is-open');
+        }
+      },
+      close: function() {
+        closeEverything();
+        if (kamer) {
+          kamer.classList.remove('is-open');
+        }
+        if (door) {
+          door.classList.remove('is-open');
+        }
+      },
+      isOpen: function() {
+        return kamer && kamer.classList.contains('is-open');
+      },
+      getActivePopover: function() {
+        return activePopover ? activePopover.id : null;
+      },
       destroy: function() {
-        if (trigger) trigger.removeEventListener('click', handleTriggerClick);
-        navLinks.forEach(function(link) {
-          link.removeEventListener('click', handleNavLinkClick);
-        });
-        closeButtons.forEach(function(btn) {
-          btn.removeEventListener('click', handleCloseClick);
-        });
-        panel.removeEventListener('keydown', handleKeydown);
-        closeAll();
+        document.removeEventListener('keydown', handleKeydown);
+        closeEverything();
         delete panel.dataset.privacyPanelInitialized;
       }
     };
@@ -177,14 +382,19 @@
     },
 
     destroyAll: function() {
-      this.instances.forEach(function(instance) { instance.destroy(); });
+      this.instances.forEach(function(instance) {
+        instance.destroy();
+      });
       this.instances = [];
     }
   };
 
+  // Auto-initialize on DOMContentLoaded
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { PrivacyPanel.init(); });
+      document.addEventListener('DOMContentLoaded', function() {
+        PrivacyPanel.init();
+      });
     } else {
       PrivacyPanel.init();
     }

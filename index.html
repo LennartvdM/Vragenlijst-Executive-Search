@@ -135,104 +135,74 @@
           <li>Beantwoord vragen over diversiteitsbeleid</li>
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
-        <!-- Privacy Disclosure - Stacked Overlay Design -->
+        <!-- Privacy Disclosure - Hover Popover Design -->
         <div class="privacy-panel" id="privacyPanel">
 
-          <!-- De Deur - Base panel (always visible) -->
-          <div class="pp-card pp-door" data-panel="door">
-            <div class="pp-card-content">
+          <!-- De Deur - Base panel (always visible initially) -->
+          <div class="pp-door" data-panel="door">
+            <h3>Waar is de cookiemelding?</h3>
+            <p class="pp-lead">Dat klopt. Die is er niet.</p>
+          </div>
+
+          <!-- Kamer: Het Verhaal -->
+          <div class="pp-kamer" data-panel="kamer">
+            <div class="pp-kamer-content">
               <h3>Waar is de cookiemelding?</h3>
-              <p class="pp-lead">Die is er niet. En dat is geen vergissing.</p>
+              <p>Websites gebruiken cookies om informatie te onthouden tussen bezoeken. Vaak ook om u te volgen, of om te koppelen aan advertentienetwerken. Daar hoort een melding bij, en toestemming.</p>
+              <p class="has-inline-trigger">Wij gebruiken geen cookies. Nul. Uw browser heeft wel een andere opslagplek: <span class="pp-trigger-wrap"><span class="pp-trigger-inline" data-pop="voortgang">localStorage</span></span>. Die is van u, niet van ons. Gegevens daar verlaten uw apparaat niet.</p>
+              <p>Daarom is er geen melding. Er is niets om toestemming voor te vragen.</p>
+              <p>Wilt u het checken? Open Developer Tools &#8594; Application &#8594; Cookies. Die lijst is leeg. Kijk daarna bij Local Storage. Daar staat wat dit formulier onthoudt.</p>
             </div>
-            <button class="pp-trigger" data-open="cookies" aria-label="Lees meer">
-              <span class="pp-trigger-icon"></span>
-            </button>
-          </div>
 
-          <!-- Kamer 1: De cookies -->
-          <div class="pp-card pp-room" data-panel="cookies">
-            <button class="pp-close" data-close aria-label="Sluiten"></button>
-            <div class="pp-card-content">
-              <header class="pp-header">
-                <span class="pp-room-label">1</span>
-                <h3>De cookies</h3>
-              </header>
-              <div class="pp-body">
-                <p>Je vraagt je misschien af waar de cookiemelding is. Die is er niet.</p>
-                <p>Websites gebruiken cookies om informatie te onthouden tussen bezoeken. Vaak ook om je te volgen, of om te koppelen aan advertentienetwerken. Daar hoort een melding bij, en toestemming.</p>
-                <p>Wij gebruiken geen cookies. Nul. Je browser heeft daarnaast een andere opslagplek die localStorage heet. Die is van jou, niet van ons. Gegevens in localStorage verlaten je apparaat niet.</p>
-                <p>Daarom is er geen melding. Er is niets om toestemming voor te vragen.</p>
+            <div class="pp-trigger-area">
+              <p>
+                <span class="pp-trigger-wrap">
+                  <span class="pp-trigger-inline" data-pop="verzenden">Wat gebeurt er als u op verzenden klikt?</span>
+                </span>
+              </p>
+              <p>
+                <span class="pp-trigger-wrap">
+                  <span class="pp-trigger-inline" data-pop="rechten">Wat kunt u doen met uw gegevens?</span>
+                </span>
+              </p>
+            </div>
 
-                <details class="pp-details">
-                  <summary>Je voortgang</summary>
-                  <div class="pp-details-content">
-                    <p>Dit formulier onthoudt waar je was. Als je halverwege stopt en morgen terugkomt, zijn je antwoorden er nog.</p>
-                    <p>Dat werkt via localStorage — een stukje opslagruimte dat bij jouw apparaat hoort. Wij zetten je antwoorden daar neer onder een sleutel die begint met <code>cttt_</code>. Ze blijven daar tot je ze verstuurt of zelf verwijdert.</p>
-                    <p>Wij zien die opslag niet. Het is alsof je een kladblok op je bureau hebt liggen. Wij staan niet in je kantoor.</p>
-                  </div>
-                </details>
+            <!-- Popovers -->
+            <div class="pp-popover" id="pp-pop-voortgang">
+              <h4>Uw voortgang</h4>
+              <p>Dit formulier onthoudt waar u was. Als u halverwege stopt en morgen terugkomt, zijn uw antwoorden er nog.</p>
+              <p>Dat werkt via localStorage — een stukje opslagruimte dat bij uw apparaat hoort. Wij zetten uw antwoorden daar neer onder een sleutel die begint met <code>cttt_</code>.</p>
+              <p>Wij zien die opslag niet. Het is alsof u een kladblok op uw bureau heeft liggen. Wij staan niet in uw kantoor.</p>
+            </div>
+
+            <div class="pp-popover" id="pp-pop-verzenden">
+              <h4>Het verzenden</h4>
+              <p>Tot nu toe bestaan uw antwoorden alleen op uw apparaat. Wij weten niet dat u er bent.</p>
+              <p>Dat verandert wanneer u op verzenden klikt. Uw antwoorden gaan dan versleuteld naar een Google-spreadsheet. Eén keer, één richting. Alleen de onderzoeksbeheerder heeft toegang.</p>
+              <p>Daar stopt het. Niet gedeeld. Niet verkocht. Niet gebruikt om u te profileren.</p>
+              <p>Na verzending krijgt u een kopie in uw browser. Die blijft van u.</p>
+            </div>
+
+            <div class="pp-popover" id="pp-pop-rechten">
+              <h4>Uw rechten</h4>
+              <p>Wat lokaal staat is van u. Bekijk het in Developer Tools &#8594; Local Storage. Verwijder het via uw browsergegevens.</p>
+              <p>Wat u heeft verzonden staat op onze server. Daar gelden uw AVG-rechten:</p>
+              <div class="pp-rights-tags">
+                <span>Inzage</span>
+                <span>Correctie</span>
+                <span>Verwijdering</span>
+                <span>Overdracht</span>
               </div>
-              <footer class="pp-footer">
-                <button class="pp-nav-link" data-open="verzenden">
-                  Wat gebeurt er als ik op verzenden klik?
-                  <span class="pp-nav-arrow">→</span>
-                </button>
-              </footer>
+              <p>Mail naar <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a>. Wij reageren binnen dertig dagen.</p>
             </div>
           </div>
 
-          <!-- Kamer 2: Het verzenden -->
-          <div class="pp-card pp-room" data-panel="verzenden">
-            <button class="pp-close" data-close aria-label="Sluiten"></button>
-            <div class="pp-card-content">
-              <header class="pp-header">
-                <span class="pp-room-label">2</span>
-                <h3>Het verzenden</h3>
-              </header>
-              <div class="pp-body">
-                <p>Tot nu toe bestaan je antwoorden alleen op je apparaat. Wij weten niet dat je er bent. We weten niet wat je invult.</p>
-                <p>Dat verandert wanneer je op verzenden klikt.</p>
-                <p>Je antwoorden gaan dan versleuteld naar een Google-spreadsheet. Eén keer, één richting. Alleen de onderzoeksbeheerder heeft toegang. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit.</p>
-                <p>Daar stopt het. Je gegevens worden niet gedeeld met partners. Niet verkocht. Niet gebruikt om je te profileren of advertenties te tonen.</p>
-                <p>Na verzending krijg je een kopie in je browser. Die blijft lokaal, van jou, zo lang je wilt.</p>
-              </div>
-              <footer class="pp-footer">
-                <button class="pp-nav-link" data-open="rechten">
-                  Wat kan ik doen met mijn gegevens?
-                  <span class="pp-nav-arrow">→</span>
-                </button>
-              </footer>
-            </div>
-          </div>
+          <!-- Trigger clone for inline localStorage link -->
+          <span class="pp-trigger-clone" id="triggerClone">localStorage</span>
 
-          <!-- Kamer 3: Je rechten -->
-          <div class="pp-card pp-room" data-panel="rechten">
-            <button class="pp-close" data-close aria-label="Sluiten"></button>
-            <div class="pp-card-content">
-              <header class="pp-header">
-                <span class="pp-room-label">3</span>
-                <h3>Je rechten</h3>
-              </header>
-              <div class="pp-body">
-                <p>Wat lokaal staat is van jou. Je kunt het bekijken in Developer Tools onder Local Storage. Je kunt het verwijderen door je browsergegevens te wissen.</p>
-                <p>Wat je hebt verzonden staat op onze server. Daar gelden je AVG-rechten:</p>
-                <div class="pp-rights">
-                  <span>Inzage</span>
-                  <span>Correctie</span>
-                  <span>Verwijdering</span>
-                  <span>Overdracht</span>
-                </div>
-                <p>Mail naar <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a>. We reageren binnen dertig dagen.</p>
-                <p>Vind je dat we iets niet goed doen? Je kunt een klacht indienen bij de Autoriteit Persoonsgegevens. Dat recht heb je altijd.</p>
-              </div>
-              <footer class="pp-footer">
-                <a href="mailto:monitoring@talentnaartop.nl" class="pp-contact">
-                  <span>Vragen?</span>
-                  <strong>monitoring@talentnaartop.nl</strong>
-                </a>
-              </footer>
-            </div>
-          </div>
+          <!-- Backdrop and safezone -->
+          <div class="pp-popover-backdrop" id="popoverBackdrop"></div>
+          <div class="pp-popover-safezone" id="popoverSafezone"></div>
 
         </div>
 
