@@ -1276,13 +1276,13 @@ body {
 .progress-dots-top {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 .content-header {
   flex-shrink: 0;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
   user-select: none;
 }
 
@@ -1374,6 +1374,8 @@ body {
 /* Gradient fade mask container */
 .content-scrollable-wrapper {
   position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 .content-scrollable-wrapper::before,
@@ -1418,8 +1420,8 @@ body {
 
 .content-footer {
   flex-shrink: 0;
-  margin-top: 16px;
-  padding-top: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
   user-select: none;
 }
 
@@ -1442,7 +1444,7 @@ body {
 .progress-dots-bottom {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 28px;
 }
 
 /* Hide inkijkexemplaar when 3 buttons visible (controle shown) */
