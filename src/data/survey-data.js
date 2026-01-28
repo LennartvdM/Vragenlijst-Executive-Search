@@ -29,8 +29,8 @@ export const SURVEY_STEPS = [
         conditional: {
           trigger: 'Ja',
           fields: [
-            { type: 'number', name: 'streefcijfer_percentage', label: 'Streefcijfer percentage', suffix: '%' },
-            { type: 'number', name: 'streefcijfer_jaar', label: 'Te behalen in jaar' },
+            { type: 'number', name: 'streefcijfer_percentage', label: 'Streefcijfer', placeholder: 'bijv. 99%', compact: true, maxLength: 3 },
+            { type: 'number', name: 'streefcijfer_jaar', label: 'Te behalen in', placeholder: 'bijv. 1215', compact: true, maxLength: 4 },
             {
               type: 'radio-cards',
               name: 'streefcijfer_gehaald',
@@ -89,8 +89,8 @@ export const SURVEY_STEPS = [
         conditional: {
           trigger: 'Ja',
           fields: [
-            { type: 'number', name: 'aantal_rvb', label: 'Aantal leden RvB' },
-            { type: 'number', name: 'rvb_buiten_europa', label: 'Waarvan Buiten-Europa' }
+            { type: 'number', name: 'aantal_rvb', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
+            { type: 'number', name: 'rvb_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
           ]
         }
       },
@@ -102,8 +102,8 @@ export const SURVEY_STEPS = [
         conditional: {
           trigger: 'Ja',
           fields: [
-            { type: 'number', name: 'aantal_rvc', label: 'Aantal leden RvC' },
-            { type: 'number', name: 'rvc_buiten_europa', label: 'Waarvan Buiten-Europa' }
+            { type: 'number', name: 'aantal_rvc', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
+            { type: 'number', name: 'rvc_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
           ]
         }
       },
@@ -115,8 +115,8 @@ export const SURVEY_STEPS = [
         conditional: {
           trigger: 'Ja',
           fields: [
-            { type: 'number', name: 'aantal_rvt', label: 'Aantal leden RvT' },
-            { type: 'number', name: 'rvt_buiten_europa', label: 'Waarvan Buiten-Europa' }
+            { type: 'number', name: 'aantal_rvt', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
+            { type: 'number', name: 'rvt_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
           ]
         }
       }
