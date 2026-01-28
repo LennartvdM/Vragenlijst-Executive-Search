@@ -1,3 +1,4 @@
+console.log('[storage.js] Loading...');
 /**
  * Storage utility for Monitoring Cultureel Talent naar de Top
  * Provides safe localStorage operations with error handling
@@ -226,3 +227,4 @@ const Storage = (function() {
 
 // Expose on window for ES6 modules
 window.Storage = Storage;
+console.log('[storage.js] Loaded, window.Storage:', typeof window.Storage);

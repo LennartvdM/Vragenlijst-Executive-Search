@@ -1,3 +1,4 @@
+console.log('[config.js] Loading...');
 /**
  * Configuration for Monitoring Cultureel Talent naar de Top
  *
@@ -105,3 +106,4 @@ Object.freeze(CONFIG.SECTION_FIELDS);
 
 // Expose on window for ES6 modules
 window.CONFIG = CONFIG;
+console.log('[config.js] Loaded, window.CONFIG:', typeof window.CONFIG);
