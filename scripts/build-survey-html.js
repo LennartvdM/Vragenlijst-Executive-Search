@@ -290,16 +290,14 @@ ${SURVEY_STEPS.map(renderStep).join('\n')}
     </div>
 
     <div class="content-footer">
-      <div class="nav-row">
-        <div class="preview-info-box preview-info-box-bottom" id="previewInfoBoxBottom">
-          <p class="preview-info-box-title">Inkijkexemplaar</p>
-          <p class="preview-info-box-subtitle">Ingevulde gegevens worden niet verstuurd</p>
-        </div>
-        <div class="nav-buttons" id="navButtons">
-          <button type="button" class="btn btn-secondary" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
-          <button type="button" class="btn btn-tertiary" id="btnGoToReview" data-action="goToReview" style="display:none;">Ga naar controle</button>
-          <button type="button" class="btn btn-primary" id="btnNext" data-action="nextStep">Volgende</button>
-        </div>
+      <div class="preview-info-box preview-info-box-bottom" id="previewInfoBoxBottom">
+        <p class="preview-info-box-title">Inkijkexemplaar</p>
+        <p class="preview-info-box-subtitle">Ingevulde gegevens worden niet verstuurd</p>
+      </div>
+      <div class="nav-buttons" id="navButtons">
+        <button type="button" class="btn btn-secondary" id="btnPrev" data-action="prevStep" style="display:none;">Vorige</button>
+        <button type="button" class="btn btn-tertiary" id="btnGoToReview" data-action="goToReview" style="display:none;">Ga naar controle</button>
+        <button type="button" class="btn btn-primary" id="btnNext" data-action="nextStep">Volgende</button>
       </div>
       <div class="progress-dots" id="progressDots"></div>
     </div>
