@@ -1399,6 +1399,7 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  padding-left: 280px;
 }
 
 .content-footer .progress-dots {
@@ -1410,6 +1411,8 @@ body {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
+  margin-right: 24px;
+  max-width: 45%;
 }
 
 /* Hide when 3 buttons visible (controle shown) - controlled via JS class */
