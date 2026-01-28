@@ -1,13 +1,13 @@
 /**
- * Privacy Panel - Standalone Component
+ * Privacy Panel - Stacked Overlay Component
  *
- * A self-contained privacy disclosure panel with sidebar navigation
- * and scroll synchronization.
+ * A compact privacy disclosure with layered panels that stack
+ * like Excel sheets - each room overlays the previous one.
  *
  * Features:
- * - Sidebar navigation with smooth scroll to sections
- * - Visual highlighter following active section
- * - IntersectionObserver for scroll-based section detection
+ * - Stacked overlay panels with smooth animations
+ * - Room-to-room navigation via trigger buttons
+ * - Close buttons to dismiss panels and reveal the one beneath
  * - No external dependencies
  *
  * Usage:
@@ -17,7 +17,6 @@
  *   Option 2: Manual initialization
  *     PrivacyPanel.init()                    // Initialize all panels
  *     PrivacyPanel.init('#myPanel')          // Initialize specific panel
- *     PrivacyPanel.init(document.querySelector('#myPanel'))
  *
  *   Option 3: ES Module
  *     import { PrivacyPanel } from './privacy-panel.js';
@@ -39,138 +38,176 @@
   /**
    * Initialize a single privacy panel instance
    * @param {HTMLElement} panel - The .privacy-panel element
-   * @returns {Object} - Controller object with destroy method
+   * @returns {Object} - Controller object with methods
    */
   function initPanel(panel) {
     if (!panel || panel.dataset.privacyPanelInitialized) {
       return null;
     }
 
-    const highlighter = panel.querySelector('.privacy-highlighter');
-    const sidebar = panel.querySelector('.privacy-sidebar');
-    const navItems = panel.querySelectorAll('.privacy-nav-item');
-    const sections = panel.querySelectorAll('.privacy-section');
-    const scrollContainer = panel.querySelector('.privacy-scroll');
+    // Elements
+    var door = panel.querySelector('.pp-door');
+    var trigger = panel.querySelector('.pp-trigger');
+    var rooms = panel.querySelectorAll('.pp-room');
+    var navLinks = panel.querySelectorAll('.pp-nav-link[data-open]');
+    var closeButtons = panel.querySelectorAll('.pp-close[data-close]');
 
-    if (!sidebar || !navItems.length || !sections.length) {
-      console.warn('PrivacyPanel: Missing required elements', panel);
-      return null;
-    }
-
-    let initialized = false;
-    let observer = null;
+    // State: track which rooms are open (as a stack)
+    var openRooms = [];
 
     /**
-     * Update the highlighter position to match the active nav item
+     * Open a specific room panel
      */
-    function updateHighlighter(navItem) {
-      if (!navItem || !highlighter || !sidebar) return;
+    function openRoom(roomId) {
+      var room = panel.querySelector('.pp-room[data-panel="' + roomId + '"]');
+      if (!room) return;
 
-      const sidebarRect = sidebar.getBoundingClientRect();
-      const itemRect = navItem.getBoundingClientRect();
-      const topPosition = itemRect.top - sidebarRect.top;
+      // Add to stack if not already open
+      if (openRooms.indexOf(roomId) === -1) {
+        openRooms.push(roomId);
+      }
 
-      if (!initialized) {
-        // First update: no animation
-        highlighter.style.transition = 'none';
-        highlighter.style.top = topPosition + 'px';
-        // Force reflow
-        highlighter.offsetHeight;
-        highlighter.style.transition = '';
-        initialized = true;
+      // Add open class
+      room.classList.add('is-open');
+
+      // Update container state
+      updateContainerState();
+
+      // Focus the room for accessibility
+      room.setAttribute('tabindex', '-1');
+      room.focus({ preventScroll: true });
+    }
+
+    /**
+     * Close the topmost room panel
+     */
+    function closeTopRoom() {
+      if (openRooms.length === 0) return;
+
+      var roomId = openRooms.pop();
+      var room = panel.querySelector('.pp-room[data-panel="' + roomId + '"]');
+
+      if (room) {
+        room.classList.remove('is-open');
+        room.removeAttribute('tabindex');
+      }
+
+      // Update container state
+      updateContainerState();
+
+      // Focus the next room or door
+      if (openRooms.length > 0) {
+        var prevRoomId = openRooms[openRooms.length - 1];
+        var prevRoom = panel.querySelector('.pp-room[data-panel="' + prevRoomId + '"]');
+        if (prevRoom) {
+          prevRoom.focus({ preventScroll: true });
+        }
+      } else if (trigger) {
+        trigger.focus({ preventScroll: true });
+      }
+    }
+
+    /**
+     * Close a specific room and all rooms above it
+     */
+    function closeRoom(roomId) {
+      var roomIndex = openRooms.indexOf(roomId);
+      if (roomIndex === -1) return;
+
+      // Close this room and all rooms above it
+      var roomsToClose = openRooms.splice(roomIndex);
+      roomsToClose.forEach(function(id) {
+        var room = panel.querySelector('.pp-room[data-panel="' + id + '"]');
+        if (room) {
+          room.classList.remove('is-open');
+          room.removeAttribute('tabindex');
+        }
+      });
+
+      updateContainerState();
+    }
+
+    /**
+     * Close all rooms
+     */
+    function closeAll() {
+      openRooms.forEach(function(roomId) {
+        var room = panel.querySelector('.pp-room[data-panel="' + roomId + '"]');
+        if (room) {
+          room.classList.remove('is-open');
+          room.removeAttribute('tabindex');
+        }
+      });
+      openRooms = [];
+      updateContainerState();
+    }
+
+    /**
+     * Update container class based on open state
+     */
+    function updateContainerState() {
+      if (openRooms.length > 0) {
+        panel.classList.add('has-open');
       } else {
-        highlighter.style.top = topPosition + 'px';
-      }
-
-      highlighter.classList.add('active');
-    }
-
-    /**
-     * Set the active section by ID
-     */
-    function setActiveSection(sectionId) {
-      navItems.forEach(function(item) {
-        const isActive = item.dataset.section === sectionId;
-        item.classList.toggle('active', isActive);
-        if (isActive) {
-          updateHighlighter(item);
-        }
-      });
-    }
-
-    /**
-     * Handle nav item click - scroll to section
-     */
-    function handleNavClick(event) {
-      const item = event.currentTarget;
-      const sectionId = item.dataset.section;
-      const section = panel.querySelector('.privacy-section[data-section="' + sectionId + '"]');
-
-      if (section && scrollContainer) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        panel.classList.remove('has-open');
       }
     }
 
     /**
-     * Set up IntersectionObserver for scroll-based section detection
+     * Handle trigger button click (door → first room)
      */
-    function setupScrollObserver() {
-      if (!scrollContainer || typeof IntersectionObserver === 'undefined') {
-        return;
-      }
-
-      observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-            setActiveSection(entry.target.dataset.section);
-          }
-        });
-      }, {
-        root: scrollContainer,
-        threshold: 0.5
-      });
-
-      sections.forEach(function(section) {
-        observer.observe(section);
-      });
-    }
-
-    /**
-     * Handle room link click - navigate to linked section
-     */
-    function handleRoomLinkClick(event) {
+    function handleTriggerClick(event) {
       event.preventDefault();
-      var link = event.currentTarget;
-      var targetSectionId = link.dataset.goto;
-
-      if (targetSectionId) {
-        var section = panel.querySelector('.privacy-section[data-section="' + targetSectionId + '"]');
-        if (section && scrollContainer) {
-          setActiveSection(targetSectionId);
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+      var targetRoom = event.currentTarget.dataset.open;
+      if (targetRoom) {
+        openRoom(targetRoom);
       }
     }
 
-    // Attach click handlers to nav items
-    navItems.forEach(function(item) {
-      item.addEventListener('click', handleNavClick);
-    });
-
-    // Attach click handlers to room links
-    var roomLinks = panel.querySelectorAll('.room-link[data-goto]');
-    roomLinks.forEach(function(link) {
-      link.addEventListener('click', handleRoomLinkClick);
-    });
-
-    // Set up scroll observer
-    setupScrollObserver();
-
-    // Initialize with the first active item
-    var activeItem = panel.querySelector('.privacy-nav-item.active');
-    if (activeItem) {
-      updateHighlighter(activeItem);
+    /**
+     * Handle navigation link click (room → next room)
+     */
+    function handleNavLinkClick(event) {
+      event.preventDefault();
+      var targetRoom = event.currentTarget.dataset.open;
+      if (targetRoom) {
+        openRoom(targetRoom);
+      }
     }
+
+    /**
+     * Handle close button click
+     */
+    function handleCloseClick(event) {
+      event.preventDefault();
+      closeTopRoom();
+    }
+
+    /**
+     * Handle keyboard navigation
+     */
+    function handleKeydown(event) {
+      // Escape key closes topmost room
+      if (event.key === 'Escape' && openRooms.length > 0) {
+        event.preventDefault();
+        closeTopRoom();
+      }
+    }
+
+    // Attach event listeners
+    if (trigger) {
+      trigger.addEventListener('click', handleTriggerClick);
+    }
+
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', handleNavLinkClick);
+    });
+
+    closeButtons.forEach(function(btn) {
+      btn.addEventListener('click', handleCloseClick);
+    });
+
+    panel.addEventListener('keydown', handleKeydown);
 
     // Mark as initialized
     panel.dataset.privacyPanelInitialized = 'true';
@@ -178,42 +215,61 @@
     // Return controller object
     return {
       /**
+       * Open a room by ID
+       */
+      open: function(roomId) {
+        openRoom(roomId);
+      },
+
+      /**
+       * Close the topmost room
+       */
+      close: function() {
+        closeTopRoom();
+      },
+
+      /**
+       * Close all rooms
+       */
+      closeAll: function() {
+        closeAll();
+      },
+
+      /**
+       * Get list of currently open rooms
+       */
+      getOpenRooms: function() {
+        return openRooms.slice();
+      },
+
+      /**
+       * Check if a room is open
+       */
+      isOpen: function(roomId) {
+        return openRooms.indexOf(roomId) !== -1;
+      },
+
+      /**
        * Clean up the panel instance
        */
       destroy: function() {
-        if (observer) {
-          observer.disconnect();
-          observer = null;
+        if (trigger) {
+          trigger.removeEventListener('click', handleTriggerClick);
         }
 
-        navItems.forEach(function(item) {
-          item.removeEventListener('click', handleNavClick);
+        navLinks.forEach(function(link) {
+          link.removeEventListener('click', handleNavLinkClick);
         });
 
-        roomLinks.forEach(function(link) {
-          link.removeEventListener('click', handleRoomLinkClick);
+        closeButtons.forEach(function(btn) {
+          btn.removeEventListener('click', handleCloseClick);
         });
 
+        panel.removeEventListener('keydown', handleKeydown);
+
+        // Reset state
+        closeAll();
         delete panel.dataset.privacyPanelInitialized;
-      },
-
-      /**
-       * Programmatically set active section
-       */
-      setSection: function(sectionId) {
-        setActiveSection(sectionId);
-        var section = panel.querySelector('.privacy-section[data-section="' + sectionId + '"]');
-        if (section && scrollContainer) {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      },
-
-      /**
-       * Get the current active section ID
-       */
-      getActiveSection: function() {
-        var active = panel.querySelector('.privacy-nav-item.active');
-        return active ? active.dataset.section : null;
       }
     };
   }
