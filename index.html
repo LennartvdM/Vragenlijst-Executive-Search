@@ -257,72 +257,8 @@
           </div>
         </div>
 
-        <script>
-        // Privacy panel - sidebar navigation with scroll sync
-        (function() {
-          const panel = document.getElementById('privacyPanel');
-          if (!panel) return;
-
-          const highlighter = panel.querySelector('.privacy-highlighter');
-          const sidebar = panel.querySelector('.privacy-sidebar');
-          const navItems = panel.querySelectorAll('.privacy-nav-item');
-          const sections = panel.querySelectorAll('.privacy-section');
-          const scrollContainer = document.getElementById('privacyScroll');
-          let initialized = false;
-
-          function updateHighlighter(navItem) {
-            if (!navItem || !highlighter || !sidebar) return;
-            const sidebarRect = sidebar.getBoundingClientRect();
-            const itemRect = navItem.getBoundingClientRect();
-            const topPosition = itemRect.top - sidebarRect.top;
-
-            if (!initialized) {
-              highlighter.style.transition = 'none';
-              highlighter.style.top = topPosition + 'px';
-              highlighter.offsetHeight;
-              highlighter.style.transition = '';
-              initialized = true;
-            } else {
-              highlighter.style.top = topPosition + 'px';
-            }
-            highlighter.classList.add('active');
-          }
-
-          function setActiveSection(sectionId) {
-            navItems.forEach(item => {
-              const isActive = item.dataset.section === sectionId;
-              item.classList.toggle('active', isActive);
-              if (isActive) updateHighlighter(item);
-            });
-          }
-
-          // Click nav items to scroll to section
-          navItems.forEach(item => {
-            item.addEventListener('click', () => {
-              const section = panel.querySelector(`.privacy-section[data-section="${item.dataset.section}"]`);
-              if (section && scrollContainer) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            });
-          });
-
-          // Scroll sync - update nav based on visible section
-          if (scrollContainer) {
-            const observer = new IntersectionObserver((entries) => {
-              entries.forEach(entry => {
-                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-                  setActiveSection(entry.target.dataset.section);
-                }
-              });
-            }, { root: scrollContainer, threshold: 0.5 });
-
-            sections.forEach(section => observer.observe(section));
-          }
-
-          // Initialize
-          updateHighlighter(panel.querySelector('.privacy-nav-item.active'));
-        })();
-        </script>
+<!-- Privacy Panel Component -->
+        <script src="/components/privacy-panel/privacy-panel.js"></script>
       </div>
     </div>
   </div>

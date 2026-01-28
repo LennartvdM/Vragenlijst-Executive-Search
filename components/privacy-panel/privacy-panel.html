@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Panel - Standalone Component</title>
+
+  <!-- Optional: Inter font (falls back to system fonts if not loaded) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="privacy-panel.css">
+
+  <!-- Demo page styles -->
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+      margin: 0;
+    }
+
+    .demo-container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      color: #333;
+    }
+
+    .demo-note {
+      margin-top: 24px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .demo-note code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-container">
+    <h1>Privacy Panel Component</h1>
+
+    <!-- ====================================================================
+         PRIVACY PANEL - Copy everything between these comments
+         ==================================================================== -->
+    <div class="privacy-panel" id="privacyPanel">
+      <!-- Sidebar Navigation -->
+      <nav class="privacy-sidebar">
+        <div class="privacy-highlighter"></div>
+        <div class="privacy-nav-item active" data-section="premise">
+          <span class="nav-marker"></span>
+        </div>
+        <div class="privacy-nav-item" data-section="local">
+          <span class="nav-marker"></span>
+        </div>
+        <div class="privacy-nav-item" data-section="journey">
+          <span class="nav-marker"></span>
+        </div>
+        <div class="privacy-nav-item" data-section="rights">
+          <span class="nav-marker"></span>
+        </div>
+      </nav>
+
+      <!-- Content Area -->
+      <div class="privacy-content">
+        <!-- Main scrollable content -->
+        <div class="privacy-scroll">
+
+          <!-- Section: Premise -->
+          <section class="privacy-section" data-section="premise">
+            <header class="section-header">
+              <h3>Geen cookiebanner.</h3>
+              <p class="section-lead">Omdat we u niet volgen.</p>
+            </header>
+            <div class="section-body">
+              <p>Dat is geen marketingpraatje. Dat is architectuur. Dit formulier is gebouwd met één principe: <em>uw gegevens zijn van u</em>.</p>
+              <aside class="section-aside">
+                <p>Ze leven in uw browser — als een kladblok op uw bureau. Wij kijken niet mee. We <em>kunnen</em> niet meekijken. Dat hebben we zo ontworpen.</p>
+              </aside>
+            </div>
+          </section>
+
+          <!-- Section: Local Storage -->
+          <section class="privacy-section" data-section="local">
+            <header class="section-header">
+              <h3>Tot u op verzenden klikt</h3>
+              <p class="section-lead">Blijft alles hier. Op uw apparaat. Letterlijk.</p>
+            </header>
+            <div class="section-body">
+              <dl class="data-list">
+                <div class="data-item">
+                  <dt>Uw antwoorden</dt>
+                  <dd>Lokaal bewaard zodat u niet opnieuw hoeft te beginnen</dd>
+                </div>
+                <div class="data-item">
+                  <dt>Uw voortgang</dt>
+                  <dd>Zodat u morgen verder kunt waar u was gebleven</dd>
+                </div>
+                <div class="data-item">
+                  <dt>Uw sessie</dt>
+                  <dd>24 uur geldig, daarna opnieuw inloggen</dd>
+                </div>
+              </dl>
+              <aside class="section-footnote">
+                <p>Dit zijn geen cookies. Dit is uw browser die onthoudt wat u deed — zoals een tekstverwerker dat doet. Wij zien dit niet.</p>
+              </aside>
+            </div>
+          </section>
+
+          <!-- Section: The Journey -->
+          <section class="privacy-section" data-section="journey">
+            <header class="section-header">
+              <h3>Het moment van verzenden</h3>
+              <p class="section-lead">Dan pas bestaat u voor ons.</p>
+            </header>
+            <div class="section-body">
+              <p>Eén keer. Eén richting. Eén doel.</p>
+              <p>Uw antwoorden reizen beveiligd naar de beheerder. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit. Dat is het.</p>
+              <ul class="negation-list">
+                <li>Niet gedeeld met partners</li>
+                <li>Niet verkocht aan adverteerders</li>
+                <li>Niet geanalyseerd door algoritmes</li>
+              </ul>
+              <details class="section-details">
+                <summary>Na verzenden</summary>
+                <div class="details-content">
+                  <p>Krijgt u een kopie in uw browser — voor uw eigen administratie. Die blijft van u, lokaal, zo lang u wilt.</p>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          <!-- Section: Rights -->
+          <section class="privacy-section" data-section="rights">
+            <header class="section-header">
+              <h3>U blijft de eigenaar.</h3>
+              <p class="section-lead">Altijd.</p>
+            </header>
+            <div class="section-body">
+              <div class="rights-grid">
+                <span class="right-item">Inzage</span>
+                <span class="right-item">Correctie</span>
+                <span class="right-item">Verwijdering</span>
+                <span class="right-item">Overdracht</span>
+              </div>
+              <p>De AVG geeft u rechten. Wij respecteren ze niet omdat het moet — maar omdat het logisch is.</p>
+              <details class="section-details">
+                <summary>Juridische grondslag</summary>
+                <div class="details-content">
+                  <p>Geen toestemming nodig voor de lokale opslag — het is noodzakelijk voor de werking (AVG 6.1.b). Maar transparantie is niet optioneel. Vandaar dit verhaal, zonder vinkje.</p>
+                </div>
+              </details>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="privacy-footer">
+          <a href="mailto:monitoring@talentnaartop.nl" class="footer-contact">
+            <span>Vragen?</span>
+            <strong>monitoring@talentnaartop.nl</strong>
+          </a>
+        </footer>
+      </div>
+    </div>
+    <!-- ==================================================================== -->
+
+    <div class="demo-note">
+      <p><strong>Usage:</strong></p>
+      <p>1. Include <code>privacy-panel.css</code> in your head</p>
+      <p>2. Include <code>privacy-panel.js</code> before closing body</p>
+      <p>3. Copy the HTML structure above</p>
+      <p style="margin-top: 12px;"><strong>Customization:</strong></p>
+      <p>Override CSS variables on <code>.privacy-panel</code> to change colors:</p>
+      <pre style="background: #f0f0f0; padding: 8px; border-radius: 4px; margin-top: 8px; overflow-x: auto;"><code>.privacy-panel {
+  --pp-terracotta: #your-accent-color;
+  --pp-teal: #your-highlight-color;
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Component JavaScript -->
+  <script src="privacy-panel.js"></script>
+
+</body>
+</html>
