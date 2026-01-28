@@ -29,7 +29,7 @@ export const SURVEY_STEPS = [
         conditional: {
           trigger: 'Ja',
           fields: [
-            { type: 'number', name: 'streefcijfer_percentage', label: 'Streefcijfer', placeholder: 'bijv. 99', suffix: '%', compact: true, maxLength: 3 },
+            { type: 'number', name: 'streefcijfer_percentage', label: 'Streefcijfer', placeholder: '99', suffix: '%', compact: true, maxLength: 3 },
             { type: 'number', name: 'streefcijfer_jaar', label: 'Te behalen in', placeholder: 'bijv. 1215', compact: true, maxLength: 4 },
             {
               type: 'radio-cards',
