@@ -1,60 +1,49 @@
 /**
- * Privacy Panel - Standalone Component
+ * Privacy Panel - Stacked Overlay Component
  *
- * A self-contained privacy disclosure panel with sidebar navigation.
- * No external dependencies - can be dropped into any project.
- *
- * Usage:
- *   1. Include this CSS file
- *   2. Include privacy-panel.js
- *   3. Add the HTML structure (see privacy-panel.html for template)
- *
- * Customization:
- *   Override CSS custom properties on .privacy-panel to change colors.
+ * A compact privacy disclosure with layered panels that stack
+ * like Excel sheets - each room overlays the previous one.
  */
 
 /* ==========================================================================
-   Component Variables (scoped to .privacy-panel)
-   Override these on .privacy-panel to customize colors
+   CSS Custom Properties (overridable)
    ========================================================================== */
 .privacy-panel {
-  /* Color palette */
   --pp-cream: #fffbf7;
   --pp-sand: #f5e6d3;
   --pp-sand-light: #faf4eb;
   --pp-sand-dark: #d4c4a8;
-  --pp-salmon: #e8a091;
   --pp-terracotta: #c4785a;
-  --pp-teal: #7cc5c0;
-  --pp-teal-dark: #5aada8;
+  --pp-terracotta-light: #e8a091;
+  --pp-brown: #8b5a3c;
   --pp-text: #4a3728;
   --pp-text-light: #7a6555;
+  --pp-teal: #7cc5c0;
+  --pp-teal-dark: #5aada8;
 
-  /* Sizing */
-  --pp-sidebar-width: 48px;
-  --pp-border-radius: 16px;
-  --pp-min-height: 380px;
-  --pp-max-height: 460px;
+  /* Spacing */
+  --pp-offset: 14px;
+  --pp-card-radius: 14px;
+  --pp-card-padding: 20px;
 }
 
 /* ==========================================================================
-   Main Container
+   Container - Stacking Context
    ========================================================================== */
 .privacy-panel {
-  display: flex;
-  background: var(--pp-cream);
-  border-radius: var(--pp-border-radius);
-  overflow: hidden;
-  box-shadow:
-    0 4px 24px rgba(139, 90, 60, 0.12),
-    0 0 0 1px rgba(196, 120, 90, 0.08);
-  min-height: var(--pp-min-height);
-  max-height: var(--pp-max-height);
+  position: relative;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--pp-text);
+  margin-top: 24px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Reserve space for stacked panels */
+  min-height: 100px;
+  padding-right: calc(var(--pp-offset) * 3);
+  padding-bottom: calc(var(--pp-offset) * 3);
 }
 
 .privacy-panel *,
@@ -64,420 +53,489 @@
 }
 
 /* ==========================================================================
-   Sidebar Navigation
+   Card Base - Shared styling for all panels
    ========================================================================== */
-.privacy-sidebar {
-  flex: 0 0 var(--pp-sidebar-width);
-  padding: 20px 8px;
-  background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  overflow: visible;
+.pp-card {
+  background: var(--pp-cream);
+  border-radius: var(--pp-card-radius);
+  box-shadow:
+    0 2px 8px rgba(139, 90, 60, 0.08),
+    0 0 0 1px rgba(196, 120, 90, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
-/* Highlighter - floats behind active marker */
-.privacy-highlighter {
-  position: absolute;
-  left: -12px;
-  top: 0;
-  right: 4px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 16px 6px 6px 16px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transition: top 0.3s ease-in-out, opacity 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+.pp-card-content {
+  padding: var(--pp-card-padding);
 }
 
-.privacy-highlighter.active {
-  opacity: 1;
-}
-
-/* Navigation markers */
-.privacy-nav-item {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+/* ==========================================================================
+   De Deur - Base Panel (always visible)
+   ========================================================================== */
+.pp-door {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: stretch;
+  cursor: default;
 }
 
-.nav-marker {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--pp-sand-dark);
-  transition: all 0.3s ease;
-}
-
-.privacy-nav-item:hover .nav-marker {
-  background: var(--pp-terracotta);
-  transform: scale(1.2);
-}
-
-.privacy-nav-item.active .nav-marker {
-  background: var(--pp-teal);
-  transform: translateX(-10px) scale(1.4);
-  box-shadow: 0 0 8px rgba(124, 197, 192, 0.5);
-}
-
-/* ==========================================================================
-   Content Area
-   ========================================================================== */
-.privacy-content {
+.pp-door .pp-card-content {
   flex: 1;
+  padding: 18px 12px 18px 20px;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
+  justify-content: center;
 }
 
-/* Scrollable content */
-.privacy-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px 28px 16px 20px;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: var(--pp-salmon) transparent;
-}
-
-.privacy-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.privacy-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.privacy-scroll::-webkit-scrollbar-thumb {
-  background: var(--pp-salmon);
-  border-radius: 2px;
-}
-
-/* ==========================================================================
-   Sections
-   ========================================================================== */
-.privacy-section {
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(212, 196, 168, 0.25);
-}
-
-.privacy-section:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-/* Section header */
-.section-header {
-  margin-bottom: 12px;
-}
-
-.section-header h3 {
+.pp-door h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--pp-text);
   line-height: 1.3;
 }
 
-.section-lead {
+.pp-lead {
   margin: 4px 0 0 0;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--pp-terracotta);
   font-weight: 500;
 }
 
+/* Trigger button on door */
+.pp-trigger {
+  flex-shrink: 0;
+  width: 48px;
+  background: linear-gradient(135deg, rgba(196, 120, 90, 0.1) 0%, rgba(196, 120, 90, 0.05) 100%);
+  border: none;
+  border-left: 1px solid rgba(196, 120, 90, 0.12);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.pp-trigger:hover {
+  background: linear-gradient(135deg, rgba(196, 120, 90, 0.18) 0%, rgba(196, 120, 90, 0.1) 100%);
+}
+
+.pp-trigger:focus {
+  outline: none;
+}
+
+.pp-trigger:focus-visible {
+  outline: 2px solid var(--pp-teal);
+  outline-offset: -2px;
+}
+
+.pp-trigger-icon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.pp-trigger-icon::before,
+.pp-trigger-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--pp-terracotta);
+  border-radius: 1px;
+  transition: transform 0.2s ease;
+}
+
+.pp-trigger-icon::before {
+  width: 10px;
+  height: 2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-70%, -4px) rotate(45deg);
+}
+
+.pp-trigger-icon::after {
+  width: 10px;
+  height: 2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-70%, 2px) rotate(-45deg);
+}
+
+.pp-trigger:hover .pp-trigger-icon::before {
+  transform: translate(-55%, -4px) rotate(45deg);
+}
+
+.pp-trigger:hover .pp-trigger-icon::after {
+  transform: translate(-55%, 2px) rotate(-45deg);
+}
+
+/* Door state when rooms are open */
+.privacy-panel.has-open .pp-door {
+  box-shadow:
+    0 1px 4px rgba(139, 90, 60, 0.06),
+    0 0 0 1px rgba(196, 120, 90, 0.08);
+}
+
 /* ==========================================================================
-   Section Body
+   Room Panels - Stacked Overlays
    ========================================================================== */
-.section-body {
-  font-size: 13px;
-  line-height: 1.65;
+.pp-room {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: calc(var(--pp-offset) * 3);
+  z-index: 0;
+
+  /* Hidden state */
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.94) translateY(12px);
+  transform-origin: top left;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.3s ease;
+
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Room positioning when open - stacked offset */
+.pp-room.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+}
+
+.pp-room[data-panel="cookies"].is-open {
+  z-index: 10;
+  top: var(--pp-offset);
+  left: var(--pp-offset);
+  box-shadow:
+    0 8px 32px rgba(139, 90, 60, 0.15),
+    0 0 0 1px rgba(196, 120, 90, 0.12);
+}
+
+.pp-room[data-panel="verzenden"].is-open {
+  z-index: 20;
+  top: calc(var(--pp-offset) * 2);
+  left: calc(var(--pp-offset) * 2);
+  box-shadow:
+    0 12px 40px rgba(139, 90, 60, 0.18),
+    0 0 0 1px rgba(196, 120, 90, 0.12);
+}
+
+.pp-room[data-panel="rechten"].is-open {
+  z-index: 30;
+  top: calc(var(--pp-offset) * 3);
+  left: calc(var(--pp-offset) * 3);
+  box-shadow:
+    0 16px 48px rgba(139, 90, 60, 0.2),
+    0 0 0 1px rgba(196, 120, 90, 0.12);
+}
+
+/* Room content */
+.pp-room .pp-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Close Button
+   ========================================================================== */
+.pp-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  background: rgba(245, 230, 211, 0.8);
+  border: 1px solid rgba(212, 196, 168, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 5;
+}
+
+.pp-close::before,
+.pp-close::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: var(--pp-text-light);
+  border-radius: 1px;
+  transition: background 0.2s;
+}
+
+.pp-close::before {
+  transform: rotate(45deg);
+}
+
+.pp-close::after {
+  transform: rotate(-45deg);
+}
+
+.pp-close:hover {
+  background: rgba(232, 160, 145, 0.3);
+  border-color: rgba(196, 120, 90, 0.3);
+}
+
+.pp-close:hover::before,
+.pp-close:hover::after {
+  background: var(--pp-terracotta);
+}
+
+.pp-close:focus {
+  outline: none;
+}
+
+.pp-close:focus-visible {
+  outline: 2px solid var(--pp-teal);
+  outline-offset: 1px;
+}
+
+/* ==========================================================================
+   Room Header
+   ========================================================================== */
+.pp-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-right: 36px;
+}
+
+.pp-room-label {
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--pp-teal) 0%, var(--pp-teal-dark) 100%);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pp-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
   color: var(--pp-text);
 }
 
-.section-body p {
+/* ==========================================================================
+   Room Body - Scrollable content
+   ========================================================================== */
+.pp-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-right: -4px;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--pp-sand-dark) transparent;
+}
+
+.pp-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pp-body::-webkit-scrollbar-thumb {
+  background: var(--pp-sand-dark);
+  border-radius: 2px;
+}
+
+.pp-body p {
   margin: 0 0 10px 0;
 }
 
-.section-body p:last-child {
+.pp-body p:last-child {
   margin-bottom: 0;
 }
 
-.section-body em {
+/* ==========================================================================
+   Code Tags
+   ========================================================================== */
+.pp-body code {
+  background: rgba(212, 196, 168, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, 'Fira Code', monospace;
+  font-size: 0.88em;
   color: var(--pp-terracotta);
-  font-style: normal;
-  font-weight: 500;
 }
 
 /* ==========================================================================
-   Asides - secondary information
+   Details/Accordion (Nest)
    ========================================================================== */
-.section-aside {
-  margin: 12px 0;
-  padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(124, 197, 192, 0.08) 0%, rgba(124, 197, 192, 0.03) 100%);
-  border-left: 3px solid var(--pp-teal);
-  border-radius: 0 8px 8px 0;
+.pp-details {
+  margin: 14px 0;
+  border: 1px solid rgba(212, 196, 168, 0.25);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.section-aside p {
-  margin: 0;
-  font-size: 12px;
-  color: var(--pp-text);
-  line-height: 1.6;
-}
-
-.section-footnote {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(212, 196, 168, 0.3);
-}
-
-.section-footnote p {
-  margin: 0;
-  font-size: 11px;
-  color: var(--pp-text-light);
-  line-height: 1.6;
-}
-
-/* ==========================================================================
-   Data List - structured info
-   ========================================================================== */
-.data-list {
-  margin: 0 0 12px 0;
-}
-
-.data-item {
+.pp-details summary {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(212, 196, 168, 0.15);
-}
-
-.data-item:last-child {
-  border-bottom: none;
-}
-
-.data-item dt {
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(245, 230, 211, 0.4);
   font-size: 12px;
   font-weight: 600;
   color: var(--pp-text);
-}
-
-.data-item dd {
-  margin: 0;
-  font-size: 11px;
-  color: var(--pp-text-light);
-  text-align: right;
-  max-width: 60%;
-}
-
-/* ==========================================================================
-   Negation List - what we don't do
-   ========================================================================== */
-.negation-list {
+  cursor: pointer;
   list-style: none;
-  padding: 0;
-  margin: 12px 0;
+  transition: background 0.2s;
 }
 
-.negation-list li {
-  position: relative;
-  padding: 4px 0 4px 18px;
+.pp-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.pp-details summary::before {
+  content: '+';
+  width: 16px;
+  height: 16px;
+  background: var(--pp-terracotta);
+  border-radius: 4px;
   font-size: 12px;
-  color: var(--pp-text);
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
 }
 
-.negation-list li::before {
-  content: '\00d7';
-  position: absolute;
-  left: 0;
-  color: var(--pp-salmon);
-  font-weight: 700;
-  font-size: 14px;
+.pp-details[open] summary::before {
+  content: '−';
+}
+
+.pp-details summary:hover {
+  background: rgba(245, 230, 211, 0.7);
+}
+
+.pp-details-content {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--pp-text-light);
+}
+
+.pp-details-content p {
+  margin: 0 0 8px 0;
+}
+
+.pp-details-content p:last-child {
+  margin-bottom: 0;
 }
 
 /* ==========================================================================
    Rights Grid
    ========================================================================== */
-.rights-grid {
+.pp-rights {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 12px;
+  margin: 12px 0;
 }
 
-.right-item {
+.pp-rights span {
   padding: 5px 10px;
-  background: rgba(124, 197, 192, 0.12);
-  border-radius: 4px;
+  background: rgba(124, 197, 192, 0.15);
+  border-radius: 5px;
   font-size: 11px;
   font-weight: 600;
   color: var(--pp-teal-dark);
 }
 
 /* ==========================================================================
-   Expandable Details
+   Room Footer
    ========================================================================== */
-.section-details {
-  margin-top: 12px;
+.pp-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(212, 196, 168, 0.2);
 }
 
-.section-details summary {
+/* Navigation link to next room */
+.pp-nav-link {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
-  background: rgba(212, 196, 168, 0.12);
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--pp-text-light);
-  cursor: pointer;
-  list-style: none;
-  transition: all 0.2s;
-}
-
-.section-details summary::-webkit-details-marker {
-  display: none;
-}
-
-.section-details summary::before {
-  content: '+';
-  font-size: 12px;
-  color: var(--pp-terracotta);
-  transition: transform 0.2s;
-}
-
-.section-details[open] summary::before {
-  content: '\2212';
-}
-
-.section-details summary:hover {
-  background: rgba(212, 196, 168, 0.2);
-  color: var(--pp-text);
-}
-
-.details-content {
-  padding: 10px 10px 0 10px;
-}
-
-.details-content p {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.6;
-  color: var(--pp-text-light);
-}
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-.privacy-footer {
-  flex-shrink: 0;
-  padding: 12px 20px;
-  border-top: 1px solid rgba(212, 196, 168, 0.25);
-  background: rgba(245, 238, 230, 0.5);
-}
-
-.footer-contact {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  font-size: 11px;
-  color: var(--pp-text-light);
-  transition: color 0.2s;
-}
-
-.footer-contact:hover {
-  color: var(--pp-text);
-}
-
-.footer-contact strong {
-  color: var(--pp-terracotta);
-  font-weight: 600;
-}
-
-/* ==========================================================================
-   Room Navigation Links
-   ========================================================================== */
-.room-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  padding: 10px 14px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
   background: linear-gradient(135deg, rgba(196, 120, 90, 0.08) 0%, rgba(196, 120, 90, 0.03) 100%);
-  border: 1px solid rgba(196, 120, 90, 0.15);
+  border: 1px solid rgba(196, 120, 90, 0.12);
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   color: var(--pp-terracotta);
-  text-decoration: none;
+  text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.room-link::after {
-  content: '\2192';
-  font-size: 14px;
-  transition: transform 0.2s ease;
-}
-
-.room-link:hover {
+.pp-nav-link:hover {
   background: linear-gradient(135deg, rgba(196, 120, 90, 0.15) 0%, rgba(196, 120, 90, 0.08) 100%);
   border-color: rgba(196, 120, 90, 0.25);
   transform: translateX(2px);
 }
 
-.room-link:hover::after {
-  transform: translateX(3px);
+.pp-nav-link:focus {
+  outline: none;
 }
 
-.room-link-back::after {
-  content: '\2190';
-  order: -1;
+.pp-nav-link:focus-visible {
+  outline: 2px solid var(--pp-teal);
+  outline-offset: 1px;
 }
 
-.room-link-back:hover {
-  transform: translateX(-2px);
+.pp-nav-arrow {
+  font-size: 16px;
+  transition: transform 0.2s;
 }
 
-.room-link-back:hover::after {
-  transform: translateX(-3px);
+.pp-nav-link:hover .pp-nav-arrow {
+  transform: translateX(4px);
 }
 
-/* ==========================================================================
-   Code Tag Styling
-   ========================================================================== */
-.privacy-panel code {
-  background: rgba(212, 196, 168, 0.25);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-  font-size: 0.9em;
+/* Contact link in footer */
+.pp-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  color: var(--pp-text-light);
+  transition: color 0.2s;
+}
+
+.pp-contact:hover {
+  color: var(--pp-text);
+}
+
+.pp-contact strong {
   color: var(--pp-terracotta);
+  font-weight: 600;
 }
 
-/* ==========================================================================
-   Inline Email Links
-   ========================================================================== */
-.section-body a[href^="mailto:"] {
+/* Email links in body */
+.pp-body a[href^="mailto:"] {
   color: var(--pp-terracotta);
   text-decoration: none;
   font-weight: 500;
@@ -485,6 +543,49 @@
   transition: border-color 0.2s;
 }
 
-.section-body a[href^="mailto:"]:hover {
+.pp-body a[href^="mailto:"]:hover {
   border-bottom-style: solid;
+}
+
+/* ==========================================================================
+   Depth Indicators - subtle visual cues showing stacked cards behind
+   ========================================================================== */
+.privacy-panel::before,
+.privacy-panel::after {
+  content: '';
+  position: absolute;
+  background: var(--pp-sand-light);
+  border-radius: var(--pp-card-radius);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* First shadow layer */
+.privacy-panel::before {
+  top: calc(var(--pp-offset) * 0.5);
+  left: calc(var(--pp-offset) * 0.5);
+  right: calc(var(--pp-offset) * 2.5);
+  bottom: calc(var(--pp-offset) * 2.5);
+  z-index: 0;
+  box-shadow: 0 0 0 1px rgba(196, 120, 90, 0.06);
+}
+
+/* Second shadow layer */
+.privacy-panel::after {
+  top: var(--pp-offset);
+  left: var(--pp-offset);
+  right: calc(var(--pp-offset) * 2);
+  bottom: calc(var(--pp-offset) * 2);
+  z-index: 0;
+  box-shadow: 0 0 0 1px rgba(196, 120, 90, 0.08);
+}
+
+/* Show depth indicators when panels are open */
+.privacy-panel.has-open::before {
+  opacity: 0.5;
+}
+
+.privacy-panel.has-open::after {
+  opacity: 0.7;
 }

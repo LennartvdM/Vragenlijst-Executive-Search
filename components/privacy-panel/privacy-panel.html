@@ -3,27 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Panel - Standalone Component</title>
+  <title>Privacy Panel - Stacked Overlay Design</title>
 
-  <!-- Optional: Inter font (falls back to system fonts if not loaded) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Component CSS -->
   <link rel="stylesheet" href="privacy-panel.css">
 
-  <!-- Demo page styles -->
   <style>
     body {
       font-family: 'Inter', sans-serif;
       background: #f5f5f5;
       padding: 40px;
       margin: 0;
+      min-height: 100vh;
     }
 
     .demo-container {
-      max-width: 480px;
+      max-width: 600px;
       margin: 0 auto;
     }
 
@@ -34,150 +32,131 @@
     }
 
     .demo-note {
-      margin-top: 24px;
+      margin-top: 40px;
       padding: 16px;
       background: #fff;
       border-radius: 8px;
       font-size: 14px;
       color: #666;
     }
-
-    .demo-note code {
-      background: #f0f0f0;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 13px;
-    }
   </style>
 </head>
 <body>
 
   <div class="demo-container">
-    <h1>Privacy Panel Component</h1>
+    <h1>Privacy Panel - Stacked Overlays</h1>
 
     <!-- ====================================================================
-         PRIVACY PANEL - Copy everything between these comments
+         PRIVACY PANEL - Stacked overlay design
          ==================================================================== -->
     <div class="privacy-panel" id="privacyPanel">
-      <!-- Sidebar Navigation -->
-      <nav class="privacy-sidebar">
-        <div class="privacy-highlighter"></div>
-        <div class="privacy-nav-item active" data-section="cookies">
-          <span class="nav-marker"></span>
+
+      <!-- De Deur - Base panel (always visible) -->
+      <div class="pp-card pp-door" data-panel="door">
+        <div class="pp-card-content">
+          <h3>Waar is de cookiemelding?</h3>
+          <p class="pp-lead">Die is er niet. En dat is geen vergissing.</p>
         </div>
-        <div class="privacy-nav-item" data-section="verzenden">
-          <span class="nav-marker"></span>
-        </div>
-        <div class="privacy-nav-item" data-section="rechten">
-          <span class="nav-marker"></span>
-        </div>
-      </nav>
-
-      <!-- Content Area -->
-      <div class="privacy-content">
-        <!-- Main scrollable content -->
-        <div class="privacy-scroll">
-
-          <!-- Kamer 1: De cookies -->
-          <section class="privacy-section" data-section="cookies">
-            <header class="section-header">
-              <h3>Waar is de cookiemelding?</h3>
-              <p class="section-lead">Die is er niet. En dat is geen vergissing.</p>
-            </header>
-            <div class="section-body">
-              <p>Je vraagt je misschien af waar de cookiemelding is. Die is er niet.</p>
-              <p>Websites gebruiken cookies om informatie te onthouden tussen bezoeken. Vaak ook om je te volgen, of om te koppelen aan advertentienetwerken. Daar hoort een melding bij, en toestemming.</p>
-              <p>Wij gebruiken geen cookies. Nul. Je browser heeft daarnaast een andere opslagplek die localStorage heet. Die is van jou, niet van ons. Gegevens in localStorage verlaten je apparaat niet. Ze worden niet meegestuurd bij elk verzoek aan een server, zoals cookies dat doen.</p>
-              <p>Daarom is er geen melding. Er is niets om toestemming voor te vragen.</p>
-              <aside class="section-aside">
-                <p>Wil je het checken? Open Developer Tools, ga naar Application, dan Cookies. Die lijst is leeg. Kijk daarna bij Local Storage. Daar staat wat dit formulier onthoudt. Het verschil tussen die twee plekken is precies waarom er geen banner is.</p>
-              </aside>
-
-              <!-- Nest: Je voortgang -->
-              <details class="section-details">
-                <summary>Je voortgang</summary>
-                <div class="details-content">
-                  <p>Dit formulier onthoudt waar je was. Als je halverwege stopt en morgen terugkomt, zijn je antwoorden er nog.</p>
-                  <p>Dat werkt via een ingebouwde functie van je browser die localStorage heet. Het is een stukje opslagruimte dat bij jouw apparaat hoort. Wij zetten je antwoorden daar neer onder een sleutel die begint met <code>cttt_</code>. Ze blijven daar tot je ze verstuurt of zelf verwijdert.</p>
-                  <p>Wij zien die opslag niet. Onze servers zien die niet. Het is alsof je een kladblok op je bureau hebt liggen. Wij staan niet in je kantoor.</p>
-                  <p>Wil je het zien? Open de Developer Tools van je browser. Dat kan met F12 op Windows of Cmd+Option+I op Mac. Ga naar Application, dan Local Storage. Daar staan je antwoorden, gewoon leesbaar.</p>
-                </div>
-              </details>
-
-              <!-- Link to Kamer 2 -->
-              <a href="#" class="room-link" data-goto="verzenden">Wat gebeurt er als ik op verzenden klik?</a>
-            </div>
-          </section>
-
-          <!-- Kamer 2: Het verzenden -->
-          <section class="privacy-section" data-section="verzenden">
-            <header class="section-header">
-              <h3>Het verzenden</h3>
-              <p class="section-lead">Dan pas bestaat je voor ons.</p>
-            </header>
-            <div class="section-body">
-              <p>Tot nu toe bestaan je antwoorden alleen op je apparaat. Wij weten niet dat je er bent. We weten niet wat je invult.</p>
-              <p>Dat verandert wanneer je op verzenden klikt.</p>
-              <p>Je antwoorden gaan dan versleuteld naar een Google-spreadsheet. Eén keer, één richting. Alleen de onderzoeksbeheerder heeft toegang. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit.</p>
-              <p>Daar stopt het. Je gegevens worden niet gedeeld met partners. Niet verkocht. Niet gebruikt om je te profileren of advertenties te tonen.</p>
-              <p>Na verzending krijg je een kopie in je browser. Die blijft lokaal, van jou, zo lang je wilt.</p>
-
-              <!-- Link to Kamer 3 -->
-              <a href="#" class="room-link" data-goto="rechten">Wat kan ik doen met mijn gegevens?</a>
-            </div>
-          </section>
-
-          <!-- Kamer 3: Je rechten -->
-          <section class="privacy-section" data-section="rechten">
-            <header class="section-header">
-              <h3>Je rechten</h3>
-              <p class="section-lead">Wat van jou is, blijft van jou.</p>
-            </header>
-            <div class="section-body">
-              <p>Wat lokaal staat is van jou. Je kunt het bekijken in Developer Tools onder Local Storage. Je kunt het verwijderen door je browsergegevens te wissen.</p>
-              <p>Wat je hebt verzonden staat op onze server. Daar gelden je AVG-rechten. Je mag inzage vragen. Correctie. Verwijdering. Overdracht naar een andere partij.</p>
-              <div class="rights-grid">
-                <span class="right-item">Inzage</span>
-                <span class="right-item">Correctie</span>
-                <span class="right-item">Verwijdering</span>
-                <span class="right-item">Overdracht</span>
-              </div>
-              <p>Mail naar <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a>. We reageren binnen dertig dagen.</p>
-              <p>Vind je dat we iets niet goed doen? Je kunt een klacht indienen bij de Autoriteit Persoonsgegevens. Dat recht heb je altijd.</p>
-
-              <!-- Link back to Kamer 1 -->
-              <a href="#" class="room-link room-link-back" data-goto="cookies">Terug naar het begin</a>
-            </div>
-          </section>
-
-        </div>
-
-        <!-- Footer -->
-        <footer class="privacy-footer">
-          <a href="mailto:monitoring@talentnaartop.nl" class="footer-contact">
-            <span>Vragen?</span>
-            <strong>monitoring@talentnaartop.nl</strong>
-          </a>
-        </footer>
+        <button class="pp-trigger" data-open="cookies" aria-label="Lees meer">
+          <span class="pp-trigger-icon"></span>
+        </button>
       </div>
+
+      <!-- Kamer 1: De cookies -->
+      <div class="pp-card pp-room" data-panel="cookies">
+        <button class="pp-close" data-close aria-label="Sluiten"></button>
+        <div class="pp-card-content">
+          <header class="pp-header">
+            <span class="pp-room-label">1</span>
+            <h3>De cookies</h3>
+          </header>
+          <div class="pp-body">
+            <p>Je vraagt je misschien af waar de cookiemelding is. Die is er niet.</p>
+            <p>Websites gebruiken cookies om informatie te onthouden tussen bezoeken. Vaak ook om je te volgen, of om te koppelen aan advertentienetwerken. Daar hoort een melding bij, en toestemming.</p>
+            <p>Wij gebruiken geen cookies. Nul. Je browser heeft daarnaast een andere opslagplek die localStorage heet. Die is van jou, niet van ons. Gegevens in localStorage verlaten je apparaat niet.</p>
+            <p>Daarom is er geen melding. Er is niets om toestemming voor te vragen.</p>
+
+            <details class="pp-details">
+              <summary>Je voortgang</summary>
+              <div class="pp-details-content">
+                <p>Dit formulier onthoudt waar je was. Als je halverwege stopt en morgen terugkomt, zijn je antwoorden er nog.</p>
+                <p>Dat werkt via localStorage — een stukje opslagruimte dat bij jouw apparaat hoort. Wij zetten je antwoorden daar neer onder een sleutel die begint met <code>cttt_</code>. Ze blijven daar tot je ze verstuurt of zelf verwijdert.</p>
+                <p>Wij zien die opslag niet. Het is alsof je een kladblok op je bureau hebt liggen. Wij staan niet in je kantoor.</p>
+              </div>
+            </details>
+          </div>
+          <footer class="pp-footer">
+            <button class="pp-nav-link" data-open="verzenden">
+              Wat gebeurt er als ik op verzenden klik?
+              <span class="pp-nav-arrow">→</span>
+            </button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Kamer 2: Het verzenden -->
+      <div class="pp-card pp-room" data-panel="verzenden">
+        <button class="pp-close" data-close aria-label="Sluiten"></button>
+        <div class="pp-card-content">
+          <header class="pp-header">
+            <span class="pp-room-label">2</span>
+            <h3>Het verzenden</h3>
+          </header>
+          <div class="pp-body">
+            <p>Tot nu toe bestaan je antwoorden alleen op je apparaat. Wij weten niet dat je er bent. We weten niet wat je invult.</p>
+            <p>Dat verandert wanneer je op verzenden klikt.</p>
+            <p>Je antwoorden gaan dan versleuteld naar een Google-spreadsheet. Eén keer, één richting. Alleen de onderzoeksbeheerder heeft toegang. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit.</p>
+            <p>Daar stopt het. Je gegevens worden niet gedeeld met partners. Niet verkocht. Niet gebruikt om je te profileren of advertenties te tonen.</p>
+            <p>Na verzending krijg je een kopie in je browser. Die blijft lokaal, van jou, zo lang je wilt.</p>
+          </div>
+          <footer class="pp-footer">
+            <button class="pp-nav-link" data-open="rechten">
+              Wat kan ik doen met mijn gegevens?
+              <span class="pp-nav-arrow">→</span>
+            </button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Kamer 3: Je rechten -->
+      <div class="pp-card pp-room" data-panel="rechten">
+        <button class="pp-close" data-close aria-label="Sluiten"></button>
+        <div class="pp-card-content">
+          <header class="pp-header">
+            <span class="pp-room-label">3</span>
+            <h3>Je rechten</h3>
+          </header>
+          <div class="pp-body">
+            <p>Wat lokaal staat is van jou. Je kunt het bekijken in Developer Tools onder Local Storage. Je kunt het verwijderen door je browsergegevens te wissen.</p>
+            <p>Wat je hebt verzonden staat op onze server. Daar gelden je AVG-rechten:</p>
+            <div class="pp-rights">
+              <span>Inzage</span>
+              <span>Correctie</span>
+              <span>Verwijdering</span>
+              <span>Overdracht</span>
+            </div>
+            <p>Mail naar <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a>. We reageren binnen dertig dagen.</p>
+            <p>Vind je dat we iets niet goed doen? Je kunt een klacht indienen bij de Autoriteit Persoonsgegevens. Dat recht heb je altijd.</p>
+          </div>
+          <footer class="pp-footer">
+            <a href="mailto:monitoring@talentnaartop.nl" class="pp-contact">
+              <span>Vragen?</span>
+              <strong>monitoring@talentnaartop.nl</strong>
+            </a>
+          </footer>
+        </div>
+      </div>
+
     </div>
     <!-- ==================================================================== -->
 
     <div class="demo-note">
-      <p><strong>Usage:</strong></p>
-      <p>1. Include <code>privacy-panel.css</code> in your head</p>
-      <p>2. Include <code>privacy-panel.js</code> before closing body</p>
-      <p>3. Copy the HTML structure above</p>
-      <p style="margin-top: 12px;"><strong>Customization:</strong></p>
-      <p>Override CSS variables on <code>.privacy-panel</code> to change colors:</p>
-      <pre style="background: #f0f0f0; padding: 8px; border-radius: 4px; margin-top: 8px; overflow-x: auto;"><code>.privacy-panel {
-  --pp-terracotta: #your-accent-color;
-  --pp-teal: #your-highlight-color;
-}</code></pre>
+      <p><strong>Interaction:</strong></p>
+      <p>Click the arrow on "De Deur" to open Kamer 1. Each room has a link to the next room, creating a stacked overlay effect like layered cards.</p>
+      <p>Click the × button to close a room and reveal the one beneath.</p>
     </div>
   </div>
 
-  <!-- Component JavaScript -->
   <script src="privacy-panel.js"></script>
 
 </body>
