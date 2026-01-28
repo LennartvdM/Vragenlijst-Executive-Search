@@ -21,19 +21,30 @@ import * as print from './print.js';
  * Initialize the survey module
  */
 function initSurvey() {
+  console.log('[Survey] initSurvey called');
+  console.log('[Survey] window.CONSTANTS:', typeof window.CONSTANTS);
+  console.log('[Survey] window.CONFIG:', typeof window.CONFIG);
+  console.log('[Survey] window.Storage:', typeof window.Storage);
+
   // Always setup event delegation first so navigation works
   setupEventDelegation();
 
   const formEl = document.getElementById('monitoringForm');
+  console.log('[Survey] monitoringForm found:', !!formEl);
   if (!formEl) {
+    console.log('[Survey] No form found, returning false');
     return false;
   }
 
   // Get session
-  state.setSession(window.Storage.getSession());
+  const session = window.Storage.getSession();
+  console.log('[Survey] Session:', session);
+  state.setSession(session);
   if (!state.session || !state.session.orgCode) {
+    console.log('[Survey] Invalid session, returning false');
     return false;
   }
+  console.log('[Survey] Session valid, continuing initialization');
 
   // Initialize UI
   form.initializeOrganizationInfo();
@@ -88,12 +99,15 @@ function initSurvey() {
  * Setup event delegation for all interactive elements
  */
 function setupEventDelegation() {
+  console.log('[Survey] Setting up event delegation');
   document.addEventListener('click', function(event) {
     const target = event.target;
+    console.log('[Survey] Click detected on:', target.tagName, target.className);
 
     const actionElement = target.closest('[data-action]');
     if (actionElement) {
       const action = actionElement.dataset.action;
+      console.log('[Survey] Action found:', action, 'step:', actionElement.dataset.step);
       handleAction(action, actionElement, event);
       return;
     }
@@ -110,11 +124,14 @@ function setupEventDelegation() {
  * Handle actions triggered by data-action attributes
  */
 function handleAction(action, element, event) {
-  switch (action) {
-    case 'goToStep':
-      const step = parseInt(element.dataset.step, 10);
-      navigation.goToStep(step);
-      break;
+  console.log('[Survey] Handling action:', action);
+  try {
+    switch (action) {
+      case 'goToStep':
+        const step = parseInt(element.dataset.step, 10);
+        console.log('[Survey] Going to step:', step);
+        navigation.goToStep(step);
+        break;
 
     case 'prevStep':
       navigation.prevStep();
@@ -208,6 +225,9 @@ function handleAction(action, element, event) {
     case 'closePreviewModal':
       modals.hidePreviewModal();
       break;
+    }
+  } catch (error) {
+    console.error('[Survey] Error in handleAction:', action, error);
   }
 }
 

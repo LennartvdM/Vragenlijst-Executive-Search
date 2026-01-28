@@ -139,7 +139,9 @@ export function showStep(step) {
  * @param {number} step - Step index to navigate to
  */
 export function goToStep(step) {
+  console.log('[Navigation] goToStep called with step:', step, 'currentStep:', state.currentStep);
   if (step === state.currentStep) {
+    console.log('[Navigation] Same step, scrolling to top');
     const scrollable = getScrollableContainer();
     if (scrollable) {
       scrollable.scrollTo({ top: 0, behavior: 'smooth' });
@@ -148,10 +150,12 @@ export function goToStep(step) {
     return;
   }
 
+  console.log('[Navigation] Navigating from', state.currentStep, 'to', step);
   triggerPassingEffect(state.currentStep, step);
   saveScrollPosition();
   state.setCurrentStep(step);
   showStep(step);
+  console.log('[Navigation] Navigation complete');
 }
 
 /**
