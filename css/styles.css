@@ -1868,12 +1868,27 @@ input[inputmode="numeric"] {
   -moz-appearance: textfield;
 }
 
+/* Consistent styling for all numeric inputs */
+.field input[inputmode="numeric"] {
+  width: 104px;
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.field .input-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 /* Non-compact fields in conditionals */
 .conditional .field:not(.field-compact) {
   margin-bottom: 12px;
 }
 
-.conditional .field:not(.field-compact) input {
+.conditional .field:not(.field-compact) input:not([inputmode="numeric"]) {
   width: 100%;
 }
 
@@ -3896,6 +3911,15 @@ input[inputmode="numeric"] {
     padding: 14px 16px;
     font-size: 16px; /* Prevents zoom on iOS */
     border-radius: 12px;
+  }
+
+  /* Keep numeric inputs compact on mobile */
+  .field input[inputmode="numeric"] {
+    width: 104px;
+    padding: 8px 12px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 6px;
   }
 
   /* Option cards - more touch-friendly */
