@@ -76,10 +76,12 @@ export function showStep(step) {
     document.dispatchEvent(new CustomEvent('generateReview'));
   }
 
-  // Show/hide "Ga naar controle" button
+  // Show/hide "Ga naar controle" button (both top and bottom)
   const btnGoToReview = document.getElementById('btnGoToReview');
+  const btnGoToReviewTop = document.getElementById('btnGoToReviewTop');
   const showReviewBtn = state.reviewVisited && step < window.CONFIG.REVIEW_STEP;
   if (btnGoToReview) btnGoToReview.style.display = showReviewBtn ? 'block' : 'none';
+  if (btnGoToReviewTop) btnGoToReviewTop.style.display = showReviewBtn ? 'block' : 'none';
 
   // Toggle footer class to hide Inkijkexemplaar when review button is visible
   const contentFooter = document.querySelector('.content-footer');
@@ -87,25 +89,38 @@ export function showStep(step) {
     contentFooter.classList.toggle('has-review-btn', showReviewBtn);
   }
 
-  // Update navigation buttons
+  // Update navigation buttons (both top and bottom)
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
+  const btnPrevTop = document.getElementById('btnPrevTop');
+  const btnNextTop = document.getElementById('btnNextTop');
+  const navButtonsTop = document.getElementById('navButtonsTop');
   const progressDotsTop = document.getElementById('progressDotsTop');
+  const progressDotsBottom = document.getElementById('progressDots');
 
   const showPrev = step > 0 && step <= window.CONFIG.REVIEW_STEP;
   if (btnPrev) btnPrev.style.display = showPrev ? 'block' : 'none';
+  if (btnPrevTop) btnPrevTop.style.display = showPrev ? 'block' : 'none';
 
   if (step === 13) {
     if (btnNext) {
       btnNext.textContent = 'Controleren';
       btnNext.style.display = 'block';
     }
+    if (btnNextTop) {
+      btnNextTop.textContent = 'Controleren';
+      btnNextTop.style.display = 'block';
+    }
   } else if (step === window.CONFIG.REVIEW_STEP) {
     if (progressDotsTop) progressDotsTop.style.display = 'none';
+    if (progressDotsBottom) progressDotsBottom.style.display = 'none';
+    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (btnNext) btnNext.style.display = 'none';
     if (btnPrev) btnPrev.style.display = 'block';
   } else if (step === window.CONFIG.SUCCESS_STEP) {
     if (progressDotsTop) progressDotsTop.style.display = 'none';
+    if (progressDotsBottom) progressDotsBottom.style.display = 'none';
+    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (btnNext) btnNext.style.display = 'none';
     if (btnPrev) btnPrev.style.display = 'none';
   } else {
@@ -113,7 +128,13 @@ export function showStep(step) {
       btnNext.textContent = window.CONSTANTS.UI.BUTTON_NEXT;
       btnNext.style.display = 'block';
     }
+    if (btnNextTop) {
+      btnNextTop.textContent = window.CONSTANTS.UI.BUTTON_NEXT;
+      btnNextTop.style.display = 'block';
+    }
     if (progressDotsTop) progressDotsTop.style.display = 'flex';
+    if (progressDotsBottom) progressDotsBottom.style.display = 'flex';
+    if (navButtonsTop) navButtonsTop.style.display = 'flex';
   }
 
   updateProgress();

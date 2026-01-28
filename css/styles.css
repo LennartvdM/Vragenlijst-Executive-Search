@@ -1272,6 +1272,13 @@ body {
   position: relative;
 }
 
+/* Progress dots at very top of content */
+.progress-dots-top {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
 .content-header {
   flex-shrink: 0;
   margin-bottom: 24px;
@@ -1279,25 +1286,26 @@ body {
   user-select: none;
 }
 
-/* Three-column header layout: Inkijkexemplaar | Progress dots | Spacer */
+/* Two-column header layout: Inkijkexemplaar | Nav buttons */
 .content-header .header-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 16px;
   min-height: 40px;
 }
 
-.content-header .preview-info-box-top {
-  justify-self: start;
+/* Small button variant for top nav */
+.btn-small {
+  padding: 6px 16px;
+  font-size: 12px;
+  height: 32px;
+  min-width: 80px;
 }
 
-.content-header .progress-dots-top {
-  justify-self: center;
-}
-
-.content-header .header-spacer {
-  /* Empty spacer for grid balance */
+.nav-buttons-top {
+  display: flex;
+  gap: 8px;
 }
 
 .content-scrollable {
@@ -1415,27 +1423,26 @@ body {
   user-select: none;
 }
 
-/* Three-column footer layout: Inkijkexemplaar | Progress dots | Nav buttons */
+/* Two-column footer layout: Inkijkexemplaar | Nav buttons */
 .content-footer .footer-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 16px;
   min-height: 48px;
-}
-
-.content-footer .preview-info-box-bottom {
-  justify-self: start;
-}
-
-.content-footer .progress-dots {
-  justify-self: center;
 }
 
 .content-footer .nav-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+/* Progress dots at very bottom */
+.progress-dots-bottom {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
 }
 
 /* Hide inkijkexemplaar when 3 buttons visible (controle shown) */
@@ -3811,7 +3818,9 @@ input[inputmode="numeric"] {
   }
 
   .content-footer .preview-info-box-bottom,
-  .content-footer .progress-dots {
+  .content-footer .progress-dots-bottom,
+  .progress-dots-top,
+  .nav-buttons-top {
     display: none;
   }
 
