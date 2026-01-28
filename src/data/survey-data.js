@@ -70,12 +70,12 @@ export const SURVEY_STEPS = [
     sectionNum: '2',
     subtitle: 'Kwantitatieve gegevens over uw organisatie',
     fields: [
-      { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal werknemers' },
-      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst Buiten-Europa' },
-      { type: 'number', name: 'aantal_top', label: 'Aantal in de top' },
-      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst Buiten-Europa' },
-      { type: 'number', name: 'aantal_subtop', label: 'Aantal in de subtop' },
-      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst Buiten-Europa' }
+      { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>' },
+      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
+      { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>' },
+      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
+      { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>' },
+      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' }
     ]
   },
   {

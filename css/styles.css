@@ -654,6 +654,11 @@ body {
   margin-bottom: 8px;
 }
 
+/* Dark terracotta highlight for specific label words */
+.label-highlight {
+  color: #995544;
+}
+
 .field input[type="text"],
 .field input[type="number"],
 .field input[type="date"],
