@@ -21,6 +21,7 @@
   --terracotta: #c4785a;
   --brown: #8b5a3c;
   --cream: #fffbf7;
+  --input-fill: #ffffff;
   --text: #4a3728;
   --text-light: #7a6555;
   --error: #d64545;
@@ -666,7 +667,7 @@ body {
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
-  background: var(--cream);
+  background: var(--input-fill);
   color: var(--text);
   transition: all 0.3s ease;
   opacity: 0.6;
@@ -742,7 +743,7 @@ body {
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
-  background: var(--cream);
+  background: var(--input-fill);
   color: var(--text);
   transition: all 0.3s ease;
   opacity: 0.6;
@@ -2486,7 +2487,7 @@ input[inputmode="numeric"] {
 .form-section .comments-section .comments-field textarea:focus {
   outline: none;
   border-color: var(--salmon);
-  background: var(--cream);
+  background: var(--input-fill);
 }
 
 .form-section .comments-section .comments-field textarea::placeholder {
@@ -3010,7 +3011,7 @@ input[inputmode="numeric"] {
   border: 1px solid var(--border, #ddd);
   border-radius: 6px;
   font-size: 14px;
-  background: white;
+  background: var(--input-fill);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -4543,7 +4544,7 @@ body.mobile-drawer-open {
   padding: 12px 14px;
   border: 1px solid var(--sand-dark);
   border-radius: 8px;
-  background: var(--cream-light);
+  background: var(--input-fill);
   font-family: inherit;
   font-size: inherit;
   line-height: 1.5;
@@ -4556,7 +4557,7 @@ body.mobile-drawer-open {
 .contenteditable-field:focus {
   outline: none;
   border-color: var(--salmon);
-  background: var(--cream);
+  background: var(--input-fill);
 }
 
 .contenteditable-field:empty::before {
