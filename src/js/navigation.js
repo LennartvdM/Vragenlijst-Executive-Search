@@ -83,6 +83,12 @@ export function showStep(step) {
   if (btnGoToReview) btnGoToReview.style.display = showReviewBtn ? 'block' : 'none';
   if (btnGoToReviewTop) btnGoToReviewTop.style.display = showReviewBtn ? 'block' : 'none';
 
+  // Toggle footer class to hide Inkijkexemplaar when review button is visible
+  const contentFooter = document.querySelector('.content-footer');
+  if (contentFooter) {
+    contentFooter.classList.toggle('has-review-btn', showReviewBtn);
+  }
+
   // Update navigation buttons
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');

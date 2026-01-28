@@ -1393,22 +1393,28 @@ body {
   margin-top: 16px;
   padding-top: 12px;
   user-select: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
 }
 
 .content-footer .nav-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 12px;
+}
+
+.content-footer .progress-dots {
+  margin-top: 12px;
 }
 
 .content-footer .preview-info-box-bottom {
   position: absolute;
   left: 0;
-  top: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Hide when 3 buttons visible (controle shown) - controlled via JS class */
+.content-footer.has-review-btn .preview-info-box-bottom {
+  display: none;
 }
 
 h1 {
