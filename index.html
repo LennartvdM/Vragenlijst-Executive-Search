@@ -134,21 +134,18 @@
           <li>Beantwoord vragen over diversiteitsbeleid</li>
           <li>De CEO/directeur ondertekent digitaal</li>
         </ul>
-        <!-- Privacy Disclosure - Sidebar + Content with Deep Hierarchy -->
+        <!-- Privacy Disclosure - Room-based Navigation -->
         <div class="privacy-panel" id="privacyPanel">
           <!-- Sidebar Navigation -->
           <nav class="privacy-sidebar">
             <div class="privacy-highlighter" id="privacyHighlighter"></div>
-            <div class="privacy-nav-item active" data-section="premise">
+            <div class="privacy-nav-item active" data-section="cookies">
               <span class="nav-marker"></span>
             </div>
-            <div class="privacy-nav-item" data-section="local">
+            <div class="privacy-nav-item" data-section="verzenden">
               <span class="nav-marker"></span>
             </div>
-            <div class="privacy-nav-item" data-section="journey">
-              <span class="nav-marker"></span>
-            </div>
-            <div class="privacy-nav-item" data-section="rights">
+            <div class="privacy-nav-item" data-section="rechten">
               <span class="nav-marker"></span>
             </div>
           </nav>
@@ -158,90 +155,75 @@
             <!-- Main scrollable content -->
             <div class="privacy-scroll" id="privacyScroll">
 
-              <!-- Section: Premise -->
-              <section class="privacy-section" data-section="premise">
+              <!-- Kamer 1: De cookies -->
+              <section class="privacy-section" data-section="cookies">
                 <header class="section-header">
-                  <h3>Geen cookiebanner.</h3>
-                  <p class="section-lead">Omdat we u niet volgen.</p>
+                  <h3>Waar is de cookiemelding?</h3>
+                  <p class="section-lead">Die is er niet. En dat is geen vergissing.</p>
                 </header>
                 <div class="section-body">
-                  <p>Dat is geen marketingpraatje. Dat is architectuur. Dit formulier is gebouwd met één principe: <em>uw gegevens zijn van u</em>.</p>
+                  <p>Je vraagt je misschien af waar de cookiemelding is. Die is er niet.</p>
+                  <p>Websites gebruiken cookies om informatie te onthouden tussen bezoeken. Vaak ook om je te volgen, of om te koppelen aan advertentienetwerken. Daar hoort een melding bij, en toestemming.</p>
+                  <p>Wij gebruiken geen cookies. Nul. Je browser heeft daarnaast een andere opslagplek die localStorage heet. Die is van jou, niet van ons. Gegevens in localStorage verlaten je apparaat niet. Ze worden niet meegestuurd bij elk verzoek aan een server, zoals cookies dat doen.</p>
+                  <p>Daarom is er geen melding. Er is niets om toestemming voor te vragen.</p>
                   <aside class="section-aside">
-                    <p>Ze leven in uw browser — als een kladblok op uw bureau. Wij kijken niet mee. We <em>kunnen</em> niet meekijken. Dat hebben we zo ontworpen.</p>
+                    <p>Wil je het checken? Open Developer Tools, ga naar Application, dan Cookies. Die lijst is leeg. Kijk daarna bij Local Storage. Daar staat wat dit formulier onthoudt. Het verschil tussen die twee plekken is precies waarom er geen banner is.</p>
                   </aside>
-                </div>
-              </section>
 
-              <!-- Section: Local Storage -->
-              <section class="privacy-section" data-section="local">
-                <header class="section-header">
-                  <h3>Tot u op verzenden klikt</h3>
-                  <p class="section-lead">Blijft alles hier. Op uw apparaat. Letterlijk.</p>
-                </header>
-                <div class="section-body">
-                  <dl class="data-list">
-                    <div class="data-item">
-                      <dt>Uw antwoorden</dt>
-                      <dd>Lokaal bewaard zodat u niet opnieuw hoeft te beginnen</dd>
-                    </div>
-                    <div class="data-item">
-                      <dt>Uw voortgang</dt>
-                      <dd>Zodat u morgen verder kunt waar u was gebleven</dd>
-                    </div>
-                    <div class="data-item">
-                      <dt>Uw sessie</dt>
-                      <dd>24 uur geldig, daarna opnieuw inloggen</dd>
-                    </div>
-                  </dl>
-                  <aside class="section-footnote">
-                    <p>Dit zijn geen cookies. Dit is uw browser die onthoudt wat u deed — zoals een tekstverwerker dat doet. Wij zien dit niet.</p>
-                  </aside>
-                </div>
-              </section>
-
-              <!-- Section: The Journey -->
-              <section class="privacy-section" data-section="journey">
-                <header class="section-header">
-                  <h3>Het moment van verzenden</h3>
-                  <p class="section-lead">Dan pas bestaat u voor ons.</p>
-                </header>
-                <div class="section-body">
-                  <p>Eén keer. Eén richting. Eén doel.</p>
-                  <p>Uw antwoorden reizen beveiligd naar de beheerder. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit. Dat is het.</p>
-                  <ul class="negation-list">
-                    <li>Niet gedeeld met partners</li>
-                    <li>Niet verkocht aan adverteerders</li>
-                    <li>Niet geanalyseerd door algoritmes</li>
-                  </ul>
+                  <!-- Nest: Je voortgang -->
                   <details class="section-details">
-                    <summary>Na verzenden</summary>
+                    <summary>Je voortgang</summary>
                     <div class="details-content">
-                      <p>Krijgt u een kopie in uw browser — voor uw eigen administratie. Die blijft van u, lokaal, zo lang u wilt.</p>
+                      <p>Dit formulier onthoudt waar je was. Als je halverwege stopt en morgen terugkomt, zijn je antwoorden er nog.</p>
+                      <p>Dat werkt via een ingebouwde functie van je browser die localStorage heet. Het is een stukje opslagruimte dat bij jouw apparaat hoort. Wij zetten je antwoorden daar neer onder een sleutel die begint met <code>cttt_</code>. Ze blijven daar tot je ze verstuurt of zelf verwijdert.</p>
+                      <p>Wij zien die opslag niet. Onze servers zien die niet. Het is alsof je een kladblok op je bureau hebt liggen. Wij staan niet in je kantoor.</p>
+                      <p>Wil je het zien? Open de Developer Tools van je browser. Dat kan met F12 op Windows of Cmd+Option+I op Mac. Ga naar Application, dan Local Storage. Daar staan je antwoorden, gewoon leesbaar.</p>
                     </div>
                   </details>
+
+                  <!-- Link to Kamer 2 -->
+                  <a href="#" class="room-link" data-goto="verzenden">Wat gebeurt er als ik op verzenden klik?</a>
                 </div>
               </section>
 
-              <!-- Section: Rights -->
-              <section class="privacy-section" data-section="rights">
+              <!-- Kamer 2: Het verzenden -->
+              <section class="privacy-section" data-section="verzenden">
                 <header class="section-header">
-                  <h3>U blijft de eigenaar.</h3>
-                  <p class="section-lead">Altijd.</p>
+                  <h3>Het verzenden</h3>
+                  <p class="section-lead">Dan pas bestaat je voor ons.</p>
                 </header>
                 <div class="section-body">
+                  <p>Tot nu toe bestaan je antwoorden alleen op je apparaat. Wij weten niet dat je er bent. We weten niet wat je invult.</p>
+                  <p>Dat verandert wanneer je op verzenden klikt.</p>
+                  <p>Je antwoorden gaan dan versleuteld naar een Google-spreadsheet. Eén keer, één richting. Alleen de onderzoeksbeheerder heeft toegang. Ze worden onderdeel van het jaarlijkse rapport over culturele diversiteit.</p>
+                  <p>Daar stopt het. Je gegevens worden niet gedeeld met partners. Niet verkocht. Niet gebruikt om je te profileren of advertenties te tonen.</p>
+                  <p>Na verzending krijg je een kopie in je browser. Die blijft lokaal, van jou, zo lang je wilt.</p>
+
+                  <!-- Link to Kamer 3 -->
+                  <a href="#" class="room-link" data-goto="rechten">Wat kan ik doen met mijn gegevens?</a>
+                </div>
+              </section>
+
+              <!-- Kamer 3: Je rechten -->
+              <section class="privacy-section" data-section="rechten">
+                <header class="section-header">
+                  <h3>Je rechten</h3>
+                  <p class="section-lead">Wat van jou is, blijft van jou.</p>
+                </header>
+                <div class="section-body">
+                  <p>Wat lokaal staat is van jou. Je kunt het bekijken in Developer Tools onder Local Storage. Je kunt het verwijderen door je browsergegevens te wissen.</p>
+                  <p>Wat je hebt verzonden staat op onze server. Daar gelden je AVG-rechten. Je mag inzage vragen. Correctie. Verwijdering. Overdracht naar een andere partij.</p>
                   <div class="rights-grid">
                     <span class="right-item">Inzage</span>
                     <span class="right-item">Correctie</span>
                     <span class="right-item">Verwijdering</span>
                     <span class="right-item">Overdracht</span>
                   </div>
-                  <p>De AVG geeft u rechten. Wij respecteren ze niet omdat het moet — maar omdat het logisch is.</p>
-                  <details class="section-details">
-                    <summary>Juridische grondslag</summary>
-                    <div class="details-content">
-                      <p>Geen toestemming nodig voor de lokale opslag — het is noodzakelijk voor de werking (AVG 6.1.b). Maar transparantie is niet optioneel. Vandaar dit verhaal, zonder vinkje.</p>
-                    </div>
-                  </details>
+                  <p>Mail naar <a href="mailto:monitoring@talentnaartop.nl">monitoring@talentnaartop.nl</a>. We reageren binnen dertig dagen.</p>
+                  <p>Vind je dat we iets niet goed doen? Je kunt een klacht indienen bij de Autoriteit Persoonsgegevens. Dat recht heb je altijd.</p>
+
+                  <!-- Link back to Kamer 1 -->
+                  <a href="#" class="room-link room-link-back" data-goto="cookies">Terug naar het begin</a>
                 </div>
               </section>
 

@@ -639,6 +639,82 @@ body {
 }
 
 /* ==========================================================================
+   Room Navigation Links
+   ========================================================================== */
+.room-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(196, 120, 90, 0.08) 0%, rgba(196, 120, 90, 0.03) 100%);
+  border: 1px solid rgba(196, 120, 90, 0.15);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--terracotta);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.room-link::after {
+  content: '\2192';
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.room-link:hover {
+  background: linear-gradient(135deg, rgba(196, 120, 90, 0.15) 0%, rgba(196, 120, 90, 0.08) 100%);
+  border-color: rgba(196, 120, 90, 0.25);
+  transform: translateX(2px);
+}
+
+.room-link:hover::after {
+  transform: translateX(3px);
+}
+
+.room-link-back::after {
+  content: '\2190';
+  order: -1;
+}
+
+.room-link-back:hover {
+  transform: translateX(-2px);
+}
+
+.room-link-back:hover::after {
+  transform: translateX(-3px);
+}
+
+/* ==========================================================================
+   Privacy Panel Code Tag Styling
+   ========================================================================== */
+.privacy-panel code {
+  background: rgba(212, 196, 168, 0.25);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  font-size: 0.9em;
+  color: var(--terracotta);
+}
+
+/* ==========================================================================
+   Privacy Panel Inline Email Links
+   ========================================================================== */
+.privacy-panel .section-body a[href^="mailto:"] {
+  color: var(--terracotta);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px dotted var(--terracotta);
+  transition: border-color 0.2s;
+}
+
+.privacy-panel .section-body a[href^="mailto:"]:hover {
+  border-bottom-style: solid;
+}
+
+/* ==========================================================================
    Form Elements
    ========================================================================== */
 
