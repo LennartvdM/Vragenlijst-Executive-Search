@@ -1766,7 +1766,58 @@ h1 {
   visibility: visible;
 }
 
-.conditional .field input {
+/* Compact inline fields for conditionals */
+.conditional .field-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 24px;
+  margin-bottom: 12px;
+}
+
+.conditional .field-compact label {
+  margin-bottom: 0;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.conditional .field-compact .input-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.conditional .field-compact input {
+  width: 80px;
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.field-suffix {
+  font-size: 14px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Hide number input spinners */
+input[inputmode="numeric"]::-webkit-outer-spin-button,
+input[inputmode="numeric"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[inputmode="numeric"] {
+  -moz-appearance: textfield;
+}
+
+/* Non-compact fields in conditionals */
+.conditional .field:not(.field-compact) {
+  margin-bottom: 12px;
+}
+
+.conditional .field:not(.field-compact) input {
   width: 100%;
 }
 
