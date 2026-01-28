@@ -83,11 +83,12 @@ function renderField(field) {
     case 'radio-cards': return renderRadioCards(field);
     case 'number': {
       const compactClass = field.compact ? ' field-compact' : '';
+      const groupEndClass = field.groupEnd ? ' field-group-end' : '';
       const placeholder = field.placeholder ? ` placeholder="${field.placeholder}"` : '';
       const maxLength = field.maxLength ? ` maxlength="${field.maxLength}"` : '';
       const suffix = field.suffix ? `<span class="field-suffix">${field.suffix}</span>` : '';
       return `
-          <div class="field${compactClass}">
+          <div class="field${compactClass}${groupEndClass}">
             <label for="${field.name}">${field.label}</label>
             <div class="input-wrapper">
               <input type="text" inputmode="numeric" pattern="[0-9]*" id="${field.name}" name="${field.name}"${placeholder}${maxLength}>
