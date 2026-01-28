@@ -76,7 +76,7 @@ export function showStep(step) {
     document.dispatchEvent(new CustomEvent('generateReview'));
   }
 
-  // Show/hide "Ga naar controle" button
+  // Show/hide "Ga naar controle" button (both top and bottom)
   const btnGoToReview = document.getElementById('btnGoToReview');
   const btnGoToReviewTop = document.getElementById('btnGoToReviewTop');
   const showReviewBtn = state.reviewVisited && step < window.CONFIG.REVIEW_STEP;
@@ -89,14 +89,14 @@ export function showStep(step) {
     contentFooter.classList.toggle('has-review-btn', showReviewBtn);
   }
 
-  // Update navigation buttons
+  // Update navigation buttons (both top and bottom)
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
-  const navButtons = document.getElementById('navButtons');
   const btnPrevTop = document.getElementById('btnPrevTop');
   const btnNextTop = document.getElementById('btnNextTop');
   const navButtonsTop = document.getElementById('navButtonsTop');
   const progressDotsTop = document.getElementById('progressDotsTop');
+  const progressDotsBottom = document.getElementById('progressDots');
 
   const showPrev = step > 0 && step <= window.CONFIG.REVIEW_STEP;
   if (btnPrev) btnPrev.style.display = showPrev ? 'block' : 'none';
@@ -109,17 +109,18 @@ export function showStep(step) {
     }
     if (btnNextTop) {
       btnNextTop.textContent = 'Controleren';
-      btnNextTop.disabled = false;
-      btnNextTop.classList.remove('btn-disabled-top');
+      btnNextTop.style.display = 'block';
     }
   } else if (step === window.CONFIG.REVIEW_STEP) {
-    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (progressDotsTop) progressDotsTop.style.display = 'none';
+    if (progressDotsBottom) progressDotsBottom.style.display = 'none';
+    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (btnNext) btnNext.style.display = 'none';
     if (btnPrev) btnPrev.style.display = 'block';
   } else if (step === window.CONFIG.SUCCESS_STEP) {
-    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (progressDotsTop) progressDotsTop.style.display = 'none';
+    if (progressDotsBottom) progressDotsBottom.style.display = 'none';
+    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (btnNext) btnNext.style.display = 'none';
     if (btnPrev) btnPrev.style.display = 'none';
   } else {
@@ -129,11 +130,11 @@ export function showStep(step) {
     }
     if (btnNextTop) {
       btnNextTop.textContent = window.CONSTANTS.UI.BUTTON_NEXT;
-      btnNextTop.disabled = false;
-      btnNextTop.classList.remove('btn-disabled-top');
+      btnNextTop.style.display = 'block';
     }
-    if (navButtonsTop) navButtonsTop.style.display = 'flex';
     if (progressDotsTop) progressDotsTop.style.display = 'flex';
+    if (progressDotsBottom) progressDotsBottom.style.display = 'flex';
+    if (navButtonsTop) navButtonsTop.style.display = 'flex';
   }
 
   updateProgress();

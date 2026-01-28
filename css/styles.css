@@ -1272,11 +1272,40 @@ body {
   position: relative;
 }
 
+/* Progress dots at very top of content */
+.progress-dots-top {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
 .content-header {
   flex-shrink: 0;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
   user-select: none;
+}
+
+/* Two-column header layout: Inkijkexemplaar | Nav buttons */
+.content-header .header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 40px;
+}
+
+/* Small button variant for top nav */
+.btn-small {
+  padding: 6px 16px;
+  font-size: 12px;
+  height: 32px;
+  min-width: 80px;
+}
+
+.nav-buttons-top {
+  display: flex;
+  gap: 8px;
 }
 
 .content-scrollable {
@@ -1388,36 +1417,37 @@ body {
 }
 
 .content-footer {
-  position: relative;
   flex-shrink: 0;
   margin-top: 16px;
   padding-top: 12px;
   user-select: none;
 }
 
+/* Two-column footer layout: Inkijkexemplaar | Nav buttons */
+.content-footer .footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 48px;
+}
+
 .content-footer .nav-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding-left: 280px;
 }
 
-.content-footer .progress-dots {
+/* Progress dots at very bottom */
+.progress-dots-bottom {
+  display: flex;
+  justify-content: center;
   margin-top: 12px;
 }
 
-.content-footer .preview-info-box-bottom {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 24px;
-  max-width: 45%;
-}
-
-/* Hide when 3 buttons visible (controle shown) - controlled via JS class */
+/* Hide inkijkexemplaar when 3 buttons visible (controle shown) */
 .content-footer.has-review-btn .preview-info-box-bottom {
-  display: none;
+  visibility: hidden;
 }
 
 h1 {
@@ -2252,45 +2282,10 @@ input[inputmode="numeric"] {
    Survey Page - Navigation
    ========================================================================== */
 
-/* ==========================================================================
-   Survey Page - Top Bar (dots + print + nav)
-   ========================================================================== */
-
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 48px; /* Push buttons down, away from dots */
-  padding-bottom: 8px; /* Close to divider line */
-  margin-bottom: 6px;
-  /* No border - divider is drawn by .container::after alignment rig */
-}
-
-.bottom-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 24px;
-  padding-top: 20px;
-}
-
 .nav-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-}
-
-.nav-buttons-top {
-  margin: 0;
-  padding: 0;
-}
-
-/* Small button variant */
-.btn-small {
-  padding: 6px 16px;
-  font-size: 12px;
-  height: 32px;
-  min-width: 80px;
+  gap: 12px;
 }
 
 .progress-dots {
@@ -2324,28 +2319,6 @@ input[inputmode="numeric"] {
   background: var(--salmon);
 }
 
-.progress-dots-top-container {
-  position: absolute;
-  top: 12px;
-  left: 20px;  /* Match .content padding-left */
-  right: 60px; /* Match .content padding-right */
-  display: flex;
-  justify-content: center;
-}
-
-.progress-dots-bottom-container {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  padding: 12px 0 0 0;
-}
-
-.progress-dots-top,
-.progress-dots-bottom {
-  position: static;
-  transform: none;
-  justify-content: center;
-}
 
 /* ==========================================================================
    Survey Page - Steps
@@ -2601,15 +2574,10 @@ input[inputmode="numeric"] {
   .progress-dots,
   .progress-dots-top,
   .progress-dots-bottom,
-  .progress-dots-top-container,
-  .progress-dots-bottom-container,
   .nav-buttons,
-  .nav-buttons-top,
   .btn-print,
   .comments-section,
-  .logout-btn,
-  .top-bar,
-  .bottom-bar {
+  .logout-btn {
     display: none !important;
   }
 
@@ -3510,10 +3478,6 @@ input[inputmode="numeric"] {
   display: block;
 }
 
-/* Top bar uses relative positioning for the top preview box */
-.top-bar {
-  position: relative;
-}
 
 /* Bottom preview box is in flex row with nav buttons */
 .preview-info-box-bottom {
@@ -3848,14 +3812,15 @@ input[inputmode="numeric"] {
     margin-top: 24px;
   }
 
-  /* Hide progress dots at top on mobile - we have the drawer */
-  .progress-dots-top-container {
-    display: none;
+  /* Hide footer-row elements on mobile (using fixed nav instead) */
+  .content-footer .footer-row {
+    display: block;
   }
 
-  /* Top bar adjustments */
-  /* Hide top navigation on mobile - using fixed bottom nav instead */
-  .top-bar {
+  .content-footer .preview-info-box-bottom,
+  .content-footer .progress-dots-bottom,
+  .progress-dots-top,
+  .nav-buttons-top {
     display: none;
   }
 
@@ -3877,12 +3842,6 @@ input[inputmode="numeric"] {
     font-size: 15px;
     min-height: 48px;
     border-radius: 12px;
-  }
-
-  .btn-small {
-    padding: 12px 18px;
-    font-size: 14px;
-    min-height: 44px;
   }
 
   /* Fixed bottom navigation bar for thumb comfort */
@@ -4363,11 +4322,6 @@ input[inputmode="numeric"] {
 
   .btn {
     padding: 12px 20px;
-  }
-
-  .btn-small {
-    padding: 10px 14px;
-    font-size: 13px;
   }
 
   /* Likert cards - extra small screens */
