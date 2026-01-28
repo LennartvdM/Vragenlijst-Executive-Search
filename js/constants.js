@@ -128,3 +128,6 @@ Object.freeze(CONSTANTS.API_ACTIONS);
 Object.freeze(CONSTANTS.CSS);
 Object.freeze(CONSTANTS.TIMEOUTS);
 Object.freeze(CONSTANTS.RETRY);
+
+// Expose on window for ES6 modules
+window.CONSTANTS = CONSTANTS;

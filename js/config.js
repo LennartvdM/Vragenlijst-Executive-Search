@@ -102,3 +102,6 @@ const CONFIG = {
 Object.freeze(CONFIG.STORAGE_KEYS);
 Object.freeze(CONFIG.STEP_FIELDS);
 Object.freeze(CONFIG.SECTION_FIELDS);
+
+// Expose on window for ES6 modules
+window.CONFIG = CONFIG;
