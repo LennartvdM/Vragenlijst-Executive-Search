@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Panel - Hover Popover Design</title>
+  <title>Privacy Panel - Overlay Popover Design</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,6 +31,18 @@
       color: #333;
     }
 
+    .demo-content {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .demo-content p {
+      margin: 0 0 16px 0;
+      color: #666;
+    }
+
     .demo-note {
       margin-top: 40px;
       padding: 16px;
@@ -44,10 +56,15 @@
 <body>
 
   <div class="demo-container">
-    <h1>Privacy Panel - Hover Popovers</h1>
+    <h1>Privacy Panel - Overlay Design</h1>
+
+    <div class="demo-content">
+      <p>This is some example page content that will blur when the privacy panel is opened.</p>
+      <p>Click the panel below to see the overlay effect.</p>
+    </div>
 
     <!-- ====================================================================
-         PRIVACY PANEL - Hover popover design
+         PRIVACY PANEL - Overlay popover design
          ==================================================================== -->
     <div class="privacy-panel" id="privacyPanel">
 
@@ -113,8 +130,7 @@
       <!-- Trigger clone for inline localStorage link -->
       <span class="pp-trigger-clone" id="triggerClone">localStorage</span>
 
-      <!-- Backdrop and safezone -->
-      <div class="pp-popover-backdrop" id="popoverBackdrop"></div>
+      <!-- Safezone (moved to overlay by JS) -->
       <div class="pp-popover-safezone" id="popoverSafezone"></div>
 
     </div>
@@ -122,9 +138,9 @@
 
     <div class="demo-note">
       <p><strong>Interaction:</strong></p>
-      <p>Click "De Deur" to open the room. Hover over highlighted terms to see popovers with more information.</p>
-      <p>The inline "localStorage" link shows a popover to the right. The bottom links show popovers above.</p>
-      <p>Move your mouse away from the card to close it. Press Escape to close immediately.</p>
+      <p>Click "De Deur" to open the overlay. The rest of the page will blur.</p>
+      <p>Hover over highlighted terms to see popovers with more information.</p>
+      <p>Click the backdrop or press Escape to close the overlay.</p>
     </div>
   </div>
 

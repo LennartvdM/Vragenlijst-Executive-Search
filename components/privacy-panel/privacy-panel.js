@@ -1,16 +1,16 @@
 /**
- * Privacy Panel - Hover Popover Component
+ * Privacy Panel - Overlay Popover Component
  *
- * A compact door that expands into a card with hover-based popovers.
- * Mouse-driven interaction with safe zones and blur effects.
+ * A compact door that expands into a centered overlay with blur backdrop.
+ * Mouse-driven interaction with safe zones and popover tooltips.
  *
  * Features:
- * - Door opens to reveal "kamer" (room) on click
+ * - Door opens to reveal centered overlay with page blur
  * - Hover triggers open popovers with information
- * - Blur effect on main content when popover is active
+ * - Blur effect on kamer content when popover is active
  * - Safe zones prevent accidental closing
  * - Clone trigger for inline links stays visible
- * - Escape key closes everything
+ * - Escape key or backdrop click closes overlay
  * - No external dependencies
  */
 
@@ -37,18 +37,46 @@
     var popovers = panel.querySelectorAll('.pp-popover');
     var triggerClone = panel.querySelector('.pp-trigger-clone');
     var popoverSafezone = panel.querySelector('.pp-popover-safezone');
-    var backdrop = panel.querySelector('.pp-popover-backdrop');
     var triggerArea = panel.querySelector('.pp-trigger-area');
 
     // Find inline trigger (in kamer-content, not trigger-area)
     var inlineTrigger = panel.querySelector('.pp-kamer-content .pp-trigger-inline[data-pop]');
 
+    // Create overlay container
+    var overlayContainer = document.createElement('div');
+    overlayContainer.className = 'pp-overlay-container';
+
+    var overlayBackdrop = document.createElement('div');
+    overlayBackdrop.className = 'pp-overlay-backdrop';
+    overlayContainer.appendChild(overlayBackdrop);
+
+    // Move kamer into overlay (if it exists)
+    if (kamer) {
+      overlayContainer.appendChild(kamer);
+    }
+
+    // Move popovers into overlay
+    popovers.forEach(function(p) {
+      overlayContainer.appendChild(p);
+    });
+
+    // Move trigger clone and safezone into overlay
+    if (triggerClone) {
+      overlayContainer.appendChild(triggerClone);
+    }
+    if (popoverSafezone) {
+      overlayContainer.appendChild(popoverSafezone);
+    }
+
+    // Add overlay to body
+    document.body.appendChild(overlayContainer);
+
     // Timers
-    var closeTimeout = null;
     var popoverCloseTimeout = null;
 
     // State
     var activePopover = null;
+    var isOpen = false;
 
     /**
      * Close all popovers and reset state
@@ -73,7 +101,7 @@
     }
 
     /**
-     * Close everything - popovers and kamer
+     * Close everything - popovers and overlay
      */
     function closeEverything() {
       closeAllPopovers();
@@ -81,12 +109,14 @@
         kamer.classList.remove('has-popover');
       }
       hideClone();
-      if (backdrop) {
-        backdrop.classList.remove('is-visible');
-      }
       if (popoverSafezone) {
         popoverSafezone.classList.remove('is-visible');
       }
+
+      // Close overlay
+      overlayContainer.classList.remove('is-open');
+      document.body.classList.remove('pp-blur-active');
+      isOpen = false;
     }
 
     /**
@@ -159,31 +189,6 @@
     }
 
     /**
-     * Start timer to close everything (kamer + popovers)
-     */
-    function startCloseTimer() {
-      closeTimeout = setTimeout(function() {
-        closeEverything();
-        if (kamer) {
-          kamer.classList.remove('is-open');
-        }
-        if (door) {
-          door.classList.remove('is-open');
-        }
-      }, 150);
-    }
-
-    /**
-     * Cancel the close timer
-     */
-    function cancelCloseTimer() {
-      if (closeTimeout) {
-        clearTimeout(closeTimeout);
-        closeTimeout = null;
-      }
-    }
-
-    /**
      * Start timer to close just popovers
      */
     function startPopoverCloseTimer() {
@@ -214,7 +219,7 @@
      */
     function openPopover(trigger) {
       var popId = 'pp-pop-' + trigger.dataset.pop;
-      var pop = panel.querySelector('#' + popId);
+      var pop = overlayContainer.querySelector('#' + popId);
       if (!pop) return;
 
       closeAllPopovers();
@@ -225,9 +230,6 @@
       trigger.classList.add('is-active');
       if (kamer) {
         kamer.classList.add('has-popover');
-      }
-      if (backdrop) {
-        backdrop.classList.add('is-visible');
       }
 
       requestAnimationFrame(function() {
@@ -243,28 +245,26 @@
       });
     }
 
+    /**
+     * Open the overlay
+     */
+    function openOverlay() {
+      overlayContainer.classList.add('is-open');
+      document.body.classList.add('pp-blur-active');
+      isOpen = true;
+    }
+
     // Door click handler
     if (door) {
       door.addEventListener('click', function() {
-        door.classList.add('is-open');
-        if (kamer) {
-          kamer.classList.add('is-open');
-        }
+        openOverlay();
       });
     }
 
-    // Backdrop click handler
-    if (backdrop) {
-      backdrop.addEventListener('click', function() {
-        closeEverything();
-      });
-    }
-
-    // Kamer mouse handlers
-    if (kamer) {
-      kamer.addEventListener('mouseenter', cancelCloseTimer);
-      kamer.addEventListener('mouseleave', startCloseTimer);
-    }
+    // Backdrop click handler - close overlay
+    overlayBackdrop.addEventListener('click', function() {
+      closeEverything();
+    });
 
     // Safe zone handlers for popovers and related elements
     var popoverSafeZones = [triggerClone, popoverSafezone].filter(Boolean);
@@ -275,7 +275,6 @@
     popoverSafeZones.forEach(function(zone) {
       if (!zone) return;
       zone.addEventListener('mouseenter', function() {
-        cancelCloseTimer();
         cancelPopoverCloseTimer();
       });
       zone.addEventListener('mouseleave', startPopoverCloseTimer);
@@ -284,7 +283,6 @@
     // Trigger area handlers
     if (triggerArea) {
       triggerArea.addEventListener('mouseenter', function() {
-        cancelCloseTimer();
         cancelPopoverCloseTimer();
       });
       triggerArea.addEventListener('mouseleave', function(e) {
@@ -312,7 +310,7 @@
 
     // Escape key handler
     function handleKeydown(e) {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && isOpen) {
         closeEverything();
       }
     }
@@ -323,24 +321,13 @@
 
     return {
       open: function() {
-        if (door) {
-          door.classList.add('is-open');
-        }
-        if (kamer) {
-          kamer.classList.add('is-open');
-        }
+        openOverlay();
       },
       close: function() {
         closeEverything();
-        if (kamer) {
-          kamer.classList.remove('is-open');
-        }
-        if (door) {
-          door.classList.remove('is-open');
-        }
       },
       isOpen: function() {
-        return kamer && kamer.classList.contains('is-open');
+        return isOpen;
       },
       getActivePopover: function() {
         return activePopover ? activePopover.id : null;
@@ -348,6 +335,20 @@
       destroy: function() {
         document.removeEventListener('keydown', handleKeydown);
         closeEverything();
+        // Move elements back and remove overlay
+        if (kamer) {
+          panel.appendChild(kamer);
+        }
+        popovers.forEach(function(p) {
+          panel.appendChild(p);
+        });
+        if (triggerClone) {
+          panel.appendChild(triggerClone);
+        }
+        if (popoverSafezone) {
+          panel.appendChild(popoverSafezone);
+        }
+        overlayContainer.remove();
         delete panel.dataset.privacyPanelInitialized;
       }
     };
