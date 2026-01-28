@@ -135,14 +135,13 @@ function renderStep(step) {
             <textarea name="${step.toelichting}" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
           </div>`;
     content += `
-        </div>
-
-        <div class="comments-section">
-          <button type="button" class="comments-toggle" data-action="toggleComments" data-step="${step.id}">
-            <span class="comments-label">Opmerking achterlaten</span>
-          </button>
-          <div class="comments-field" id="comments-field-${step.id}">
-            <textarea name="opmerkingen_stap_${step.id}" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+          <div class="comments-section">
+            <button type="button" class="comments-toggle" data-action="toggleComments" data-step="${step.id}">
+              <span class="comments-label">Opmerking achterlaten</span>
+            </button>
+            <div class="comments-field" id="comments-field-${step.id}">
+              <textarea name="opmerkingen_stap_${step.id}" placeholder="Optioneel: laat hier een opmerking achter"></textarea>
+            </div>
           </div>
         </div>`;
   }

@@ -4,11 +4,9 @@
  *
  * Dependencies: config.js, constants.js, storage.js
  */
-console.log('[App.js] Loading...');
 
 var App = (function() {
   'use strict';
-  console.log('[App] IIFE executing');
 
   // View state
   var currentView = null;
@@ -29,12 +27,9 @@ var App = (function() {
    * Determines initial view based on session state
    */
   function init() {
-    console.log('[App] init() called');
     // Cache DOM elements
     elements.loginView = document.getElementById('login-view');
     elements.surveyView = document.getElementById('survey-view');
-
-    console.log('[App] loginView:', !!elements.loginView, 'surveyView:', !!elements.surveyView);
 
     if (!elements.loginView || !elements.surveyView) {
       console.error('App: Required view containers not found');
@@ -43,23 +38,15 @@ var App = (function() {
 
     // Check for logout parameter
     if (window.location.search.includes('logout=1')) {
-      console.log('[App] Logout parameter detected');
       handleLogout();
     }
 
     // Determine initial view based on session
-    console.log('[App] Checking session validity...');
-    console.log('[App] Storage:', typeof Storage, 'isSessionValid:', typeof Storage.isSessionValid);
-    var sessionValid = Storage.isSessionValid();
-    console.log('[App] Session valid:', sessionValid);
-
-    if (sessionValid) {
+    if (Storage.isSessionValid()) {
       // User has valid session - show survey
-      console.log('[App] Loading survey...');
       loadAndShowSurvey();
     } else {
       // No valid session - show login
-      console.log('[App] Showing login...');
       showLogin();
     }
 
@@ -119,34 +106,27 @@ var App = (function() {
    * Called when user has valid session on page load
    */
   function loadAndShowSurvey() {
-    console.log('[App] loadAndShowSurvey() called, surveyLoaded:', surveyLoaded);
     if (surveyLoaded) {
       showSurvey();
       return;
     }
 
     // Fetch survey partial
-    console.log('[App] Fetching /views/survey.html...');
     fetch('/views/survey.html')
       .then(function(response) {
-        console.log('[App] Fetch response:', response.status, response.ok);
         if (!response.ok) {
           throw new Error('Failed to load survey');
         }
         return response.text();
       })
       .then(function(html) {
-        console.log('[App] HTML received, length:', html.length);
         elements.surveyView.innerHTML = html;
         surveyLoaded = true;
-        console.log('[App] Calling showSurvey()...');
         showSurvey();
-        console.log('[App] Calling initializeSurvey()...');
         initializeSurvey();
-        console.log('[App] Survey initialization complete');
       })
       .catch(function(error) {
-        console.error('[App] Error loading survey:', error);
+        console.error('App: Error loading survey:', error);
         // Fallback: redirect to survey.html if fetch fails
         window.location.href = '/survey.html';
       });
@@ -178,27 +158,17 @@ var App = (function() {
    * Initialize survey module after content is loaded
    */
   function initializeSurvey() {
-    console.log('[App] initializeSurvey() called, already initialized:', surveyInitialized);
     if (surveyInitialized) return;
 
-    // Survey.js should expose an init function
-    console.log('[App] Survey object:', typeof Survey);
-    console.log('[App] Survey keys:', typeof Survey !== 'undefined' ? Object.keys(Survey) : 'N/A');
-    console.log('[App] Survey.init:', typeof Survey !== 'undefined' ? typeof Survey.init : 'N/A');
-    console.log('[App] Survey.initSurvey:', typeof Survey !== 'undefined' ? typeof Survey.initSurvey : 'N/A');
+    // Survey.js exposes init function (Vite may export as initSurvey)
     if (typeof Survey !== 'undefined' && typeof Survey.init === 'function') {
-      console.log('[App] Calling Survey.init()...');
-      var result = Survey.init();
-      console.log('[App] Survey.init() returned:', result);
+      Survey.init();
       surveyInitialized = true;
     } else if (typeof Survey !== 'undefined' && typeof Survey.initSurvey === 'function') {
-      // Vite may export as initSurvey instead of init
-      console.log('[App] Calling Survey.initSurvey()...');
-      var result = Survey.initSurvey();
-      console.log('[App] Survey.initSurvey() returned:', result);
+      Survey.initSurvey();
       surveyInitialized = true;
     } else {
-      console.error('[App] Survey or Survey.init not available!');
+      console.error('App: Survey module not available');
     }
   }
 
@@ -561,9 +531,6 @@ var App = (function() {
 })();
 
 // Initialize app when DOM is ready
-console.log('[App.js] Setting up DOMContentLoaded listener');
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('[App.js] DOMContentLoaded fired');
   App.init();
 });
-console.log('[App.js] Finished loading');

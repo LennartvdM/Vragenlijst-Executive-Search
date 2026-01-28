@@ -1,4 +1,3 @@
-console.log('[constants.js] Loading...');
 /**
  * Constants for Monitoring Cultureel Talent naar de Top
  * Centralized magic strings and values to improve maintainability
@@ -132,4 +131,3 @@ Object.freeze(CONSTANTS.RETRY);
 
 // Expose on window for ES6 modules
 window.CONSTANTS = CONSTANTS;
-console.log('[constants.js] Loaded, window.CONSTANTS:', typeof window.CONSTANTS);
