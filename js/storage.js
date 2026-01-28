@@ -223,3 +223,6 @@ const Storage = (function() {
     deleteSubmittedForm
   };
 })();
+
+// Expose on window for ES6 modules
+window.Storage = Storage;
