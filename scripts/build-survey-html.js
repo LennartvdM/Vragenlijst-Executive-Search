@@ -95,11 +95,15 @@ function renderField(field) {
             </div>
           </div>`;
     }
-    case 'text': return `
+    case 'text': {
+      const placeholder = field.placeholder ? ` placeholder="${field.placeholder}"` : '';
+      const required = field.required ? ' required' : '';
+      return `
           <div class="field">
             <label for="${field.name}">${field.label}</label>
-            <input type="text" id="${field.name}" name="${field.name}">
+            <input type="text" id="${field.name}" name="${field.name}"${placeholder}${required}>
           </div>`;
+    }
     case 'textarea': return `
           <div class="field">
             <label for="${field.name}">${field.label}</label>

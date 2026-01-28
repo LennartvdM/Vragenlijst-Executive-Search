@@ -9,9 +9,12 @@ export const SURVEY_STEPS = [
     title: 'Welkom',
     type: 'welcome',
     content: {
-      heading: 'Welkom bij de Monitoring Cultureel Talent naar de Top 2025',
-      intro: 'Bedankt dat u deelneemt aan de jaarlijkse monitoring.'
-    }
+      heading: 'Monitoring Cultureel Talent naar de Top 2025',
+      intro: 'Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw organisatiegegevens en beleid rondom culturele diversiteit.'
+    },
+    fields: [
+      { type: 'text', name: 'organisatie', label: 'Naam organisatie (Charter)', required: true, placeholder: 'Voer de naam van uw organisatie in' }
+    ]
   },
   {
     id: 1,
