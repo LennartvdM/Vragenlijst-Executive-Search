@@ -147,7 +147,7 @@ function renderStep(step) {
     if (step.content.text) content += `
         <p>${step.content.text}</p>`;
     if (step.content.intro) content += `
-        <p>${step.content.intro}</p>`;
+        <p class="welcome-intro">${step.content.intro}</p>`;
   }
 
   if (step.fields || step.likert) {

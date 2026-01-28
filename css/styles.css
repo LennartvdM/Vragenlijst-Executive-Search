@@ -1475,6 +1475,13 @@ h1 {
   flex-shrink: 0;
 }
 
+.welcome-intro {
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 48px;
+}
+
 .info-box {
   background: linear-gradient(135deg, var(--sand-light) 0%, var(--sand) 100%);
   border-left: 3px solid var(--terracotta);
