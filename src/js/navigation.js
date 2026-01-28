@@ -78,10 +78,8 @@ export function showStep(step) {
 
   // Show/hide "Ga naar controle" button
   const btnGoToReview = document.getElementById('btnGoToReview');
-  const btnGoToReviewTop = document.getElementById('btnGoToReviewTop');
   const showReviewBtn = state.reviewVisited && step < window.CONFIG.REVIEW_STEP;
   if (btnGoToReview) btnGoToReview.style.display = showReviewBtn ? 'block' : 'none';
-  if (btnGoToReviewTop) btnGoToReviewTop.style.display = showReviewBtn ? 'block' : 'none';
 
   // Toggle footer class to hide Inkijkexemplaar when review button is visible
   const contentFooter = document.querySelector('.content-footer');
@@ -92,33 +90,21 @@ export function showStep(step) {
   // Update navigation buttons
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
-  const navButtons = document.getElementById('navButtons');
-  const btnPrevTop = document.getElementById('btnPrevTop');
-  const btnNextTop = document.getElementById('btnNextTop');
-  const navButtonsTop = document.getElementById('navButtonsTop');
   const progressDotsTop = document.getElementById('progressDotsTop');
 
   const showPrev = step > 0 && step <= window.CONFIG.REVIEW_STEP;
   if (btnPrev) btnPrev.style.display = showPrev ? 'block' : 'none';
-  if (btnPrevTop) btnPrevTop.style.display = showPrev ? 'block' : 'none';
 
   if (step === 13) {
     if (btnNext) {
       btnNext.textContent = 'Controleren';
       btnNext.style.display = 'block';
     }
-    if (btnNextTop) {
-      btnNextTop.textContent = 'Controleren';
-      btnNextTop.disabled = false;
-      btnNextTop.classList.remove('btn-disabled-top');
-    }
   } else if (step === window.CONFIG.REVIEW_STEP) {
-    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (progressDotsTop) progressDotsTop.style.display = 'none';
     if (btnNext) btnNext.style.display = 'none';
     if (btnPrev) btnPrev.style.display = 'block';
   } else if (step === window.CONFIG.SUCCESS_STEP) {
-    if (navButtonsTop) navButtonsTop.style.display = 'none';
     if (progressDotsTop) progressDotsTop.style.display = 'none';
     if (btnNext) btnNext.style.display = 'none';
     if (btnPrev) btnPrev.style.display = 'none';
@@ -127,12 +113,6 @@ export function showStep(step) {
       btnNext.textContent = window.CONSTANTS.UI.BUTTON_NEXT;
       btnNext.style.display = 'block';
     }
-    if (btnNextTop) {
-      btnNextTop.textContent = window.CONSTANTS.UI.BUTTON_NEXT;
-      btnNextTop.disabled = false;
-      btnNextTop.classList.remove('btn-disabled-top');
-    }
-    if (navButtonsTop) navButtonsTop.style.display = 'flex';
     if (progressDotsTop) progressDotsTop.style.display = 'flex';
   }
 
