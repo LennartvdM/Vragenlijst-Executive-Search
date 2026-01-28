@@ -135,9 +135,32 @@
       });
     }
 
+    /**
+     * Handle room link click - navigate to linked section
+     */
+    function handleRoomLinkClick(event) {
+      event.preventDefault();
+      var link = event.currentTarget;
+      var targetSectionId = link.dataset.goto;
+
+      if (targetSectionId) {
+        var section = panel.querySelector('.privacy-section[data-section="' + targetSectionId + '"]');
+        if (section && scrollContainer) {
+          setActiveSection(targetSectionId);
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+
     // Attach click handlers to nav items
     navItems.forEach(function(item) {
       item.addEventListener('click', handleNavClick);
+    });
+
+    // Attach click handlers to room links
+    var roomLinks = panel.querySelectorAll('.room-link[data-goto]');
+    roomLinks.forEach(function(link) {
+      link.addEventListener('click', handleRoomLinkClick);
     });
 
     // Set up scroll observer
@@ -165,6 +188,10 @@
 
         navItems.forEach(function(item) {
           item.removeEventListener('click', handleNavClick);
+        });
+
+        roomLinks.forEach(function(link) {
+          link.removeEventListener('click', handleRoomLinkClick);
         });
 
         delete panel.dataset.privacyPanelInitialized;
