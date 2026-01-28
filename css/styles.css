@@ -2217,12 +2217,17 @@ h1 {
 }
 
 .progress-dots {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: 8px;
+  margin-bottom: 16px;
+}
+
+.nav-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
 }
 
 .progress-dots span {
@@ -3423,24 +3428,20 @@ h1 {
   border: 2px solid rgba(180, 93, 70, 0.5);
   border-radius: 4px;
   opacity: 0.7;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-70%); /* Offset to account for buttons on right */
 }
 
 .preview-info-box.visible {
   display: block;
 }
 
-/* Ensure containers have relative positioning for absolute children */
-.top-bar,
-.content-footer {
+/* Top bar uses relative positioning for the top preview box */
+.top-bar {
   position: relative;
 }
 
-/* Position bottom box relative to content-footer */
+/* Bottom preview box is in flex row with nav buttons */
 .preview-info-box-bottom {
-  top: 8px;
+  /* Positioned via flexbox in .nav-row */
 }
 
 .preview-info-box-title {

@@ -18,13 +18,14 @@ const CONSTANTS = {
   },
 
   // Field names that trigger conditional sections
+  // IDs match pattern: conditional-{fieldName} from build-survey-html.js
   CONDITIONAL_FIELDS: {
-    streefcijfer: 'streefcijfer-details',
-    definitie_afwijking: 'definitie-afwijking-details',
-    heeft_rvb: 'rvb-details',
-    heeft_rvc: 'rvc-details',
-    heeft_rvt: 'rvt-details',
-    beleid_samenstelling: 'beleid-anders-details'
+    streefcijfer: 'conditional-streefcijfer',
+    definitie_afwijking: 'conditional-definitie_afwijking',
+    heeft_rvb: 'conditional-heeft_rvb',
+    heeft_rvc: 'conditional-heeft_rvc',
+    heeft_rvt: 'conditional-heeft_rvt',
+    beleid_samenstelling: 'conditional-beleid_samenstelling'
   },
 
   // Answer values that trigger conditional sections (for "Anders" options)
