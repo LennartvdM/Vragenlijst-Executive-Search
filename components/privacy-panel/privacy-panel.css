@@ -1,0 +1,414 @@
+/**
+ * Privacy Panel - Standalone Component
+ *
+ * A self-contained privacy disclosure panel with sidebar navigation.
+ * No external dependencies - can be dropped into any project.
+ *
+ * Usage:
+ *   1. Include this CSS file
+ *   2. Include privacy-panel.js
+ *   3. Add the HTML structure (see privacy-panel.html for template)
+ *
+ * Customization:
+ *   Override CSS custom properties on .privacy-panel to change colors.
+ */
+
+/* ==========================================================================
+   Component Variables (scoped to .privacy-panel)
+   Override these on .privacy-panel to customize colors
+   ========================================================================== */
+.privacy-panel {
+  /* Color palette */
+  --pp-cream: #fffbf7;
+  --pp-sand: #f5e6d3;
+  --pp-sand-light: #faf4eb;
+  --pp-sand-dark: #d4c4a8;
+  --pp-salmon: #e8a091;
+  --pp-terracotta: #c4785a;
+  --pp-teal: #7cc5c0;
+  --pp-teal-dark: #5aada8;
+  --pp-text: #4a3728;
+  --pp-text-light: #7a6555;
+
+  /* Sizing */
+  --pp-sidebar-width: 48px;
+  --pp-border-radius: 16px;
+  --pp-min-height: 380px;
+  --pp-max-height: 460px;
+}
+
+/* ==========================================================================
+   Main Container
+   ========================================================================== */
+.privacy-panel {
+  display: flex;
+  background: var(--pp-cream);
+  border-radius: var(--pp-border-radius);
+  overflow: hidden;
+  box-shadow:
+    0 4px 24px rgba(139, 90, 60, 0.12),
+    0 0 0 1px rgba(196, 120, 90, 0.08);
+  min-height: var(--pp-min-height);
+  max-height: var(--pp-max-height);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--pp-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.privacy-panel *,
+.privacy-panel *::before,
+.privacy-panel *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Sidebar Navigation
+   ========================================================================== */
+.privacy-sidebar {
+  flex: 0 0 var(--pp-sidebar-width);
+  padding: 20px 8px;
+  background: linear-gradient(180deg, rgba(232, 160, 145, 0.15) 0%, rgba(245, 230, 211, 0.3) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: visible;
+}
+
+/* Highlighter - floats behind active marker */
+.privacy-highlighter {
+  position: absolute;
+  left: -12px;
+  top: 0;
+  right: 4px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px 6px 6px 16px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: top 0.3s ease-in-out, opacity 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.privacy-highlighter.active {
+  opacity: 1;
+}
+
+/* Navigation markers */
+.privacy-nav-item {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pp-sand-dark);
+  transition: all 0.3s ease;
+}
+
+.privacy-nav-item:hover .nav-marker {
+  background: var(--pp-terracotta);
+  transform: scale(1.2);
+}
+
+.privacy-nav-item.active .nav-marker {
+  background: var(--pp-teal);
+  transform: translateX(-10px) scale(1.4);
+  box-shadow: 0 0 8px rgba(124, 197, 192, 0.5);
+}
+
+/* ==========================================================================
+   Content Area
+   ========================================================================== */
+.privacy-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Scrollable content */
+.privacy-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px 16px 20px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pp-salmon) transparent;
+}
+
+.privacy-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.privacy-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.privacy-scroll::-webkit-scrollbar-thumb {
+  background: var(--pp-salmon);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+.privacy-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(212, 196, 168, 0.25);
+}
+
+.privacy-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Section header */
+.section-header {
+  margin-bottom: 12px;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pp-text);
+  line-height: 1.3;
+}
+
+.section-lead {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: var(--pp-terracotta);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Section Body
+   ========================================================================== */
+.section-body {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--pp-text);
+}
+
+.section-body p {
+  margin: 0 0 10px 0;
+}
+
+.section-body p:last-child {
+  margin-bottom: 0;
+}
+
+.section-body em {
+  color: var(--pp-terracotta);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Asides - secondary information
+   ========================================================================== */
+.section-aside {
+  margin: 12px 0;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(124, 197, 192, 0.08) 0%, rgba(124, 197, 192, 0.03) 100%);
+  border-left: 3px solid var(--pp-teal);
+  border-radius: 0 8px 8px 0;
+}
+
+.section-aside p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--pp-text);
+  line-height: 1.6;
+}
+
+.section-footnote {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(212, 196, 168, 0.3);
+}
+
+.section-footnote p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--pp-text-light);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Data List - structured info
+   ========================================================================== */
+.data-list {
+  margin: 0 0 12px 0;
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(212, 196, 168, 0.15);
+}
+
+.data-item:last-child {
+  border-bottom: none;
+}
+
+.data-item dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pp-text);
+}
+
+.data-item dd {
+  margin: 0;
+  font-size: 11px;
+  color: var(--pp-text-light);
+  text-align: right;
+  max-width: 60%;
+}
+
+/* ==========================================================================
+   Negation List - what we don't do
+   ========================================================================== */
+.negation-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.negation-list li {
+  position: relative;
+  padding: 4px 0 4px 18px;
+  font-size: 12px;
+  color: var(--pp-text);
+}
+
+.negation-list li::before {
+  content: '\00d7';
+  position: absolute;
+  left: 0;
+  color: var(--pp-salmon);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Rights Grid
+   ========================================================================== */
+.rights-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.right-item {
+  padding: 5px 10px;
+  background: rgba(124, 197, 192, 0.12);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pp-teal-dark);
+}
+
+/* ==========================================================================
+   Expandable Details
+   ========================================================================== */
+.section-details {
+  margin-top: 12px;
+}
+
+.section-details summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(212, 196, 168, 0.12);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pp-text-light);
+  cursor: pointer;
+  list-style: none;
+  transition: all 0.2s;
+}
+
+.section-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-details summary::before {
+  content: '+';
+  font-size: 12px;
+  color: var(--pp-terracotta);
+  transition: transform 0.2s;
+}
+
+.section-details[open] summary::before {
+  content: '\2212';
+}
+
+.section-details summary:hover {
+  background: rgba(212, 196, 168, 0.2);
+  color: var(--pp-text);
+}
+
+.details-content {
+  padding: 10px 10px 0 10px;
+}
+
+.details-content p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--pp-text-light);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.privacy-footer {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(212, 196, 168, 0.25);
+  background: rgba(245, 238, 230, 0.5);
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 11px;
+  color: var(--pp-text-light);
+  transition: color 0.2s;
+}
+
+.footer-contact:hover {
+  color: var(--pp-text);
+}
+
+.footer-contact strong {
+  color: var(--pp-terracotta);
+  font-weight: 600;
+}
