@@ -1276,7 +1276,7 @@ body {
 .progress-dots-top {
   display: flex;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 .content-header {
@@ -1442,7 +1442,7 @@ body {
 .progress-dots-bottom {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 /* Hide inkijkexemplaar when 3 buttons visible (controle shown) */
