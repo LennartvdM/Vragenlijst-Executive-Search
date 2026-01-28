@@ -1,7 +1,7 @@
 /**
- * Privacy Panel - Hover Popover Component
+ * Privacy Panel - Overlay Popover Component
  *
- * A compact door that expands into a card with hover-based popovers.
+ * A compact door that expands into a centered overlay with blur backdrop.
  * Based on a "kamer" (room) metaphor with inline triggers.
  */
 
@@ -42,6 +42,50 @@
 }
 
 /* ==========================================================================
+   Page Blur Effect - Applied to body when panel is open
+   ========================================================================== */
+body.pp-blur-active > *:not(.pp-overlay-container) {
+  filter: blur(4px);
+  pointer-events: none;
+  transition: filter 0.3s ease;
+}
+
+body.pp-blur-active {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Overlay Container - Fixed overlay for kamer
+   ========================================================================== */
+.pp-overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.pp-overlay-container.is-open {
+  display: flex;
+}
+
+/* Backdrop with subtle darkening */
+.pp-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(74, 55, 40, 0.1);
+  cursor: pointer;
+}
+
+/* ==========================================================================
    De Deur - Compact trigger (always visible initially)
    ========================================================================== */
 .pp-door {
@@ -75,46 +119,36 @@
   font-weight: 500;
 }
 
-.pp-door.is-open {
-  display: none;
-}
-
 /* ==========================================================================
-   Kamer (Room) - Main expanded card
+   Kamer (Room) - Main expanded card (inside overlay)
    ========================================================================== */
 .pp-kamer {
-  display: none;
+  position: relative;
   background: var(--pp-cream);
   border-radius: var(--pp-card-radius);
   padding: 36px 40px;
   box-shadow:
-    0 4px 24px rgba(139, 90, 60, 0.1),
-    0 0 0 1px rgba(196, 120, 90, 0.08);
-  position: relative;
+    0 12px 48px rgba(74, 55, 40, 0.2),
+    0 0 0 1px rgba(196, 120, 90, 0.1);
   font-size: 14px;
   line-height: 1.75;
   color: var(--pp-text);
-  overflow: visible;
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: ppSlideIn 0.3s ease;
 }
 
-.pp-kamer.is-open {
-  display: block;
-  animation: ppFadeIn 0.25s ease;
-}
-
-@keyframes ppFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Safe zone under the card for mouse tracking */
-.pp-kamer::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -60px;
-  height: 60px;
+@keyframes ppSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .pp-kamer h3 {
@@ -207,7 +241,7 @@
    ========================================================================== */
 .pp-trigger-clone {
   position: fixed;
-  z-index: 101;
+  z-index: 10001;
   color: var(--pp-terracotta);
   font-weight: 600;
   border-bottom: 1px dashed var(--pp-terracotta);
@@ -246,7 +280,7 @@
   font-size: 14px;
   line-height: 1.75;
   color: var(--pp-text);
-  z-index: 1000;
+  z-index: 10000;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.35s ease, visibility 0.35s ease;
@@ -317,20 +351,13 @@
    ========================================================================== */
 .pp-popover-safezone {
   position: fixed;
-  z-index: 999;
+  z-index: 9999;
   display: none;
   pointer-events: auto;
 }
 
 .pp-popover-safezone.is-visible {
   display: block;
-}
-
-/* ==========================================================================
-   Popover Backdrop - Optional click-to-close area
-   ========================================================================== */
-.pp-popover-backdrop {
-  display: none;
 }
 
 /* ==========================================================================
