@@ -659,6 +659,11 @@ body {
   color: #995544;
 }
 
+/* Extra spacing after field group (visual paragraph break) */
+.field-group-end {
+  margin-bottom: 32px;
+}
+
 .field input[type="text"],
 .field input[type="number"],
 .field input[type="date"],
