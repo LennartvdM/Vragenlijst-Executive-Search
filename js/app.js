@@ -183,11 +183,19 @@ var App = (function() {
 
     // Survey.js should expose an init function
     console.log('[App] Survey object:', typeof Survey);
+    console.log('[App] Survey keys:', typeof Survey !== 'undefined' ? Object.keys(Survey) : 'N/A');
     console.log('[App] Survey.init:', typeof Survey !== 'undefined' ? typeof Survey.init : 'N/A');
+    console.log('[App] Survey.initSurvey:', typeof Survey !== 'undefined' ? typeof Survey.initSurvey : 'N/A');
     if (typeof Survey !== 'undefined' && typeof Survey.init === 'function') {
       console.log('[App] Calling Survey.init()...');
       var result = Survey.init();
       console.log('[App] Survey.init() returned:', result);
+      surveyInitialized = true;
+    } else if (typeof Survey !== 'undefined' && typeof Survey.initSurvey === 'function') {
+      // Vite may export as initSurvey instead of init
+      console.log('[App] Calling Survey.initSurvey()...');
+      var result = Survey.initSurvey();
+      console.log('[App] Survey.initSurvey() returned:', result);
       surveyInitialized = true;
     } else {
       console.error('[App] Survey or Survey.init not available!');
