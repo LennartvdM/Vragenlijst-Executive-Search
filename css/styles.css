@@ -1389,8 +1389,8 @@ body {
 
 .content-footer {
   flex-shrink: 0;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 16px;
+  padding-top: 12px;
   user-select: none;
 }
 
