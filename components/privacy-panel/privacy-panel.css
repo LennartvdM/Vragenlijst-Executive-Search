@@ -207,13 +207,9 @@ body.pp-blur-active {
   opacity: 0;
 }
 
-/* Keep trigger area visible and interactive when popover is open */
+/* Trigger area hidden under blur layer when popover is open (clone takes over) */
 .pp-kamer.has-popover .pp-trigger-area {
-  filter: none;
-  opacity: 1;
-  pointer-events: auto;
-  position: relative;
-  z-index: 101;
+  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -287,6 +283,28 @@ body.pp-blur-active {
 
 .pp-trigger-clone.is-visible {
   display: inline;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Trigger Area Clone - Fixed position copy of trigger-area links
+   ========================================================================== */
+.pp-trigger-area-clone {
+  position: fixed;
+  z-index: 10001;
+  display: none;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  padding-top: 16px;
+  border-top: 1px solid var(--pp-sand);
+}
+
+.pp-trigger-area-clone.is-visible {
+  display: block;
   opacity: 1;
 }
 
