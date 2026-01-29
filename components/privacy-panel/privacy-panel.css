@@ -8,7 +8,8 @@
 /* ==========================================================================
    CSS Custom Properties
    ========================================================================== */
-.privacy-panel {
+.privacy-panel,
+.pp-overlay-container {
   --pp-cream: #fffbf7;
   --pp-sand: #f5e6d3;
   --pp-sand-light: #faf4eb;
