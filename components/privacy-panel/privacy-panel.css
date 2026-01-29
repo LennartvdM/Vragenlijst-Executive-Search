@@ -299,6 +299,7 @@ body.pp-blur-active {
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.75;
+  padding-top: 17px;
 }
 
 .pp-trigger-area-clone.is-visible {
