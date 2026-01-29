@@ -124,7 +124,10 @@ body.pp-blur-active {
    ========================================================================== */
 .pp-kamer {
   position: relative;
-  background: var(--pp-cream);
+  background: rgba(255, 251, 247, 0.85);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+  mix-blend-mode: screen;
   border-radius: var(--pp-card-radius);
   padding: 36px 40px;
   box-shadow:
