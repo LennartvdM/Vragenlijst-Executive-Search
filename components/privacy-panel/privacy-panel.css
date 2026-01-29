@@ -50,23 +50,27 @@ body.pp-blur-active {
 }
 
 /* ==========================================================================
-   Blur Layer - Moves into kamer when popover is active
+   Blur Layer - Single element that moves between overlay and kamer
    ========================================================================== */
 .pp-blur-layer {
   position: absolute;
   inset: 0;
-  z-index: 100;
-  border-radius: var(--pp-card-radius);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  background: rgba(255, 251, 247, 0.7);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 
 .pp-blur-layer.is-active {
   opacity: 1;
+}
+
+/* When inside kamer: sit above content but below trigger-area */
+.pp-kamer > .pp-blur-layer {
+  z-index: 100;
+  border-radius: var(--pp-card-radius);
+  background: rgba(255, 251, 247, 0.7);
 }
 
 /* ==========================================================================
@@ -89,7 +93,7 @@ body.pp-blur-active {
   display: flex;
 }
 
-/* Backdrop with subtle darkening + permanent page blur */
+/* Backdrop with subtle darkening */
 .pp-overlay-backdrop {
   position: absolute;
   top: 0;
@@ -97,8 +101,6 @@ body.pp-blur-active {
   right: 0;
   bottom: 0;
   background: rgba(74, 55, 40, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
 }
 
