@@ -49,7 +49,7 @@
     overlayBackdrop.className = 'pp-overlay-backdrop';
     overlayContainer.appendChild(overlayBackdrop);
 
-    // Create single blur layer (moves between overlay and kamer)
+    // Create single blur layer (switches z-index)
     var blurLayer = document.createElement('div');
     blurLayer.className = 'pp-blur-layer';
     overlayContainer.appendChild(blurLayer);
@@ -57,6 +57,16 @@
     // Move kamer into overlay (if it exists)
     if (kamer) {
       overlayContainer.appendChild(kamer);
+    }
+
+    // Create clone of trigger-area (floats above blur layer when popover is active)
+    var triggerAreaClone = null;
+    var triggerAreaTriggers = triggerArea ? triggerArea.querySelectorAll('.pp-trigger-inline[data-pop]') : [];
+    if (triggerArea) {
+      triggerAreaClone = document.createElement('div');
+      triggerAreaClone.className = 'pp-trigger-area-clone';
+      triggerAreaClone.innerHTML = triggerArea.innerHTML;
+      overlayContainer.appendChild(triggerAreaClone);
     }
 
     // Move popovers into overlay
@@ -113,6 +123,7 @@
         kamer.classList.remove('has-popover');
       }
       hideClone();
+      hideTriggerAreaClone();
       if (popoverSafezone) {
         popoverSafezone.classList.remove('is-visible');
       }
@@ -138,6 +149,28 @@
       triggerClone.style.width = rect.width + 'px';
       triggerClone.style.height = rect.height + 'px';
       triggerClone.classList.add('is-visible');
+    }
+
+    /**
+     * Show the trigger-area clone positioned over the original
+     */
+    function showTriggerAreaClone() {
+      if (!triggerAreaClone || !triggerArea) return;
+
+      var rect = triggerArea.getBoundingClientRect();
+      triggerAreaClone.style.left = rect.left + 'px';
+      triggerAreaClone.style.top = rect.top + 'px';
+      triggerAreaClone.style.width = rect.width + 'px';
+      triggerAreaClone.classList.add('is-visible');
+    }
+
+    /**
+     * Hide the trigger-area clone
+     */
+    function hideTriggerAreaClone() {
+      if (triggerAreaClone) {
+        triggerAreaClone.classList.remove('is-visible');
+      }
     }
 
     /**
@@ -207,6 +240,7 @@
         // Drop blur layer back behind kamer
         blurLayer.classList.remove('above-kamer');
         hideClone();
+        hideTriggerAreaClone();
         if (popoverSafezone) {
           popoverSafezone.classList.remove('is-visible');
         }
@@ -244,7 +278,9 @@
       blurLayer.classList.add('above-kamer');
 
       requestAnimationFrame(function() {
-        // Only show clone for voortgang (inline trigger); hide for others
+        // Always show trigger-area clone above blur
+        showTriggerAreaClone();
+        // Only show localStorage clone for voortgang popover
         if (trigger.dataset.pop === 'voortgang') {
           showClone();
         } else {
@@ -318,10 +354,38 @@
       });
     });
 
-    // Clone hover handler
+    // Clone hover handler (localStorage)
     if (triggerClone && inlineTrigger) {
       triggerClone.addEventListener('mouseenter', function() {
         openPopover(inlineTrigger);
+      });
+    }
+
+    // Trigger-area clone hover handlers
+    if (triggerAreaClone) {
+      // Map clone triggers to original triggers by data-pop
+      var cloneTriggers = triggerAreaClone.querySelectorAll('.pp-trigger-inline[data-pop]');
+      cloneTriggers.forEach(function(cloneTrigger) {
+        var popName = cloneTrigger.dataset.pop;
+        // Find the matching original trigger in trigger-area
+        var originalTrigger = triggerArea.querySelector('.pp-trigger-inline[data-pop="' + popName + '"]');
+        if (originalTrigger) {
+          cloneTrigger.addEventListener('mouseenter', function() {
+            openPopover(originalTrigger);
+          });
+        }
+      });
+
+      // Safe zone: keep popover open when hovering the clone
+      triggerAreaClone.addEventListener('mouseenter', function() {
+        cancelPopoverCloseTimer();
+      });
+      triggerAreaClone.addEventListener('mouseleave', function(e) {
+        var toElement = e.relatedTarget;
+        if (toElement && (toElement.closest('.pp-popover') || toElement.closest('.pp-popover-safezone'))) {
+          return;
+        }
+        startPopoverCloseTimer();
       });
     }
 
