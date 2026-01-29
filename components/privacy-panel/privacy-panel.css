@@ -291,7 +291,7 @@ body.pp-blur-active {
    ========================================================================== */
 .pp-trigger-area-clone {
   position: fixed;
-  z-index: 10002;
+  z-index: 3;
   display: none;
   pointer-events: auto;
   opacity: 0;
