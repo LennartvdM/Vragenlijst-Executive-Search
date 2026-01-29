@@ -361,6 +361,10 @@ var App = (function() {
       if (highlighter) {
         highlighter.style.transition = 'opacity 300ms linear';
         highlighter.style.opacity = '1';
+        // After fade-in completes, restore full transition set so highlighter can travel between items
+        setTimeout(function() {
+          highlighter.style.transition = '';
+        }, 300);
       }
     }, expandDuration + 500);
 
