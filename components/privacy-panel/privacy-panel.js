@@ -102,6 +102,12 @@
       triggers.forEach(function(t) {
         t.classList.remove('is-active');
       });
+      // Sync active state to trigger-area clone
+      if (triggerAreaClone) {
+        triggerAreaClone.querySelectorAll('.pp-trigger-inline').forEach(function(t) {
+          t.classList.remove('is-active');
+        });
+      }
       activePopover = null;
     }
 
@@ -271,6 +277,11 @@
       }
 
       trigger.classList.add('is-active');
+      // Sync active state to matching clone trigger
+      if (triggerAreaClone) {
+        var cloneMatch = triggerAreaClone.querySelector('.pp-trigger-inline[data-pop="' + trigger.dataset.pop + '"]');
+        if (cloneMatch) cloneMatch.classList.add('is-active');
+      }
       if (kamer) {
         kamer.classList.add('has-popover');
       }
