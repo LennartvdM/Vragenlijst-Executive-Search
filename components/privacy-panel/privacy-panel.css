@@ -208,7 +208,7 @@ body.pp-blur-active {
 }
 
 .pp-kamer.has-popover .pp-trigger-area {
-  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
@@ -299,8 +299,6 @@ body.pp-blur-active {
   font-family: 'Inter', -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.75;
-  padding-top: 16px;
-  border-top: 1px solid var(--pp-sand);
 }
 
 .pp-trigger-area-clone.is-visible {
