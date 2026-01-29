@@ -92,31 +92,31 @@ body.pp-blur-active {
 .pp-door {
   background: var(--pp-cream);
   border-radius: var(--pp-card-radius);
-  padding: 28px 32px;
+  padding: 20px 24px;
   box-shadow:
-    0 2px 12px rgba(139, 90, 60, 0.08),
-    0 0 0 1px rgba(196, 120, 90, 0.08);
+    0 2px 12px rgba(139, 90, 60, 0.06),
+    0 0 0 1px rgba(196, 120, 90, 0.06);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .pp-door:hover {
   box-shadow:
-    0 4px 20px rgba(139, 90, 60, 0.12),
-    0 0 0 1px rgba(196, 120, 90, 0.15);
+    0 4px 20px rgba(139, 90, 60, 0.1),
+    0 0 0 1px rgba(196, 120, 90, 0.1);
 }
 
 .pp-door h3 {
-  margin: 0 0 4px 0;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--pp-text);
+  margin: 0 0 2px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pp-text-light);
 }
 
 .pp-door .pp-lead {
   margin: 0;
-  font-size: 13px;
-  color: var(--pp-terracotta);
+  font-size: 12px;
+  color: var(--pp-terracotta-light);
   font-weight: 500;
 }
 
