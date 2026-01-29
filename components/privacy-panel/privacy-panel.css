@@ -139,7 +139,7 @@ body.pp-blur-active {
   max-height: 90vh;
   overflow-y: auto;
   overflow-x: hidden;
-  animation: ppSlideIn 0.3s ease;
+  animation: ppSlideIn 0.3s linear;
 }
 
 /* Translucent screen-blend fill as pseudo so border-radius stays intact */
@@ -296,7 +296,7 @@ body.pp-blur-active {
   z-index: 10000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  transition: opacity 0.35s linear, visibility 0.35s linear;
 }
 
 .pp-popover.is-open {

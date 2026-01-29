@@ -359,7 +359,7 @@ var App = (function() {
     // Fade in highlighter after clip-path animation + extra delay
     setTimeout(function() {
       if (highlighter) {
-        highlighter.style.transition = 'opacity 300ms ease-out';
+        highlighter.style.transition = 'opacity 300ms linear';
         highlighter.style.opacity = '1';
       }
     }, expandDuration + 500);
@@ -370,7 +370,7 @@ var App = (function() {
     // ========================================
     setTimeout(function() {
       // Fade out login
-      elements.loginView.style.transition = 'opacity 300ms ease-out';
+      elements.loginView.style.transition = 'opacity 300ms linear';
       elements.loginView.style.opacity = '0';
 
       // After login fade completes
@@ -484,12 +484,12 @@ var App = (function() {
 
     // Set transition to match survey fade-out, then trigger fade-in
     // This creates a crossfade: login fades in while survey fades out
-    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+    elements.loginView.style.transition = 'opacity ' + FADE_DURATION + 'ms linear';
     elements.loginView.classList.add('view-active');
 
     // Fade OUT survey container (reveals login underneath)
     if (surveyContainer) {
-      surveyContainer.style.transition = 'opacity ' + FADE_DURATION + 'ms ease-out';
+      surveyContainer.style.transition = 'opacity ' + FADE_DURATION + 'ms linear';
       surveyContainer.style.opacity = '0';
     }
 
