@@ -259,15 +259,15 @@
       isOpen = true;
     }
 
-    // Door click handler
+    // Door press handler (mousedown, not click)
     if (door) {
-      door.addEventListener('click', function() {
+      door.addEventListener('mousedown', function() {
         openOverlay();
       });
     }
 
-    // Backdrop click handler - close overlay
-    overlayBackdrop.addEventListener('click', function() {
+    // Backdrop press handler - close overlay (mousedown, not click)
+    overlayBackdrop.addEventListener('mousedown', function() {
       closeEverything();
     });
 
