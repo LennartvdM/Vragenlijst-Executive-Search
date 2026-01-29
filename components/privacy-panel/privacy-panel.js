@@ -233,7 +233,12 @@
       }
 
       requestAnimationFrame(function() {
-        showClone();
+        // Only show clone for voortgang (inline trigger); hide for others
+        if (trigger.dataset.pop === 'voortgang') {
+          showClone();
+        } else {
+          hideClone();
+        }
         positionPopover(trigger, pop);
         pop.classList.add('is-open');
         activePopover = pop;

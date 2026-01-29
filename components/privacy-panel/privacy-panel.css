@@ -19,7 +19,7 @@
   --pp-text-light: #7a6555;
   --pp-teal: #5aada8;
   --pp-teal-dark: #5aada8;
-  --pp-card-radius: 14px;
+  --pp-card-radius: 16px;
 }
 
 /* ==========================================================================
@@ -124,7 +124,8 @@ body.pp-blur-active {
    ========================================================================== */
 .pp-kamer {
   position: relative;
-  background: rgba(255, 251, 247, 0.85);
+  z-index: 1;
+  background: rgba(255, 251, 247, 0.93);
   mix-blend-mode: screen;
   border-radius: var(--pp-card-radius);
   padding: 36px 40px;
@@ -272,8 +273,7 @@ body.pp-blur-active {
 .pp-popover {
   position: fixed;
   width: 360px;
-  background: rgba(255, 251, 247, 0.85);
-  mix-blend-mode: screen;
+  background: rgba(255, 251, 247, 0.93);
   border-radius: var(--pp-card-radius);
   padding: 28px 32px;
   box-shadow:
@@ -301,7 +301,7 @@ body.pp-blur-active {
   right: 40px;
   width: 16px;
   height: 16px;
-  background: rgba(255, 251, 247, 0.85);
+  background: rgba(255, 251, 247, 0.93);
   border-radius: 2px;
   transform: rotate(45deg);
   box-shadow: 2px 2px 4px rgba(74, 55, 40, 0.05);
