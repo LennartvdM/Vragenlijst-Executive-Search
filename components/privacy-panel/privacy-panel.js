@@ -5,7 +5,7 @@
  * Mouse-driven interaction with safe zones and popover tooltips.
  *
  * Features:
- * - Single blur layer moves between overlay (page blur) and kamer (content blur)
+ * - Single blur layer switches z-index: behind kamer (page blur) or above kamer (card blur)
  * - Hover triggers open popovers with information
  * - Safe zones prevent accidental closing
  * - Clone trigger for inline links stays visible
@@ -117,9 +117,8 @@
         popoverSafezone.classList.remove('is-visible');
       }
 
-      // Deactivate blur layer and return to overlay position
-      blurLayer.classList.remove('is-active');
-      overlayContainer.insertBefore(blurLayer, kamer);
+      // Deactivate blur layer
+      blurLayer.classList.remove('is-active', 'above-kamer');
 
       // Close overlay
       overlayContainer.classList.remove('is-open');
@@ -205,8 +204,8 @@
         if (kamer) {
           kamer.classList.remove('has-popover');
         }
-        // Move blur layer back to overlay (behind kamer)
-        overlayContainer.insertBefore(blurLayer, kamer);
+        // Drop blur layer back behind kamer
+        blurLayer.classList.remove('above-kamer');
         hideClone();
         if (popoverSafezone) {
           popoverSafezone.classList.remove('is-visible');
@@ -240,9 +239,9 @@
       trigger.classList.add('is-active');
       if (kamer) {
         kamer.classList.add('has-popover');
-        // Move blur layer into kamer (above content, below trigger-area)
-        kamer.insertBefore(blurLayer, kamer.firstChild);
       }
+      // Raise blur layer above kamer
+      blurLayer.classList.add('above-kamer');
 
       requestAnimationFrame(function() {
         // Only show clone for voortgang (inline trigger); hide for others
@@ -268,8 +267,6 @@
     function openOverlay() {
       overlayContainer.classList.add('is-open');
       document.body.classList.add('pp-blur-active');
-      // Ensure blur layer is in overlay (behind kamer) and activate
-      overlayContainer.insertBefore(blurLayer, kamer);
       blurLayer.classList.add('is-active');
       isOpen = true;
     }
