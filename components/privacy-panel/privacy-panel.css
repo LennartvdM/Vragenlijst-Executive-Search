@@ -125,8 +125,6 @@ body.pp-blur-active {
 .pp-kamer {
   position: relative;
   background: rgba(255, 251, 247, 0.85);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
-  backdrop-filter: blur(20px) saturate(1.2);
   mix-blend-mode: screen;
   border-radius: var(--pp-card-radius);
   padding: 36px 40px;
@@ -274,7 +272,8 @@ body.pp-blur-active {
 .pp-popover {
   position: fixed;
   width: 360px;
-  background: var(--pp-cream);
+  background: rgba(255, 251, 247, 0.85);
+  mix-blend-mode: screen;
   border-radius: var(--pp-card-radius);
   padding: 28px 32px;
   box-shadow:
@@ -302,7 +301,8 @@ body.pp-blur-active {
   right: 40px;
   width: 16px;
   height: 16px;
-  background: var(--pp-cream);
+  background: rgba(255, 251, 247, 0.85);
+  border-radius: 2px;
   transform: rotate(45deg);
   box-shadow: 2px 2px 4px rgba(74, 55, 40, 0.05);
 }
