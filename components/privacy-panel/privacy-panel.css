@@ -50,11 +50,14 @@ body.pp-blur-active {
 }
 
 /* ==========================================================================
-   Blur Layer - Single element that moves between overlay and kamer
+   Blur Layer - Stays in overlay-container, switches z-index
+   Behind kamer (z-index 0) = page blur
+   Above kamer (z-index 2) = page + card blur
    ========================================================================== */
 .pp-blur-layer {
   position: absolute;
   inset: 0;
+  z-index: 0;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   pointer-events: none;
@@ -66,11 +69,9 @@ body.pp-blur-active {
   opacity: 1;
 }
 
-/* When inside kamer: sit above content but below trigger-area */
-.pp-kamer > .pp-blur-layer {
-  z-index: 100;
-  border-radius: var(--pp-card-radius);
-  background: rgba(255, 251, 247, 0.7);
+/* Popover active: rise above kamer (z-index 1) but below popovers (10000) */
+.pp-blur-layer.above-kamer {
+  z-index: 2;
 }
 
 /* ==========================================================================
