@@ -13,7 +13,7 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   padding: 8px;
   width: 320px;
-  animation: flatpickr-fade-in 0.2s ease-out;
+  animation: flatpickr-fade-in 0.2s linear;
 }
 
 @keyframes flatpickr-fade-in {
@@ -326,7 +326,7 @@
 
 /* Animation for opening */
 .flatpickr-calendar.open {
-  animation: flatpickr-fade-in 0.2s ease-out;
+  animation: flatpickr-fade-in 0.2s linear;
 }
 
 /* Touch-friendly improvements */
