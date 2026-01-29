@@ -202,13 +202,13 @@ body.pp-blur-active {
   pointer-events: none;
 }
 
-/* Hide the original trigger when popover is open */
+/* Hide original triggers when popover is open (clones take over above blur) */
 .pp-kamer.has-popover .pp-kamer-content .pp-trigger-inline {
   opacity: 0;
 }
 
-/* Trigger area hidden under blur layer when popover is open (clone takes over) */
 .pp-kamer.has-popover .pp-trigger-area {
+  opacity: 0;
   pointer-events: none;
 }
 
