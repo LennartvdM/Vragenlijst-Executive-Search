@@ -45,14 +45,32 @@
 /* ==========================================================================
    Page Blur Effect - Applied to body when panel is open
    ========================================================================== */
-body.pp-blur-active > *:not(.pp-overlay-container) {
-  filter: blur(4px);
-  pointer-events: none;
-  transition: filter 0.3s ease;
-}
-
 body.pp-blur-active {
   overflow: hidden;
+}
+
+/* ==========================================================================
+   Blur Layer - Single element that moves between overlay and kamer
+   ========================================================================== */
+.pp-blur-layer {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pp-blur-layer.is-active {
+  opacity: 1;
+}
+
+/* When inside kamer: sit above content but below trigger-area */
+.pp-kamer > .pp-blur-layer {
+  z-index: 100;
+  border-radius: var(--pp-card-radius);
+  background: rgba(255, 251, 247, 0.3);
 }
 
 /* ==========================================================================
@@ -178,16 +196,9 @@ body.pp-blur-active {
   margin-bottom: 0;
 }
 
-/* Blur effect when popover is active */
+/* Disable interaction on kamer-content when popover is active */
 .pp-kamer.has-popover .pp-kamer-content {
-  filter: blur(2px);
-  opacity: 0.6;
   pointer-events: none;
-  transition: filter 0.2s ease, opacity 0.2s ease;
-}
-
-.pp-kamer-content {
-  transition: filter 0.2s ease, opacity 0.2s ease;
 }
 
 /* Hide the original trigger when popover is open */
