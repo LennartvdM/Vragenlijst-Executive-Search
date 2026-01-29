@@ -5,8 +5,8 @@
  * Mouse-driven interaction with safe zones and popover tooltips.
  *
  * Features:
- * - Door opens to reveal centered overlay with blur layer
- * - Single blur layer moves between overlay (page blur) and kamer (content blur)
+ * - Door opens to reveal centered overlay with backdrop blur
+ * - Blur layer inside kamer activates when popover opens
  * - Hover triggers open popovers with information
  * - Safe zones prevent accidental closing
  * - Clone trigger for inline links stays visible
@@ -50,14 +50,16 @@
     overlayBackdrop.className = 'pp-overlay-backdrop';
     overlayContainer.appendChild(overlayBackdrop);
 
-    // Create single blur layer that moves between overlay and kamer
-    var blurLayer = document.createElement('div');
-    blurLayer.className = 'pp-blur-layer';
-    overlayContainer.appendChild(blurLayer);
-
     // Move kamer into overlay (if it exists)
     if (kamer) {
       overlayContainer.appendChild(kamer);
+    }
+
+    // Create blur layer inside kamer (activated when popover opens)
+    var blurLayer = document.createElement('div');
+    blurLayer.className = 'pp-blur-layer';
+    if (kamer) {
+      kamer.insertBefore(blurLayer, kamer.firstChild);
     }
 
     // Move popovers into overlay
@@ -118,9 +120,8 @@
         popoverSafezone.classList.remove('is-visible');
       }
 
-      // Deactivate blur layer and move back to overlay
+      // Deactivate blur layer
       blurLayer.classList.remove('is-active');
-      overlayContainer.insertBefore(blurLayer, kamer);
 
       // Close overlay
       overlayContainer.classList.remove('is-open');
@@ -205,9 +206,8 @@
         closeAllPopovers();
         if (kamer) {
           kamer.classList.remove('has-popover');
-          // Move blur layer back to overlay (behind kamer)
-          overlayContainer.insertBefore(blurLayer, kamer);
         }
+        blurLayer.classList.remove('is-active');
         hideClone();
         if (popoverSafezone) {
           popoverSafezone.classList.remove('is-visible');
@@ -241,9 +241,8 @@
       trigger.classList.add('is-active');
       if (kamer) {
         kamer.classList.add('has-popover');
-        // Move blur layer into kamer (above content, below trigger-area)
-        kamer.insertBefore(blurLayer, kamer.firstChild);
       }
+      blurLayer.classList.add('is-active');
 
       requestAnimationFrame(function() {
         // Only show clone for voortgang (inline trigger); hide for others
@@ -269,9 +268,6 @@
     function openOverlay() {
       overlayContainer.classList.add('is-open');
       document.body.classList.add('pp-blur-active');
-      // Place blur layer in overlay (behind kamer) and activate
-      overlayContainer.insertBefore(blurLayer, kamer);
-      blurLayer.classList.add('is-active');
       isOpen = true;
     }
 
