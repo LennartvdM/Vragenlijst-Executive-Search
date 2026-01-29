@@ -308,6 +308,14 @@ body.pp-blur-active {
   opacity: 1;
 }
 
+.pp-trigger-area-clone p {
+  margin-bottom: 8px;
+}
+
+.pp-trigger-area-clone p:last-child {
+  margin-bottom: 0;
+}
+
 /* ==========================================================================
    Popover - Floating info panel
    ========================================================================== */

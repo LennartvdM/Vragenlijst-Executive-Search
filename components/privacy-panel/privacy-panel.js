@@ -59,16 +59,6 @@
       overlayContainer.appendChild(kamer);
     }
 
-    // Create clone of trigger-area (floats above blur layer when popover is active)
-    var triggerAreaClone = null;
-    var triggerAreaTriggers = triggerArea ? triggerArea.querySelectorAll('.pp-trigger-inline[data-pop]') : [];
-    if (triggerArea) {
-      triggerAreaClone = document.createElement('div');
-      triggerAreaClone.className = 'pp-trigger-area-clone';
-      triggerAreaClone.innerHTML = triggerArea.innerHTML;
-      overlayContainer.appendChild(triggerAreaClone);
-    }
-
     // Move popovers into overlay
     popovers.forEach(function(p) {
       overlayContainer.appendChild(p);
@@ -80,6 +70,16 @@
     }
     if (popoverSafezone) {
       overlayContainer.appendChild(popoverSafezone);
+    }
+
+    // Create clone of trigger-area (appended last so it sits above everything)
+    var triggerAreaClone = null;
+    var triggerAreaTriggers = triggerArea ? triggerArea.querySelectorAll('.pp-trigger-inline[data-pop]') : [];
+    if (triggerArea) {
+      triggerAreaClone = document.createElement('div');
+      triggerAreaClone.className = 'pp-trigger-area-clone';
+      triggerAreaClone.innerHTML = triggerArea.innerHTML;
+      overlayContainer.appendChild(triggerAreaClone);
     }
 
     // Add overlay to body
