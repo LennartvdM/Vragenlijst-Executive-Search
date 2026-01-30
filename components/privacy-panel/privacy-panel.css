@@ -135,7 +135,7 @@ body.pp-blur-active {
 .pp-door .pp-lead {
   margin: 0;
   font-size: 12px;
-  color: var(--pp-terracotta-light);
+  color: var(--pp-text-light);
   font-weight: 500;
 }
 
