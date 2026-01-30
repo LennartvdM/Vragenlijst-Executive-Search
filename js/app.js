@@ -99,6 +99,32 @@ var App = (function() {
     // Trigger reflow for animation
     void elements.loginView.offsetWidth;
     elements.loginView.classList.add('view-active');
+
+    // Preload survey HTML in background so it's ready when user logs in
+    preloadSurvey();
+  }
+
+  /**
+   * Preload survey HTML in background while user is on login screen
+   * This eliminates the fetch delay when transitioning to the survey
+   */
+  function preloadSurvey() {
+    if (surveyLoaded) return;
+
+    fetch('/views/survey.html')
+      .then(function(response) {
+        if (!response.ok) return;
+        return response.text();
+      })
+      .then(function(html) {
+        if (html && !surveyLoaded) {
+          elements.surveyView.innerHTML = html;
+          surveyLoaded = true;
+        }
+      })
+      .catch(function() {
+        // Silently ignore preload failures - will retry on actual navigation
+      });
   }
 
   /**
@@ -122,8 +148,8 @@ var App = (function() {
       .then(function(html) {
         elements.surveyView.innerHTML = html;
         surveyLoaded = true;
-        showSurvey();
         initializeSurvey();
+        showSurvey();
       })
       .catch(function(error) {
         console.error('App: Error loading survey:', error);
@@ -212,6 +238,9 @@ var App = (function() {
 
     loadPromise
       .then(function() {
+        // Initialize survey BEFORE animation so progress dots and
+        // inkijkexemplaar are already in the DOM when the form appears
+        initializeSurvey();
         performContainerTransform(originRect);
       })
       .catch(function(error) {
@@ -438,9 +467,6 @@ var App = (function() {
         // Update state
         currentView = 'survey';
         document.title = 'Monitoring Cultureel Talent naar de Top 2025';
-
-        // Initialize survey
-        initializeSurvey();
       }, 300); // Login fade duration
     }, expandDuration);
   }
