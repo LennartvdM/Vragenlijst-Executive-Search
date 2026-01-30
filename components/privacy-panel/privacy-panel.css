@@ -126,17 +126,17 @@ body.pp-blur-active {
 }
 
 .pp-door h3 {
-  margin: 0 0 2px 0;
-  font-size: 13px;
+  margin: 0 0 4px 0;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--pp-text-light);
+  color: var(--pp-text);
 }
 
 .pp-door .pp-lead {
   margin: 0;
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--pp-text-light);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ==========================================================================
