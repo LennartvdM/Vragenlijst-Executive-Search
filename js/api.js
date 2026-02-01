@@ -70,11 +70,13 @@ const ApiClient = (function() {
           }
         }
 
+        console.log(`[API] ${method} ${url.toString()} (attempt ${attempt + 1}/${maxRetries})`);
         const response = await fetch(url.toString(), fetchOptions);
 
         clearTimeout(timeoutId);
 
         if (!response.ok) {
+          console.error(`[API] HTTP error ${response.status} for ${action}`);
           throw new ApiError(
             `HTTP error: ${response.status}`,
             'HTTP_ERROR',
@@ -82,11 +84,20 @@ const ApiClient = (function() {
           );
         }
 
-        const data = await response.json();
+        const text = await response.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          console.error(`[API] Invalid JSON response for ${action}:`, text.substring(0, 200));
+          throw new ApiError('Invalid JSON response from server', 'PARSE_ERROR');
+        }
+        console.log(`[API] ${action} success:`, data);
         return data;
 
       } catch (error) {
         lastError = error;
+        console.error(`[API] ${action} attempt ${attempt + 1} failed:`, error.message);
 
         // Don't retry on abort (timeout) or non-network errors
         if (error.name === 'AbortError') {
