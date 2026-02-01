@@ -20,7 +20,7 @@ const CONFIG = {
    * - Demo codes (DEMO, ORG-2025-XXX) are accepted
    * - Form submissions are simulated
    */
-  SCRIPT_URL: '',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg/exec',
 
   /**
    * localStorage keys for session and form data persistence
@@ -71,7 +71,7 @@ const CONFIG = {
     9: ['kennis_1', 'kennis_2', 'kennis_3', 'kennis_4', 'kennis_5', 'kennis_6', 'kennis_7', 'kennis_8'],
     10: ['klimaat_1', 'klimaat_2', 'klimaat_3', 'klimaat_4', 'klimaat_5', 'klimaat_6'],
     11: ['motivatie'],
-    12: ['strategie_vraag_1', 'blokkade_1', 'bevorderend_1', 'voorbeeld_organisatie'],
+    12: ['vraag_5a_1', 'vraag_5a_2', 'vraag_5a_3', 'blokkade_1', 'bevorderend_1', 'voorbeeld_organisatie'],
     13: ['datum', 'ondertekenaar', 'bevestiging']
   },
 

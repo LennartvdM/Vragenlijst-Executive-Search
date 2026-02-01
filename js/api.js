@@ -33,7 +33,7 @@ const ApiClient = (function() {
    * @returns {Promise<Object>} - The API response
    * @throws {ApiError} - On request failure after all retries
    */
-  async function request(action, payload = {}, options = {}) {
+  async function request(action, params = {}, options = {}) {
     const maxRetries = options.maxRetries ?? CONSTANTS.RETRY.MAX_ATTEMPTS;
     const timeout = options.timeout ?? CONSTANTS.TIMEOUTS.API_REQUEST;
 
@@ -48,16 +48,19 @@ const ApiClient = (function() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const response = await fetch(CONFIG.SCRIPT_URL, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'text/plain'
-          },
-          body: JSON.stringify({
-            action: action,
-            ...payload
-          }),
+        const url = new URL(CONFIG.SCRIPT_URL);
+        url.searchParams.set('action', action);
+
+        for (const [key, value] of Object.entries(params)) {
+          if (typeof value === 'object') {
+            url.searchParams.set(key, JSON.stringify(value));
+          } else {
+            url.searchParams.set(key, value);
+          }
+        }
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
           signal: controller.signal
         });
 
@@ -104,7 +107,13 @@ const ApiClient = (function() {
    * @returns {Promise<{success: boolean, organizationName?: string, message?: string}>}
    */
   async function validateCode(code) {
-    return request(CONSTANTS.API_ACTIONS.VALIDATE_CODE, { code: code });
+    const result = await request('checkCode', { code: code });
+
+    return {
+      success: result.success,
+      organizationName: result.organisatie || '',
+      message: result.error || ''
+    };
   }
 
   /**
@@ -113,7 +122,15 @@ const ApiClient = (function() {
    * @returns {Promise<{success: boolean, documentUrl?: string, message?: string}>}
    */
   async function submitSurvey(formData) {
-    return request(CONSTANTS.API_ACTIONS.SUBMIT_SURVEY, { data: formData });
+    const result = await request('saveResponses', {
+      code: formData.orgCode,
+      data: formData
+    });
+
+    return {
+      success: result.success,
+      message: result.message || result.error || ''
+    };
   }
 
   // Public API
