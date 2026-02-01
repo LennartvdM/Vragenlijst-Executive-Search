@@ -75,7 +75,7 @@ const CONSTANTS = {
   // Error messages (Dutch)
   ERRORS: {
     INVALID_CODE: 'Ongeldige organisatiecode. Controleer uw code en probeer opnieuw.',
-    ENTER_CODE: 'Voer uw organisatiecode in.',
+    ENTER_CODE: 'Vul beide delen van uw organisatiecode in.',
     NETWORK_ERROR: 'Er ging iets mis bij het controleren van uw code. Probeer het later opnieuw.',
     SUBMIT_ERROR: 'Er ging iets mis bij het verzenden. Probeer het opnieuw.',
     SESSION_EXPIRED: 'Uw sessie is verlopen. Log opnieuw in.',

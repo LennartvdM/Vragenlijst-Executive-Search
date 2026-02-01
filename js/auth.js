@@ -24,10 +24,71 @@
       loginForm.addEventListener('submit', handleLogin);
     }
 
+    // Split code input: auto-advance and paste handling
+    var part1 = document.getElementById('orgCodePart1');
+    var part2 = document.getElementById('orgCodePart2');
+
+    if (part1 && part2) {
+      // Auto-advance to part2 when part1 is filled
+      part1.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (this.value.length === 3) {
+          part2.focus();
+        }
+      });
+
+      part2.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      });
+
+      // Handle paste on either field: split full code across both
+      part1.addEventListener('paste', function(e) {
+        handleCodePaste(e, part1, part2);
+      });
+      part2.addEventListener('paste', function(e) {
+        handleCodePaste(e, part1, part2);
+      });
+
+      // Allow backspace from empty part2 to jump back to part1
+      part2.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && this.value === '') {
+          part1.focus();
+        }
+      });
+    }
+
     // Public login button (demo mode)
     var publicLoginBtn = document.getElementById('publicLoginBtn');
     if (publicLoginBtn) {
       publicLoginBtn.addEventListener('click', publicLogin);
+    }
+  }
+
+  /**
+   * Handle paste event for split code inputs
+   * Splits a pasted code like "YAW-PGP" across both fields
+   */
+  function handleCodePaste(e, part1, part2) {
+    e.preventDefault();
+    var pasted = (e.clipboardData || window.clipboardData).getData('text').trim().toUpperCase();
+    // Remove any separators (dash, space, etc.)
+    var clean = pasted.replace(/[\s\-_]/g, '');
+    if (clean.length >= 6) {
+      part1.value = clean.substring(0, 3);
+      part2.value = clean.substring(3, 6);
+      part2.focus();
+    } else if (clean.length <= 3) {
+      // Short paste, just put in current field
+      var target = e.target;
+      target.value = clean.substring(0, 3);
+      if (clean.length === 3 && target === part1) {
+        part2.focus();
+      }
+    } else {
+      // 4 or 5 chars: fill part1 with first 3, rest in part2
+      part1.value = clean.substring(0, 3);
+      part2.value = clean.substring(3);
+      part2.focus();
     }
   }
 
@@ -42,9 +103,11 @@
       if (demoBanner) demoBanner.style.display = 'block';
       if (publicAccess) publicAccess.style.display = 'block';
 
-      // Make org code field not required in demo mode
-      var orgCodeInput = document.getElementById('orgCode');
-      if (orgCodeInput) orgCodeInput.required = false;
+      // Make org code fields not required in demo mode
+      var part1 = document.getElementById('orgCodePart1');
+      var part2 = document.getElementById('orgCodePart2');
+      if (part1) part1.required = false;
+      if (part2) part2.required = false;
     }
   }
 
@@ -82,7 +145,8 @@
   async function handleLogin(event) {
     event.preventDefault();
 
-    var codeInput = document.getElementById('orgCode');
+    var codePart1 = document.getElementById('orgCodePart1');
+    var codePart2 = document.getElementById('orgCodePart2');
     var errorDiv = document.getElementById('loginError');
     var loginBtn = document.getElementById('loginBtn');
     var btnText = loginBtn.querySelector('.btn-text');
@@ -92,17 +156,23 @@
     var retryProgressFill = document.getElementById('retryProgressFill');
     var retryProgressText = document.getElementById('retryProgressText');
 
-    var code = codeInput.value.trim().toUpperCase();
+    var p1 = codePart1.value.trim().toUpperCase();
+    var p2 = codePart2.value.trim().toUpperCase();
 
-    if (!code) {
+    if (!p1 || !p2) {
       showError(errorDiv, CONSTANTS.ERRORS.ENTER_CODE);
+      if (!p1) codePart1.focus();
+      else codePart2.focus();
       return;
     }
+
+    var code = p1 + '-' + p2;
 
     // Show loading state
     setLoadingState(true, loginBtn, btnText, btnLoading);
     errorDiv.style.display = 'none';
-    codeInput.classList.remove(CONSTANTS.CSS.ERROR);
+    codePart1.classList.remove(CONSTANTS.CSS.ERROR);
+    codePart2.classList.remove(CONSTANTS.CSS.ERROR);
 
     // Reset retry progress
     if (retryProgress) {
@@ -153,8 +223,9 @@
         }
       } else {
         showError(errorDiv, result.message || CONSTANTS.ERRORS.INVALID_CODE);
-        codeInput.classList.add(CONSTANTS.CSS.ERROR);
-        codeInput.focus();
+        codePart1.classList.add(CONSTANTS.CSS.ERROR);
+        codePart2.classList.add(CONSTANTS.CSS.ERROR);
+        codePart1.focus();
         resetLoginUI(loginBtn, btnText, btnLoading, btnLoadingText, retryProgress);
       }
     } catch (error) {
@@ -206,21 +277,13 @@
 
   /**
    * Demo validation for testing without backend
-   * Accepts codes in format: ORG-YYYY-XXX or DEMO
+   * Accepts codes in format: XXX-XXX (e.g. YAW-PGP) or DEM-OOO
    * @param {string} code - The organization code to validate
    * @returns {{success: boolean, organizationName?: string, message?: string}}
    */
   function demoValidation(code) {
-    // Accept DEMO code
-    if (code === 'DEMO') {
-      return {
-        success: true,
-        organizationName: 'Demo Organisatie'
-      };
-    }
-
-    // Accept any code matching the pattern for demo purposes
-    if (/^ORG-\d{4}-\d{3}$/.test(code)) {
+    // Accept any code matching the XXX-XXX pattern for demo purposes
+    if (/^[A-Z0-9]{3}-[A-Z0-9]{3}$/.test(code)) {
       return {
         success: true,
         organizationName: 'Organisatie ' + code
@@ -229,7 +292,7 @@
 
     return {
       success: false,
-      message: 'Ongeldige organisatiecode. Gebruik DEMO of een code in het formaat ORG-2025-001.'
+      message: 'Ongeldige organisatiecode. Voer een code in het formaat ABC-DEF in.'
     };
   }
 
