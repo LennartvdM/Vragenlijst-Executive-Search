@@ -72,20 +72,26 @@ const ApiClient = (function() {
    */
   function buildRequest(baseUrl, action, params, method, signal) {
     const url = new URL(baseUrl, window.location.origin);
-    const fetchOptions = { signal, method, redirect: 'follow' };
+    const fetchOptions = { signal, redirect: 'follow' };
 
     url.searchParams.set('action', action);
 
-    if (method === 'POST') {
-      fetchOptions.headers = { 'Content-Type': 'text/plain' };
-      fetchOptions.body = JSON.stringify(params);
-    } else {
-      for (const [key, value] of Object.entries(params)) {
-        url.searchParams.set(key, typeof value === 'object' ? JSON.stringify(value) : value);
-      }
+    // GAS redirects POST→GET during its 302 execution flow, which drops the
+    // request body. To work around this, all data is sent as query parameters
+    // using GET. GAS doGet() reads params via e.parameter.
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, typeof value === 'object' ? JSON.stringify(value) : value);
+    }
+    fetchOptions.method = 'GET';
+
+    const urlString = url.toString();
+
+    // Warn if URL is very long (browser limits vary, ~8KB is safe for most)
+    if (urlString.length > 7000) {
+      console.warn(`[API] URL length is ${urlString.length} chars — may exceed browser limits`);
     }
 
-    return { url: url.toString(), fetchOptions };
+    return { url: urlString, fetchOptions };
   }
 
   /**
