@@ -158,7 +158,11 @@
         resetLoginUI(loginBtn, btnText, btnLoading, btnLoadingText, retryProgress);
       }
     } catch (error) {
-      showError(errorDiv, CONSTANTS.ERRORS.NETWORK_ERROR);
+      const isServerConfig = error instanceof ApiError && (error.code === 'AUTH_REDIRECT' || error.code === 'REDIRECT_ERROR' || error.code === 'PARSE_ERROR');
+      const message = isServerConfig
+        ? 'De server is tijdelijk niet beschikbaar. Probeer het later opnieuw of neem contact op met de beheerder.'
+        : CONSTANTS.ERRORS.NETWORK_ERROR;
+      showError(errorDiv, message);
       resetLoginUI(loginBtn, btnText, btnLoading, btnLoadingText, retryProgress);
     }
   }

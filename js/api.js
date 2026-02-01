@@ -97,30 +97,40 @@ const ApiClient = (function() {
     const status = response.status;
     const statusText = response.statusText || '';
 
-    // Detect redirects (status 0xx, 3xx) — with redirect: 'manual' these come through as opaque-redirect
+    // Detect redirects — with redirect: 'manual' these come through as opaqueredirect (status 0)
+    // or as 3xx responses. The Netlify proxy should resolve all GAS redirects server-side,
+    // so any redirect reaching the client means the proxy couldn't complete the request.
     if (response.type === 'opaqueredirect' || (status >= 300 && status < 400)) {
-      const location = response.headers.get('location') || '(not exposed by browser)';
+      const location = response.headers.get('location') || '';
+      const isGoogleAuth = isGoogleAuthRedirect(location) || isGoogleAuthRedirect(responseUrl);
 
-      if (isGoogleAuthRedirect(location) || isGoogleAuthRedirect(responseUrl)) {
+      // An opaque redirect from our own /api/ proxy is almost always a Google auth redirect.
+      // The browser hides the Location header for opaque redirects, so we can't inspect it,
+      // but the Netlify proxy only redirects when GAS itself redirects (to Google login).
+      const isLikelyGoogleAuth = isGoogleAuth || (response.type === 'opaqueredirect' && responseUrl.includes('/api/'));
+
+      if (isLikelyGoogleAuth) {
         logDiagnostic('error', 'GOOGLE AUTH REDIRECT DETECTED', {
-          'Problem': 'Google Apps Script is redirecting to login instead of responding with data',
-          'Redirect to': location,
+          'Problem': 'The API proxy is redirecting instead of returning data',
+          'Diagnosis': response.type === 'opaqueredirect'
+            ? 'Opaque redirect from /api/ — the Netlify proxy passed through a GAS redirect (likely to Google login)'
+            : `Redirect to: ${location || '(unknown)'}`,
           'Response URL': responseUrl,
-          'Status': `${status} ${statusText}`,
-          'Likely cause': 'The GAS Web App deployment needs reauthorization or is not set to "Anyone" access',
-          'Fix': 'Redeploy the Google Apps Script: Deploy > New deployment > Web app > Execute as: Me, Who has access: Anyone'
+          'Status': status === 0 ? '0 (opaqueredirect — browser hides details)' : `${status} ${statusText}`,
+          'Root cause': 'The Google Apps Script Web App deployment requires authentication',
+          'Fix': 'In Google Apps Script editor: Deploy > New deployment > Web app > Who has access: Anyone'
         });
         throw new ApiError(
-          'Google Apps Script requires authentication — redeploy with "Anyone" access',
+          'Server configuratiefout — neem contact op met de beheerder',
           'AUTH_REDIRECT',
           status
         );
       }
 
       logDiagnostic('warn', 'UNEXPECTED REDIRECT', {
-        'Location': location,
+        'Location': location || '(not exposed by browser)',
         'Response URL': responseUrl,
-        'Status': `${status} ${statusText}`,
+        'Status': status === 0 ? '0 (opaqueredirect)' : `${status} ${statusText}`,
         'Response type': response.type
       });
       throw new ApiError(`Unexpected redirect (${status})`, 'REDIRECT_ERROR', status);
