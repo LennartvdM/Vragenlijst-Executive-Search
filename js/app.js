@@ -480,6 +480,20 @@ var App = (function() {
     var MOBILE_BREAKPOINT = 768;
     var isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
+    // Reset login button from any lingering loading state
+    var loginBtn = document.getElementById('loginBtn');
+    var btnText = loginBtn && loginBtn.querySelector('.btn-text');
+    var btnLoading = loginBtn && loginBtn.querySelector('.btn-loading');
+    var btnLoadingText = loginBtn && loginBtn.querySelector('.btn-loading-text');
+    var retryProgress = document.getElementById('retryProgress');
+    if (loginBtn && btnText && btnLoading) {
+      loginBtn.disabled = false;
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+    }
+    if (btnLoadingText) btnLoadingText.textContent = 'Controleren...';
+    if (retryProgress) retryProgress.style.display = 'none';
+
     // On mobile, skip animation - just switch views instantly
     if (isMobile) {
       document.body.classList.remove('survey-body');
