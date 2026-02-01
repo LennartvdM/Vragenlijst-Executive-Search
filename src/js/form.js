@@ -152,6 +152,7 @@ export async function submitForm(goToStep) {
 
   try {
     const formData = getFormData();
+    console.log('[FORM] Submitting survey...', { orgCode: formData.orgCode, fieldsCount: Object.keys(formData).length, method: 'POST' });
 
     if (!window.ApiClient.isConfigured()) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -191,6 +192,7 @@ export async function submitForm(goToStep) {
       throw new Error(result.message || window.CONSTANTS.ERRORS.SUBMIT_ERROR);
     }
   } catch (e) {
+    console.error('[FORM] Submit failed:', e.message, e.code || '', e);
     showErrorModal(
       'Verzenden mislukt',
       window.CONSTANTS.ERRORS.SUBMIT_ERROR
