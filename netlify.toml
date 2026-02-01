@@ -5,7 +5,15 @@
   publish = "."
 
 # Proxy API calls to Google Apps Script to avoid CORS issues
-# Query parameters are passed through automatically with status 200 proxies
+# Query parameters are forwarded automatically for status 200 proxies.
+# Two rules needed: /api/ (exact) and /api/* (sub-paths) because the
+# wildcard * requires at least one character and won't match /api/?query=...
+[[redirects]]
+  from = "/api/"
+  to = "https://script.google.com/macros/s/AKfycbw4ZABLfBqi4_l_zcSBnSqP9UgmJsRk3RLjMoF42p55kG-AefL1QgYo2G4Fnlfh1qf7WQ/exec"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "https://script.google.com/macros/s/AKfycbw4ZABLfBqi4_l_zcSBnSqP9UgmJsRk3RLjMoF42p55kG-AefL1QgYo2G4Fnlfh1qf7WQ/exec/:splat"
