@@ -80,16 +80,32 @@
 
           <form id="loginForm">
             <div class="field">
-              <label for="orgCode">Organisatiecode</label>
-              <input
-                type="text"
-                id="orgCode"
-                name="orgCode"
-                required
-                placeholder="Bijv. ORG-2025-001"
-                autocomplete="off"
-                spellcheck="false"
-              >
+              <label for="orgCodePart1">Organisatiecode</label>
+              <div class="code-input-group">
+                <input
+                  type="text"
+                  id="orgCodePart1"
+                  name="orgCodePart1"
+                  required
+                  maxlength="3"
+                  placeholder="---"
+                  autocomplete="off"
+                  spellcheck="false"
+                  class="code-input"
+                >
+                <span class="code-separator">&mdash;</span>
+                <input
+                  type="text"
+                  id="orgCodePart2"
+                  name="orgCodePart2"
+                  required
+                  maxlength="3"
+                  placeholder="---"
+                  autocomplete="off"
+                  spellcheck="false"
+                  class="code-input"
+                >
+              </div>
               <span class="field-hint">Deze code heeft u per e-mail ontvangen</span>
             </div>
 
