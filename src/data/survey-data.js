@@ -71,11 +71,14 @@ export const SURVEY_STEPS = [
     subtitle: 'Kwantitatieve gegevens over uw organisatie',
     fields: [
       { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>' },
-      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', groupEnd: true },
+      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
+      { type: 'number', name: 'werknemers_buiten_europa_schatting', label: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven', groupEnd: true },
       { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>' },
-      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', groupEnd: true },
+      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
+      { type: 'number', name: 'top_buiten_europa_schatting', label: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven', groupEnd: true },
       { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>' },
-      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' }
+      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
+      { type: 'number', name: 'subtop_buiten_europa_schatting', label: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven' }
     ]
   },
   {
@@ -120,6 +123,22 @@ export const SURVEY_STEPS = [
           fields: [
             { type: 'number', name: 'aantal_rvt', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
             { type: 'number', name: 'rvt_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
+          ]
+        }
+      },
+      {
+        type: 'radio',
+        name: 'beleid_samenstelling',
+        label: 'Beleid samenstelling',
+        options: [
+          { value: 'rvb_rvc_rvt', label: 'Onze organisatie heeft bewust beleid om het aandeel mensen met herkomst Buiten-Europa in de raad van bestuur en/of raad van commissarissen/rvt te vergroten' },
+          { value: 'hogere_management', label: 'Onze organisatie heeft bewust beleid om het aandeel mensen met herkomst Buiten-Europa in hogere managementposities te vergroten' },
+          { value: 'anders', label: 'Anders' }
+        ],
+        conditional: {
+          trigger: 'anders',
+          fields: [
+            { type: 'text', name: 'beleid_samenstelling_anders', label: 'Toelichting', placeholder: 'Beschrijf uw beleid' }
           ]
         }
       }
@@ -276,6 +295,16 @@ export const SURVEY_STEPS = [
     sectionNum: '5',
     subtitle: 'Aanvullende informatie',
     fields: [
+      {
+        type: 'group',
+        name: 'vraag_5a',
+        label: 'Heeft u vragen naar aanleiding van uw strategie en beleid ten behoeve van de toename van het aandeel mensen met herkomst Buiten-Europa in de top, of culturele diversiteit in het algemeen?',
+        fields: [
+          { type: 'text', name: 'vraag_5a_1', label: 'Vraag 1' },
+          { type: 'text', name: 'vraag_5a_2', label: 'Vraag 2' },
+          { type: 'text', name: 'vraag_5a_3', label: 'Vraag 3' }
+        ]
+      },
       { type: 'textarea', name: 'voorbeeld_organisatie', label: 'Deel een voorbeeld of best practice' }
     ]
   },
