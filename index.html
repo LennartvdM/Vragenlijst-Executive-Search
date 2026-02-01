@@ -108,9 +108,16 @@
                 <svg class="spinner" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4"/>
                 </svg>
-                Controleren...
+                <span class="btn-loading-text">Controleren...</span>
               </span>
             </button>
+
+            <div id="retryProgress" class="retry-progress" style="display: none;">
+              <div class="retry-progress-bar">
+                <div class="retry-progress-fill" id="retryProgressFill"></div>
+              </div>
+              <span class="retry-progress-text" id="retryProgressText"></span>
+            </div>
           </form>
 
           <!-- Public access button - shown when DEV_MODE is true -->

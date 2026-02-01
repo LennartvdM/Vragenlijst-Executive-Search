@@ -87,6 +87,10 @@
     var loginBtn = document.getElementById('loginBtn');
     var btnText = loginBtn.querySelector('.btn-text');
     var btnLoading = loginBtn.querySelector('.btn-loading');
+    var btnLoadingText = loginBtn.querySelector('.btn-loading-text');
+    var retryProgress = document.getElementById('retryProgress');
+    var retryProgressFill = document.getElementById('retryProgressFill');
+    var retryProgressText = document.getElementById('retryProgressText');
 
     var code = codeInput.value.trim().toUpperCase();
 
@@ -100,8 +104,34 @@
     errorDiv.style.display = 'none';
     codeInput.classList.remove(CONSTANTS.CSS.ERROR);
 
+    // Reset retry progress
+    if (retryProgress) {
+      retryProgress.style.display = 'none';
+      retryProgressFill.style.width = '0%';
+    }
+
+    // Progress callback to show retry attempts to the user
+    var onProgress = function(attempt, maxAttempts) {
+      if (btnLoadingText) {
+        btnLoadingText.textContent = 'Poging ' + attempt + ' van ' + maxAttempts + '...';
+      }
+      if (retryProgress && attempt > 1) {
+        retryProgress.style.display = 'flex';
+      }
+      if (retryProgressFill) {
+        retryProgressFill.style.width = ((attempt / maxAttempts) * 100) + '%';
+      }
+      if (retryProgressText) {
+        if (attempt === 1) {
+          retryProgressText.textContent = 'Verbinding maken...';
+        } else {
+          retryProgressText.textContent = 'Server reageert niet, opnieuw proberen...';
+        }
+      }
+    };
+
     try {
-      var result = await validateOrganizationCode(code);
+      var result = await validateOrganizationCode(code, { onProgress: onProgress });
 
       if (result.success) {
         // Store session data
@@ -110,6 +140,9 @@
           orgName: result.organizationName,
           timestamp: Date.now()
         });
+
+        // Hide retry progress
+        if (retryProgress) retryProgress.style.display = 'none';
 
         // Transition to survey view (SPA navigation) - expand from button
         if (typeof App !== 'undefined' && App.transitionToSurvey) {
@@ -122,12 +155,21 @@
         showError(errorDiv, result.message || CONSTANTS.ERRORS.INVALID_CODE);
         codeInput.classList.add(CONSTANTS.CSS.ERROR);
         codeInput.focus();
-        setLoadingState(false, loginBtn, btnText, btnLoading);
+        resetLoginUI(loginBtn, btnText, btnLoading, btnLoadingText, retryProgress);
       }
     } catch (error) {
       showError(errorDiv, CONSTANTS.ERRORS.NETWORK_ERROR);
-      setLoadingState(false, loginBtn, btnText, btnLoading);
+      resetLoginUI(loginBtn, btnText, btnLoading, btnLoadingText, retryProgress);
     }
+  }
+
+  /**
+   * Reset login UI to its default state after an error
+   */
+  function resetLoginUI(btn, textEl, loadingEl, loadingTextEl, retryProgress) {
+    setLoadingState(false, btn, textEl, loadingEl);
+    if (loadingTextEl) loadingTextEl.textContent = 'Controleren...';
+    if (retryProgress) retryProgress.style.display = 'none';
   }
 
   /**
@@ -149,13 +191,13 @@
    * @param {string} code - The organization code to validate
    * @returns {Promise<{success: boolean, organizationName?: string, message?: string}>}
    */
-  async function validateOrganizationCode(code) {
+  async function validateOrganizationCode(code, options) {
     // Use demo validation if API is not configured
     if (!ApiClient.isConfigured()) {
       return demoValidation(code);
     }
 
-    return ApiClient.validateCode(code);
+    return ApiClient.validateCode(code, options);
   }
 
   /**
