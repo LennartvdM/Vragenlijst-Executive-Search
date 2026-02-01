@@ -366,6 +366,63 @@ const ApiClient = (function() {
     };
   }
 
+  /**
+   * Log API configuration on startup for diagnostics
+   */
+  function logStartupDiagnostic() {
+    const proxyUrl = CONFIG.SCRIPT_URL || '(not set)';
+    const fullUrl = new URL(proxyUrl, window.location.origin).toString();
+
+    console.log('[API] ─── STARTUP DIAGNOSTIC ───');
+    console.log(`[API]   Configured endpoint: ${proxyUrl}`);
+    console.log(`[API]   Full proxy URL: ${fullUrl}`);
+    console.log(`[API]   Demo mode: ${CONFIG.isDemoMode()}`);
+    console.log(`[API]   Origin: ${window.location.origin}`);
+    console.log(`[API]   User agent: ${navigator.userAgent.substring(0, 80)}`);
+    console.log('[API] ─────────────────────────');
+
+    // Probe the proxy endpoint to check what it returns without waiting for user action
+    fetch(fullUrl + '?action=ping', { method: 'GET', redirect: 'manual' })
+      .then(response => {
+        const info = {
+          'Status': response.status,
+          'Type': response.type,
+          'Response URL': response.url || '(hidden)',
+          'Content-Type': response.headers.get('content-type') || '(none)'
+        };
+
+        if (response.type === 'opaqueredirect') {
+          console.error('[API] ─── PROXY PROBE: REDIRECT (BAD) ───');
+          console.error('[API]   The proxy is redirecting — GAS deployment likely needs reauth');
+          for (const [k, v] of Object.entries(info)) console.error(`[API]   ${k}: ${v}`);
+          console.error('[API] ─────────────────────────────────');
+        } else if (response.ok || response.status === 200) {
+          console.log('[API] ─── PROXY PROBE: OK ───');
+          for (const [k, v] of Object.entries(info)) console.log(`[API]   ${k}: ${v}`);
+          response.text().then(body => {
+            const preview = body.substring(0, 150);
+            const looksLikeJson = body.trimStart().startsWith('{') || body.trimStart().startsWith('[');
+            const looksLikeHtml = body.trimStart().startsWith('<!') || body.trimStart().startsWith('<html');
+            console.log(`[API]   Body format: ${looksLikeJson ? 'JSON (good)' : looksLikeHtml ? 'HTML (bad — likely error page)' : 'unknown'}`);
+            console.log(`[API]   Body preview: ${preview}`);
+            console.log('[API] ────────────────────');
+          }).catch(() => {});
+        } else {
+          console.warn('[API] ─── PROXY PROBE: ERROR ───');
+          for (const [k, v] of Object.entries(info)) console.warn(`[API]   ${k}: ${v}`);
+          console.warn('[API] ─────────────────────────');
+        }
+      })
+      .catch(err => {
+        console.error('[API] ─── PROXY PROBE: FAILED ───');
+        console.error(`[API]   Error: ${err.message}`);
+        console.error('[API] ─────────────────────────');
+      });
+  }
+
+  // Run startup diagnostic immediately
+  logStartupDiagnostic();
+
   // Public API
   return {
     isConfigured,
