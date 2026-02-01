@@ -252,7 +252,39 @@ const ApiClient = (function() {
   }
 
   /**
-   * Make an API request. Tries direct GAS URL first, falls back to proxy.
+   * Race two endpoints in parallel, returning the first successful result.
+   * If both fail, throws the most relevant error (non-retryable preferred).
+   * @param {string} directUrl - Direct GAS endpoint
+   * @param {string} proxyUrl - Proxy endpoint
+   * @param {string} action - API action
+   * @param {Object} params - Request parameters
+   * @param {string} method - HTTP method
+   * @param {number} timeout - Timeout in ms
+   * @returns {Promise<Object>} Parsed response data from whichever endpoint wins
+   */
+  async function raceEndpoints(directUrl, proxyUrl, action, params, method, timeout) {
+    const directPromise = tryEndpoint(directUrl, action, params, method, timeout, 'direct')
+      .then(data => ({ data, source: 'direct' }));
+    const proxyPromise = tryEndpoint(proxyUrl, action, params, method, timeout, 'proxy')
+      .then(data => ({ data, source: 'proxy' }));
+
+    // Use Promise.any to get the first successful result
+    // If both fail, Promise.any throws an AggregateError
+    try {
+      const result = await Promise.any([directPromise, proxyPromise]);
+      console.log(`[API] Won by ${result.source} endpoint`);
+      return result.data;
+    } catch (aggregateError) {
+      // Both failed — pick the best error to propagate
+      const errors = aggregateError.errors || [];
+      // Prefer non-retryable errors (they carry more specific info)
+      const nonRetryable = errors.find(e => !classifyError(e).retryable);
+      throw nonRetryable || errors[0] || new ApiError('Both endpoints failed', 'NETWORK_ERROR');
+    }
+  }
+
+  /**
+   * Make an API request. Races direct GAS URL and proxy in parallel.
    * Retries with exponential backoff for transient errors.
    *
    * @param {string} action - The API action to perform
@@ -282,39 +314,49 @@ const ApiClient = (function() {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       if (onProgress) onProgress(attempt + 1, maxRetries);
 
-      // 1. Try direct GAS URL (CORS-enabled for "Anyone" deployments)
-      try {
-        const data = await tryEndpoint(directUrl, action, params, method, timeout, 'direct');
-        console.log(`[API] ${action} success (direct):`, data);
-        return data;
-      } catch (directError) {
-        lastError = directError;
-        const { retryable, reason } = classifyError(directError);
+      // Race direct and proxy endpoints in parallel for faster response
+      if (proxyUrl) {
+        try {
+          const data = await raceEndpoints(directUrl, proxyUrl, action, params, method, timeout);
+          console.log(`[API] ${action} success:`, data);
+          return data;
+        } catch (raceError) {
+          lastError = raceError;
+          const { retryable, reason } = classifyError(raceError);
 
-        if (!retryable) {
-          logDiagnostic('error', 'NON-RETRYABLE ERROR', {
-            'Action': action,
-            'Endpoint': 'direct',
-            'Error': directError.message,
-            'Code': directError.code || directError.name,
-            'Reason': reason
-          });
-          if (directError instanceof ApiError) throw directError;
-          if (directError.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
-          throw new ApiError(directError.message, 'NETWORK_ERROR');
+          if (!retryable) {
+            logDiagnostic('error', 'NON-RETRYABLE ERROR', {
+              'Action': action,
+              'Error': raceError.message,
+              'Code': raceError.code || raceError.name,
+              'Reason': reason
+            });
+            if (raceError instanceof ApiError) throw raceError;
+            if (raceError.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
+            throw new ApiError(raceError.message, 'NETWORK_ERROR');
+          }
         }
+      } else {
+        // No proxy — try direct only
+        try {
+          const data = await tryEndpoint(directUrl, action, params, method, timeout, 'direct');
+          console.log(`[API] ${action} success (direct):`, data);
+          return data;
+        } catch (directError) {
+          lastError = directError;
+          const { retryable, reason } = classifyError(directError);
 
-        // Direct failed with retryable error — try proxy as fallback
-        if (proxyUrl) {
-          console.log(`[API] Direct call failed, trying proxy fallback...`);
-          try {
-            const data = await tryEndpoint(proxyUrl, action, params, method, timeout, 'proxy');
-            console.log(`[API] ${action} success (proxy):`, data);
-            return data;
-          } catch (proxyError) {
-            // Proxy also failed — use direct error as the primary
-            console.warn(`[API] Proxy fallback also failed: ${proxyError.message}`);
-            lastError = directError;
+          if (!retryable) {
+            logDiagnostic('error', 'NON-RETRYABLE ERROR', {
+              'Action': action,
+              'Endpoint': 'direct',
+              'Error': directError.message,
+              'Code': directError.code || directError.name,
+              'Reason': reason
+            });
+            if (directError instanceof ApiError) throw directError;
+            if (directError.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
+            throw new ApiError(directError.message, 'NETWORK_ERROR');
           }
         }
       }
@@ -441,8 +483,12 @@ const ApiClient = (function() {
       });
   }
 
-  // Run startup diagnostic immediately
-  logStartupDiagnostic();
+  // Defer startup diagnostic so it doesn't compete with login requests
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(logStartupDiagnostic);
+  } else {
+    setTimeout(logStartupDiagnostic, 2000);
+  }
 
   // Public API
   return {
