@@ -11,16 +11,16 @@
 
 const CONFIG = {
   /**
-   * Google Apps Script Web App URL
-   * Replace with your deployed script URL from Google Apps Script
-   * Format: https://script.google.com/macros/s/XXXXXX/exec
+   * API endpoint URL
+   * Uses Netlify proxy (/api/) to avoid CORS issues with Google Apps Script.
+   * The proxy is configured in netlify.toml to forward requests to the GAS web app.
    *
    * When not configured, the app runs in demo mode:
    * - Public access without login is available
    * - Demo codes (DEMO, ORG-2025-XXX) are accepted
    * - Form submissions are simulated
    */
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg/exec',
+  SCRIPT_URL: '/api/',
 
   /**
    * localStorage keys for session and form data persistence
