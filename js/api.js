@@ -51,7 +51,7 @@ const ApiClient = (function() {
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
         const url = new URL(CONFIG.SCRIPT_URL);
-        const fetchOptions = { signal: controller.signal, method };
+        const fetchOptions = { signal: controller.signal, method, mode: 'cors', redirect: 'follow' };
 
         if (method === 'POST') {
           // POST: action as query param, data in request body
