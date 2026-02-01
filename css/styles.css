@@ -363,6 +363,19 @@ body {
   border-color: var(--error);
 }
 
+.field-validation {
+  display: block;
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 6px;
+  animation: validation-fade-in 0.2s ease;
+}
+
+@keyframes validation-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .field textarea {
   resize: vertical;
   min-height: 80px;

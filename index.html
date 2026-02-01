@@ -78,7 +78,7 @@
             Demo modus - geen backend verbonden
           </div>
 
-          <form id="loginForm">
+          <form id="loginForm" novalidate>
             <div class="field">
               <label for="orgCodePart1">Organisatiecode</label>
               <div class="code-input-group">
@@ -107,6 +107,7 @@
                 >
               </div>
               <span class="field-hint">Deze code heeft u per e-mail ontvangen</span>
+              <span class="field-validation" id="codeValidation" style="display: none;">Vul uw organisatiecode in</span>
             </div>
 
             <div id="loginError" class="error-message" style="display: none;">

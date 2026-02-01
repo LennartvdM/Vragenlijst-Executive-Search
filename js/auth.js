@@ -29,9 +29,18 @@
     var part2 = document.getElementById('orgCodePart2');
 
     if (part1 && part2) {
+      // Clear validation on input
+      function clearCodeValidation() {
+        var v = document.getElementById('codeValidation');
+        if (v) v.style.display = 'none';
+        part1.classList.remove(CONSTANTS.CSS.ERROR);
+        part2.classList.remove(CONSTANTS.CSS.ERROR);
+      }
+
       // Auto-advance to part2 when part1 is filled
       part1.addEventListener('input', function() {
         this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        clearCodeValidation();
         if (this.value.length === 3) {
           part2.focus();
         }
@@ -39,6 +48,7 @@
 
       part2.addEventListener('input', function() {
         this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        clearCodeValidation();
       });
 
       // Handle paste on either field: split full code across both
@@ -190,17 +200,19 @@
 
     var p1 = codePart1.value.trim().toUpperCase();
     var p2 = codePart2.value.trim().toUpperCase();
+    var codeValidation = document.getElementById('codeValidation');
 
     if (!p1 || !p2) {
-      showError(errorDiv, CONSTANTS.ERRORS.ENTER_CODE);
-      if (!p1) codePart1.focus();
-      else codePart2.focus();
+      if (!p1) { codePart1.classList.add(CONSTANTS.CSS.ERROR); codePart1.focus(); }
+      if (!p2) codePart2.classList.add(CONSTANTS.CSS.ERROR);
+      if (codeValidation) codeValidation.style.display = '';
       return;
     }
 
     var code = p1 + '-' + p2;
 
-    // Show loading state
+    // Hide validation and show loading state
+    if (codeValidation) codeValidation.style.display = 'none';
     setLoadingState(true, loginBtn, btnText, btnLoading);
     errorDiv.style.display = 'none';
     codePart1.classList.remove(CONSTANTS.CSS.ERROR);
