@@ -26,14 +26,16 @@ const ApiClient = (function() {
   /**
    * Make an API request with retry logic
    * @param {string} action - The API action to perform
-   * @param {Object} payload - The data to send
+   * @param {Object} params - The data to send
    * @param {Object} options - Request options
+   * @param {string} options.method - HTTP method: 'GET' or 'POST' (default: 'GET')
    * @param {number} options.maxRetries - Maximum retry attempts (default: CONSTANTS.RETRY.MAX_ATTEMPTS)
    * @param {number} options.timeout - Request timeout in ms (default: CONSTANTS.TIMEOUTS.API_REQUEST)
    * @returns {Promise<Object>} - The API response
    * @throws {ApiError} - On request failure after all retries
    */
   async function request(action, params = {}, options = {}) {
+    const method = options.method || 'GET';
     const maxRetries = options.maxRetries ?? CONSTANTS.RETRY.MAX_ATTEMPTS;
     const timeout = options.timeout ?? CONSTANTS.TIMEOUTS.API_REQUEST;
 
@@ -49,20 +51,26 @@ const ApiClient = (function() {
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
         const url = new URL(CONFIG.SCRIPT_URL);
-        url.searchParams.set('action', action);
+        const fetchOptions = { signal: controller.signal, method };
 
-        for (const [key, value] of Object.entries(params)) {
-          if (typeof value === 'object') {
-            url.searchParams.set(key, JSON.stringify(value));
-          } else {
-            url.searchParams.set(key, value);
+        if (method === 'POST') {
+          // POST: action as query param, data in request body
+          url.searchParams.set('action', action);
+          fetchOptions.headers = { 'Content-Type': 'text/plain' };
+          fetchOptions.body = JSON.stringify(params);
+        } else {
+          // GET: everything as query params
+          url.searchParams.set('action', action);
+          for (const [key, value] of Object.entries(params)) {
+            if (typeof value === 'object') {
+              url.searchParams.set(key, JSON.stringify(value));
+            } else {
+              url.searchParams.set(key, value);
+            }
           }
         }
 
-        const response = await fetch(url.toString(), {
-          method: 'GET',
-          signal: controller.signal
-        });
+        const response = await fetch(url.toString(), fetchOptions);
 
         clearTimeout(timeoutId);
 
@@ -125,7 +133,7 @@ const ApiClient = (function() {
     const result = await request('saveResponses', {
       code: formData.orgCode,
       data: formData
-    });
+    }, { method: 'POST' });
 
     return {
       success: result.success,
