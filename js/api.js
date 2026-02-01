@@ -466,3 +466,6 @@ class ApiError extends Error {
 
 // Make ApiError available globally
 window.ApiError = ApiError;
+
+// Make ApiClient available globally
+window.ApiClient = ApiClient;
