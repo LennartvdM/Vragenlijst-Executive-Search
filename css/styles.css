@@ -182,6 +182,10 @@ body {
   line-height: 1.6;
 }
 
+.login-body .field {
+  text-align: center;
+}
+
 .login-footer {
   margin-top: 24px;
   padding-top: 20px;
@@ -215,7 +219,25 @@ body {
 }
 
 .public-access {
-  margin-top: 20px;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.preview-link {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 0;
+  opacity: 0.7;
+  transition: all 0.2s;
+}
+
+.preview-link:hover {
+  opacity: 1;
+  color: var(--terracotta);
 }
 
 .divider {
@@ -359,6 +381,7 @@ body {
   align-items: center;
   gap: 8px;
   max-width: 280px;
+  margin: 0 auto;
 }
 
 .code-input-group .code-input {
