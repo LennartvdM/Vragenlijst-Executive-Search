@@ -6,6 +6,14 @@
 const ApiClient = (function() {
   'use strict';
 
+  // Patterns that indicate a Google authentication redirect
+  const GOOGLE_AUTH_PATTERNS = [
+    'accounts.google.com',
+    'accounts.youtube.com',
+    'ServiceLogin',
+    'signin/identifier'
+  ];
+
   /**
    * Check if the API is configured
    * @returns {boolean}
@@ -21,6 +29,194 @@ const ApiClient = (function() {
    */
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Check if a URL or error message indicates a Google auth redirect
+   * @param {string} str - URL or error message to check
+   * @returns {boolean}
+   */
+  function isGoogleAuthRedirect(str) {
+    if (!str) return false;
+    return GOOGLE_AUTH_PATTERNS.some(pattern => str.includes(pattern));
+  }
+
+  /**
+   * Log a structured diagnostic block to the console
+   * @param {string} level - 'info', 'warn', or 'error'
+   * @param {string} title - Block title
+   * @param {Object} details - Key-value pairs to log
+   */
+  function logDiagnostic(level, title, details) {
+    const fn = level === 'error' ? console.error : level === 'warn' ? console.warn : console.log;
+    fn(`[API] ─── ${title} ───`);
+    for (const [key, value] of Object.entries(details)) {
+      if (value !== undefined && value !== null && value !== '') {
+        fn(`[API]   ${key}: ${value}`);
+      }
+    }
+    fn(`[API] ${'─'.repeat(title.length + 8)}`);
+  }
+
+  /**
+   * Build the fetch URL and options for a request
+   * @param {string} action - API action
+   * @param {Object} params - Request parameters
+   * @param {string} method - HTTP method
+   * @param {AbortSignal} signal - Abort signal
+   * @returns {{url: URL, fetchOptions: Object}}
+   */
+  function buildRequest(action, params, method, signal) {
+    const url = new URL(CONFIG.SCRIPT_URL, window.location.origin);
+    const fetchOptions = { signal, method, redirect: 'manual' };
+
+    url.searchParams.set('action', action);
+
+    if (method === 'POST') {
+      fetchOptions.headers = { 'Content-Type': 'text/plain' };
+      fetchOptions.body = JSON.stringify(params);
+    } else {
+      for (const [key, value] of Object.entries(params)) {
+        url.searchParams.set(key, typeof value === 'object' ? JSON.stringify(value) : value);
+      }
+    }
+
+    return { url, fetchOptions };
+  }
+
+  /**
+   * Diagnose a response and return parsed data or throw a descriptive error
+   * @param {Response} response - Fetch response
+   * @param {string} action - API action name
+   * @returns {Promise<Object>} Parsed JSON data
+   * @throws {ApiError}
+   */
+  async function diagnoseResponse(response, action) {
+    const responseUrl = response.url || '(unknown)';
+    const contentType = response.headers.get('content-type') || '(none)';
+    const status = response.status;
+    const statusText = response.statusText || '';
+
+    // Detect redirects (status 0xx, 3xx) — with redirect: 'manual' these come through as opaque-redirect
+    if (response.type === 'opaqueredirect' || (status >= 300 && status < 400)) {
+      const location = response.headers.get('location') || '(not exposed by browser)';
+
+      if (isGoogleAuthRedirect(location) || isGoogleAuthRedirect(responseUrl)) {
+        logDiagnostic('error', 'GOOGLE AUTH REDIRECT DETECTED', {
+          'Problem': 'Google Apps Script is redirecting to login instead of responding with data',
+          'Redirect to': location,
+          'Response URL': responseUrl,
+          'Status': `${status} ${statusText}`,
+          'Likely cause': 'The GAS Web App deployment needs reauthorization or is not set to "Anyone" access',
+          'Fix': 'Redeploy the Google Apps Script: Deploy > New deployment > Web app > Execute as: Me, Who has access: Anyone'
+        });
+        throw new ApiError(
+          'Google Apps Script requires authentication — redeploy with "Anyone" access',
+          'AUTH_REDIRECT',
+          status
+        );
+      }
+
+      logDiagnostic('warn', 'UNEXPECTED REDIRECT', {
+        'Location': location,
+        'Response URL': responseUrl,
+        'Status': `${status} ${statusText}`,
+        'Response type': response.type
+      });
+      throw new ApiError(`Unexpected redirect (${status})`, 'REDIRECT_ERROR', status);
+    }
+
+    // Non-OK status
+    if (!response.ok) {
+      let bodyPreview = '';
+      try { bodyPreview = (await response.text()).substring(0, 300); } catch (e) { /* ignore */ }
+
+      logDiagnostic('error', `HTTP ${status} ERROR`, {
+        'Action': action,
+        'Status': `${status} ${statusText}`,
+        'Response URL': responseUrl,
+        'Content-Type': contentType,
+        'Body preview': bodyPreview || '(empty)'
+      });
+      throw new ApiError(`HTTP error: ${status} ${statusText}`, 'HTTP_ERROR', status);
+    }
+
+    // Read body
+    const text = await response.text();
+
+    // Check for HTML response (indicates proxy returned a web page instead of JSON)
+    if (contentType.includes('text/html') || text.trimStart().startsWith('<!') || text.trimStart().startsWith('<html')) {
+      const isGoogleAuth = isGoogleAuthRedirect(text) || isGoogleAuthRedirect(responseUrl);
+
+      logDiagnostic('error', isGoogleAuth ? 'GOOGLE LOGIN PAGE RETURNED' : 'HTML RESPONSE (expected JSON)', {
+        'Action': action,
+        'Response URL': responseUrl,
+        'Content-Type': contentType,
+        'Body preview': text.substring(0, 300).replace(/\n/g, ' '),
+        ...(isGoogleAuth ? {
+          'Problem': 'The Netlify proxy followed the redirect and returned Google\'s login page',
+          'Fix': 'Redeploy the Google Apps Script with "Anyone" access'
+        } : {
+          'Problem': 'Expected JSON but received HTML — the proxy may be returning an error page'
+        })
+      });
+
+      throw new ApiError(
+        isGoogleAuth
+          ? 'Google Apps Script requires authentication — redeploy with "Anyone" access'
+          : 'Server returned HTML instead of JSON',
+        isGoogleAuth ? 'AUTH_REDIRECT' : 'PARSE_ERROR',
+        status
+      );
+    }
+
+    // Parse JSON
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      logDiagnostic('error', 'INVALID JSON RESPONSE', {
+        'Action': action,
+        'Response URL': responseUrl,
+        'Content-Type': contentType,
+        'Parse error': parseError.message,
+        'Body preview': text.substring(0, 300)
+      });
+      throw new ApiError('Invalid JSON response from server', 'PARSE_ERROR');
+    }
+
+    return data;
+  }
+
+  /**
+   * Classify whether an error is retryable
+   * @param {Error} error - The error to classify
+   * @returns {{retryable: boolean, reason: string}}
+   */
+  function classifyError(error) {
+    if (error.name === 'AbortError') {
+      return { retryable: false, reason: 'Request timed out' };
+    }
+    if (error instanceof ApiError) {
+      // Auth redirects will never resolve by retrying
+      if (error.code === 'AUTH_REDIRECT') {
+        return { retryable: false, reason: 'Google Apps Script authentication issue (retrying won\'t help)' };
+      }
+      // Unexpected redirects are also not retryable
+      if (error.code === 'REDIRECT_ERROR') {
+        return { retryable: false, reason: 'Server redirect issue (retrying won\'t help)' };
+      }
+      // Client errors (4xx) are not retryable
+      if (error.statusCode >= 400 && error.statusCode < 500) {
+        return { retryable: false, reason: `Client error ${error.statusCode}` };
+      }
+      // Parse errors from HTML responses won't fix themselves
+      if (error.code === 'PARSE_ERROR') {
+        return { retryable: false, reason: 'Server returned non-JSON response (retrying won\'t help)' };
+      }
+    }
+    // Network errors, 5xx, etc. are retryable
+    return { retryable: true, reason: '' };
   }
 
   /**
@@ -52,76 +248,78 @@ const ApiClient = (function() {
         onProgress(attempt + 1, maxRetries);
       }
 
+      const startTime = performance.now();
+
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const url = new URL(CONFIG.SCRIPT_URL, window.location.origin);
-        const fetchOptions = { signal: controller.signal, method, redirect: 'follow' };
-
-        if (method === 'POST') {
-          // POST: action as query param, data in request body
-          url.searchParams.set('action', action);
-          fetchOptions.headers = { 'Content-Type': 'text/plain' };
-          fetchOptions.body = JSON.stringify(params);
-        } else {
-          // GET: everything as query params
-          url.searchParams.set('action', action);
-          for (const [key, value] of Object.entries(params)) {
-            if (typeof value === 'object') {
-              url.searchParams.set(key, JSON.stringify(value));
-            } else {
-              url.searchParams.set(key, value);
-            }
-          }
-        }
+        const { url, fetchOptions } = buildRequest(action, params, method, controller.signal);
 
         console.log(`[API] ${method} ${url.toString()} (attempt ${attempt + 1}/${maxRetries})`);
         const response = await fetch(url.toString(), fetchOptions);
-
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          console.error(`[API] HTTP error ${response.status} for ${action}`);
-          throw new ApiError(
-            `HTTP error: ${response.status}`,
-            'HTTP_ERROR',
-            response.status
-          );
-        }
+        const elapsed = Math.round(performance.now() - startTime);
+        console.log(`[API] Response in ${elapsed}ms — status: ${response.status}, type: ${response.type}`);
 
-        const text = await response.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (parseError) {
-          console.error(`[API] Invalid JSON response for ${action}:`, text.substring(0, 200));
-          throw new ApiError('Invalid JSON response from server', 'PARSE_ERROR');
-        }
+        const data = await diagnoseResponse(response, action);
         console.log(`[API] ${action} success:`, data);
         return data;
 
       } catch (error) {
         lastError = error;
-        console.error(`[API] ${action} attempt ${attempt + 1} failed:`, error.message);
+        const elapsed = Math.round(performance.now() - startTime);
+        const { retryable, reason } = classifyError(error);
 
-        // Don't retry on abort (timeout) or non-network errors
-        if (error.name === 'AbortError') {
-          throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
+        if (!retryable) {
+          logDiagnostic('error', 'NON-RETRYABLE ERROR', {
+            'Action': action,
+            'Error': error.message,
+            'Code': error.code || error.name,
+            'Reason': reason,
+            'Elapsed': `${elapsed}ms`
+          });
+          if (error instanceof ApiError) throw error;
+          if (error.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
+          throw new ApiError(error.message, 'NETWORK_ERROR');
         }
 
-        // Don't retry on client errors (4xx)
-        if (error instanceof ApiError && error.statusCode >= 400 && error.statusCode < 500) {
-          throw error;
+        // Retryable error
+        const isGoogleCORS = error.message === 'Failed to fetch' && isGoogleAuthRedirect(error.stack || '');
+        if (error.message === 'Failed to fetch') {
+          logDiagnostic('warn', `FETCH FAILED (attempt ${attempt + 1}/${maxRetries})`, {
+            'Action': action,
+            'Elapsed': `${elapsed}ms`,
+            'Error': error.message,
+            'Possible causes': [
+              'Network connectivity issue',
+              'CORS error (check browser Network tab for blocked requests)',
+              'DNS resolution failure',
+              'Netlify proxy not routing correctly',
+              isGoogleCORS ? 'Google Apps Script auth redirect causing CORS block' : null
+            ].filter(Boolean).join('; '),
+            'Tip': 'Open browser DevTools > Network tab and look for red/blocked requests to see the actual URL'
+          });
+        } else {
+          console.warn(`[API] ${action} attempt ${attempt + 1} failed (${elapsed}ms): ${error.message}`);
         }
 
         // Wait before retrying (exponential backoff)
         if (attempt < maxRetries - 1) {
           const delay = CONSTANTS.TIMEOUTS.RETRY_BASE * Math.pow(CONSTANTS.RETRY.BACKOFF_MULTIPLIER, attempt);
+          console.log(`[API] Retrying in ${delay}ms...`);
           await sleep(delay);
         }
       }
     }
+
+    logDiagnostic('error', 'ALL RETRIES EXHAUSTED', {
+      'Action': action,
+      'Attempts': maxRetries,
+      'Last error': lastError?.message || '(unknown)',
+      'Error code': lastError?.code || lastError?.name || '(unknown)'
+    });
 
     throw lastError || new ApiError('Request failed after retries', 'NETWORK_ERROR');
   }
