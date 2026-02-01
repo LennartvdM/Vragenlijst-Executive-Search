@@ -12,15 +12,16 @@
 const CONFIG = {
   /**
    * API endpoint URL
-   * Uses Netlify proxy (/api/) to avoid CORS issues with Google Apps Script.
-   * The proxy is configured in netlify.toml to forward requests to the GAS web app.
+   * Primary: direct GAS URL (GAS supports CORS for "Anyone" deployments).
+   * Fallback: Netlify proxy (/api/) configured in netlify.toml.
    *
    * When not configured, the app runs in demo mode:
    * - Public access without login is available
    * - Demo codes (DEMO, ORG-2025-XXX) are accepted
    * - Form submissions are simulated
    */
-  SCRIPT_URL: '/api/',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw4ZABLfBqi4_l_zcSBnSqP9UgmJsRk3RLjMoF42p55kG-AefL1QgYo2G4Fnlfh1qf7WQ/exec',
+  PROXY_URL: '/api/',
 
   /**
    * localStorage keys for session and form data persistence
