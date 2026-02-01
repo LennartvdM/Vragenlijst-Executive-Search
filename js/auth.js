@@ -154,12 +154,9 @@
   }
 
   /**
-   * Public login without organization code (demo mode only)
+   * Public login without organization code (inkijkexemplaar)
    */
   function publicLogin() {
-    if (!CONFIG.isDemoMode()) {
-      return;
-    }
 
     var publicLoginBtn = document.getElementById('publicLoginBtn');
 
