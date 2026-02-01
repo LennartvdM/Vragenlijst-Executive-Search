@@ -31,6 +31,7 @@ const ApiClient = (function() {
    * @param {string} options.method - HTTP method: 'GET' or 'POST' (default: 'GET')
    * @param {number} options.maxRetries - Maximum retry attempts (default: CONSTANTS.RETRY.MAX_ATTEMPTS)
    * @param {number} options.timeout - Request timeout in ms (default: CONSTANTS.TIMEOUTS.API_REQUEST)
+   * @param {Function} options.onProgress - Callback for retry progress: (attempt, maxAttempts) => void
    * @returns {Promise<Object>} - The API response
    * @throws {ApiError} - On request failure after all retries
    */
@@ -38,6 +39,7 @@ const ApiClient = (function() {
     const method = options.method || 'GET';
     const maxRetries = options.maxRetries ?? CONSTANTS.RETRY.MAX_ATTEMPTS;
     const timeout = options.timeout ?? CONSTANTS.TIMEOUTS.API_REQUEST;
+    const onProgress = options.onProgress || null;
 
     if (!isConfigured()) {
       throw new ApiError('API not configured', 'CONFIG_ERROR');
@@ -46,6 +48,10 @@ const ApiClient = (function() {
     let lastError;
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
+      if (onProgress) {
+        onProgress(attempt + 1, maxRetries);
+      }
+
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -125,8 +131,8 @@ const ApiClient = (function() {
    * @param {string} code - The organization code to validate
    * @returns {Promise<{success: boolean, organizationName?: string, message?: string}>}
    */
-  async function validateCode(code) {
-    const result = await request('checkCode', { code: code });
+  async function validateCode(code, options = {}) {
+    const result = await request('checkCode', { code: code }, options);
 
     return {
       success: result.success,
