@@ -105,13 +105,13 @@ const CONSTANTS = {
   // Timeouts (milliseconds)
   TIMEOUTS: {
     AUTO_SAVE_DELAY: 500,
-    API_REQUEST: 30000,
-    RETRY_BASE: 2000
+    API_REQUEST: 15000,
+    RETRY_BASE: 1000
   },
 
   // Retry configuration
   RETRY: {
-    MAX_ATTEMPTS: 4,
+    MAX_ATTEMPTS: 3,
     BACKOFF_MULTIPLIER: 2
   }
 };
