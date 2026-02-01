@@ -55,6 +55,38 @@
           part1.focus();
         }
       });
+
+      // Ctrl+A / Cmd+A selects both fields visually
+      function handleSelectAll(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+          e.preventDefault();
+          part1.select();
+          part2.select();
+          part1.parentElement.classList.add('code-input-selected');
+        }
+      }
+      part1.addEventListener('keydown', handleSelectAll);
+      part2.addEventListener('keydown', handleSelectAll);
+
+      // Ctrl+C / Cmd+C copies the full combined code when both are selected
+      function handleCopy(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'c' && part1.parentElement.classList.contains('code-input-selected')) {
+          e.preventDefault();
+          var fullCode = part1.value + '-' + part2.value;
+          navigator.clipboard.writeText(fullCode);
+        }
+      }
+      part1.addEventListener('keydown', handleCopy);
+      part2.addEventListener('keydown', handleCopy);
+
+      // Clear the "selected" visual state on click or any other input
+      function clearGroupSelection() {
+        part1.parentElement.classList.remove('code-input-selected');
+      }
+      part1.addEventListener('click', clearGroupSelection);
+      part2.addEventListener('click', clearGroupSelection);
+      part1.addEventListener('input', clearGroupSelection);
+      part2.addEventListener('input', clearGroupSelection);
     }
 
     // Public login button (demo mode)
