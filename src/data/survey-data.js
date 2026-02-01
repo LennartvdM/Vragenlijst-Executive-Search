@@ -158,7 +158,7 @@ export const SURVEY_STEPS = [
     id: 5,
     title: 'Leiderschap',
     sectionNum: '3.1',
-    subtitle: 'Leiderschap en commitment',
+    subtitle: 'Leiderschap',
     likert: {
       id: 'likert-leiderschap',
       prefix: 'leid',
@@ -181,14 +181,14 @@ export const SURVEY_STEPS = [
       id: 'likert-strategie',
       prefix: 'strat',
       questions: [
-        'Er is een meerjarige strategie voor het bereiken van culturele diversiteitsdoelstellingen',
-        'Er zijn concrete, meetbare doelen gesteld',
-        'De voortgang wordt periodiek gemeten en gerapporteerd',
-        'Er is een verantwoordelijke aangesteld voor het diversiteitsbeleid',
-        'Het diversiteitsbeleid is geïntegreerd in het algemene HR-beleid',
-        'Er wordt samengewerkt met externe partijen (bijv. netwerken, kennisinstellingen)',
-        'Het management wordt afgerekend op diversiteitsdoelstellingen',
-        'Er is budget gereserveerd voor diversiteitsinitiatieven'
+        'Culturele diversiteit is een business case voor onze organisatie, d.w.z. voor onze organisatie is het om zakelijke of bedrijfsmatige redenen waardevol om culturele diversiteit te stimuleren',
+        'De organisatie streeft expliciete doelstellingen voor het aandeel mensen met herkomst Buiten-Europa in de top na',
+        'Vastgelegd is hoe deze doelstellingen bereikt gaan worden en op welke termijn',
+        'Bedrijfsonderdelen (business units, afdelingen, teams) rapporteren over het realiseren van culturele diversiteitdoelstellingen (via de planning en controle cyclus)',
+        'Leidinggevenden worden beoordeeld op het realiseren van culturele diversiteits-doelstellingen i.h.k.v. de periodieke beoordeling',
+        'Wij evalueren met vastgestelde regelmaat (bijvoorbeeld elk kwartaal) de resultaten van ons culturele diversiteitsbeleid',
+        'De uitkomsten van evaluaties worden gebruikt om ons culturele diversiteitsbeleid te verbeteren',
+        'Wij vergelijken ons culturele diversiteitsbeleid met dat van andere organisaties'
       ]
     },
     toelichting: 'strategie_toelichting'
@@ -197,25 +197,25 @@ export const SURVEY_STEPS = [
     id: 7,
     title: 'HR Management',
     sectionNum: '3.3',
-    subtitle: 'HR Management en werving',
+    subtitle: 'HR Management',
     likert: {
       id: 'likert-hr',
       prefix: 'hr',
       questions: [
-        'Vacatureteksten zijn inclusief geformuleerd',
-        'Er wordt actief geworven via diverse kanalen',
-        'Selectieprocedures zijn objectief en gestandaardiseerd',
-        'Er is aandacht voor onbewuste bias in selectie',
-        'Er zijn mentorprogramma\'s voor diverse medewerkers',
-        'Er zijn doorgroeimogelijkheden voor diverse medewerkers',
-        'Exit-interviews bevatten vragen over inclusie',
-        'Er is een onboardingprogramma gericht op inclusie',
-        'Leidinggevenden worden getraind in inclusief leiderschap',
-        'Er zijn Employee Resource Groups of netwerken',
-        'Flexibel werken wordt gefaciliteerd',
-        'Er is aandacht voor werk-privébalans',
-        'Beloningsbeleid is transparant en eerlijk',
-        'Er zijn stages/traineeships gericht op diversiteit'
+        'De organisatie zet bewust maatwerkinstrumenten en regelingen in om de doorstroom van mensen met herkomst Buiten-Europa naar de top en subtop te vergroten',
+        'Bij de werving van kandidaten voor top- en subtopfuncties wordt doelbewust gestreefd naar culturele diversiteit',
+        'Subjectiviteit en stereotypering worden tegengegaan door transparante en objectieve selectieprocedures',
+        'Onze arbeidsmarktcommunicatie reflecteert ons streven naar culturele diversiteit',
+        'Begeleiding van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door opleiding en management-development',
+        'Begeleiding van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door middel van coaching en mentoring',
+        'Effectiviteit van onze HR-maatregelen ten behoeve het realiseren van culturele diversiteit wordt gemeten om beleid te kunnen verbeteren',
+        'Het aandeel met herkomst Buiten-Europa naar functieniveau en naar afdeling (business unit, team) wordt gemeten (is bekend)',
+        'Bij de personeels-/successie-planning wordt doelbewust gestreefd naar het realiseren van culturele diversiteit',
+        'Ondersteuning van de carrièreontwikkeling van mensen met herkomst Buiten-Europa door netwerken',
+        'Ondersteuning van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door rolmodellen',
+        'Ons streven naar meer mensen met herkomst Buiten-Europa in de top is geïntegreerd in al onze HR-maatregelen',
+        'Door empowerment worden mensen met herkomst Buiten-Europa gestimuleerd tot carrièreontwikkeling vanuit eigen kracht',
+        'Ongewenste uitstroom van talentvolle mensen met herkomst Buiten-Europa wordt voorkomen'
       ]
     },
     toelichting: 'hr_toelichting'
@@ -229,11 +229,11 @@ export const SURVEY_STEPS = [
       id: 'likert-communicatie',
       prefix: 'comm',
       questions: [
-        'Diversiteit en inclusie worden intern gecommuniceerd',
-        'Er is externe communicatie over diversiteitsbeleid',
-        'Successen worden gedeeld en gevierd',
-        'Er is ruimte voor dialoog over diversiteit',
-        'Communicatie-uitingen zijn divers en inclusief'
+        'De organisatie communiceert intern bewust over haar streven om het aandeel mensen met herkomst Buiten-Europa in topfuncties te verhogen',
+        'De organisatie communiceert extern bewust over haar streven om het aandeel mensen met herkomst Buiten-Europa in topfuncties te verhogen',
+        'Alle medewerkers in de organisatie zijn op de hoogte van onze strategie en beleid voor culturele diversiteit',
+        'De organisatie staat extern bekend als cultureel diversiteitsgericht',
+        'Culturele diversiteit is in onze organisatie zichtbaar in woord en beeld'
       ]
     },
     toelichting: 'communicatie_toelichting'
@@ -242,19 +242,19 @@ export const SURVEY_STEPS = [
     id: 9,
     title: 'Kennis',
     sectionNum: '3.5',
-    subtitle: 'Kennis en bewustwording',
+    subtitle: 'Kennis en vaardigheden',
     likert: {
       id: 'likert-kennis',
       prefix: 'kennis',
       questions: [
-        'Er worden trainingen gegeven over diversiteit en inclusie',
-        'Medewerkers zijn zich bewust van onbewuste bias',
-        'Er is kennis over culturele verschillen',
-        'Best practices worden gedeeld binnen de organisatie',
-        'Er wordt geleerd van andere organisaties',
-        'Onderzoek naar diversiteit wordt gebruikt',
-        'Er is kennis over wet- en regelgeving',
-        'Nieuwe inzichten worden toegepast'
+        'De organisatie beschikt over inzicht in de maatregelen die culturele diversiteit bevorderen',
+        'De organisatie beschikt over inzicht in de mechanismen die culturele diversiteit belemmeren',
+        'Leidinggevenden zijn zich bewust van de meerwaarde van culturele diversiteit',
+        'Leidinggevenden zijn zich bewust van de mechanismen (zoals stereotypen) die doorstroom van mensen met herkomst Buiten-Europa naar de top belemmeren',
+        'Leidinggevenden zetten maatregelen in die de doorstroom van mensen met herkomst Buiten-Europa naar de top bevorderen',
+        'Wij maken voortdurend gebruik van alle beschikbare kennis en ervaring voor het verbeteren van culturele diversiteit',
+        'Het periodieke medewerkers-tevredenheidsonderzoek wordt gebruikt om te sturen op culturele diversiteit',
+        'De organisatie weet waarom talentvolle medewerkers met herkomst Buiten-Europa de organisatie verlaten en gebruikt deze kennis om medewerkers te behouden'
       ]
     },
     toelichting: 'kennis_toelichting'
@@ -268,12 +268,12 @@ export const SURVEY_STEPS = [
       id: 'likert-klimaat',
       prefix: 'klimaat',
       questions: [
-        'Er wordt actief strijd gevoerd tegen stereotypen',
-        'Maatregelen worden geaccepteerd in de organisatie',
-        'Culturele verschillen worden gewaardeerd',
-        'Diversiteitsaandacht leeft in de organisatie',
-        'Managers voelen zich verantwoordelijk',
-        'De organisatie staat bekend als diversiteitsgericht'
+        'Stereotypen, vooroordelen en discriminatie worden in deze organisatie actief bestreden',
+        'De inzet van specifieke maatregelen om te investeren in mensen met herkomst Buiten-Europa teneinde culturele diversiteit in de top te vergroten, is zonder meer geaccepteerd in de organisatie',
+        'Culturele verschillen tussen medewerkers worden in de gehele organisatie - op alle niveaus en in de organisatie breed - erkend en gewaardeerd',
+        'De aandacht voor culturele diversiteit leeft binnen de organisatie - op alle niveaus en in de organisatie breed',
+        'Leidinggevenden voelen zich verantwoordelijk voor het realiseren van culturele diversiteit',
+        'De organisatie wordt door medewerkers gezien als culturele diversiteit minded'
       ]
     },
     toelichting: 'klimaat_toelichting'
