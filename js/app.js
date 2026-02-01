@@ -20,7 +20,7 @@ var App = (function() {
   };
 
   // Animation duration in ms
-  var TRANSFORM_DURATION = 500;
+  var TRANSFORM_DURATION = 350;
 
   /**
    * Initialize the application
@@ -385,17 +385,17 @@ var App = (function() {
       mainContent.style.transform = 'scale(1) translateX(0)';
     }
 
-    // Fade in highlighter after clip-path animation + extra delay
+    // Fade in highlighter after clip-path animation + short delay
     setTimeout(function() {
       if (highlighter) {
-        highlighter.style.transition = 'opacity 300ms linear';
+        highlighter.style.transition = 'opacity 200ms linear';
         highlighter.style.opacity = '1';
         // After fade-in completes, restore full transition set so highlighter can travel between items
         setTimeout(function() {
           highlighter.style.transition = '';
-        }, 300);
+        }, 200);
       }
-    }, expandDuration + 500);
+    }, expandDuration + 200);
 
     // ========================================
     // PHASE 3: CLEANUP
@@ -403,7 +403,7 @@ var App = (function() {
     // ========================================
     setTimeout(function() {
       // Fade out login
-      elements.loginView.style.transition = 'opacity 300ms linear';
+      elements.loginView.style.transition = 'opacity 200ms linear';
       elements.loginView.style.opacity = '0';
 
       // After login fade completes
@@ -467,7 +467,7 @@ var App = (function() {
         // Update state
         currentView = 'survey';
         document.title = 'Monitoring Cultureel Talent naar de Top 2025';
-      }, 300); // Login fade duration
+      }, 200); // Login fade duration
     }, expandDuration);
   }
 
