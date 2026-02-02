@@ -155,12 +155,20 @@ export function initPreviewMode(session) {
 
   const topBox = document.getElementById('previewInfoBoxTop');
   const bottomBox = document.getElementById('previewInfoBoxBottom');
+  const exitBannerTop = document.getElementById('previewExitBannerTop');
+  const exitBannerBottom = document.getElementById('previewExitBannerBottom');
 
   if (topBox) {
     topBox.classList.add('visible');
   }
   if (bottomBox) {
     bottomBox.classList.add('visible');
+  }
+  if (exitBannerTop) {
+    exitBannerTop.classList.add('visible');
+  }
+  if (exitBannerBottom) {
+    exitBannerBottom.classList.add('visible');
   }
 }
 

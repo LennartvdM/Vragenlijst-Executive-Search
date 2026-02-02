@@ -222,6 +222,10 @@ const fullHtml = `<!-- AUTO-GENERATED - Edit src/data/survey-data.js, then run: 
 <div class="container">
   <div class="index">
     <div class="mobile-highlighter" id="mobileHighlighter"></div>
+    <div class="preview-exit-banner" id="previewExitBannerTop">
+      <span class="preview-exit-label">Inkijkexemplaar</span>
+      <a href="#" class="preview-exit-link" data-action="logout">Sluiten</a>
+    </div>
     <h2>Monitoring Cultureel</h2>
     <div class="index-divider-full"></div>
     <div class="progress-bar-container">
@@ -237,6 +241,9 @@ ${renderNavItems()}
       <div class="org-name" id="orgNameDisplay">-</div>
       <div class="org-code" id="orgCodeDisplay">-</div>
       <a href="/index.html?logout=1" class="logout-btn" data-action="logout">Uitloggen</a>
+    </div>
+    <div class="preview-exit-banner preview-exit-banner-bottom" id="previewExitBannerBottom">
+      <a href="#" class="preview-exit-link" data-action="logout">← Terug naar inloggen</a>
     </div>
   </div>
 
