@@ -49,7 +49,7 @@ export const SURVEY_STEPS = [
       },
       {
         type: 'info-block',
-        content: 'Talent naar de Top gebruikt de definitie van het CBS (2022):\nIemand heeft een niet-Europese achtergrond als hij/zij in een niet-Europees land is geboren of als de ouders in een niet-Europees land zijn geboren.\n\n1. Europees: Europa (inclusief Nederland), Noord-Amerika en Oceanië\n2. Niet-Europees (Buiten-Europa): Afrika, Azië, Zuid- en Midden-Amerika (Turkije definiëren we als Buiten-Europa)'
+        content: 'Talent naar de Top gebruikt de definitie van het CBS (2022):\nIemand heeft een niet-Europese achtergrond als hij/zij in een niet-Europees land is geboren of als de ouders in een niet-Europees land zijn geboren.\n\n1. <strong>Europees:</strong> Europa (inclusief Nederland), Noord-Amerika en Oceanië\n2. <strong>Niet-Europees (Buiten-Europa):</strong> Afrika, Azië, Zuid- en Midden-Amerika (Turkije definiëren we als Buiten-Europa)'
       },
       {
         type: 'radio-cards',
