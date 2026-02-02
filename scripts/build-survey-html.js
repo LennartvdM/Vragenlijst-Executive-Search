@@ -263,10 +263,11 @@ ${renderNavItems()}
       <div class="org-name" id="orgNameDisplay">-</div>
       <div class="org-code" id="orgCodeDisplay">-</div>
       <a href="#" class="sidebar-privacy-link" id="sidebarPrivacyLink">Uw gegevens</a>
-      <a href="/index.html?logout=1" class="logout-btn" data-action="logout">Uitloggen</a>
+    </div>
+    <div class="back-to-login-banner">
+      <a href="#" class="back-to-login-link" data-action="logout">← Terug naar inloggen</a>
     </div>
     <div class="preview-exit-banner preview-exit-banner-bottom" id="previewExitBannerBottom">
-      <a href="#" class="preview-exit-link" data-action="logout">← Terug naar inloggen</a>
     </div>
   </div>
 
