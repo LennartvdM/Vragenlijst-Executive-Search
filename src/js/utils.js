@@ -117,11 +117,11 @@ export function setupWordCounter() {
     const normalWords = words.slice(0, softLimit);
     const excessWords = words.slice(softLimit, hardLimit);
 
-    let html = normalWords.join(' ');
+    let html = escapeHtml(normalWords.join(' '));
     if (excessWords.length > 0) {
       const styledWords = excessWords.map((word, i) => {
         const color = getGradientColor(i, 20);
-        return `<span style="color: ${color}; font-weight: 600;">${word}</span>`;
+        return `<span style="color: ${color}; font-weight: 600;">${escapeHtml(word)}</span>`;
       });
       html += ' ' + styledWords.join(' ');
     }
