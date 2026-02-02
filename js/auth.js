@@ -168,6 +168,9 @@
       isPublic: true
     });
 
+    // Update URL so /inkijkexemplaar is shareable
+    window.history.pushState({ inkijkexemplaar: true }, '', '/inkijkexemplaar');
+
     // Transition to survey view (SPA navigation) - expand from button
     if (typeof App !== 'undefined' && App.transitionToSurvey) {
       App.transitionToSurvey(publicLoginBtn);

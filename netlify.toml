@@ -20,6 +20,13 @@
   status = 200
   force = true
 
+# Serve index.html for /inkijkexemplaar so it works as a direct URL
+[[redirects]]
+  from = "/inkijkexemplaar"
+  to = "/index.html"
+  status = 200
+  force = true
+
 # Headers for security
 [[headers]]
   for = "/*"

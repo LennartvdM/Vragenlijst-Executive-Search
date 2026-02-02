@@ -41,6 +41,22 @@ var App = (function() {
       handleLogout();
     }
 
+    // Setup popstate handler for browser back/forward
+    window.addEventListener('popstate', handlePopState);
+
+    // Check for /inkijkexemplaar direct URL
+    if (window.location.pathname === '/inkijkexemplaar') {
+      // Create public session and go straight to survey
+      Storage.saveSession({
+        orgCode: CONSTANTS.SESSION.PUBLIC_CODE,
+        orgName: CONSTANTS.SESSION.PUBLIC_NAME,
+        timestamp: Date.now(),
+        isPublic: true
+      });
+      loadAndShowSurvey();
+      return;
+    }
+
     // Determine initial view based on session
     if (Storage.isSessionValid()) {
       // User has valid session - show survey
@@ -49,9 +65,6 @@ var App = (function() {
       // No valid session - show login
       showLogin();
     }
-
-    // Setup popstate handler for browser back/forward
-    window.addEventListener('popstate', handlePopState);
   }
 
   /**
@@ -64,8 +77,8 @@ var App = (function() {
     } catch (e) {
       // Ignore storage errors
     }
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
+    // Clean URL (reset to / if on /inkijkexemplaar, otherwise just strip query params)
+    window.history.replaceState({}, document.title, '/');
   }
 
   /**
