@@ -178,6 +178,9 @@ var App = (function() {
     // Trigger reflow for animation
     void elements.surveyView.offsetWidth;
     elements.surveyView.classList.add('view-active');
+
+    // Notify survey module that layout is now visible (recalculate highlighter etc.)
+    document.dispatchEvent(new Event('surveyVisible'));
   }
 
   /**
@@ -233,6 +236,7 @@ var App = (function() {
           elements.surveyView.classList.add('view-active');
           currentView = 'survey';
           document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+          document.dispatchEvent(new Event('surveyVisible'));
         })
         .catch(function(error) {
           console.error('App: Error loading survey:', error);
@@ -504,6 +508,9 @@ var App = (function() {
         // Update state
         currentView = 'survey';
         document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+
+        // Notify survey module that layout is settled (recalculate highlighter etc.)
+        document.dispatchEvent(new Event('surveyVisible'));
       }, 200); // Login fade duration
     }, expandDuration);
   }
