@@ -8,6 +8,7 @@ import { STEP_LABELS, FIELD_LABELS, LIKERT_LABELS } from './state.js';
 import { isFieldFilled, checkLikertTableStatus, getFieldValue } from './validation.js';
 import { updateAllSections, updateIndexStatus } from './progress.js';
 import { saveFormData } from './form.js';
+import { escapeHtml } from './utils.js';
 
 /**
  * Generate the review content HTML
@@ -325,7 +326,7 @@ function generateFieldsAccordionContent(item) {
       fieldsHtml += `
         <div class="review-field">
           <label class="review-field-label">${label}</label>
-          <textarea name="review_${fieldName}" rows="3" data-original="${fieldName}" placeholder="Vul hier in...">${currentValue}</textarea>
+          <textarea name="review_${fieldName}" rows="3" data-original="${fieldName}" placeholder="Vul hier in...">${escapeHtml(currentValue)}</textarea>
         </div>
       `;
     } else if (originalField.type === 'date' || fieldName === 'datum') {
@@ -334,7 +335,7 @@ function generateFieldsAccordionContent(item) {
         <div class="review-field">
           <label class="review-field-label">${label}</label>
           <div class="date-input-wrapper">
-            <input type="text" name="review_${fieldName}" id="review_datumPicker" value="${currentValue}" data-original="${fieldName}" readonly placeholder="Selecteer datum">
+            <input type="text" name="review_${fieldName}" id="review_datumPicker" value="${escapeHtml(currentValue)}" data-original="${fieldName}" readonly placeholder="Selecteer datum">
           </div>
         </div>
       `;
@@ -343,7 +344,7 @@ function generateFieldsAccordionContent(item) {
       fieldsHtml += `
         <div class="review-field">
           <label class="review-field-label">${label}</label>
-          <input type="number" name="review_${fieldName}" value="${currentValue}" min="0" data-original="${fieldName}" placeholder="0">
+          <input type="number" name="review_${fieldName}" value="${escapeHtml(currentValue)}" min="0" data-original="${fieldName}" placeholder="0">
         </div>
       `;
     } else {
@@ -351,7 +352,7 @@ function generateFieldsAccordionContent(item) {
       fieldsHtml += `
         <div class="review-field">
           <label class="review-field-label">${label}</label>
-          <input type="text" name="review_${fieldName}" value="${currentValue}" data-original="${fieldName}" placeholder="Vul hier in...">
+          <input type="text" name="review_${fieldName}" value="${escapeHtml(currentValue)}" data-original="${fieldName}" placeholder="Vul hier in...">
         </div>
       `;
     }

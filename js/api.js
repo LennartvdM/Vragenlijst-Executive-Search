@@ -232,7 +232,8 @@ const ApiClient = (function() {
       fetchOptions.redirect = 'manual';
     }
 
-    console.log(`[API] ${label}: ${method} ${url}`);
+    const logUrl = new URL(url, window.location.origin);
+    console.log(`[API] ${label}: ${method} ${logUrl.pathname}?action=${logUrl.searchParams.get('action')}`);
     const startTime = performance.now();
 
     try {
