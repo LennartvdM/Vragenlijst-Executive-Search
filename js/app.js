@@ -204,6 +204,43 @@ var App = (function() {
    * @param {HTMLElement} originElement - The element to expand from (usually the login button)
    */
   function transitionToSurvey(originElement) {
+    var MOBILE_BREAKPOINT = 768;
+    var isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+    // On mobile, skip the container transform animation - just load and show
+    if (isMobile) {
+      var mobileLoadPromise;
+      if (!surveyLoaded) {
+        mobileLoadPromise = fetch('/views/survey.html')
+          .then(function(response) {
+            if (!response.ok) throw new Error('Failed to load survey');
+            return response.text();
+          })
+          .then(function(html) {
+            elements.surveyView.innerHTML = html;
+            surveyLoaded = true;
+          });
+      } else {
+        mobileLoadPromise = Promise.resolve();
+      }
+      mobileLoadPromise
+        .then(function() {
+          initializeSurvey();
+          document.body.classList.add('survey-body');
+          elements.loginView.style.display = 'none';
+          elements.loginView.classList.remove('view-active');
+          elements.surveyView.style.display = '';
+          elements.surveyView.classList.add('view-active');
+          currentView = 'survey';
+          document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+        })
+        .catch(function(error) {
+          console.error('App: Error loading survey:', error);
+          window.location.href = '/survey.html';
+        });
+      return;
+    }
+
     // Get origin rect (button position)
     var originRect;
     if (originElement && originElement.getBoundingClientRect) {

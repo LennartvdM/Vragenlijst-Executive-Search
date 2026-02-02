@@ -4078,6 +4078,54 @@ input[inputmode="numeric"] {
   .btn-print {
     display: none;
   }
+
+  /* --- Mobile-first: Snappier step transitions --- */
+  .step.slide-up {
+    animation: slideInUp 0.2s ease-out forwards;
+  }
+
+  .step.slide-down {
+    animation: slideInDown 0.2s ease-out forwards;
+  }
+
+  /* Reduce the distance of the slide to feel lighter on mobile */
+  @keyframes slideInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- Hide desktop alignment divider line on mobile --- */
+  .container::after {
+    display: none;
+  }
+
+  /* --- Disable desktop-only sidebar passing effect --- */
+  .index-item.passing .status,
+  .index-item.passing .label {
+    transform: none;
+    transition: none;
+  }
+
+  /* --- Bottom padding so content isn't hidden behind fixed nav bar --- */
+  .survey-body {
+    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* --- Hide desktop custom scrollbar on mobile --- */
+  .custom-scrollbar {
+    display: none !important;
+  }
+
+  /* --- Fade gradients not needed on mobile (natural scroll) --- */
+  .content-scrollable-wrapper::before,
+  .content-scrollable-wrapper::after {
+    display: none;
+  }
 }
 
 /* ==========================================================================
@@ -4144,8 +4192,8 @@ input[inputmode="numeric"] {
    ========================================================================== */
 body.mobile-drawer-open {
   overflow: hidden;
-  position: fixed;
-  width: 100%;
+  /* Position is set via JS (open/close) with scroll position save/restore for iOS */
+  touch-action: none;
 }
 
 /* ==========================================================================
@@ -4250,22 +4298,20 @@ body.mobile-drawer-open {
   animation: float-3 22s ease-in-out infinite;
 }
 
-/* Smaller on mobile screens */
-@media (max-width: 600px) {
+/* On mobile: hide decorative shapes entirely (battery drain from infinite animations) */
+@media (max-width: 768px) {
+  .logo-decor {
+    display: none;
+  }
+}
+
+/* On tablets/small desktops: reduce decorations, stop animations */
+@media (max-width: 900px) and (min-width: 769px) {
   .logo-decor-shape {
     width: 320px;
     height: 370px;
-    opacity: 0.16;
-  }
-
-  .logo-decor-bottom-left {
-    bottom: -130px;
-    left: -90px;
-  }
-
-  .logo-decor-top-right {
-    top: -140px;
-    right: -100px;
+    opacity: 0.12;
+    animation: none !important;
   }
 
   .logo-decor-center-right {
@@ -4347,4 +4393,31 @@ body.mobile-drawer-open {
   color: var(--text-light);
   margin-top: 4px;
   text-align: right;
+}
+
+/* ==========================================================================
+   Reduced Motion - Respect user preference for less animation
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .logo-decor {
+    display: none;
+  }
+
+  .step.slide-up,
+  .step.slide-down {
+    animation: none;
+    opacity: 1;
+  }
+
+  .view {
+    transition: none;
+  }
 }
