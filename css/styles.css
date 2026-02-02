@@ -3289,6 +3289,56 @@ input[inputmode="numeric"] {
   opacity: 0.8;
 }
 
+/* Preview exit banners in sidebar (inkijkexemplaar only) */
+.preview-exit-banner {
+  display: none; /* Hidden by default, shown via JS for public sessions */
+  text-align: center;
+  padding: 8px 12px;
+  border: 1.5px solid rgba(180, 93, 70, 0.4);
+  border-radius: 6px;
+  background: rgba(180, 93, 70, 0.06);
+  margin-bottom: 10px;
+}
+
+.preview-exit-banner.visible {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.preview-exit-banner-bottom.visible {
+  justify-content: center;
+}
+
+.preview-exit-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--terracotta);
+  opacity: 0.8;
+}
+
+.preview-exit-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--terracotta);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.preview-exit-link:hover {
+  color: var(--salmon-dark, #b45d46);
+  text-decoration: underline;
+}
+
+.preview-exit-banner-bottom {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   /* Hide bottom preview box on mobile - only show top as fixed banner */
@@ -3313,6 +3363,11 @@ input[inputmode="numeric"] {
 
   .preview-info-box-subtitle {
     font-size: 8px;
+  }
+
+  /* Preview exit banners: hide bottom in mobile, top stays in drawer */
+  .preview-exit-banner-bottom {
+    display: none !important;
   }
 }
 
