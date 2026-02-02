@@ -81,19 +81,33 @@ function renderRadioCards(field) {
 function renderField(field) {
   switch (field.type) {
     case 'radio-cards': return renderRadioCards(field);
+    case 'info-block': {
+      const paragraphs = field.content.split('\n\n').map(p => {
+        // Check if paragraph contains a numbered list
+        const lines = p.split('\n');
+        if (lines.length > 1 && /^\d+\./.test(lines[0])) {
+          return `<ol class="info-block-list">${lines.map(line => `<li>${line.replace(/^\d+\.\s*/, '')}</li>`).join('')}</ol>`;
+        }
+        return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+      }).join('');
+      return `
+          <div class="info-block">${paragraphs}
+          </div>`;
+    }
     case 'number': {
       const compactClass = field.compact ? ' field-compact' : '';
       const groupEndClass = field.groupEnd ? ' field-group-end' : '';
       const placeholder = field.placeholder ? ` placeholder="${field.placeholder}"` : '';
       const maxLength = field.maxLength ? ` maxlength="${field.maxLength}"` : '';
       const suffix = field.suffix ? `<span class="field-suffix">${field.suffix}</span>` : '';
+      const hint = field.hint ? `\n            <span class="field-hint">${field.hint}</span>` : '';
       return `
           <div class="field${compactClass}${groupEndClass}">
             <label for="${field.name}">${field.label}</label>
             <div class="input-wrapper">
               <input type="text" inputmode="numeric" pattern="[0-9]*" id="${field.name}" name="${field.name}"${placeholder}${maxLength}>
               ${suffix}
-            </div>
+            </div>${hint}
           </div>`;
     }
     case 'text': {
@@ -115,13 +129,16 @@ function renderField(field) {
             <label for="${field.name}">${field.label}</label>
             <input type="text" id="datumPicker" name="${field.name}" readonly>
           </div>`;
-    case 'checkbox': return `
-          <div class="field checkbox-field">
+    case 'checkbox': {
+      const groupEndClass = field.groupEnd ? ' field-group-end' : '';
+      return `
+          <div class="field checkbox-field${groupEndClass}">
             <label class="checkbox-label">
               <input type="checkbox" name="${field.name}">
               <span>${field.label}</span>
             </label>
           </div>`;
+    }
     default: return '';
   }
 }
@@ -143,12 +160,17 @@ function renderStep(step) {
   }
 
   if (step.content) {
-    content += `
+    if (step.content.heading) content += `
         <h1>${step.content.heading}</h1>`;
     if (step.content.text) content += `
         <p>${step.content.text}</p>`;
     if (step.content.intro) content += `
         <p class="welcome-intro">${step.content.intro}</p>`;
+  }
+
+  if (step.introText) {
+    content += `
+        <p class="step-intro">${step.introText}</p>`;
   }
 
   if (step.fields || step.likert) {
@@ -240,6 +262,7 @@ ${renderNavItems()}
     <div class="org-info" id="orgInfo">
       <div class="org-name" id="orgNameDisplay">-</div>
       <div class="org-code" id="orgCodeDisplay">-</div>
+      <a href="#" class="sidebar-privacy-link" id="sidebarPrivacyLink">Uw gegevens</a>
       <a href="/index.html?logout=1" class="logout-btn" data-action="logout">Uitloggen</a>
     </div>
     <div class="preview-exit-banner preview-exit-banner-bottom" id="previewExitBannerBottom">

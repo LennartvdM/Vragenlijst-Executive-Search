@@ -48,9 +48,13 @@ export const SURVEY_STEPS = [
         }
       },
       {
+        type: 'info-block',
+        content: 'Talent naar de Top gebruikt de definitie van het CBS (2022):\nIemand heeft een niet-Europese achtergrond als hij/zij in een niet-Europees land is geboren of als de ouders in een niet-Europees land zijn geboren.\n\n1. Europees: Europa (inclusief Nederland), Noord-Amerika en Oceanië\n2. Niet-Europees (Buiten-Europa): Afrika, Azië, Zuid- en Midden-Amerika (Turkije definiëren we als Buiten-Europa)'
+      },
+      {
         type: 'radio-cards',
         name: 'definitie_afwijking',
-        label: 'Wijkt uw definitie af van de standaard?',
+        label: 'Wijkt uw definitie af van bovenstaande definitie?',
         options: [
           { value: 'Ja', label: 'Ja' },
           { value: 'Nee', label: 'Nee' }
@@ -71,14 +75,14 @@ export const SURVEY_STEPS = [
     subtitle: 'Kwantitatieve gegevens over uw organisatie',
     fields: [
       { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>' },
-      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
-      { type: 'number', name: 'werknemers_buiten_europa_schatting', label: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven', groupEnd: true },
+      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
+      { type: 'checkbox', name: 'werknemers_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', groupEnd: true },
       { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>' },
-      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
-      { type: 'number', name: 'top_buiten_europa_schatting', label: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven', groupEnd: true },
+      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
+      { type: 'checkbox', name: 'top_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', groupEnd: true },
       { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>' },
-      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>' },
-      { type: 'number', name: 'subtop_buiten_europa_schatting', label: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven' }
+      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
+      { type: 'checkbox', name: 'subtop_buiten_europa_schatting', label: 'Ik heb een schatting gegeven' }
     ]
   },
   {
@@ -150,7 +154,6 @@ export const SURVEY_STEPS = [
     type: 'intro',
     sectionNum: '3',
     content: {
-      heading: 'Kwalitatieve vragen',
       text: 'De volgende secties bevatten stellingen over uw diversiteitsbeleid.'
     }
   },
@@ -313,6 +316,7 @@ export const SURVEY_STEPS = [
     title: 'Ondertekenen',
     sectionNum: '6',
     subtitle: 'Ondertekening',
+    introText: 'Wij verzoeken de CEO/directeur als ondertekenaar van het Charter Talent naar de Top de monitorgegevens 2026 te ondertekenen.',
     fields: [
       { type: 'date', name: 'datum', label: 'Datum' },
       { type: 'text', name: 'ondertekenaar', label: 'Naam CEO/directeur' },

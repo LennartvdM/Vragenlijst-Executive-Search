@@ -68,6 +68,17 @@ function initSurvey() {
   // Initialize date picker
   utils.initDatePicker();
 
+  // Setup sidebar privacy link
+  const privacyLink = document.getElementById('sidebarPrivacyLink');
+  if (privacyLink) {
+    privacyLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.PrivacyPanel && window.PrivacyPanel.instances && window.PrivacyPanel.instances.length > 0) {
+        window.PrivacyPanel.instances[0].open();
+      }
+    });
+  }
+
   // Listen for scroll events
   const scrollable = document.getElementById('contentScrollable');
   if (scrollable) {
