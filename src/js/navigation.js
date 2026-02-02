@@ -165,6 +165,9 @@ export function goToStep(step) {
  * Trigger passing effect on sidebar items
  */
 export function triggerPassingEffect(fromStep, toStep) {
+  // Skip passing effect on mobile - it's a desktop sidebar animation
+  if (window.innerWidth <= 768) return;
+
   const direction = toStep > fromStep ? 1 : -1;
   const travelTime = 350;
   const passingDuration = 40;
@@ -299,6 +302,12 @@ export function openMobileDrawer() {
   const overlay = document.getElementById('mobileOverlay');
   const index = document.querySelector('.index');
 
+  // Save scroll position before locking body (iOS fix)
+  document.body.dataset.scrollY = window.scrollY;
+  document.body.style.top = `-${window.scrollY}px`;
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+
   menuBtn.classList.add('active');
   overlay.classList.add('active');
   index.classList.add('mobile-open');
@@ -319,6 +328,13 @@ export function closeMobileDrawer() {
   overlay.classList.remove('active');
   index.classList.remove('mobile-open');
   document.body.classList.remove('mobile-drawer-open');
+
+  // Restore scroll position after unlocking body (iOS fix)
+  const scrollY = parseInt(document.body.dataset.scrollY || '0', 10);
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollY);
 }
 
 /**
