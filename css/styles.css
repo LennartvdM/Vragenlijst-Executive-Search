@@ -109,6 +109,8 @@ body {
   border-radius: 16px;
   width: 100%;
   max-width: 420px;
+  user-select: none;
+  -webkit-user-select: none;
   /* No overflow:hidden - header needs explicit border-radius */
 }
 
