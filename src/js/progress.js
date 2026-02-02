@@ -255,16 +255,7 @@ export function updateAllSections() {
 }
 
 /**
- * Alignment rig: measures actual progress bar position and sets CSS variable
+ * Alignment rig removed: the divider line was rendering on top of Likert table content.
+ * Kept as no-op for backwards compatibility with main.js calls.
  */
-export function updateAlignmentRig() {
-  const progressBar = document.querySelector('.progress-bar');
-  const container = document.querySelector('.container');
-  if (!progressBar || !container) return;
-
-  const barRect = progressBar.getBoundingClientRect();
-  const containerRect = container.getBoundingClientRect();
-  const centerY = barRect.top + (barRect.height / 2) - containerRect.top;
-
-  container.style.setProperty('--progress-bar-center-y', `${centerY}px`);
-}
+export function updateAlignmentRig() {}
