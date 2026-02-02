@@ -325,6 +325,10 @@ export function updateOptionCardConditionalStatus(fieldName) {
  */
 export function logout() {
   window.Storage.clearSession();
+  // Clean /inkijkexemplaar URL back to /
+  if (window.location.pathname === '/inkijkexemplaar') {
+    window.history.replaceState({}, '', '/');
+  }
   if (typeof window.App !== 'undefined' && window.App.transitionToLogin) {
     window.App.transitionToLogin();
   } else {
