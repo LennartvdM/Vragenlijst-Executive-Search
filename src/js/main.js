@@ -338,6 +338,15 @@ document.addEventListener('showStep', (e) => {
   navigation.showStep(e.detail.step);
 });
 
+// Recalculate highlighter after survey becomes visible (e.g. after container transform)
+// During init, sidebar has zero dimensions so highlighter gets height: 0
+document.addEventListener('surveyVisible', () => {
+  state.setHighlighterInitialized(false);
+  progress.updateMobileHighlighter();
+  scroll.updateFadeGradients();
+  scroll.updateCustomScrollbar();
+});
+
 // Auto-initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
   const formEl = document.getElementById('monitoringForm');
