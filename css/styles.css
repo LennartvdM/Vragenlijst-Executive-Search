@@ -34,23 +34,12 @@
   /* Negative outline - outer stroke using fill color (main containers only) */
   --outline-width: 6px;
 
-  /* Alignment rig: defines position of progress bar center from container top */
-  /* The divider (.container::after) is positioned at this Y coordinate */
+  /* Sidebar layout dimensions */
   --sidebar-padding-top: 40px;
   --sidebar-h2-height: 48px; /* Fixed height - "Monitoring Cultureel" on 2 lines */
   --divider-margin: 12px;
   --divider-height: 1px;
   --progress-bar-height: 8px;
-
-  /* Calculated: Y position where progress bar center AND content divider sit */
-  --progress-bar-center-y: calc(
-    var(--sidebar-padding-top) +
-    var(--sidebar-h2-height) +
-    var(--divider-margin) +
-    var(--divider-height) +
-    var(--divider-margin) +
-    (var(--progress-bar-height) / 2)
-  );
 }
 
 html {
@@ -668,18 +657,7 @@ body {
   /* No overflow:hidden - sidebar needs explicit border-radius */
 }
 
-/* Alignment rig: Single divider line that guarantees alignment with progress bar */
-.container::after {
-  content: '';
-  position: absolute;
-  top: var(--progress-bar-center-y);
-  left: calc(260px + (100% - 260px) * 0.05); /* Centered in content area (5% margin each side) */
-  width: calc((100% - 260px) * 0.9); /* 90% of content area width */
-  height: var(--divider-height);
-  background: rgba(212, 196, 168, 0.33); /* --sand-dark at 33% opacity (2/3 transparent) */
-  pointer-events: none;
-  z-index: 1;
-}
+/* Alignment rig removed: the divider line was rendering on top of Likert table content */
 
 /* Compound shape: unified background + outer stroke as single pseudo-element */
 .container::before {
@@ -802,7 +780,7 @@ body {
 .index h2 {
   font-size: 16px;
   font-weight: 600;
-  height: var(--sidebar-h2-height); /* Fixed height for alignment rig */
+  height: var(--sidebar-h2-height);
   color: var(--text);
   opacity: 0.55;
   margin-bottom: 0;
@@ -4154,11 +4132,6 @@ input[inputmode="numeric"] {
   @keyframes slideInDown {
     from { opacity: 0; transform: translateY(-16px); }
     to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* --- Hide desktop alignment divider line on mobile --- */
-  .container::after {
-    display: none;
   }
 
   /* --- Disable desktop-only sidebar passing effect --- */
