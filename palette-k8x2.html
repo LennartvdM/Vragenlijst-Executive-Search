@@ -186,6 +186,11 @@
       font-weight: 500;
     }
 
+    /* Override body background from styles.css to use void variables */
+    body {
+      background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%) !important;
+    }
+
     /* Preview area */
     .lab-preview {
       padding-top: 160px; /* space for fixed controls */
@@ -206,7 +211,7 @@
     }
 
     .layout-viewport {
-      background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
+      background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%);
       padding: 48px 32px;
       position: relative;
       overflow: hidden;
@@ -222,7 +227,7 @@
       position: absolute;
       inset: 0;
       background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(var(--salmon-rgb), 0.08) 0%, transparent 50%);
+                  radial-gradient(ellipse at 70% 80%, rgba(var(--void-2-rgb), 0.08) 0%, transparent 50%);
       pointer-events: none;
     }
 
@@ -241,13 +246,13 @@
       overflow: hidden;
     }
 
-    /* Outline stroke — the signature visual */
+    /* Outline stroke — blends with background void, not card surface */
     .layout-card::before {
       content: '';
       position: absolute;
       inset: calc(-1 * var(--outline-width));
       border-radius: calc(16px + var(--outline-width));
-      background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
+      background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%);
       z-index: -1;
     }
 
@@ -506,7 +511,7 @@
       position: absolute;
       inset: calc(-1 * var(--outline-width));
       border-radius: calc(16px + var(--outline-width));
-      background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
+      background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%);
       z-index: -1;
     }
 
