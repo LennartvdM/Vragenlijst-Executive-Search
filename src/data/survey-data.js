@@ -9,7 +9,7 @@ export const SURVEY_STEPS = [
     title: 'Welkom',
     type: 'welcome',
     content: {
-      heading: 'Monitoring Cultureel Talent naar de Top 2025',
+      heading: 'Monitoring Cultureel Talent naar de Top 2026',
       intro: 'Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw organisatiegegevens en beleid rondom culturele diversiteit.'
     },
     fields: [
@@ -72,7 +72,7 @@ export const SURVEY_STEPS = [
     id: 2,
     title: 'Kwantitatief',
     sectionNum: '2',
-    subtitle: 'Kwantitatieve gegevens over uw organisatie (per 31 december 2025)',
+    subtitle: 'Kwantitatieve gegevens over uw organisatie (per 31 december 2026)',
     fields: [
       { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>' },
       { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
