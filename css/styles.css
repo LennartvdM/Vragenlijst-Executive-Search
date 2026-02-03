@@ -196,6 +196,13 @@ body {
   text-decoration: underline;
 }
 
+.contact-email {
+  color: var(--terracotta);
+  font-weight: 500;
+  user-select: all;
+  cursor: default;
+}
+
 /* Demo Mode Styles */
 .demo-banner {
   background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);

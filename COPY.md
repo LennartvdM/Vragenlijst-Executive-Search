@@ -33,7 +33,7 @@ Bron: `js/app.js` (regels 89, 168, 238, 510, 549, 607), `index.html` (regel 8)
 - **Knop**: `Inloggen`
 - **Knop loading**: `Controleren...`
 - **Preview link**: `Bekijk inkijkexemplaar →`
-- **Footer**: `Nog geen toegangscode ontvangen?` / `Neem contact op` (mailto:monitoring@talentnaartop.nl)
+- **Footer**: `Nog geen toegangscode ontvangen?` / `info@commissiemonitoring.nl` (JS-obfuscated, geen mailto-link)
 
 ### Over de monitoring (login-info)
 - **H2**: `Over de monitoring`

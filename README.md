@@ -166,7 +166,7 @@ Bewerk de CSS variabelen in `css/styles.css`:
 
 ## Support
 
-Bij vragen of problemen, neem contact op via monitoring@talentnaartop.nl
+Bij vragen of problemen, neem contact op via info@commissiemonitoring.nl
 
 ## Licentie
 

@@ -12,7 +12,19 @@
   document.addEventListener('DOMContentLoaded', function() {
     initDemoMode();
     setupEventListeners();
+    renderContactEmail();
   });
+
+  /**
+   * Render obfuscated contact email into the login footer
+   */
+  function renderContactEmail() {
+    var el = document.getElementById('contactEmail');
+    if (!el) return;
+    var u = 'info';
+    var d = 'commissiemonitoring' + '.' + 'nl';
+    el.textContent = u + '@' + d;
+  }
 
   /**
    * Setup all event listeners for the login page
