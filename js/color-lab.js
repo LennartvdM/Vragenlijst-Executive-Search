@@ -86,7 +86,7 @@
 
   // --- Palette derivation ---
 
-  function derivePalette(bgHex, fgHex, bbHex) {
+  function derivePalette(bgHex, fgHex, bbHex, spHex) {
     const bg = hexToHSL(bgHex);
     const fg = hexToHSL(fgHex);
 
@@ -119,10 +119,17 @@
     const text = hslToHex(fg.h, Math.max(fg.s * 0.35, 10), Math.min(Math.max(fg.l - 30, 15), 25));
     const textLight = hslToHex(fg.h, Math.max(fg.s * 0.3, 8), Math.min(Math.max(fg.l - 10, 30), 45));
 
-    // Teal: complementary accent — rotate hue ~150-180 degrees
-    const tealHue = (fg.h + 165) % 360;
-    const teal = hslToHex(tealHue, Math.min(fg.s * 0.8, 40), Math.min(fg.l + 15, 72));
-    const tealDark = hslToHex(tealHue, Math.min(fg.s * 0.9, 45), Math.min(fg.l + 5, 62));
+    // Spot color (teal) — from sp if provided, else auto-derived as complement of accent
+    let teal, tealDark;
+    if (spHex) {
+      const sp = hexToHSL(spHex);
+      teal = spHex;
+      tealDark = shift(sp, 0, 5, -10);
+    } else {
+      const tealHue = (fg.h + 165) % 360;
+      teal = hslToHex(tealHue, Math.min(fg.s * 0.8, 40), Math.min(fg.l + 15, 72));
+      tealDark = hslToHex(tealHue, Math.min(fg.s * 0.9, 45), Math.min(fg.l + 5, 62));
+    }
 
     // Muted: desaturated mid-tone of base
     const muted = hslToHex(bg.h, Math.max(bg.s * 0.25, 8), 63);
@@ -173,10 +180,11 @@
       bg: '#' + (p.get('bg') || 'e8a091'),
       fg: '#' + (p.get('fg') || 'c4785a'),
       bb: p.get('bb') ? '#' + p.get('bb') : null,
+      sp: p.get('sp') ? '#' + p.get('sp') : null,
     };
   }
 
-  function updateURL(bg, fg, bb) {
+  function updateURL(bg, fg, bb, sp) {
     const url = new URL(window.location);
     url.searchParams.set('bg', bg.replace('#', ''));
     url.searchParams.set('fg', fg.replace('#', ''));
@@ -184,6 +192,11 @@
       url.searchParams.set('bb', bb.replace('#', ''));
     } else {
       url.searchParams.delete('bb');
+    }
+    if (sp) {
+      url.searchParams.set('sp', sp.replace('#', ''));
+    } else {
+      url.searchParams.delete('sp');
     }
     window.history.replaceState({}, '', url);
   }
@@ -233,16 +246,16 @@
   // --- Preset palettes ---
 
   const PRESETS = [
-    { name: 'Original', bg: '#e8a091', fg: '#c4785a', bb: null },
-    { name: 'Ocean', bg: '#91b8e8', fg: '#5a7ec4', bb: null },
-    { name: 'Forest', bg: '#91c4a0', fg: '#5a8c6a', bb: null },
-    { name: 'Lavender', bg: '#b8a0d4', fg: '#7a5a9e', bb: null },
-    { name: 'Slate', bg: '#a0a8b8', fg: '#5a6478', bb: null },
-    { name: 'Rose', bg: '#d4929a', fg: '#a8505c', bb: '#d4c0b8' },
-    { name: 'Amber', bg: '#d4b878', fg: '#a08040', bb: null },
-    { name: 'Plum', bg: '#c496a8', fg: '#8a4a68', bb: '#c8b8c0' },
-    { name: 'Sage', bg: '#a8b8a0', fg: '#687860', bb: null },
-    { name: 'Copper', bg: '#c8a088', fg: '#906848', bb: null },
+    { name: 'Original', bg: '#e8a091', fg: '#c4785a', bb: null, sp: null },
+    { name: 'Ocean', bg: '#91b8e8', fg: '#5a7ec4', bb: null, sp: '#5ab8a8' },
+    { name: 'Forest', bg: '#91c4a0', fg: '#5a8c6a', bb: null, sp: '#c49158' },
+    { name: 'Lavender', bg: '#b8a0d4', fg: '#7a5a9e', bb: null, sp: '#d4a060' },
+    { name: 'Slate', bg: '#a0a8b8', fg: '#5a6478', bb: null, sp: '#7cc5c0' },
+    { name: 'Rose', bg: '#d4929a', fg: '#a8505c', bb: '#d4c0b8', sp: null },
+    { name: 'Amber', bg: '#d4b878', fg: '#a08040', bb: null, sp: '#6898b8' },
+    { name: 'Plum', bg: '#c496a8', fg: '#8a4a68', bb: '#c8b8c0', sp: '#68a898' },
+    { name: 'Sage', bg: '#a8b8a0', fg: '#687860', bb: null, sp: '#a87868' },
+    { name: 'Copper', bg: '#c8a088', fg: '#906848', bb: null, sp: null },
   ];
 
   // --- Init ---
@@ -252,18 +265,24 @@
     const bgPicker = document.getElementById('bg-color');
     const fgPicker = document.getElementById('fg-color');
     const bbPicker = document.getElementById('bb-color');
+    const spPicker = document.getElementById('sp-color');
     const bgHex = document.getElementById('bg-hex');
     const fgHex = document.getElementById('fg-hex');
     const bbHex = document.getElementById('bb-hex');
+    const spHex = document.getElementById('sp-hex');
     const bbToggle = document.getElementById('bb-toggle');
     const bbControls = document.getElementById('bb-controls');
     const bbResetBtn = document.getElementById('bb-reset');
+    const spToggle = document.getElementById('sp-toggle');
+    const spControls = document.getElementById('sp-controls');
+    const spResetBtn = document.getElementById('sp-reset');
     const cssOutput = document.getElementById('css-output');
     const copyBtn = document.getElementById('copy-css');
     const presetContainer = document.getElementById('presets');
     const urlHint = document.querySelector('.lab-url-hint');
 
     let bbActive = !!params.bb;
+    let spActive = !!params.sp;
 
     bgPicker.value = params.bg;
     fgPicker.value = params.fg;
@@ -274,24 +293,36 @@
       bbPicker.value = params.bb;
       bbHex.value = params.bb;
     } else {
-      // Default to a neutral warm tone as starting point when activated
       bbPicker.value = '#d4c4b0';
       bbHex.value = '#d4c4b0';
     }
 
-    function syncBBVisibility() {
-      bbControls.style.display = bbActive ? 'flex' : 'none';
-      bbToggle.textContent = bbActive ? '−' : '+';
-      bbToggle.title = bbActive ? 'Derive background from base' : 'Control background separately';
+    if (params.sp) {
+      spPicker.value = params.sp;
+      spHex.value = params.sp;
+    } else {
+      spPicker.value = '#7cc5c0';
+      spHex.value = '#7cc5c0';
     }
 
-    function getBB() {
-      return bbActive ? bbPicker.value : null;
+    function syncToggle(active, controls, toggle, label) {
+      controls.style.display = active ? 'flex' : 'none';
+      toggle.textContent = active ? '−' : '+';
+      toggle.title = active ? 'Auto-derive ' + label : 'Control ' + label + ' separately';
     }
+
+    function syncAll() {
+      syncToggle(bbActive, bbControls, bbToggle, 'background');
+      syncToggle(spActive, spControls, spToggle, 'spot color');
+    }
+
+    function getBB() { return bbActive ? bbPicker.value : null; }
+    function getSP() { return spActive ? spPicker.value : null; }
 
     function updateHint() {
       let hint = `?bg=${bgPicker.value.slice(1)}&fg=${fgPicker.value.slice(1)}`;
       if (bbActive) hint += `&bb=${bbPicker.value.slice(1)}`;
+      if (spActive) hint += `&sp=${spPicker.value.slice(1)}`;
       urlHint.textContent = hint;
     }
 
@@ -299,12 +330,14 @@
       const bg = bgPicker.value;
       const fg = fgPicker.value;
       const bb = getBB();
+      const sp = getSP();
       bgHex.value = bg;
       fgHex.value = fg;
       if (bbActive) bbHex.value = bbPicker.value;
-      updateURL(bg, fg, bb);
+      if (spActive) spHex.value = spPicker.value;
+      updateURL(bg, fg, bb, sp);
       updateHint();
-      const palette = derivePalette(bg, fg, bb);
+      const palette = derivePalette(bg, fg, bb, sp);
       applyPalette(palette);
       renderSwatches(palette);
       cssOutput.textContent = generateCSS(palette);
@@ -313,6 +346,7 @@
     bgPicker.addEventListener('input', update);
     fgPicker.addEventListener('input', update);
     bbPicker.addEventListener('input', update);
+    spPicker.addEventListener('input', update);
 
     // Hex input sync
     function bindHexSync(hexInput, picker) {
@@ -325,31 +359,22 @@
     bindHexSync(bgHex, bgPicker);
     bindHexSync(fgHex, fgPicker);
     bindHexSync(bbHex, bbPicker);
+    bindHexSync(spHex, spPicker);
 
-    // Background toggle
-    bbToggle.addEventListener('click', () => {
-      bbActive = !bbActive;
-      syncBBVisibility();
-      update();
-    });
+    // Toggle handlers
+    bbToggle.addEventListener('click', () => { bbActive = !bbActive; syncAll(); update(); });
+    bbResetBtn.addEventListener('click', () => { bbActive = false; syncAll(); update(); });
+    spToggle.addEventListener('click', () => { spActive = !spActive; syncAll(); update(); });
+    spResetBtn.addEventListener('click', () => { spActive = false; syncAll(); update(); });
 
-    // Background reset — collapse back to deriving from base
-    bbResetBtn.addEventListener('click', () => {
-      bbActive = false;
-      syncBBVisibility();
-      update();
-    });
-
-    syncBBVisibility();
+    syncAll();
 
     // Presets
     PRESETS.forEach(preset => {
-      const dots = preset.bb
-        ? `<span class="preset-dot" style="background:${preset.bg}"></span>
-           <span class="preset-dot" style="background:${preset.fg}"></span>
-           <span class="preset-dot" style="background:${preset.bb}"></span>`
-        : `<span class="preset-dot" style="background:${preset.bg}"></span>
-           <span class="preset-dot" style="background:${preset.fg}"></span>`;
+      const allColors = [preset.bg, preset.fg, preset.bb, preset.sp].filter(Boolean);
+      const dots = allColors.map(c =>
+        `<span class="preset-dot" style="background:${c}"></span>`
+      ).join('');
 
       const btn = document.createElement('button');
       btn.className = 'preset-btn';
@@ -367,7 +392,14 @@
         } else {
           bbActive = false;
         }
-        syncBBVisibility();
+        if (preset.sp) {
+          spActive = true;
+          spPicker.value = preset.sp;
+          spHex.value = preset.sp;
+        } else {
+          spActive = false;
+        }
+        syncAll();
         update();
       });
       presetContainer.appendChild(btn);
