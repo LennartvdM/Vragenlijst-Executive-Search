@@ -171,7 +171,7 @@ body {
   background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
   padding: 40px 32px;
   text-align: center;
-  color: white;
+  color: rgba(255, 255, 255, 0.87);
   border-radius: 16px 16px 0 0;
 }
 
