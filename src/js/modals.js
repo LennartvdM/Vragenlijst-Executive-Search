@@ -167,7 +167,7 @@ export function initPreviewMode(session) {
   if (exitBannerTop) {
     exitBannerTop.classList.add('visible');
   }
-  if (exitBannerBottom) {
+  if (exitBannerBottom && exitBannerBottom.children.length > 0) {
     exitBannerBottom.classList.add('visible');
   }
 }
