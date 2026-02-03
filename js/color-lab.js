@@ -89,20 +89,26 @@
   function derivePalette(bgHex, fgHex, bbHex) {
     const bg = hexToHSL(bgHex);
     const fg = hexToHSL(fgHex);
-    const bb = bbHex ? hexToHSL(bbHex) : null;
 
     // Warm base family (salmon — the mid-tone accent)
     const salmon = bgHex;
     const salmonLight = shift(bg, 0, -5, 12);
     const salmonDark = shift(bg, 0, 0, -15);
 
-    // Background family (sand / cream) — derived from bb if provided, else from bg
-    const src = bb || bg;
-    const sandHue = src.h + (src.h < 30 ? 5 : -5);
-    const sand = hslToHex(sandHue, Math.max(src.s * 0.55, 15), Math.min(src.l + 20, 92));
-    const sandLight = hslToHex(sandHue, Math.max(src.s * 0.4, 10), Math.min(src.l + 28, 96));
-    const sandDark = hslToHex(sandHue, Math.max(src.s * 0.35, 12), Math.min(src.l + 5, 75));
-    const cream = hslToHex(src.h, Math.max(src.s * 0.3, 8), Math.min(src.l + 32, 98.5));
+    // Card surface family (sand / cream) — ALWAYS from base
+    const sandHue = bg.h + (bg.h < 30 ? 5 : -5);
+    const sand = hslToHex(sandHue, Math.max(bg.s * 0.55, 15), Math.min(bg.l + 20, 92));
+    const sandLight = hslToHex(sandHue, Math.max(bg.s * 0.4, 10), Math.min(bg.l + 28, 96));
+    const sandDark = hslToHex(sandHue, Math.max(bg.s * 0.35, 12), Math.min(bg.l + 5, 75));
+    const cream = hslToHex(bg.h, Math.max(bg.s * 0.3, 8), Math.min(bg.l + 32, 98.5));
+
+    // Background void gradient — from bb if provided, else mirrors card family
+    const src = bbHex ? hexToHSL(bbHex) : bg;
+    const voidHue = src.h + (src.h < 30 ? 5 : -5);
+    // 3 gradient stops: sand-like, salmon-light-like, sand-light-like
+    const void1 = hslToHex(voidHue, Math.max(src.s * 0.55, 15), Math.min(src.l + 20, 92));
+    const void2 = hslToHex(src.h, Math.max(src.s * 0.7, 20), Math.min(src.l + 12, 88));
+    const void3 = hslToHex(voidHue, Math.max(src.s * 0.4, 10), Math.min(src.l + 28, 96));
 
     // Accent family (terracotta / brown)
     const terracotta = fgHex;
@@ -118,28 +124,37 @@
     const teal = hslToHex(tealHue, Math.min(fg.s * 0.8, 40), Math.min(fg.l + 15, 72));
     const tealDark = hslToHex(tealHue, Math.min(fg.s * 0.9, 45), Math.min(fg.l + 5, 62));
 
-    // Muted: desaturated mid-tone of background source
-    const muted = hslToHex(src.h, Math.max(src.s * 0.25, 8), 63);
+    // Muted: desaturated mid-tone of base
+    const muted = hslToHex(bg.h, Math.max(bg.s * 0.25, 8), 63);
 
     return {
-      // Named colors
+      // Card surface colors (always from base)
       '--salmon': salmon,
       '--salmon-light': salmonLight,
       '--salmon-dark': salmonDark,
       '--sand': sand,
       '--sand-light': sandLight,
       '--sand-dark': sandDark,
+      '--cream': cream,
+      '--input-fill': '#ffffff',
+
+      // Accent colors
       '--terracotta': terracotta,
       '--terracotta-dark': terracottaDark,
       '--brown': brown,
-      '--cream': cream,
-      '--input-fill': '#ffffff',
       '--text': text,
       '--text-light': textLight,
       '--teal': teal,
       '--teal-dark': tealDark,
 
-      // RGB components
+      // Background void (separate from card)
+      '--void-1': void1,
+      '--void-2': void2,
+      '--void-3': void3,
+      '--void-1-rgb': rgbString(void1),
+      '--void-2-rgb': rgbString(void2),
+
+      // RGB components (card family)
       '--brown-rgb': rgbString(brown),
       '--terracotta-rgb': rgbString(terracotta),
       '--salmon-rgb': rgbString(salmon),
