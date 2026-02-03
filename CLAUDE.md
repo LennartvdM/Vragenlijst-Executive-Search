@@ -1,4 +1,4 @@
-# CLAUDE.md — AI Context for Monitoring Cultureel Talent naar de Top 2025
+# CLAUDE.md — AI Context for Monitoring Cultureel Talent naar de Top 2026
 
 ## What This Is
 Dutch-language multi-step survey form (vragenlijst) for monitoring cultural diversity in top positions of Dutch organizations. Single-page application, vanilla JS, no framework. Hosted on Netlify, backend on Google Apps Script + Google Sheets.

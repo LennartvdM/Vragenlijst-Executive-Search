@@ -1,4 +1,4 @@
-# Monitoring Cultureel Talent naar de Top 2025
+# Monitoring Cultureel Talent naar de Top 2026
 
 Een webapplicatie voor het monitoren van culturele diversiteit in Nederlandse organisaties.
 

@@ -99,7 +99,7 @@ var App = (function() {
     currentView = 'login';
 
     // Update document title
-    document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
+    document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2026';
 
     // Remove survey-body class from body
     document.body.classList.remove('survey-body');
@@ -178,7 +178,7 @@ var App = (function() {
     currentView = 'survey';
 
     // Update document title
-    document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+    document.title = 'Monitoring Cultureel Talent naar de Top 2026';
 
     // Add survey-body class to body for styling
     document.body.classList.add('survey-body');
@@ -248,7 +248,7 @@ var App = (function() {
           elements.surveyView.style.display = '';
           elements.surveyView.classList.add('view-active');
           currentView = 'survey';
-          document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+          document.title = 'Monitoring Cultureel Talent naar de Top 2026';
           document.dispatchEvent(new Event('surveyVisible'));
         })
         .catch(function(error) {
@@ -520,7 +520,7 @@ var App = (function() {
 
         // Update state
         currentView = 'survey';
-        document.title = 'Monitoring Cultureel Talent naar de Top 2025';
+        document.title = 'Monitoring Cultureel Talent naar de Top 2026';
 
         // Notify survey module that layout is settled (recalculate highlighter etc.)
         document.dispatchEvent(new Event('surveyVisible'));
@@ -559,7 +559,7 @@ var App = (function() {
       elements.loginView.style.display = '';
       elements.loginView.classList.add('view-active');
       currentView = 'login';
-      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
+      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2026';
       return;
     }
 
@@ -617,7 +617,7 @@ var App = (function() {
       elements.loginView.style.transition = '';
 
       currentView = 'login';
-      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2025';
+      document.title = 'Inloggen - Monitoring Cultureel Talent naar de Top 2026';
     }, FADE_DURATION);
   }
 

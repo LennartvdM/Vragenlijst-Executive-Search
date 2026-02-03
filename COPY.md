@@ -9,8 +9,8 @@ Doel: snel tekst vinden en wijzigen zonder de hele codebase te doorzoeken.
 
 | Context | Titel |
 |---------|-------|
-| Login | `Inloggen - Monitoring Cultureel Talent naar de Top 2025` |
-| Survey | `Monitoring Cultureel Talent naar de Top 2025` |
+| Login | `Inloggen - Monitoring Cultureel Talent naar de Top 2026` |
+| Survey | `Monitoring Cultureel Talent naar de Top 2026` |
 
 Bron: `js/app.js` (regels 89, 168, 238, 510, 549, 607), `index.html` (regel 8)
 
@@ -20,7 +20,7 @@ Bron: `js/app.js` (regels 89, 168, 238, 510, 549, 607), `index.html` (regel 8)
 
 ### Header
 - **H1**: `Monitoring Cultureel Talent naar de Top`
-- **Jaarbadge**: `2025`
+- **Jaarbadge**: `2026`
 
 ### Loginformulier
 - **Intro**: `Welkom bij de jaarlijkse monitoring. Voer uw organisatiecode in om toegang te krijgen tot het monitoringsformulier.`
@@ -131,7 +131,7 @@ Bron: `scripts/build-survey-html.js` (previewInfoBox)
 ## 7. Survey stappen — Alle vraagteksten
 
 ### Stap 0: Welkom
-- **Heading**: `Monitoring Cultureel Talent naar de Top 2025`
+- **Heading**: `Monitoring Cultureel Talent naar de Top 2026`
 - **Intro**: `Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw organisatiegegevens en beleid rondom culturele diversiteit.`
 - **Veld**: `Naam organisatie (Charter)` / placeholder: `Voer de naam van uw organisatie in`
 
