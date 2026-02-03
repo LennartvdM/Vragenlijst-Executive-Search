@@ -86,23 +86,23 @@
 
   // --- Palette derivation ---
 
-  function derivePalette(bgHex, fgHex) {
+  function derivePalette(bgHex, fgHex, bbHex) {
     const bg = hexToHSL(bgHex);
     const fg = hexToHSL(fgHex);
+    const bb = bbHex ? hexToHSL(bbHex) : null;
 
-    // Warm base family (salmon / sand / cream)
+    // Warm base family (salmon — the mid-tone accent)
     const salmon = bgHex;
     const salmonLight = shift(bg, 0, -5, 12);
     const salmonDark = shift(bg, 0, 0, -15);
 
-    // Sand: shift hue slightly toward yellow, desaturate, lighten
-    const sandHue = bg.h + (bg.h < 30 ? 5 : -5); // nudge toward warm neutral
-    const sand = hslToHex(sandHue, Math.max(bg.s * 0.55, 15), Math.min(bg.l + 20, 92));
-    const sandLight = hslToHex(sandHue, Math.max(bg.s * 0.4, 10), Math.min(bg.l + 28, 96));
-    const sandDark = hslToHex(sandHue, Math.max(bg.s * 0.35, 12), Math.min(bg.l + 5, 75));
-
-    // Cream: near-white with faintest tint of bg hue
-    const cream = hslToHex(bg.h, Math.max(bg.s * 0.3, 8), Math.min(bg.l + 32, 98.5));
+    // Background family (sand / cream) — derived from bb if provided, else from bg
+    const src = bb || bg;
+    const sandHue = src.h + (src.h < 30 ? 5 : -5);
+    const sand = hslToHex(sandHue, Math.max(src.s * 0.55, 15), Math.min(src.l + 20, 92));
+    const sandLight = hslToHex(sandHue, Math.max(src.s * 0.4, 10), Math.min(src.l + 28, 96));
+    const sandDark = hslToHex(sandHue, Math.max(src.s * 0.35, 12), Math.min(src.l + 5, 75));
+    const cream = hslToHex(src.h, Math.max(src.s * 0.3, 8), Math.min(src.l + 32, 98.5));
 
     // Accent family (terracotta / brown)
     const terracotta = fgHex;
@@ -118,8 +118,8 @@
     const teal = hslToHex(tealHue, Math.min(fg.s * 0.8, 40), Math.min(fg.l + 15, 72));
     const tealDark = hslToHex(tealHue, Math.min(fg.s * 0.9, 45), Math.min(fg.l + 5, 62));
 
-    // Muted: desaturated mid-tone of bg
-    const muted = hslToHex(bg.h, Math.max(bg.s * 0.25, 8), 63);
+    // Muted: desaturated mid-tone of background source
+    const muted = hslToHex(src.h, Math.max(src.s * 0.25, 8), 63);
 
     return {
       // Named colors
@@ -157,13 +157,19 @@
     return {
       bg: '#' + (p.get('bg') || 'e8a091'),
       fg: '#' + (p.get('fg') || 'c4785a'),
+      bb: p.get('bb') ? '#' + p.get('bb') : null,
     };
   }
 
-  function updateURL(bg, fg) {
+  function updateURL(bg, fg, bb) {
     const url = new URL(window.location);
     url.searchParams.set('bg', bg.replace('#', ''));
     url.searchParams.set('fg', fg.replace('#', ''));
+    if (bb) {
+      url.searchParams.set('bb', bb.replace('#', ''));
+    } else {
+      url.searchParams.delete('bb');
+    }
     window.history.replaceState({}, '', url);
   }
 
@@ -212,16 +218,16 @@
   // --- Preset palettes ---
 
   const PRESETS = [
-    { name: 'Original', bg: '#e8a091', fg: '#c4785a' },
-    { name: 'Ocean', bg: '#91b8e8', fg: '#5a7ec4' },
-    { name: 'Forest', bg: '#91c4a0', fg: '#5a8c6a' },
-    { name: 'Lavender', bg: '#b8a0d4', fg: '#7a5a9e' },
-    { name: 'Slate', bg: '#a0a8b8', fg: '#5a6478' },
-    { name: 'Rose', bg: '#d4929a', fg: '#a8505c' },
-    { name: 'Amber', bg: '#d4b878', fg: '#a08040' },
-    { name: 'Plum', bg: '#c496a8', fg: '#8a4a68' },
-    { name: 'Sage', bg: '#a8b8a0', fg: '#687860' },
-    { name: 'Copper', bg: '#c8a088', fg: '#906848' },
+    { name: 'Original', bg: '#e8a091', fg: '#c4785a', bb: null },
+    { name: 'Ocean', bg: '#91b8e8', fg: '#5a7ec4', bb: null },
+    { name: 'Forest', bg: '#91c4a0', fg: '#5a8c6a', bb: null },
+    { name: 'Lavender', bg: '#b8a0d4', fg: '#7a5a9e', bb: null },
+    { name: 'Slate', bg: '#a0a8b8', fg: '#5a6478', bb: null },
+    { name: 'Rose', bg: '#d4929a', fg: '#a8505c', bb: '#d4c0b8' },
+    { name: 'Amber', bg: '#d4b878', fg: '#a08040', bb: null },
+    { name: 'Plum', bg: '#c496a8', fg: '#8a4a68', bb: '#c8b8c0' },
+    { name: 'Sage', bg: '#a8b8a0', fg: '#687860', bb: null },
+    { name: 'Copper', bg: '#c8a088', fg: '#906848', bb: null },
   ];
 
   // --- Init ---
@@ -230,24 +236,60 @@
     const params = getParams();
     const bgPicker = document.getElementById('bg-color');
     const fgPicker = document.getElementById('fg-color');
+    const bbPicker = document.getElementById('bb-color');
     const bgHex = document.getElementById('bg-hex');
     const fgHex = document.getElementById('fg-hex');
+    const bbHex = document.getElementById('bb-hex');
+    const bbToggle = document.getElementById('bb-toggle');
+    const bbControls = document.getElementById('bb-controls');
+    const bbResetBtn = document.getElementById('bb-reset');
     const cssOutput = document.getElementById('css-output');
     const copyBtn = document.getElementById('copy-css');
     const presetContainer = document.getElementById('presets');
+    const urlHint = document.querySelector('.lab-url-hint');
+
+    let bbActive = !!params.bb;
 
     bgPicker.value = params.bg;
     fgPicker.value = params.fg;
     bgHex.value = params.bg;
     fgHex.value = params.fg;
 
+    if (params.bb) {
+      bbPicker.value = params.bb;
+      bbHex.value = params.bb;
+    } else {
+      // Default to a neutral warm tone as starting point when activated
+      bbPicker.value = '#d4c4b0';
+      bbHex.value = '#d4c4b0';
+    }
+
+    function syncBBVisibility() {
+      bbControls.style.display = bbActive ? 'flex' : 'none';
+      bbToggle.textContent = bbActive ? '−' : '+';
+      bbToggle.title = bbActive ? 'Derive background from base' : 'Control background separately';
+    }
+
+    function getBB() {
+      return bbActive ? bbPicker.value : null;
+    }
+
+    function updateHint() {
+      let hint = `?bg=${bgPicker.value.slice(1)}&fg=${fgPicker.value.slice(1)}`;
+      if (bbActive) hint += `&bb=${bbPicker.value.slice(1)}`;
+      urlHint.textContent = hint;
+    }
+
     function update() {
       const bg = bgPicker.value;
       const fg = fgPicker.value;
+      const bb = getBB();
       bgHex.value = bg;
       fgHex.value = fg;
-      updateURL(bg, fg);
-      const palette = derivePalette(bg, fg);
+      if (bbActive) bbHex.value = bbPicker.value;
+      updateURL(bg, fg, bb);
+      updateHint();
+      const palette = derivePalette(bg, fg, bb);
       applyPalette(palette);
       renderSwatches(palette);
       cssOutput.textContent = generateCSS(palette);
@@ -255,33 +297,62 @@
 
     bgPicker.addEventListener('input', update);
     fgPicker.addEventListener('input', update);
+    bbPicker.addEventListener('input', update);
 
     // Hex input sync
-    bgHex.addEventListener('change', () => {
-      let v = bgHex.value.trim();
-      if (!v.startsWith('#')) v = '#' + v;
-      if (/^#[0-9a-fA-F]{6}$/.test(v)) { bgPicker.value = v; update(); }
+    function bindHexSync(hexInput, picker) {
+      hexInput.addEventListener('change', () => {
+        let v = hexInput.value.trim();
+        if (!v.startsWith('#')) v = '#' + v;
+        if (/^#[0-9a-fA-F]{6}$/.test(v)) { picker.value = v; update(); }
+      });
+    }
+    bindHexSync(bgHex, bgPicker);
+    bindHexSync(fgHex, fgPicker);
+    bindHexSync(bbHex, bbPicker);
+
+    // Background toggle
+    bbToggle.addEventListener('click', () => {
+      bbActive = !bbActive;
+      syncBBVisibility();
+      update();
     });
-    fgHex.addEventListener('change', () => {
-      let v = fgHex.value.trim();
-      if (!v.startsWith('#')) v = '#' + v;
-      if (/^#[0-9a-fA-F]{6}$/.test(v)) { fgPicker.value = v; update(); }
+
+    // Background reset — collapse back to deriving from base
+    bbResetBtn.addEventListener('click', () => {
+      bbActive = false;
+      syncBBVisibility();
+      update();
     });
+
+    syncBBVisibility();
 
     // Presets
     PRESETS.forEach(preset => {
+      const dots = preset.bb
+        ? `<span class="preset-dot" style="background:${preset.bg}"></span>
+           <span class="preset-dot" style="background:${preset.fg}"></span>
+           <span class="preset-dot" style="background:${preset.bb}"></span>`
+        : `<span class="preset-dot" style="background:${preset.bg}"></span>
+           <span class="preset-dot" style="background:${preset.fg}"></span>`;
+
       const btn = document.createElement('button');
       btn.className = 'preset-btn';
       btn.innerHTML = `
-        <span class="preset-dots">
-          <span class="preset-dot" style="background:${preset.bg}"></span>
-          <span class="preset-dot" style="background:${preset.fg}"></span>
-        </span>
+        <span class="preset-dots">${dots}</span>
         <span class="preset-name">${preset.name}</span>
       `;
       btn.addEventListener('click', () => {
         bgPicker.value = preset.bg;
         fgPicker.value = preset.fg;
+        if (preset.bb) {
+          bbActive = true;
+          bbPicker.value = preset.bb;
+          bbHex.value = preset.bb;
+        } else {
+          bbActive = false;
+        }
+        syncBBVisibility();
         update();
       });
       presetContainer.appendChild(btn);

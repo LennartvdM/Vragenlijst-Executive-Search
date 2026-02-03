@@ -93,6 +93,63 @@
       flex-wrap: wrap;
     }
 
+    /* Background toggle controls */
+    .bb-toggle-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #f5f5f5;
+      color: #666;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      line-height: 1;
+      font-family: system-ui, sans-serif;
+    }
+
+    .bb-toggle-btn:hover {
+      border-color: #999;
+      background: #eee;
+    }
+
+    .bb-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bb-reset-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      color: #999;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      line-height: 1;
+      font-family: system-ui, sans-serif;
+    }
+
+    .bb-reset-btn:hover {
+      border-color: #999;
+      color: #666;
+      background: #eee;
+    }
+
+    .lab-bb-group label {
+      min-width: auto !important;
+    }
+
     .preset-btn {
       display: flex;
       align-items: center;
@@ -834,7 +891,7 @@
       </div>
       <div class="lab-row">
         <div class="lab-picker-group">
-          <label>Warm base</label>
+          <label>Base</label>
           <input type="color" id="bg-color" value="#e8a091">
           <input type="text" id="bg-hex" value="#e8a091" maxlength="7" spellcheck="false">
         </div>
@@ -842,6 +899,15 @@
           <label>Accent</label>
           <input type="color" id="fg-color" value="#c4785a">
           <input type="text" id="fg-hex" value="#c4785a" maxlength="7" spellcheck="false">
+        </div>
+        <div class="lab-picker-group lab-bb-group">
+          <label>Background</label>
+          <button id="bb-toggle" class="bb-toggle-btn" title="Control background separately">+</button>
+          <div id="bb-controls" class="bb-controls" style="display: none;">
+            <input type="color" id="bb-color" value="#d4c4b0">
+            <input type="text" id="bb-hex" value="#d4c4b0" maxlength="7" spellcheck="false">
+            <button id="bb-reset" class="bb-reset-btn" title="Reset to auto-derive from base">&times;</button>
+          </div>
         </div>
         <div id="presets" class="lab-presets"></div>
       </div>
