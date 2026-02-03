@@ -315,8 +315,11 @@ const ApiClient = (function() {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       if (onProgress) onProgress(attempt + 1, maxRetries);
 
-      // Race direct and proxy endpoints in parallel for faster response
-      if (proxyUrl) {
+      // For mutating actions (saveResponses), use sequential fallback to avoid
+      // duplicate writes. For read-only actions, race both endpoints in parallel.
+      const isMutating = action === 'saveResponses';
+
+      if (proxyUrl && !isMutating) {
         try {
           const data = await raceEndpoints(directUrl, proxyUrl, action, params, method, timeout);
           console.log(`[API] ${action} success:`, data);
@@ -335,6 +338,49 @@ const ApiClient = (function() {
             if (raceError instanceof ApiError) throw raceError;
             if (raceError.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
             throw new ApiError(raceError.message, 'NETWORK_ERROR');
+          }
+        }
+      } else if (proxyUrl && isMutating) {
+        // Sequential: try direct first, fall back to proxy only if direct fails
+        try {
+          const data = await tryEndpoint(directUrl, action, params, method, timeout, 'direct');
+          console.log(`[API] ${action} success (direct):`, data);
+          return data;
+        } catch (directError) {
+          const { retryable: directRetryable, reason: directReason } = classifyError(directError);
+          if (!directRetryable) {
+            logDiagnostic('error', 'NON-RETRYABLE ERROR', {
+              'Action': action,
+              'Endpoint': 'direct',
+              'Error': directError.message,
+              'Code': directError.code || directError.name,
+              'Reason': directReason
+            });
+            if (directError instanceof ApiError) throw directError;
+            if (directError.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
+            throw new ApiError(directError.message, 'NETWORK_ERROR');
+          }
+          // Direct failed with retryable error — try proxy as fallback
+          console.log(`[API] ${action}: direct failed, falling back to proxy`);
+          try {
+            const data = await tryEndpoint(proxyUrl, action, params, method, timeout, 'proxy');
+            console.log(`[API] ${action} success (proxy fallback):`, data);
+            return data;
+          } catch (proxyError) {
+            lastError = proxyError;
+            const { retryable, reason } = classifyError(proxyError);
+            if (!retryable) {
+              logDiagnostic('error', 'NON-RETRYABLE ERROR', {
+                'Action': action,
+                'Endpoint': 'proxy (fallback)',
+                'Error': proxyError.message,
+                'Code': proxyError.code || proxyError.name,
+                'Reason': reason
+              });
+              if (proxyError instanceof ApiError) throw proxyError;
+              if (proxyError.name === 'AbortError') throw new ApiError('Request timed out', 'TIMEOUT_ERROR');
+              throw new ApiError(proxyError.message, 'NETWORK_ERROR');
+            }
           }
         }
       } else {
