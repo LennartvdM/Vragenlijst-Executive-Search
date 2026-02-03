@@ -14,21 +14,26 @@
   color-scheme: light only;
 
   /* Core palette */
-  --salmon: #e8a091;
-  --salmon-light: #f5c4b8;
-  --salmon-dark: #c47a6c;
-  --sand: #f5e6d3;
-  --sand-light: #faf4eb;
-  --sand-dark: #d4c4a8;
-  --terracotta: #c4785a;
-  --terracotta-dark: #995544;
-  --brown: #8b5a3c;
-  --cream: #fffbf7;
+  --salmon: #8caef4;
+  --salmon-light: #c5d6f8;
+  --salmon-dark: #467ded;
+  --sand: #e1e9f4;
+  --sand-light: #f1f4f8;
+  --sand-dark: #adbcd2;
+  --terracotta: #111162;
+  --terracotta-dark: #07072f;
+  --brown: #08091e;
+  --cream: #fafbfc;
   --input-fill: #ffffff;
-  --text: #4a3728;
-  --text-light: #7a6555;
-  --teal: #7cc5c0;
-  --teal-dark: #5aada8;
+  --text: #1d1d30;
+  --text-light: #3c3c5d;
+  --teal: #d27b4b;
+  --teal-dark: #c15f29;
+
+  /* Background void gradient (separate from card surface) */
+  --void-1: #f3ece2;
+  --void-2: #f0e6d1;
+  --void-3: #f8f5f2;
 
   /* Status: Error */
   --error: #d64545;
@@ -60,13 +65,15 @@
   --info-dark: #0369a1;
 
   /* RGB components for rgba() opacity variants */
-  --brown-rgb: 139, 90, 60;
-  --terracotta-rgb: 196, 120, 90;
-  --salmon-rgb: 232, 160, 145;
-  --sand-rgb: 245, 230, 211;
-  --cream-rgb: 255, 251, 247;
-  --text-rgb: 74, 55, 40;
-  --muted-rgb: 180, 160, 140;
+  --brown-rgb: 8, 9, 30;
+  --terracotta-rgb: 17, 17, 98;
+  --salmon-rgb: 140, 174, 244;
+  --sand-rgb: 225, 233, 244;
+  --cream-rgb: 250, 251, 252;
+  --text-rgb: 29, 29, 48;
+  --muted-rgb: 141, 154, 180;
+  --void-1-rgb: 243, 236, 226;
+  --void-2-rgb: 240, 230, 209;
   --warning-rgb: 245, 158, 11;
   --danger-rgb: 220, 38, 38;
   --success-rgb: 45, 138, 78;
@@ -88,7 +95,7 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
+  background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%);
   min-height: 100vh;
   color: var(--text);
   line-height: 1.5;
