@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Lab</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* Color lab controls — isolated from main stylesheet */
+    .lab-controls {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      padding: 16px 24px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .lab-controls-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .lab-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .lab-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .lab-url-hint {
+      font-size: 11px;
+      color: #999;
+      font-family: monospace;
+    }
+
+    .lab-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .lab-picker-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lab-picker-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      min-width: 75px;
+    }
+
+    .lab-picker-group input[type="color"] {
+      width: 40px;
+      height: 32px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .lab-picker-group input[type="text"] {
+      width: 80px;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      color: #333;
+      background: #fff;
+    }
+
+    .lab-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .preset-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 11px;
+      color: #555;
+      transition: all 0.15s;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .preset-btn:hover {
+      border-color: #999;
+      background: #f5f5f5;
+    }
+
+    .preset-dots {
+      display: flex;
+      gap: 2px;
+    }
+
+    .preset-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+
+    .preset-name {
+      font-weight: 500;
+    }
+
+    /* Preview area */
+    .lab-preview {
+      padding-top: 160px; /* space for fixed controls */
+      min-height: 100vh;
+    }
+
+    .preview-section {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+
+    .preview-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-light);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    /* Card preview using actual site styles */
+    .preview-card {
+      background: var(--cream);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(var(--brown-rgb), 0.15),
+                  0 2px 8px rgba(var(--brown-rgb), 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-card::before {
+      content: '';
+      position: absolute;
+      inset: calc(-1 * var(--outline-width));
+      border-radius: calc(16px + var(--outline-width));
+      background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
+      z-index: -1;
+    }
+
+    .preview-card-header {
+      background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
+      padding: 24px 32px;
+      color: white;
+    }
+
+    .preview-card-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .preview-card-header p {
+      opacity: 0.85;
+      font-size: 14px;
+    }
+
+    .preview-card-body {
+      padding: 32px;
+    }
+
+    /* Form elements preview */
+    .preview-form-group {
+      margin-bottom: 20px;
+    }
+
+    .preview-form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .preview-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--sand-dark);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--input-fill);
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .preview-input:focus {
+      outline: none;
+      border-color: var(--salmon);
+      box-shadow: 0 0 0 3px rgba(var(--salmon-rgb), 0.25);
+    }
+
+    /* Button previews */
+    .preview-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .preview-btn-primary {
+      background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(var(--terracotta-rgb), 0.3);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .preview-btn-secondary {
+      background: transparent;
+      color: var(--terracotta);
+      border: 1.5px solid var(--salmon);
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .preview-btn-teal {
+      background: var(--teal);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Option cards */
+    .preview-options {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .preview-option-card {
+      flex: 1;
+      padding: 16px;
+      border: 2px solid var(--sand-dark);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--cream);
+      color: var(--text);
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .preview-option-card.selected {
+      border-color: var(--terracotta);
+      background: linear-gradient(135deg, rgba(var(--salmon-rgb), 0.1) 0%, rgba(var(--sand-rgb), 0.3) 100%);
+      box-shadow: 0 2px 8px rgba(var(--terracotta-rgb), 0.2);
+    }
+
+    /* Progress bar */
+    .preview-progress {
+      height: 8px;
+      background: var(--sand);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .preview-progress-fill {
+      height: 100%;
+      width: 45%;
+      background: linear-gradient(90deg, var(--salmon) 0%, var(--terracotta) 100%);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* Sidebar preview */
+    .preview-sidebar {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 20px 0;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(var(--brown-rgb), 0.1);
+    }
+
+    .preview-sidebar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--terracotta);
+      padding: 0 20px;
+      margin-bottom: 12px;
+    }
+
+    .preview-sidebar-divider {
+      height: 1px;
+      background: var(--sand);
+      margin: 8px 20px 12px;
+    }
+
+    .preview-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: var(--text-light);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .preview-nav-item.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .preview-nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--sand-dark);
+      flex-shrink: 0;
+    }
+
+    .preview-nav-item.completed .preview-nav-dot {
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .preview-nav-item.active .preview-nav-dot {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+    }
+
+    .preview-sidebar-highlighter {
+      position: absolute;
+      right: 0;
+      width: calc(100% - 8px);
+      height: 36px;
+      border-radius: 8px 0 0 8px;
+      background: linear-gradient(180deg, rgba(var(--salmon-rgb), 0.15) 0%, rgba(var(--sand-rgb), 0.3) 100%);
+      transition: top 0.3s ease;
+      pointer-events: none;
+    }
+
+    /* Likert pill preview */
+    .preview-likert-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .preview-likert-pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1.5px solid var(--sand-dark);
+      background: var(--cream);
+      color: var(--text-light);
+    }
+
+    .preview-likert-pill.active {
+      background: linear-gradient(135deg, var(--salmon) 0%, var(--terracotta) 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(var(--terracotta-rgb), 0.3);
+    }
+
+    /* Two column preview layout */
+    .preview-columns {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .preview-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Swatch grid */
+    #swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+    }
+
+    .swatch-item {
+      text-align: center;
+    }
+
+    .swatch-color {
+      width: 100%;
+      height: 48px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 4px;
+    }
+
+    .swatch-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .swatch-value {
+      font-size: 10px;
+      color: var(--text-light);
+      font-family: monospace;
+    }
+
+    /* CSS output */
+    .css-output-container {
+      position: relative;
+    }
+
+    #css-output {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+      max-height: 300px;
+    }
+
+    #copy-css {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid #555;
+      background: #333;
+      color: #ddd;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    #copy-css:hover {
+      background: #444;
+    }
+
+    /* Info banner preview */
+    .preview-info-banner {
+      padding: 14px 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(var(--salmon-rgb), 0.12) 0%, rgba(var(--sand-rgb), 0.25) 100%);
+      border: 1px solid rgba(var(--salmon-rgb), 0.3);
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* Logo preview */
+    .preview-logo {
+      width: 48px;
+      height: auto;
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
+
+    /* Status chips */
+    .preview-status-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .preview-status-chip {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .preview-status-chip.success {
+      background: var(--success-light);
+      color: var(--success-dark);
+      border: 1px solid var(--success-medium);
+    }
+
+    .preview-status-chip.warning {
+      background: var(--warning-light);
+      color: var(--warning-dark);
+      border: 1px solid var(--warning-medium);
+    }
+
+    .preview-status-chip.error {
+      background: var(--danger-light);
+      color: var(--danger-dark);
+      border: 1px solid var(--danger-medium);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed control bar -->
+  <div class="lab-controls">
+    <div class="lab-controls-inner">
+      <div class="lab-header">
+        <div class="lab-title">Color Lab</div>
+        <div class="lab-url-hint">?bg=e8a091&fg=c4785a</div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-picker-group">
+          <label>Warm base</label>
+          <input type="color" id="bg-color" value="#e8a091">
+          <input type="text" id="bg-hex" value="#e8a091" maxlength="7" spellcheck="false">
+        </div>
+        <div class="lab-picker-group">
+          <label>Accent</label>
+          <input type="color" id="fg-color" value="#c4785a">
+          <input type="text" id="fg-hex" value="#c4785a" maxlength="7" spellcheck="false">
+        </div>
+        <div id="presets" class="lab-presets"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview area -->
+  <div class="lab-preview">
+
+    <!-- Card with gradient header -->
+    <div class="preview-section">
+      <div class="preview-section-title">Card &amp; Header Gradient</div>
+      <div class="preview-card">
+        <div class="preview-card-header">
+          <h2>Monitoring Cultureel Talent</h2>
+          <p>Welkom bij de vragenlijst voor uw organisatie</p>
+        </div>
+        <div class="preview-card-body">
+          <div class="preview-info-banner">
+            Dit is een voorbeeld van een informatief bericht met een subtiele achtergrondkleur.
+          </div>
+
+          <div class="preview-form-group">
+            <label>Naam organisatie</label>
+            <input class="preview-input" type="text" placeholder="Vul hier in...">
+          </div>
+
+          <div class="preview-section-title" style="margin-top: 24px;">Option Cards</div>
+          <div class="preview-options">
+            <div class="preview-option-card">Nee</div>
+            <div class="preview-option-card selected">Ja</div>
+            <div class="preview-option-card">Onbekend</div>
+          </div>
+
+          <div class="preview-section-title">Likert Scale</div>
+          <div class="preview-likert-row">
+            <div class="preview-likert-pill">Niet</div>
+            <div class="preview-likert-pill">Enigszins</div>
+            <div class="preview-likert-pill active">Grotendeels</div>
+            <div class="preview-likert-pill">Volledig</div>
+          </div>
+          <div class="preview-likert-row">
+            <div class="preview-likert-pill">Niet</div>
+            <div class="preview-likert-pill active">Enigszins</div>
+            <div class="preview-likert-pill">Grotendeels</div>
+            <div class="preview-likert-pill">Volledig</div>
+          </div>
+
+          <div class="preview-section-title" style="margin-top: 24px;">Buttons</div>
+          <div class="preview-buttons">
+            <button class="preview-btn-primary">Volgende stap</button>
+            <button class="preview-btn-secondary">Vorige</button>
+            <button class="preview-btn-teal">Accent kleur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar + content layout -->
+    <div class="preview-section">
+      <div class="preview-section-title">Sidebar Navigation</div>
+      <div class="preview-columns">
+        <div class="preview-sidebar">
+          <svg class="preview-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.614 67.051" style="margin-left: 20px;">
+            <g transform="translate(-741 -4156)">
+              <path d="M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0" transform="translate(740.999 4117.211)" fill="#c4785a"/>
+              <path d="M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588" transform="translate(741 4134.599)" fill="#c4785a"/>
+              <path d="M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356" transform="translate(723.664 4155.999)" fill="#c4785a"/>
+            </g>
+          </svg>
+          <div class="preview-sidebar-title">Monitoring Cultureel</div>
+          <div class="preview-progress" style="margin: 0 20px 12px;">
+            <div class="preview-progress-fill"></div>
+          </div>
+          <div class="preview-sidebar-divider"></div>
+          <div style="position: relative;">
+            <div class="preview-sidebar-highlighter" style="top: 72px;"></div>
+            <div class="preview-nav-item completed">
+              <span class="preview-nav-dot"></span>
+              <span>Welkom</span>
+            </div>
+            <div class="preview-nav-item completed">
+              <span class="preview-nav-dot"></span>
+              <span>Streefcijfer</span>
+            </div>
+            <div class="preview-nav-item active">
+              <span class="preview-nav-dot"></span>
+              <span>Kwantitatief</span>
+            </div>
+            <div class="preview-nav-item">
+              <span class="preview-nav-dot"></span>
+              <span>Bestuursorganen</span>
+            </div>
+            <div class="preview-nav-item">
+              <span class="preview-nav-dot"></span>
+              <span>Leiderschap</span>
+            </div>
+            <div class="preview-nav-item">
+              <span class="preview-nav-dot"></span>
+              <span>Strategie</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="preview-section-title">Status Indicators</div>
+          <div class="preview-status-row">
+            <span class="preview-status-chip success">Compleet</span>
+            <span class="preview-status-chip warning">Onvolledig</span>
+            <span class="preview-status-chip error">Fout</span>
+          </div>
+
+          <div class="preview-section-title">Text Samples</div>
+          <p style="color: var(--text); font-size: 15px; line-height: 1.7; margin-bottom: 12px;">
+            <strong>Primary text</strong> — De organisatie streeft naar een diverse samenstelling
+            van het bestuur en de top van de organisatie.
+          </p>
+          <p style="color: var(--text-light); font-size: 14px; line-height: 1.7;">
+            <strong>Secondary text</strong> — Vul hieronder de gegevens in over het aantal
+            medewerkers in de top en subtop van uw organisatie.
+          </p>
+          <p style="margin-top: 12px;">
+            <a href="#" style="color: var(--terracotta); text-decoration: underline; font-weight: 500;" onclick="return false">Een terracotta link</a>
+            &nbsp;&middot;&nbsp;
+            <a href="#" style="color: var(--teal-dark); text-decoration: underline; font-weight: 500;" onclick="return false">Een teal link</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Derived palette swatches -->
+    <div class="preview-section">
+      <div class="preview-section-title">Derived Palette</div>
+      <div id="swatch-grid"></div>
+    </div>
+
+    <!-- CSS output -->
+    <div class="preview-section">
+      <div class="preview-section-title">Generated CSS Variables</div>
+      <div class="css-output-container">
+        <pre id="css-output"></pre>
+        <button id="copy-css">Copy CSS</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/js/color-lab.js"></script>
+</body>
+</html>
