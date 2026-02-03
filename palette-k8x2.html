@@ -243,16 +243,15 @@
       border-radius: 16px;
       box-shadow: 0 8px 32px rgba(var(--brown-rgb), 0.15),
                   0 2px 8px rgba(var(--brown-rgb), 0.1);
-      overflow: hidden;
     }
 
-    /* Outline stroke — blends with background void, not card surface */
+    /* Outline stroke — uses card-family colors to frame card against any background */
     .layout-card::before {
       content: '';
       position: absolute;
       inset: calc(-1 * var(--outline-width));
       border-radius: calc(16px + var(--outline-width));
-      background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%);
+      background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
       z-index: -1;
     }
 
@@ -262,6 +261,7 @@
       padding: 24px 0;
       display: flex;
       flex-direction: column;
+      border-radius: 16px 0 0 16px;
     }
 
     .layout-sidebar-brand {
@@ -349,6 +349,8 @@
       padding: 0;
       display: flex;
       flex-direction: column;
+      border-radius: 0 16px 16px 0;
+      overflow: hidden;
     }
 
     .layout-content-header {
@@ -480,6 +482,10 @@
         border-right: none;
         border-bottom: 1px solid var(--sand);
         padding: 16px 0;
+        border-radius: 16px 16px 0 0;
+      }
+      .layout-content {
+        border-radius: 0 0 16px 16px;
       }
       .layout-viewport {
         padding: 24px 16px;
@@ -511,7 +517,7 @@
       position: absolute;
       inset: calc(-1 * var(--outline-width));
       border-radius: calc(16px + var(--outline-width));
-      background: linear-gradient(135deg, var(--void-1) 0%, var(--void-2) 50%, var(--void-3) 100%);
+      background: linear-gradient(135deg, var(--sand) 0%, var(--salmon-light) 50%, var(--sand-light) 100%);
       z-index: -1;
     }
 
