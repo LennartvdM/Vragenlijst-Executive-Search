@@ -235,9 +235,9 @@ const fullHtml = `<!-- AUTO-GENERATED - Edit src/data/survey-data.js, then run: 
 <div class="mobile-overlay" id="mobileOverlay"></div>
 
 <noscript>
-  <div style="background:#fef3c7;border:1px solid #f59e0b;padding:20px;margin:20px;border-radius:8px;text-align:center;">
+  <div style="background:var(--warning-light, #fff8e1);border:1px solid var(--warning, #f59e0b);padding:20px;margin:20px;border-radius:8px;text-align:center;">
     <p style="margin:0 0 10px 0;font-weight:bold;">JavaScript is vereist voor deze vragenlijst.</p>
-    <p style="margin:0;"><a href="/index.html?logout=1" style="color:#b45309;">Klik hier om terug te gaan naar de inlogpagina</a></p>
+    <p style="margin:0;"><a href="/index.html?logout=1" style="color:var(--warning-dark, #92400e);">Klik hier om terug te gaan naar de inlogpagina</a></p>
   </div>
 </noscript>
 
