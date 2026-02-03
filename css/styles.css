@@ -31,9 +31,9 @@
   --teal-dark: #c15f29;
 
   /* Background void gradient (separate from card surface) */
-  --void-1: #f3ece2;
-  --void-2: #f0e6d1;
-  --void-3: #f8f5f2;
+  --void-1: #e8ecf4;
+  --void-2: #dde4f0;
+  --void-3: #f0f2f7;
 
   /* Status: Error */
   --error: #d64545;
@@ -72,8 +72,8 @@
   --cream-rgb: 250, 251, 252;
   --text-rgb: 29, 29, 48;
   --muted-rgb: 141, 154, 180;
-  --void-1-rgb: 243, 236, 226;
-  --void-2-rgb: 240, 230, 209;
+  --void-1-rgb: 232, 236, 244;
+  --void-2-rgb: 221, 228, 240;
   --warning-rgb: 245, 158, 11;
   --danger-rgb: 220, 38, 38;
   --success-rgb: 45, 138, 78;
@@ -1364,8 +1364,8 @@ h1 {
 }
 
 .info-box-link:hover {
-  background: linear-gradient(135deg, var(--sand) 0%, #e8dcc8 100%);
-  border-left-color: var(--terracotta-dark, #c55a3a);
+  background: linear-gradient(135deg, var(--sand) 0%, var(--sand-dark) 100%);
+  border-left-color: var(--terracotta-dark);
   transform: translateX(2px);
 }
 
