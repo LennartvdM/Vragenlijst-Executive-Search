@@ -408,6 +408,15 @@
     }
     document.addEventListener('keydown', handleKeydown);
 
+    // Populate contact email (obfuscated to prevent scraping)
+    var rechtenEmails = overlayContainer.querySelectorAll('.pp-rechten-email');
+    var emailUser = 'info';
+    var emailDomain = 'commissiemonitoring' + '.' + 'nl';
+    var emailAddr = emailUser + '@' + emailDomain;
+    rechtenEmails.forEach(function(el) {
+      el.textContent = emailAddr;
+    });
+
     // Mark as initialized
     panel.dataset.privacyPanelInitialized = 'true';
 
