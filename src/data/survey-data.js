@@ -75,14 +75,14 @@ export const SURVEY_STEPS = [
     subtitle: 'Kwantitatieve gegevens over uw organisatie (per 31 december 2026)',
     fields: [
       { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>', group: 'werknemers' },
-      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'werknemers' },
-      { type: 'checkbox', name: 'werknemers_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'werknemers' },
+      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'werknemers', indent: true },
+      { type: 'checkbox', name: 'werknemers_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'werknemers', indent: true },
       { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>', group: 'top' },
-      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'top' },
-      { type: 'checkbox', name: 'top_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'top' },
+      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'top', indent: true },
+      { type: 'checkbox', name: 'top_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'top', indent: true },
       { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>', group: 'subtop' },
-      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'subtop' },
-      { type: 'checkbox', name: 'subtop_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'subtop' }
+      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'subtop', indent: true },
+      { type: 'checkbox', name: 'subtop_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'subtop', indent: true }
     ]
   },
   {
