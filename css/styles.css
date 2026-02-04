@@ -1518,7 +1518,7 @@ h1 {
 .form-section > .question-group::before {
   content: '';
   position: absolute;
-  top: -4px;
+  top: -16px;
   /* Left: clip = 20px left of field (sidebar edge). Extend 40px past for mask fade.
      Right: clip = 100px + stroke right of field. Extend 40px past for mask fade. */
   left: -60px;
@@ -2194,7 +2194,6 @@ input[inputmode="numeric"] {
    Spacing between groups replaces the old .field-group-end margin. */
 .question-group {
   /* position: relative is set in the gradient section above */
-  padding-top: 12px;
   margin-bottom: 12px;
 }
 
