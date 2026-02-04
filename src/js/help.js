@@ -193,17 +193,40 @@ function createPopoverElement(id, html) {
   pop.addEventListener('mouseleave', startClose);
 
   // Handle reveal sections inside popovers
+  // Each reveal gets a collapse delay so moving between reveals doesn't
+  // cause a chain reaction of collapsing/expanding content
   var reveals = pop.querySelectorAll('.ch-reveal');
   reveals.forEach(function(reveal) {
+    var collapseTimer = null;
+
+    function cancelCollapse() {
+      if (collapseTimer) {
+        clearTimeout(collapseTimer);
+        collapseTimer = null;
+      }
+    }
+
     reveal.addEventListener('mouseenter', function() {
+      cancelCollapse();
+      // Cancel pending collapses on sibling reveals too
+      reveals.forEach(function(sib) {
+        if (sib !== reveal && sib._cancelCollapse) {
+          sib._cancelCollapse();
+        }
+      });
       reveal.classList.add('is-expanded');
-      // Recalculate safezone after grid transition settles
       setTimeout(updateSafezone, 380);
     });
+
     reveal.addEventListener('mouseleave', function() {
-      reveal.classList.remove('is-expanded');
-      setTimeout(updateSafezone, 380);
+      collapseTimer = setTimeout(function() {
+        reveal.classList.remove('is-expanded');
+        setTimeout(updateSafezone, 380);
+      }, 300);
     });
+
+    // Store cancel function so siblings can reach it
+    reveal._cancelCollapse = cancelCollapse;
   });
 
   popovers[id] = pop;
