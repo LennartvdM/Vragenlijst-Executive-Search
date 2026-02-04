@@ -1521,6 +1521,7 @@ h1 {
   right: calc(-140px - var(--outline-width));
   bottom: -24px;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent 80%);
+  mix-blend-mode: screen;
   pointer-events: none;
   z-index: -1;
   -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent);
