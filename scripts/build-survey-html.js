@@ -97,12 +97,13 @@ function renderField(field) {
     case 'number': {
       const compactClass = field.compact ? ' field-compact' : '';
       const groupEndClass = field.groupEnd ? ' field-group-end' : '';
+      const indentClass = field.indent ? ' field-indent' : '';
       const placeholder = field.placeholder ? ` placeholder="${field.placeholder}"` : '';
       const maxLength = field.maxLength ? ` maxlength="${field.maxLength}"` : '';
       const suffix = field.suffix ? `<span class="field-suffix">${field.suffix}</span>` : '';
       const hint = field.hint ? `\n            <span class="field-hint">${field.hint}</span>` : '';
       return `
-          <div class="field${compactClass}${groupEndClass}">
+          <div class="field${compactClass}${groupEndClass}${indentClass}">
             <label for="${field.name}">${field.label}</label>
             <div class="input-wrapper">
               <input type="text" inputmode="numeric" pattern="[0-9]*" id="${field.name}" name="${field.name}"${placeholder}${maxLength}>
@@ -131,8 +132,9 @@ function renderField(field) {
           </div>`;
     case 'checkbox': {
       const groupEndClass = field.groupEnd ? ' field-group-end' : '';
+      const indentClass = field.indent ? ' field-indent' : '';
       return `
-          <div class="field checkbox-field${groupEndClass}">
+          <div class="field checkbox-field${groupEndClass}${indentClass}">
             <label class="checkbox-label">
               <input type="checkbox" name="${field.name}">
               <span>${field.label}</span>

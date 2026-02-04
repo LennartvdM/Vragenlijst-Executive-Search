@@ -374,6 +374,10 @@ body {
   margin-bottom: 32px;
 }
 
+.field-indent {
+  padding-left: 24px;
+}
+
 /* Info block for definitions and explanatory text */
 .info-block {
   background: var(--sand-light);
