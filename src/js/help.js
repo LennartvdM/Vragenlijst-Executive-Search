@@ -193,14 +193,34 @@ function createPopoverElement(id, html) {
   pop.addEventListener('mouseleave', startClose);
 
   // Handle reveal sections inside popovers
-  // Reveals only collapse when a sibling is opened or the popover closes.
-  // Moving below the last reveal (still inside the popover) keeps it open.
+  // Reveals collapse on mouseleave with a delay, EXCEPT the bottom-most
+  // reveal ignores downward mouse exits (generous vertical safe zone).
   var reveals = pop.querySelectorAll('.ch-reveal');
+  var lastReveal = reveals[reveals.length - 1];
   reveals.forEach(function(reveal) {
+    var collapseTimer = null;
+
+    function scheduleCollapse() {
+      collapseTimer = setTimeout(function() {
+        reveal.classList.remove('is-expanded');
+        updateSafezone();
+        setTimeout(updateSafezone, 500);
+      }, 300);
+    }
+
+    function cancelCollapse() {
+      if (collapseTimer) {
+        clearTimeout(collapseTimer);
+        collapseTimer = null;
+      }
+    }
+
     reveal.addEventListener('mouseenter', function() {
+      cancelCollapse();
       // Collapse sibling reveals
       reveals.forEach(function(sib) {
         if (sib !== reveal) {
+          if (sib._cancelCollapse) sib._cancelCollapse();
           sib.classList.remove('is-expanded');
         }
       });
@@ -210,6 +230,19 @@ function createPopoverElement(id, html) {
       var frames = [150, 350, 600, 1050];
       frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
     });
+
+    reveal.addEventListener('mouseleave', function(e) {
+      // Bottom reveal: don't collapse if mouse went downward
+      if (reveal === lastReveal) {
+        var rect = reveal.getBoundingClientRect();
+        if (e.clientY >= rect.bottom - 2) {
+          return;
+        }
+      }
+      scheduleCollapse();
+    });
+
+    reveal._cancelCollapse = cancelCollapse;
   });
 
   popovers[id] = pop;
