@@ -1520,7 +1520,7 @@ h1 {
   left: -60px;
   right: calc(-140px - var(--outline-width));
   bottom: -24px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent 80%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), transparent 80%);
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: -1;
