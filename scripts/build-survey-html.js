@@ -176,16 +176,12 @@ function renderStep(step) {
   if (step.fields || step.likert) {
     content += `
         <div class="form-section">`;
-    if (step.likert) content += `
-          <div class="question-group">${renderLikertTable(step.likert)}</div>`;
-    if (step.fields) content += step.fields.map(f => `
-          <div class="question-group">${renderField(f)}</div>`).join('');
+    if (step.likert) content += renderLikertTable(step.likert);
+    if (step.fields) content += step.fields.map(f => renderField(f)).join('');
     if (step.toelichting) content += `
-          <div class="question-group">
           <div class="field">
             <label>Toelichting (optioneel)</label>
             <textarea name="${step.toelichting}" rows="3" placeholder="Licht uw antwoorden toe..."></textarea>
-          </div>
           </div>`;
     content += `
           <div class="comments-section">

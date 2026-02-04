@@ -1462,6 +1462,7 @@ h1 {
   width: 100%;
   min-width: 0;
   overflow: visible; /* Allow checkmarks to overflow */
+  isolation: isolate; /* Stacking context for question gradient pseudo-elements */
 }
 
 .form-section > * {
@@ -1485,15 +1486,29 @@ h1 {
 
 /* ==========================================================================
    Question Group Gradient
-   Subtle white-to-transparent gradient per question for visual separation
+   Subtle white-to-transparent gradient behind each question for visual separation.
+   Uses ::before so it has zero layout impact.
    ========================================================================== */
 
-.question-group {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent 70%);
-  mix-blend-mode: screen;
+.form-section > .field,
+.form-section > .question-header,
+.form-section > .likert-header {
+  position: relative;
+}
+
+.form-section > .field::before,
+.form-section > .question-header::before,
+.form-section > .likert-header::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -14px;
+  right: -14px;
+  bottom: -4px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent 80%);
   border-radius: 10px;
-  padding: 2px 16px 0;
-  margin: 0 -16px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ==========================================================================
@@ -2535,11 +2550,10 @@ input[inputmode="numeric"] {
   }
 
   /* Remove question gradients in print */
-  .question-group {
-    background: none !important;
-    padding: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+  .form-section > .field::before,
+  .form-section > .question-header::before,
+  .form-section > .likert-header::before {
+    display: none !important;
   }
 
   /* Form sections */
