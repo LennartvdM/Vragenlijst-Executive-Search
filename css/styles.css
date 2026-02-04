@@ -2190,6 +2190,7 @@ input[inputmode="numeric"] {
    Spacing between groups replaces the old .field-group-end margin. */
 .question-group {
   /* position: relative is set in the gradient section above */
+  padding-top: 12px;
   margin-bottom: 12px;
 }
 
