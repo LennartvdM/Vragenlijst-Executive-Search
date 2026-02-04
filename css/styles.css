@@ -1188,13 +1188,13 @@ body {
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
   padding-right: 40px; /* Space for checkmarks to overflow into */
-  /* Extend scroll container so its clip boundary (padding-box) reaches card edges.
-     This lets question gradient pseudo-elements extend edge-to-edge.
-     .content has padding: 20px right:60px left:20px — we absorb that here. */
-  margin-left: -20px;
-  margin-right: -60px;
-  padding-left: 20px;
-  padding-right: 100px; /* 40px original + 60px absorbed from .content */
+  /* Extend scroll container so its clip boundary (padding-box) reaches past
+     the card's outer stroke. .content has padding left:20px right:60px.
+     We absorb that plus --outline-width (6px) for the card stroke. */
+  margin-left: calc(-20px - var(--outline-width));
+  margin-right: calc(-60px - var(--outline-width));
+  padding-left: calc(20px + var(--outline-width));
+  padding-right: calc(100px + var(--outline-width)); /* 40px original + 60px content + stroke */
   /* Hide native scrollbar - we use custom one */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
@@ -1512,13 +1512,10 @@ h1 {
   content: '';
   position: absolute;
   top: -4px;
-  /* Scroll container clip boundary = its padding box.
-     .content-scrollable now extends via negative margins to card edges:
-     - left clip: 20px left of field (padding-left: 20px)
-     - right clip: 100px right of field (padding-right: 100px)
-     Extend 40px past each clip edge so the mask fade straddles the boundary. */
-  left: -60px;
-  right: -140px;
+  /* Scroll container clip = its padding box, which now extends past the card
+     stroke (20px + 6px left, 100px + 6px right). Extend 40px past each edge. */
+  left: calc(-60px - var(--outline-width));
+  right: calc(-140px - var(--outline-width));
   bottom: -24px;
   background: linear-gradient(to bottom, rgba(255, 0, 0, 0.5), transparent 80%);
   pointer-events: none;
