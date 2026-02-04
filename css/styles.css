@@ -1484,6 +1484,18 @@ h1 {
 }
 
 /* ==========================================================================
+   Question Group Gradient
+   Subtle white-to-transparent gradient per question for visual separation
+   ========================================================================== */
+
+.question-group {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent);
+  border-radius: 10px;
+  padding: 14px 16px 6px;
+  margin: 0 -16px 2px;
+}
+
+/* ==========================================================================
    Question Numbering
    ========================================================================== */
 
@@ -2519,6 +2531,14 @@ input[inputmode="numeric"] {
   .step[data-step="13"],
   .step[data-step="14"] {
     display: none !important;
+  }
+
+  /* Remove question gradients in print */
+  .question-group {
+    background: none !important;
+    padding: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
   /* Form sections */
