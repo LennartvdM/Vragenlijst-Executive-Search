@@ -193,47 +193,23 @@ function createPopoverElement(id, html) {
   pop.addEventListener('mouseleave', startClose);
 
   // Handle reveal sections inside popovers
-  // Each reveal gets a collapse delay so moving between reveals doesn't
-  // cause a chain reaction of collapsing/expanding content
+  // Reveals only collapse when a sibling is opened or the popover closes.
+  // Moving below the last reveal (still inside the popover) keeps it open.
   var reveals = pop.querySelectorAll('.ch-reveal');
   reveals.forEach(function(reveal) {
-    var collapseTimer = null;
-
-    function cancelCollapse() {
-      if (collapseTimer) {
-        clearTimeout(collapseTimer);
-        collapseTimer = null;
-      }
-    }
-
     reveal.addEventListener('mouseenter', function() {
-      cancelCollapse();
-      // Collapse sibling reveals and cancel their pending timers
+      // Collapse sibling reveals
       reveals.forEach(function(sib) {
         if (sib !== reveal) {
-          if (sib._cancelCollapse) sib._cancelCollapse();
           sib.classList.remove('is-expanded');
         }
       });
       reveal.classList.add('is-expanded');
-      // Recalculate safe zone immediately and keep recalculating as
-      // the grid transition runs, so the zone tracks the growing popover
+      // Recalculate safe zone as the grid transition runs
       updateSafezone();
       var frames = [150, 350, 600, 1050];
       frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
     });
-
-    reveal.addEventListener('mouseleave', function() {
-      collapseTimer = setTimeout(function() {
-        reveal.classList.remove('is-expanded');
-        updateSafezone();
-        var frames = [150, 350, 600, 1050];
-        frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
-      }, 300);
-    });
-
-    // Store cancel function so siblings can reach it
-    reveal._cancelCollapse = cancelCollapse;
   });
 
   popovers[id] = pop;
