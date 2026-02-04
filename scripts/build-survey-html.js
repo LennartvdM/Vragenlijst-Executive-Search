@@ -143,6 +143,31 @@ function renderField(field) {
   }
 }
 
+function renderFieldsWithGroups(fields) {
+  let html = '';
+  let i = 0;
+  while (i < fields.length) {
+    const field = fields[i];
+    if (field.group) {
+      // Collect all consecutive fields with the same group value
+      const groupName = field.group;
+      const groupFields = [];
+      while (i < fields.length && fields[i].group === groupName) {
+        groupFields.push(fields[i]);
+        i++;
+      }
+      html += `
+          <div class="question-group" data-group="${groupName}">` +
+        groupFields.map(f => renderField(f)).join('') + `
+          </div>`;
+    } else {
+      html += renderField(field);
+      i++;
+    }
+  }
+  return html;
+}
+
 function renderStep(step) {
   let content = '';
 
@@ -177,7 +202,7 @@ function renderStep(step) {
     content += `
         <div class="form-section">`;
     if (step.likert) content += renderLikertTable(step.likert);
-    if (step.fields) content += step.fields.map(f => renderField(f)).join('');
+    if (step.fields) content += renderFieldsWithGroups(step.fields);
     if (step.toelichting) content += `
           <div class="field">
             <label>Toelichting (optioneel)</label>

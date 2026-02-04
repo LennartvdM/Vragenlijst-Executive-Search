@@ -1503,13 +1503,15 @@ h1 {
 
 .form-section > .field:not(.checkbox-field),
 .form-section > .question-header,
-.form-section > .likert-header {
+.form-section > .likert-header,
+.form-section > .question-group {
   position: relative;
 }
 
 .form-section > .field:not(.checkbox-field)::before,
 .form-section > .question-header::before,
-.form-section > .likert-header::before {
+.form-section > .likert-header::before,
+.form-section > .question-group::before {
   content: '';
   position: absolute;
   top: -4px;
@@ -1523,11 +1525,6 @@ h1 {
   z-index: -1;
   -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent);
   mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent);
-}
-
-/* Extend gradient further when followed by a checkbox (e.g. "Ik heb een schatting gegeven") */
-.form-section > .field:has(+ .checkbox-field)::before {
-  bottom: -72px;
 }
 
 /* ==========================================================================
@@ -2188,34 +2185,11 @@ input[inputmode="numeric"] {
    Question Group Completion Effects - Lift & Shadow
    ========================================================================== */
 
-/* Question group wrapper for completion tracking */
+/* Question group wrapper — exists for shared gradient ::before.
+   Spacing between groups replaces the old .field-group-end margin. */
 .question-group {
-  position: relative;
-  margin-bottom: 20px;
-  padding: 16px;
-  margin-left: -16px;
-  margin-right: -16px;
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: transparent;
-}
-
-/* Lift effect for completed question groups */
-.question-group.complete {
-  background: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 20px rgba(var(--brown-rgb), 0.12), 0 2px 8px rgba(var(--brown-rgb), 0.08);
-  transform: translateY(-2px);
-}
-
-/* Subtle state for partial/conditional-incomplete groups */
-.question-group.conditional-incomplete {
-  background: rgba(var(--salmon-rgb), 0.06);
-  border: 1px dashed var(--salmon);
-}
-
-/* Option card enhancement when parent group is complete */
-.question-group.complete .option-card.selected {
-  box-shadow: 0 2px 12px rgba(var(--terracotta-rgb), 0.2);
+  /* position: relative is set in the gradient section above */
+  margin-bottom: 12px;
 }
 
 /* Completed section header gets extra visual polish */
@@ -2571,7 +2545,8 @@ input[inputmode="numeric"] {
   /* Remove question gradients in print */
   .form-section > .field:not(.checkbox-field)::before,
   .form-section > .question-header::before,
-  .form-section > .likert-header::before {
+  .form-section > .likert-header::before,
+  .form-section > .question-group::before {
     display: none !important;
   }
 
@@ -4171,12 +4146,9 @@ input[inputmode="numeric"] {
     font-size: 12px;
   }
 
-  /* Question groups */
+  /* Question groups — no extra spacing on mobile either */
   .question-group {
-    padding: 18px 16px;
-    margin-left: -16px;
-    margin-right: -16px;
-    border-radius: 0;
+    /* layout-invisible */
   }
 
   /* Info boxes */
