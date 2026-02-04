@@ -216,13 +216,19 @@ function createPopoverElement(id, html) {
         }
       });
       reveal.classList.add('is-expanded');
-      setTimeout(updateSafezone, 1050);
+      // Recalculate safe zone immediately and keep recalculating as
+      // the grid transition runs, so the zone tracks the growing popover
+      updateSafezone();
+      var frames = [150, 350, 600, 1050];
+      frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
     });
 
     reveal.addEventListener('mouseleave', function() {
       collapseTimer = setTimeout(function() {
         reveal.classList.remove('is-expanded');
-        setTimeout(updateSafezone, 1050);
+        updateSafezone();
+        var frames = [150, 350, 600, 1050];
+        frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
       }, 300);
     });
 
