@@ -4752,7 +4752,7 @@ body.mobile-drawer-open {
 .ch-reveal-body {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease;
+  transition: grid-template-rows 1.05s ease;
 }
 
 .ch-reveal.is-expanded .ch-reveal-body {
