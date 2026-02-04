@@ -1510,6 +1510,7 @@ h1 {
 .form-section > .likert-header,
 .form-section > .question-group {
   position: relative;
+  padding-top: 12px;
 }
 
 .form-section > .field:not(.checkbox-field)::before,
