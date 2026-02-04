@@ -1189,9 +1189,12 @@ body {
   padding-bottom: 24px;
   padding-right: 40px; /* Space for checkmarks to overflow into */
   /* Extend scroll container so its clip boundary (padding-box) reaches
-     the card's right edge. Left stays at sidebar edge.
-     .content has padding right:60px — we absorb that here. */
+     the card edges. .content has padding left:20px right:60px.
+     Left absorbs 20px to reach sidebar edge (not further).
+     Right absorbs 60px to reach card right edge. */
+  margin-left: -20px;
   margin-right: -60px;
+  padding-left: 20px;
   padding-right: 100px; /* 40px original + 60px absorbed from .content */
   /* Hide native scrollbar - we use custom one */
   scrollbar-width: none; /* Firefox */
@@ -1510,9 +1513,9 @@ h1 {
   content: '';
   position: absolute;
   top: -4px;
-  /* Left: small extension for mask fade (clip = field left edge).
-     Right: extend past card edge (clip = 100px right of field). */
-  left: -40px;
+  /* Left: clip = 20px left of field (sidebar edge). Extend 40px past for mask fade.
+     Right: clip = 100px right of field (card edge). Extend 40px past for mask fade. */
+  left: -60px;
   right: -140px;
   bottom: -24px;
   background: linear-gradient(to bottom, rgba(255, 0, 0, 0.5), transparent 80%);
