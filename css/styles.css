@@ -1485,9 +1485,10 @@ h1 {
 }
 
 /* ==========================================================================
-   Question Group Gradient
-   Subtle white-to-transparent gradient behind each question for visual separation.
-   Uses ::before so it has zero layout impact.
+   Question Group Gradient — "luxaflex" bands
+   Subtle white-to-transparent gradient behind each question.
+   Extends far left/right (clipped by .content-scrollable overflow-x: clip)
+   with a horizontal mask so bands fade in/out with no hard edges.
    ========================================================================== */
 
 .form-section > .field,
@@ -1502,13 +1503,14 @@ h1 {
   content: '';
   position: absolute;
   top: -4px;
-  left: -14px;
-  right: -14px;
+  left: -60px;
+  right: -120px;
   bottom: -4px;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent 80%);
-  border-radius: 10px;
   pointer-events: none;
   z-index: -1;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 100px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 100px), transparent);
 }
 
 /* ==========================================================================
