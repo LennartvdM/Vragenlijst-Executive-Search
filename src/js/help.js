@@ -208,20 +208,21 @@ function createPopoverElement(id, html) {
 
     reveal.addEventListener('mouseenter', function() {
       cancelCollapse();
-      // Cancel pending collapses on sibling reveals too
+      // Collapse sibling reveals and cancel their pending timers
       reveals.forEach(function(sib) {
-        if (sib !== reveal && sib._cancelCollapse) {
-          sib._cancelCollapse();
+        if (sib !== reveal) {
+          if (sib._cancelCollapse) sib._cancelCollapse();
+          sib.classList.remove('is-expanded');
         }
       });
       reveal.classList.add('is-expanded');
-      setTimeout(updateSafezone, 380);
+      setTimeout(updateSafezone, 1050);
     });
 
     reveal.addEventListener('mouseleave', function() {
       collapseTimer = setTimeout(function() {
         reveal.classList.remove('is-expanded');
-        setTimeout(updateSafezone, 380);
+        setTimeout(updateSafezone, 1050);
       }, 300);
     });
 
