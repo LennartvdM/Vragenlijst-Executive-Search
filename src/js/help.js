@@ -193,11 +193,20 @@ function createPopoverElement(id, html) {
   pop.addEventListener('mouseleave', startClose);
 
   // Handle reveal sections inside popovers
-  // Each reveal gets a collapse delay so moving between reveals doesn't
-  // cause a chain reaction of collapsing/expanding content
+  // Reveals collapse on mouseleave with a delay, EXCEPT the bottom-most
+  // reveal ignores downward mouse exits (generous vertical safe zone).
   var reveals = pop.querySelectorAll('.ch-reveal');
+  var lastReveal = reveals[reveals.length - 1];
   reveals.forEach(function(reveal) {
     var collapseTimer = null;
+
+    function scheduleCollapse() {
+      collapseTimer = setTimeout(function() {
+        reveal.classList.remove('is-expanded');
+        updateSafezone();
+        setTimeout(updateSafezone, 500);
+      }, 300);
+    }
 
     function cancelCollapse() {
       if (collapseTimer) {
@@ -208,7 +217,7 @@ function createPopoverElement(id, html) {
 
     reveal.addEventListener('mouseenter', function() {
       cancelCollapse();
-      // Collapse sibling reveals and cancel their pending timers
+      // Collapse sibling reveals
       reveals.forEach(function(sib) {
         if (sib !== reveal) {
           if (sib._cancelCollapse) sib._cancelCollapse();
@@ -216,23 +225,23 @@ function createPopoverElement(id, html) {
         }
       });
       reveal.classList.add('is-expanded');
-      // Recalculate safe zone immediately and keep recalculating as
-      // the grid transition runs, so the zone tracks the growing popover
+      // Recalculate safe zone as the grid transition runs
       updateSafezone();
       var frames = [150, 350, 600, 1050];
       frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
     });
 
-    reveal.addEventListener('mouseleave', function() {
-      collapseTimer = setTimeout(function() {
-        reveal.classList.remove('is-expanded');
-        updateSafezone();
-        var frames = [150, 350, 600, 1050];
-        frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
-      }, 300);
+    reveal.addEventListener('mouseleave', function(e) {
+      // Bottom reveal: don't collapse if mouse went downward
+      if (reveal === lastReveal) {
+        var rect = reveal.getBoundingClientRect();
+        if (e.clientY >= rect.bottom - 2) {
+          return;
+        }
+      }
+      scheduleCollapse();
     });
 
-    // Store cancel function so siblings can reach it
     reveal._cancelCollapse = cancelCollapse;
   });
 
