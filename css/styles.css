@@ -1599,6 +1599,10 @@ h1 {
    Survey Page - Option Cards
    ========================================================================== */
 
+.option-cards {
+  margin-bottom: 16px;
+}
+
 .option-card {
   border: 2px solid var(--sand-dark);
   border-radius: 10px;
