@@ -355,7 +355,7 @@ function cancelClose() {
 // ============================================================================
 
 function injectStep2Help() {
-  var step = document.querySelector('[data-step="2"]');
+  var step = document.querySelector('.step[data-step="2"]');
   if (!step) return;
 
   var subtitle = step.querySelector('.subtitle');
@@ -368,7 +368,7 @@ function injectStep2Help() {
 }
 
 function injectStep3Help() {
-  var step = document.querySelector('[data-step="3"]');
+  var step = document.querySelector('.step[data-step="3"]');
   if (!step) return;
 
   var subtitle = step.querySelector('.subtitle');
@@ -381,7 +381,7 @@ function injectStep3Help() {
 }
 
 function injectStep5LikertHelp() {
-  var step = document.querySelector('[data-step="5"]');
+  var step = document.querySelector('.step[data-step="5"]');
   if (!step) return;
 
   var likertHeader = step.querySelector('.likert-header');
@@ -396,7 +396,7 @@ function injectStep5LikertHelp() {
 function injectDeptHelp() {
   // Add "Verschilt het per afdeling?" to all Likert steps (5-10)
   for (var stepId = 5; stepId <= 10; stepId++) {
-    var step = document.querySelector('[data-step="' + stepId + '"]');
+    var step = document.querySelector('.step[data-step="' + stepId + '"]');
     if (!step) continue;
 
     var likertHeader = step.querySelector('.likert-header');
