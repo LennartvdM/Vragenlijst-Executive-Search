@@ -74,15 +74,15 @@ export const SURVEY_STEPS = [
     sectionNum: '2',
     subtitle: 'Kwantitatieve gegevens over uw organisatie (per 31 december 2026)',
     fields: [
-      { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>' },
-      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
-      { type: 'checkbox', name: 'werknemers_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', groupEnd: true },
-      { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>' },
-      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
-      { type: 'checkbox', name: 'top_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', groupEnd: true },
-      { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>' },
-      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.' },
-      { type: 'checkbox', name: 'subtop_buiten_europa_schatting', label: 'Ik heb een schatting gegeven' }
+      { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>', group: 'werknemers' },
+      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'werknemers' },
+      { type: 'checkbox', name: 'werknemers_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'werknemers' },
+      { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>', group: 'top' },
+      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'top' },
+      { type: 'checkbox', name: 'top_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'top' },
+      { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>', group: 'subtop' },
+      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'subtop' },
+      { type: 'checkbox', name: 'subtop_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'subtop' }
     ]
   },
   {
