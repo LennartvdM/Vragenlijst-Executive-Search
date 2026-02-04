@@ -4381,16 +4381,16 @@ body.mobile-drawer-open {
     transform: translate(0, 0) scale(1);
   }
   20% {
-    transform: translate(15px, -20px) scale(1.03);
+    transform: translate(15px, -20px) scale(1.029);
   }
   40% {
-    transform: translate(-10px, -13px) scale(1);
+    transform: translate(-10px, -13px) scale(1.018);
   }
   60% {
-    transform: translate(-20px, 10px) scale(0.97);
+    transform: translate(-20px, 10px) scale(0.982);
   }
   80% {
-    transform: translate(8px, 15px) scale(1);
+    transform: translate(8px, 15px) scale(0.971);
   }
 }
 
@@ -4414,10 +4414,13 @@ body.mobile-drawer-open {
     transform: translate(0, 0) scale(1);
   }
   30% {
-    transform: translate(13px, 18px) scale(1.03);
+    transform: translate(13px, 18px) scale(1.029);
   }
   60% {
-    transform: translate(-15px, -8px) scale(0.97);
+    transform: translate(-15px, -8px) scale(0.982);
+  }
+  85% {
+    transform: translate(-5px, -3px) scale(0.976);
   }
 }
 
