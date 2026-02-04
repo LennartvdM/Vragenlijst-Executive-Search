@@ -1140,7 +1140,6 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow-x: clip; /* Contain question gradients within card boundary */
 }
 
 /* Progress dots at very top of content */
@@ -1185,7 +1184,6 @@ body {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: clip; /* Clip but allow positioned elements to paint outside */
-  overflow-clip-margin: content-box 400px; /* Extend x-clip for question gradients */
   scroll-behavior: smooth;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
@@ -1507,14 +1505,19 @@ h1 {
   content: '';
   position: absolute;
   top: -4px;
-  left: -400px;
-  right: -400px;
+  /* Extend just past scroll container clip edges so mask fade straddles them:
+     - left: no padding on .content-scrollable, so clip = field left edge
+     - right: .content-scrollable has padding-right: 40px, so clip = field right + 40px
+     Extending ~40px beyond each clip edge; mask fade (80px) straddles the boundary
+     so ~40px of the fade is clipped away and ~40px is visible = smooth edge */
+  left: -40px;
+  right: -80px;
   bottom: -24px;
   background: linear-gradient(to bottom, rgba(255, 0, 0, 0.5), transparent 80%);
   pointer-events: none;
   z-index: -1;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 120px, black calc(100% - 120px), transparent);
-  mask-image: linear-gradient(to right, transparent, black 120px, black calc(100% - 120px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent);
 }
 
 /* Extend gradient further when followed by a checkbox (e.g. "Ik heb een schatting gegeven") */
