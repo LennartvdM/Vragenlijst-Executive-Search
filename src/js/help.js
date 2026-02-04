@@ -162,11 +162,17 @@ function createSafezone() {
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
-  var margin = 30;
-  safezoneEl.style.left = (rect.left - margin) + 'px';
-  safezoneEl.style.top = (rect.top - margin) + 'px';
-  safezoneEl.style.width = (rect.width + margin * 2) + 'px';
-  safezoneEl.style.height = (rect.height + margin * 2) + 'px';
+  var hMargin = Math.max(20, rect.width * 0.08);  // 5-10% horizontal
+  var topMargin = 20;
+
+  // Extend vertically all the way to the bottom of the viewport
+  // so the mouse can drift down freely while reading expanding content
+  var bottomExtent = window.innerHeight - rect.bottom;
+
+  safezoneEl.style.left = (rect.left - hMargin) + 'px';
+  safezoneEl.style.top = (rect.top - topMargin) + 'px';
+  safezoneEl.style.width = (rect.width + hMargin * 2) + 'px';
+  safezoneEl.style.height = (rect.height + topMargin + bottomExtent) + 'px';
   safezoneEl.classList.add('is-visible');
 }
 
