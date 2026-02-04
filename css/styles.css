@@ -783,6 +783,7 @@ body {
   flex-direction: column;
   border-radius: 12px 0 0 12px;
   position: relative; /* For highlighter positioning */
+  z-index: 1; /* Above content so question gradients slide under sidebar */
   overflow: visible; /* Allow outcrop to extend left */
   user-select: none;
 }
@@ -1139,6 +1140,7 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow-x: clip; /* Contain question gradients within card boundary */
 }
 
 /* Progress dots at very top of content */
@@ -1183,6 +1185,7 @@ body {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: clip; /* Clip but allow positioned elements to paint outside */
+  overflow-clip-margin: content-box 400px; /* Extend x-clip for question gradients */
   scroll-behavior: smooth;
   /* Vertical spacing - tighter at top, relaxed at bottom */
   padding-bottom: 24px;
@@ -1487,30 +1490,36 @@ h1 {
 /* ==========================================================================
    Question Group Gradient — "luxaflex" bands
    Subtle white-to-transparent gradient behind each question.
-   Extends far left/right (clipped by .content-scrollable overflow-x: clip)
-   with a horizontal mask so bands fade in/out with no hard edges.
+   Extends far left (under sidebar, masked by its z-index) and far right
+   (contained by .content overflow-x: clip). Horizontal mask fades edges
+   so bands appear to have no beginning or end.
    ========================================================================== */
 
-.form-section > .field,
+.form-section > .field:not(.checkbox-field),
 .form-section > .question-header,
 .form-section > .likert-header {
   position: relative;
 }
 
-.form-section > .field::before,
+.form-section > .field:not(.checkbox-field)::before,
 .form-section > .question-header::before,
 .form-section > .likert-header::before {
   content: '';
   position: absolute;
   top: -4px;
-  left: -60px;
-  right: -120px;
-  bottom: -4px;
+  left: -400px;
+  right: -400px;
+  bottom: -24px;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), transparent 80%);
   pointer-events: none;
   z-index: -1;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 100px), transparent);
-  mask-image: linear-gradient(to right, transparent, black 80px, black calc(100% - 100px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 120px, black calc(100% - 120px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 120px, black calc(100% - 120px), transparent);
+}
+
+/* Extend gradient further when followed by a checkbox (e.g. "Ik heb een schatting gegeven") */
+.form-section > .field:has(+ .checkbox-field)::before {
+  bottom: -72px;
 }
 
 /* ==========================================================================
@@ -2552,7 +2561,7 @@ input[inputmode="numeric"] {
   }
 
   /* Remove question gradients in print */
-  .form-section > .field::before,
+  .form-section > .field:not(.checkbox-field)::before,
   .form-section > .question-header::before,
   .form-section > .likert-header::before {
     display: none !important;
