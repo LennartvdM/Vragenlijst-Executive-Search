@@ -14,6 +14,7 @@ import * as likert from './likert.js';
 import * as review from './review.js';
 import * as utils from './utils.js';
 import * as print from './print.js';
+import * as help from './help.js';
 
 // Note: CSS is handled separately via link tags in HTML
 
@@ -67,6 +68,9 @@ function initSurvey() {
 
   // Initialize date picker
   utils.initDatePicker();
+
+  // Initialize contextual help popovers
+  help.initHelp();
 
   // Setup sidebar privacy link
   const privacyLink = document.getElementById('sidebarPrivacyLink');
