@@ -1189,11 +1189,9 @@ body {
   padding-bottom: 24px;
   padding-right: 40px; /* Space for checkmarks to overflow into */
   /* Extend scroll container so its clip boundary (padding-box) reaches past
-     the card's outer stroke. .content has padding left:20px right:60px.
-     We absorb that plus --outline-width (6px) for the card stroke. */
-  margin-left: calc(-20px - var(--outline-width));
+     the card's outer stroke on the RIGHT only. Left stays at sidebar edge.
+     .content has padding left:20px right:60px. */
   margin-right: calc(-60px - var(--outline-width));
-  padding-left: calc(20px + var(--outline-width));
   padding-right: calc(100px + var(--outline-width)); /* 40px original + 60px content + stroke */
   /* Hide native scrollbar - we use custom one */
   scrollbar-width: none; /* Firefox */
@@ -1512,9 +1510,9 @@ h1 {
   content: '';
   position: absolute;
   top: -4px;
-  /* Scroll container clip = its padding box, which now extends past the card
-     stroke (20px + 6px left, 100px + 6px right). Extend 40px past each edge. */
-  left: calc(-60px - var(--outline-width));
+  /* Left: small extension for mask fade (clip = field left edge).
+     Right: extend past card stroke (clip = 100px + outline-width right of field). */
+  left: -40px;
   right: calc(-140px - var(--outline-width));
   bottom: -24px;
   background: linear-gradient(to bottom, rgba(255, 0, 0, 0.5), transparent 80%);
