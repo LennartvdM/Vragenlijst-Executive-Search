@@ -4378,46 +4378,46 @@ body.mobile-drawer-open {
 /* Gentle floating animations - serene blob-like paths */
 @keyframes float-1 {
   0%, 100% {
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
   }
   20% {
-    transform: translate(15px, -20px);
+    transform: translate(15px, -20px) scale(1.03);
   }
   40% {
-    transform: translate(-10px, -13px);
+    transform: translate(-10px, -13px) scale(1);
   }
   60% {
-    transform: translate(-20px, 10px);
+    transform: translate(-20px, 10px) scale(0.97);
   }
   80% {
-    transform: translate(8px, 15px);
+    transform: translate(8px, 15px) scale(1);
   }
 }
 
 @keyframes float-2 {
   0%, 100% {
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
   }
   25% {
-    transform: translate(-18px, -10px);
+    transform: translate(-18px, -10px) scale(1.03);
   }
   50% {
-    transform: translate(13px, -23px);
+    transform: translate(13px, -23px) scale(1);
   }
   75% {
-    transform: translate(-8px, 13px);
+    transform: translate(-8px, 13px) scale(0.97);
   }
 }
 
 @keyframes float-3 {
   0%, 100% {
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
   }
   30% {
-    transform: translate(13px, 18px);
+    transform: translate(13px, 18px) scale(1.03);
   }
   60% {
-    transform: translate(-15px, -8px);
+    transform: translate(-15px, -8px) scale(0.97);
   }
 }
 
