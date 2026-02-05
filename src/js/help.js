@@ -19,6 +19,7 @@ let activePopoverId = null;
 let activeTriggerEl = null;
 let safezoneEl = null;
 let blurLayerEl = null;
+let triggerCloneEl = null;
 let closeTimer = null;
 let scrollEl = null;
 
@@ -190,6 +191,31 @@ function createBlurLayer() {
   document.body.appendChild(blurLayerEl);
 }
 
+function createTriggerClone() {
+  triggerCloneEl = document.createElement('span');
+  triggerCloneEl.className = 'ch-trigger-clone';
+  document.body.appendChild(triggerCloneEl);
+
+  triggerCloneEl.addEventListener('mouseenter', cancelClose);
+  triggerCloneEl.addEventListener('mouseleave', startClose);
+}
+
+function showTriggerClone(trigger) {
+  if (!triggerCloneEl || !trigger) return;
+
+  var rect = trigger.getBoundingClientRect();
+  triggerCloneEl.textContent = trigger.textContent;
+  triggerCloneEl.style.left = rect.left + 'px';
+  triggerCloneEl.style.top = rect.top + 'px';
+  triggerCloneEl.classList.add('is-visible');
+}
+
+function hideTriggerClone() {
+  if (triggerCloneEl) {
+    triggerCloneEl.classList.remove('is-visible');
+  }
+}
+
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
@@ -335,10 +361,11 @@ function showPopover(id, trigger) {
   activePopoverId = id;
   activeTriggerEl = trigger;
 
-  // Activate blur layer
+  // Activate blur layer and show trigger clone above it
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
   }
+  showTriggerClone(trigger);
 
   requestAnimationFrame(function() {
     positionSafezone(pop);
@@ -421,6 +448,8 @@ function closeActivePopover() {
   if (blurLayerEl) {
     blurLayerEl.classList.remove('is-active');
   }
+
+  hideTriggerClone();
 }
 
 function startClose() {
@@ -513,6 +542,7 @@ export function initHelp() {
   // Create shared infrastructure
   createSafezone();
   createBlurLayer();
+  createTriggerClone();
 
   // Create popovers (shared across triggers)
   createPopoverElement('cbs', getCBSContent());

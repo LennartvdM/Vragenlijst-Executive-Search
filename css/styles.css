@@ -4694,6 +4694,26 @@ body.mobile-drawer-open {
   font-size: 13px;
 }
 
+/* Trigger clone - sits above blur layer */
+.ch-trigger-clone {
+  position: fixed;
+  z-index: 7999;
+  color: var(--text);
+  font-weight: 400;
+  border-bottom: 1px solid var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: auto;
+  transition: opacity 0.15s ease;
+}
+
+.ch-trigger-clone.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Popover panel */
 .ch-popover {
   position: fixed;
@@ -4724,6 +4744,16 @@ body.mobile-drawer-open {
   opacity: 1;
   visibility: visible;
   display: block;
+  animation: ch-mask-reveal 0.3s ease-out forwards;
+}
+
+@keyframes ch-mask-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 /* Arrow down (popover above trigger) */
