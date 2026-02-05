@@ -4688,6 +4688,12 @@ body.mobile-drawer-open {
   opacity: 1;
 }
 
+/* Hide original trigger when clone is visible (blur layer active) */
+.ch-blur-layer.is-active ~ * .ch-trigger.is-active,
+body:has(.ch-blur-layer.is-active) .ch-trigger.is-active {
+  opacity: 0;
+}
+
 .ch-trigger-sep {
   color: var(--text-light);
   opacity: 0.4;
@@ -4749,10 +4755,10 @@ body.mobile-drawer-open {
 
 @keyframes ch-mask-reveal {
   from {
-    clip-path: inset(0 0 100% 0);
+    clip-path: inset(0 0 100% 0 round 14px);
   }
   to {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0 round 14px);
   }
 }
 
