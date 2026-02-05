@@ -4693,6 +4693,11 @@ body.mobile-drawer-open {
   opacity: 0;
 }
 
+/* Inactive triggers stay visible (but blurred) when blur layer is active */
+body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
+  opacity: 1;
+}
+
 /* Clone of active trigger - sits above blur layer */
 .ch-trigger-clone {
   position: fixed;
