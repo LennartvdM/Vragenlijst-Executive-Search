@@ -203,6 +203,11 @@ function createTriggerClone() {
 function showTriggerClone(trigger) {
   if (!triggerCloneEl || !trigger) return;
 
+  // If trigger is already inside the clone container, don't re-clone
+  if (trigger.closest('.ch-trigger-clone-container')) {
+    return;
+  }
+
   // Find the parent container that holds all triggers (the span inside likert-header)
   var parent = trigger.parentElement;
   if (!parent) return;
