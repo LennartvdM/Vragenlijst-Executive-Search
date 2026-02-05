@@ -4716,18 +4716,19 @@ body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
   visibility: visible;
 }
 
-/* Style cloned triggers - always visible above blur */
+/* Cloned triggers - ensure visibility, keep normal appearance */
 .ch-trigger-clone-container .ch-trigger {
+  opacity: 0.7 !important;
+  visibility: visible !important;
+}
+
+/* Active/hover state for cloned triggers */
+.ch-trigger-clone-container .ch-trigger:hover,
+.ch-trigger-clone-container .ch-trigger.is-active {
   color: var(--text);
   border-bottom-style: solid;
   border-bottom-color: var(--text);
   opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.ch-trigger-clone-container .ch-trigger:hover {
-  color: var(--terracotta);
-  border-bottom-color: var(--terracotta);
 }
 
 /* Popover panel */
