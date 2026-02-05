@@ -4688,10 +4688,11 @@ body.mobile-drawer-open {
   opacity: 1;
 }
 
-/* Hide ALL original triggers when blur layer is active (clones take over) */
+/* Elevate triggers above blur layer when active */
 body:has(.ch-blur-layer.is-active) .likert-header .ch-trigger,
 body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
-  opacity: 0;
+  position: relative;
+  z-index: 7999;
 }
 
 .ch-trigger-sep {
@@ -4700,44 +4701,10 @@ body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
   font-size: 13px;
 }
 
-/* Trigger clone container - sits above blur layer */
-.ch-trigger-clone-container {
-  position: fixed;
+/* Also elevate separator when blur is active */
+body:has(.ch-blur-layer.is-active) .ch-trigger-sep {
+  position: relative;
   z-index: 7999;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  /* Font properties set dynamically from parent to match exactly */
-}
-
-.ch-trigger-clone-container.is-visible {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-/* Cloned triggers - reset all styles to prevent inheritance issues */
-.ch-trigger-clone-container .ch-trigger {
-  color: var(--text-light) !important;
-  border-bottom: 1px dashed rgba(122, 101, 85, 0.4) !important;
-  opacity: 0.7 !important;
-  visibility: visible !important;
-  transition: none !important;
-}
-
-/* Active/hover state for cloned triggers - only the specific one */
-.ch-trigger-clone-container .ch-trigger:hover {
-  color: var(--text) !important;
-  border-bottom-style: solid !important;
-  border-bottom-color: var(--text) !important;
-  opacity: 1 !important;
-}
-
-.ch-trigger-clone-container .ch-trigger.is-active {
-  color: var(--text) !important;
-  border-bottom-style: solid !important;
-  border-bottom-color: var(--text) !important;
-  opacity: 1 !important;
 }
 
 /* Popover panel */
