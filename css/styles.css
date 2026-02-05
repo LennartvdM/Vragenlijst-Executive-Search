@@ -4707,20 +4707,23 @@ body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
   font-size: 13px;
   opacity: 0;
   visibility: hidden;
-  pointer-events: auto;
-  transition: opacity 0.15s ease;
+  pointer-events: none;
+  transition: none;
 }
 
 .ch-trigger-clone-container.is-visible {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
-/* Cloned triggers - ensure visibility, no transitions */
+/* Cloned triggers - ensure visibility and stable positioning */
 .ch-trigger-clone-container .ch-trigger {
   opacity: 0.7 !important;
   visibility: visible !important;
   transition: none !important;
+  display: inline !important;
+  vertical-align: baseline !important;
 }
 
 /* Active/hover state for cloned triggers */
