@@ -4688,9 +4688,9 @@ body.mobile-drawer-open {
   opacity: 1;
 }
 
-/* Hide original trigger when clone is visible (blur layer active) */
-.ch-blur-layer.is-active ~ * .ch-trigger.is-active,
-body:has(.ch-blur-layer.is-active) .ch-trigger.is-active {
+/* Hide ALL original triggers when blur layer is active (clones take over) */
+body:has(.ch-blur-layer.is-active) .likert-header .ch-trigger,
+body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
   opacity: 0;
 }
 
@@ -4716,12 +4716,13 @@ body:has(.ch-blur-layer.is-active) .ch-trigger.is-active {
   visibility: visible;
 }
 
-/* Style cloned triggers to look active */
+/* Style cloned triggers - always visible above blur */
 .ch-trigger-clone-container .ch-trigger {
   color: var(--text);
   border-bottom-style: solid;
   border-bottom-color: var(--text);
-  opacity: 1;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .ch-trigger-clone-container .ch-trigger:hover {
