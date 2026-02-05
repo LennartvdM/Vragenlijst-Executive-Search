@@ -19,6 +19,7 @@ let activePopoverId = null;
 let activeTriggerEl = null;
 let safezoneEl = null;
 let blurLayerEl = null;
+let triggerCloneEl = null;
 let closeTimer = null;
 let scrollEl = null;
 
@@ -190,6 +191,53 @@ function createBlurLayer() {
   document.body.appendChild(blurLayerEl);
 }
 
+// Single reusable clone element - created once, repositioned as needed
+function createTriggerClone() {
+  triggerCloneEl = document.createElement('span');
+  triggerCloneEl.className = 'ch-trigger-clone';
+  document.body.appendChild(triggerCloneEl);
+
+  // Event listeners attached once - these never change
+  triggerCloneEl.addEventListener('mouseenter', cancelClose);
+  triggerCloneEl.addEventListener('mouseleave', startClose);
+  triggerCloneEl.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (activePopoverId) {
+      closeActivePopover();
+    }
+  });
+}
+
+// Position clone exactly over the active trigger
+function showTriggerClone(trigger) {
+  if (!triggerCloneEl || !trigger) return;
+
+  var rect = trigger.getBoundingClientRect();
+  var style = window.getComputedStyle(trigger);
+
+  triggerCloneEl.textContent = trigger.textContent;
+  triggerCloneEl.style.left = rect.left + 'px';
+  triggerCloneEl.style.top = rect.top + 'px';
+  triggerCloneEl.style.fontSize = style.fontSize;
+  triggerCloneEl.style.fontFamily = style.fontFamily;
+  triggerCloneEl.style.fontWeight = style.fontWeight;
+  triggerCloneEl.classList.add('is-visible');
+
+  // Hide original
+  trigger.classList.add('is-hidden');
+}
+
+function hideTriggerClone() {
+  if (triggerCloneEl) {
+    triggerCloneEl.classList.remove('is-visible');
+  }
+  // Restore original - activeTriggerEl might already be null during close
+  if (activeTriggerEl) {
+    activeTriggerEl.classList.remove('is-hidden');
+  }
+}
+
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
@@ -342,10 +390,11 @@ function showPopover(id, trigger) {
   activePopoverId = id;
   activeTriggerEl = trigger;
 
-  // Activate blur layer - triggers elevate above it via CSS
+  // Activate blur layer and show clone above it
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
   }
+  showTriggerClone(trigger);
 
   requestAnimationFrame(function() {
     positionSafezone(pop);
@@ -422,6 +471,7 @@ function closeActivePopover() {
   if (blurLayerEl) {
     blurLayerEl.classList.remove('is-active');
   }
+  hideTriggerClone();
 }
 
 function startClose() {
@@ -510,6 +560,7 @@ export function initHelp() {
 
   createSafezone();
   createBlurLayer();
+  createTriggerClone();
 
   createPopoverElement('cbs', getCBSContent());
   createPopoverElement('likert', getLikertContent());

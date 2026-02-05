@@ -4688,11 +4688,29 @@ body.mobile-drawer-open {
   opacity: 1;
 }
 
-/* Elevate trigger containers above blur layer when active */
-body:has(.ch-blur-layer.is-active) .likert-header,
-body:has(.ch-blur-layer.is-active) .ch-help-bar {
-  position: relative;
+/* Hide original trigger when clone is shown */
+.ch-trigger.is-hidden {
+  opacity: 0;
+}
+
+/* Clone of active trigger - sits above blur layer */
+.ch-trigger-clone {
+  position: fixed;
   z-index: 7999;
+  color: var(--text);
+  border-bottom: 1px solid var(--text);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ch-trigger-clone.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .ch-trigger-sep {
