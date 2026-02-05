@@ -80,26 +80,50 @@ function getLikertContent() {
   return `
     <p class="ch-lead">De vier niveaus beschrijven de fase waarin uw organisatie zit. Het is geen rapportcijfer.</p>
     <div class="ch-divider"></div>
-    <div class="ch-scale">
-      <div class="ch-scale-item">
-        <span class="ch-scale-badge ch-badge-0">Niet</span>
-        <span class="ch-scale-quote">\u201cWe verkennen de mogelijkheden\u201d</span>
-        <span class="ch-scale-desc">Er is een voornemen, maar concrete stappen moeten nog komen.</span>
+    <div class="ch-scale ch-scale-accordion">
+      <div class="ch-reveal ch-scale-reveal">
+        <span class="ch-reveal-label ch-scale-label">
+          <span class="ch-scale-badge ch-badge-0">Niet</span>
+          <span class="ch-scale-label-quote">\u201cWe verkennen de mogelijkheden\u201d</span>
+        </span>
+        <div class="ch-reveal-body">
+          <div class="ch-reveal-inner">
+            <p class="ch-scale-detail">Er is een voornemen, maar concrete stappen moeten nog komen.</p>
+          </div>
+        </div>
       </div>
-      <div class="ch-scale-item">
-        <span class="ch-scale-badge ch-badge-1">Enigszins</span>
-        <span class="ch-scale-quote">\u201cWe zijn gestart\u201d</span>
-        <span class="ch-scale-desc">Er is een plan, een pilot, een eerste actie. Het is nog pril.</span>
+      <div class="ch-reveal ch-scale-reveal">
+        <span class="ch-reveal-label ch-scale-label">
+          <span class="ch-scale-badge ch-badge-1">Enigszins</span>
+          <span class="ch-scale-label-quote">\u201cWe zijn gestart\u201d</span>
+        </span>
+        <div class="ch-reveal-body">
+          <div class="ch-reveal-inner">
+            <p class="ch-scale-detail">Er is een plan, een pilot, een eerste actie. Het is nog pril.</p>
+          </div>
+        </div>
       </div>
-      <div class="ch-scale-item">
-        <span class="ch-scale-badge ch-badge-2">Grotendeels</span>
-        <span class="ch-scale-quote">\u201cHet werk is in volle gang\u201d</span>
-        <span class="ch-scale-desc">Het loopt. Niet perfect, maar het is praktijk, geen project meer.</span>
+      <div class="ch-reveal ch-scale-reveal">
+        <span class="ch-reveal-label ch-scale-label">
+          <span class="ch-scale-badge ch-badge-2">Grotendeels</span>
+          <span class="ch-scale-label-quote">\u201cHet werk is in volle gang\u201d</span>
+        </span>
+        <div class="ch-reveal-body">
+          <div class="ch-reveal-inner">
+            <p class="ch-scale-detail">Het loopt. Niet perfect, maar het is praktijk, geen project meer.</p>
+          </div>
+        </div>
       </div>
-      <div class="ch-scale-item">
-        <span class="ch-scale-badge ch-badge-3">Volledig</span>
-        <span class="ch-scale-quote">\u201cWe hebben het in de vingers\u201d</span>
-        <span class="ch-scale-desc">Verankerd, gemonitord, continu verbeterd. Structureel geborgd.</span>
+      <div class="ch-reveal ch-scale-reveal">
+        <span class="ch-reveal-label ch-scale-label">
+          <span class="ch-scale-badge ch-badge-3">Volledig</span>
+          <span class="ch-scale-label-quote">\u201cWe hebben het in de vingers\u201d</span>
+        </span>
+        <div class="ch-reveal-body">
+          <div class="ch-reveal-inner">
+            <p class="ch-scale-detail">Verankerd, gemonitord, continu verbeterd. Structureel geborgd.</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="ch-divider"></div>
