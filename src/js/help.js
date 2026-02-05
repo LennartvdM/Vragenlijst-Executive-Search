@@ -397,16 +397,16 @@ function positionPopoverNear(trigger, pop) {
     }
     pop.classList.add('ch-arrow-up');
   } else {
-    // Prefer above trigger, centered
+    // Prefer below trigger (matches mask reveal animation direction)
     left = rect.left + (rect.width / 2) - (popWidth / 2);
-    top = rect.top - popHeight - 12;
+    top = rect.bottom + 12;
 
-    if (top < 16) {
-      // Not enough room above, show below
-      top = rect.bottom + 12;
-      pop.classList.add('ch-arrow-up');
-    } else {
+    if (top + popHeight > window.innerHeight - 16) {
+      // Not enough room below, show above
+      top = rect.top - popHeight - 12;
       pop.classList.remove('ch-arrow-up');
+    } else {
+      pop.classList.add('ch-arrow-up');
     }
   }
 

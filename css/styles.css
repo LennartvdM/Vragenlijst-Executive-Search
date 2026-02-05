@@ -4755,10 +4755,10 @@ body:has(.ch-blur-layer.is-active) .ch-trigger.is-active {
 
 @keyframes ch-mask-reveal {
   from {
-    clip-path: inset(0 0 100% 0 round 14px);
+    clip-path: inset(-50px -50px calc(100% + 50px) -50px round 14px);
   }
   to {
-    clip-path: inset(0 0 0 0 round 14px);
+    clip-path: inset(-50px -50px -50px -50px round 14px);
   }
 }
 
