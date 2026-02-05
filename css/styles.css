@@ -4830,7 +4830,7 @@ body.mobile-drawer-open {
 
 .ch-reveal.is-expanded .ch-reveal-body {
   grid-template-rows: 1fr;
-  transition: grid-template-rows 0.15s ease-out;
+  transition: grid-template-rows 0.25s ease;
 }
 
 .ch-reveal-inner {
