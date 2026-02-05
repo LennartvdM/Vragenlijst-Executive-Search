@@ -4716,10 +4716,11 @@ body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
   visibility: visible;
 }
 
-/* Cloned triggers - ensure visibility, keep normal appearance */
+/* Cloned triggers - ensure visibility, no transitions */
 .ch-trigger-clone-container .ch-trigger {
   opacity: 0.7 !important;
   visibility: visible !important;
+  transition: none !important;
 }
 
 /* Active/hover state for cloned triggers */
