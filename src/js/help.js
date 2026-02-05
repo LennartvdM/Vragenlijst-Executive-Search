@@ -447,6 +447,9 @@ function positionPopoverNear(trigger, pop) {
 function closeActivePopover() {
   cancelClose();
 
+  // Hide clone and restore original FIRST (while activeTriggerEl is still valid)
+  hideTriggerClone();
+
   if (activePopoverId) {
     var pop = popovers[activePopoverId];
     if (pop) {
@@ -471,7 +474,6 @@ function closeActivePopover() {
   if (blurLayerEl) {
     blurLayerEl.classList.remove('is-active');
   }
-  hideTriggerClone();
 }
 
 function startClose() {
