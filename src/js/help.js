@@ -378,9 +378,33 @@ function createTrigger(id, text) {
 function showPopover(id, trigger) {
   cancelClose();
 
+  // Check if trigger is in clone container (switching between cloned triggers)
+  var isInClone = trigger.closest('.ch-trigger-clone-container');
+
   // Close different popover if open
   if (activePopoverId && activePopoverId !== id) {
-    closeActivePopover();
+    // When switching between cloned triggers, just close the popover
+    // without hiding the clone or blur layer
+    if (isInClone) {
+      var oldPop = popovers[activePopoverId];
+      if (oldPop) {
+        oldPop.classList.remove('is-open');
+        oldPop.querySelectorAll('.ch-reveal.is-expanded').forEach(function(r) {
+          r.classList.remove('is-expanded');
+        });
+      }
+      // Remove active state from previous trigger
+      if (activeTriggerEl) {
+        activeTriggerEl.classList.remove('is-active');
+      }
+      if (safezoneEl) {
+        safezoneEl.classList.remove('is-visible');
+      }
+      activePopoverId = null;
+      activeTriggerEl = null;
+    } else {
+      closeActivePopover();
+    }
   }
 
   var pop = popovers[id];
@@ -402,7 +426,11 @@ function showPopover(id, trigger) {
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
   }
-  showTriggerClone(trigger);
+
+  // Only create clone if trigger is not already in clone container
+  if (!isInClone) {
+    showTriggerClone(trigger);
+  }
 
   requestAnimationFrame(function() {
     positionSafezone(pop);
