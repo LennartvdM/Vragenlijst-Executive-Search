@@ -19,6 +19,7 @@ let activePopoverId = null;
 let activeTriggerEl = null;
 let safezoneEl = null;
 let blurLayerEl = null;
+let triggerCloneEl = null;
 let closeTimer = null;
 let scrollEl = null;
 
@@ -190,40 +191,50 @@ function createBlurLayer() {
   document.body.appendChild(blurLayerEl);
 }
 
-function updateBlurHole(trigger) {
-  if (!blurLayerEl || !trigger) {
-    clearBlurHole();
-    return;
-  }
+// Single reusable clone element - created once, repositioned as needed
+function createTriggerClone() {
+  triggerCloneEl = document.createElement('span');
+  triggerCloneEl.className = 'ch-trigger-clone';
+  document.body.appendChild(triggerCloneEl);
 
-  // Find the container holding all triggers (the span parent)
-  var container = trigger.parentElement;
-  if (!container) {
-    clearBlurHole();
-    return;
-  }
-
-  var rect = container.getBoundingClientRect();
-  var padding = 6; // Extra padding around the hole
-  var W = window.innerWidth;
-  var H = window.innerHeight;
-
-  // Create SVG path with evenodd fill - outer rect with inner rect hole
-  var x1 = Math.max(0, rect.left - padding);
-  var y1 = Math.max(0, rect.top - padding);
-  var x2 = Math.min(W, rect.right + padding);
-  var y2 = Math.min(H, rect.bottom + padding);
-
-  // Outer rectangle (clockwise) + inner rectangle (counter-clockwise for hole)
-  var path = 'M 0 0 L ' + W + ' 0 L ' + W + ' ' + H + ' L 0 ' + H + ' Z ' +
-             'M ' + x1 + ' ' + y1 + ' L ' + x1 + ' ' + y2 + ' L ' + x2 + ' ' + y2 + ' L ' + x2 + ' ' + y1 + ' Z';
-
-  blurLayerEl.style.clipPath = 'path(evenodd, "' + path + '")';
+  // Event listeners attached once - these never change
+  triggerCloneEl.addEventListener('mouseenter', cancelClose);
+  triggerCloneEl.addEventListener('mouseleave', startClose);
+  triggerCloneEl.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (activePopoverId) {
+      closeActivePopover();
+    }
+  });
 }
 
-function clearBlurHole() {
-  if (blurLayerEl) {
-    blurLayerEl.style.clipPath = '';
+// Position clone exactly over the active trigger
+function showTriggerClone(trigger) {
+  if (!triggerCloneEl || !trigger) return;
+
+  var rect = trigger.getBoundingClientRect();
+  var style = window.getComputedStyle(trigger);
+
+  triggerCloneEl.textContent = trigger.textContent;
+  triggerCloneEl.style.left = rect.left + 'px';
+  triggerCloneEl.style.top = rect.top + 'px';
+  triggerCloneEl.style.fontSize = style.fontSize;
+  triggerCloneEl.style.fontFamily = style.fontFamily;
+  triggerCloneEl.style.fontWeight = style.fontWeight;
+  triggerCloneEl.classList.add('is-visible');
+
+  // Hide original
+  trigger.classList.add('is-hidden');
+}
+
+function hideTriggerClone() {
+  if (triggerCloneEl) {
+    triggerCloneEl.classList.remove('is-visible');
+  }
+  // Restore original - activeTriggerEl might already be null during close
+  if (activeTriggerEl) {
+    activeTriggerEl.classList.remove('is-hidden');
   }
 }
 
@@ -379,11 +390,11 @@ function showPopover(id, trigger) {
   activePopoverId = id;
   activeTriggerEl = trigger;
 
-  // Activate blur layer with hole for trigger area
+  // Activate blur layer and show clone above it
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
-    updateBlurHole(trigger);
   }
+  showTriggerClone(trigger);
 
   requestAnimationFrame(function() {
     positionSafezone(pop);
@@ -459,8 +470,8 @@ function closeActivePopover() {
 
   if (blurLayerEl) {
     blurLayerEl.classList.remove('is-active');
-    clearBlurHole();
   }
+  hideTriggerClone();
 }
 
 function startClose() {
@@ -549,6 +560,7 @@ export function initHelp() {
 
   createSafezone();
   createBlurLayer();
+  createTriggerClone();
 
   createPopoverElement('cbs', getCBSContent());
   createPopoverElement('likert', getLikertContent());
