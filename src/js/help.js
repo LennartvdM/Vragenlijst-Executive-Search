@@ -192,8 +192,8 @@ function createBlurLayer() {
 }
 
 function createTriggerClone() {
-  triggerCloneEl = document.createElement('span');
-  triggerCloneEl.className = 'ch-trigger-clone';
+  triggerCloneEl = document.createElement('div');
+  triggerCloneEl.className = 'ch-trigger-clone-container';
   document.body.appendChild(triggerCloneEl);
 
   triggerCloneEl.addEventListener('mouseenter', cancelClose);
@@ -203,10 +203,39 @@ function createTriggerClone() {
 function showTriggerClone(trigger) {
   if (!triggerCloneEl || !trigger) return;
 
-  var rect = trigger.getBoundingClientRect();
-  triggerCloneEl.textContent = trigger.textContent;
+  // Find the parent container that holds all triggers (the span inside likert-header)
+  var parent = trigger.parentElement;
+  if (!parent) return;
+
+  var rect = parent.getBoundingClientRect();
+
+  // Clone the entire parent content
+  triggerCloneEl.innerHTML = parent.innerHTML;
   triggerCloneEl.style.left = rect.left + 'px';
   triggerCloneEl.style.top = rect.top + 'px';
+
+  // Wire up cloned triggers to open their respective popovers
+  var clonedTriggers = triggerCloneEl.querySelectorAll('.ch-trigger');
+  clonedTriggers.forEach(function(clonedTrigger) {
+    var helpId = clonedTrigger.dataset.help;
+
+    clonedTrigger.addEventListener('mouseenter', function() {
+      showPopover(helpId, clonedTrigger);
+    });
+    clonedTrigger.addEventListener('mouseleave', function() {
+      startClose();
+    });
+    clonedTrigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (activePopoverId === helpId) {
+        closeActivePopover();
+      } else {
+        showPopover(helpId, clonedTrigger);
+      }
+    });
+  });
+
   triggerCloneEl.classList.add('is-visible');
 }
 

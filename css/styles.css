@@ -4700,14 +4700,10 @@ body:has(.ch-blur-layer.is-active) .ch-trigger.is-active {
   font-size: 13px;
 }
 
-/* Trigger clone - sits above blur layer */
-.ch-trigger-clone {
+/* Trigger clone container - sits above blur layer */
+.ch-trigger-clone-container {
   position: fixed;
   z-index: 7999;
-  color: var(--text);
-  font-weight: 400;
-  border-bottom: 1px solid var(--text);
-  cursor: pointer;
   font-size: 13px;
   opacity: 0;
   visibility: hidden;
@@ -4715,9 +4711,22 @@ body:has(.ch-blur-layer.is-active) .ch-trigger.is-active {
   transition: opacity 0.15s ease;
 }
 
-.ch-trigger-clone.is-visible {
+.ch-trigger-clone-container.is-visible {
   opacity: 1;
   visibility: visible;
+}
+
+/* Style cloned triggers to look active */
+.ch-trigger-clone-container .ch-trigger {
+  color: var(--text);
+  border-bottom-style: solid;
+  border-bottom-color: var(--text);
+  opacity: 1;
+}
+
+.ch-trigger-clone-container .ch-trigger:hover {
+  color: var(--terracotta);
+  border-bottom-color: var(--terracotta);
 }
 
 /* Popover panel */
