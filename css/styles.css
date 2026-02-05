@@ -4768,6 +4768,23 @@ body.mobile-drawer-open {
   display: block;
 }
 
+/* Blur layer behind popovers */
+.ch-blur-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 7998;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  background: rgba(var(--brown-rgb), 0.03);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.ch-blur-layer.is-active {
+  opacity: 1;
+}
+
 /* Lead paragraph */
 .ch-lead {
   font-size: 14px;
