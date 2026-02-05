@@ -4688,9 +4688,9 @@ body.mobile-drawer-open {
   opacity: 1;
 }
 
-/* Elevate triggers above blur layer when active */
-body:has(.ch-blur-layer.is-active) .likert-header .ch-trigger,
-body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
+/* Elevate trigger containers above blur layer when active */
+body:has(.ch-blur-layer.is-active) .likert-header,
+body:has(.ch-blur-layer.is-active) .ch-help-bar {
   position: relative;
   z-index: 7999;
 }
@@ -4699,12 +4699,6 @@ body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
   color: var(--text-light);
   opacity: 0.4;
   font-size: 13px;
-}
-
-/* Also elevate separator when blur is active */
-body:has(.ch-blur-layer.is-active) .ch-trigger-sep {
-  position: relative;
-  z-index: 7999;
 }
 
 /* Popover panel */
