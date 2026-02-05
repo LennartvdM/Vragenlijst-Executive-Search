@@ -574,10 +574,18 @@ export function initHelp() {
   injectStep5LikertHelp();
   injectDeptHelp();
 
-  // Close on scroll - fixed popover can't follow scrolling content
+  // On scroll, hide clone but keep popover open - allows normal page scroll
   scrollEl = document.getElementById('contentScrollable');
   if (scrollEl) {
-    scrollEl.addEventListener('scroll', closeActivePopover, { passive: true });
+    scrollEl.addEventListener('scroll', function() {
+      // Just hide the clone, don't close the popover
+      if (triggerCloneEl) {
+        triggerCloneEl.classList.remove('is-visible');
+      }
+      if (activeTriggerEl) {
+        activeTriggerEl.classList.remove('is-hidden');
+      }
+    }, { passive: true });
   }
 
   document.addEventListener('keydown', function(e) {
