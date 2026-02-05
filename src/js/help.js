@@ -18,6 +18,7 @@
 let activePopoverId = null;
 let activeTriggerEl = null;
 let safezoneEl = null;
+let blurLayerEl = null;
 let closeTimer = null;
 let scrollEl = null;
 
@@ -183,6 +184,12 @@ function createSafezone() {
   safezoneEl.addEventListener('mouseleave', startClose);
 }
 
+function createBlurLayer() {
+  blurLayerEl = document.createElement('div');
+  blurLayerEl.className = 'ch-blur-layer';
+  document.body.appendChild(blurLayerEl);
+}
+
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
@@ -328,6 +335,11 @@ function showPopover(id, trigger) {
   activePopoverId = id;
   activeTriggerEl = trigger;
 
+  // Activate blur layer
+  if (blurLayerEl) {
+    blurLayerEl.classList.add('is-active');
+  }
+
   requestAnimationFrame(function() {
     positionSafezone(pop);
   });
@@ -404,6 +416,10 @@ function closeActivePopover() {
 
   if (safezoneEl) {
     safezoneEl.classList.remove('is-visible');
+  }
+
+  if (blurLayerEl) {
+    blurLayerEl.classList.remove('is-active');
   }
 }
 
@@ -496,6 +512,7 @@ export function initHelp() {
 
   // Create shared infrastructure
   createSafezone();
+  createBlurLayer();
 
   // Create popovers (shared across triggers)
   createPopoverElement('cbs', getCBSContent());
