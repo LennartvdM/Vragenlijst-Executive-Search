@@ -208,16 +208,19 @@ function showTriggerClone(trigger) {
     return;
   }
 
-  // Find the parent container that holds all triggers (the span inside likert-header)
+  // Find the parent container that holds all triggers
   var parent = trigger.parentElement;
   if (!parent) return;
 
   var rect = parent.getBoundingClientRect();
+  var computedStyle = window.getComputedStyle(parent);
 
   // Clone the entire parent content
   triggerCloneEl.innerHTML = parent.innerHTML;
   triggerCloneEl.style.left = rect.left + 'px';
   triggerCloneEl.style.top = rect.top + 'px';
+  triggerCloneEl.style.width = rect.width + 'px';
+  triggerCloneEl.style.textAlign = computedStyle.textAlign;
 
   // Wire up cloned triggers to open their respective popovers
   var clonedTriggers = triggerCloneEl.querySelectorAll('.ch-trigger');
