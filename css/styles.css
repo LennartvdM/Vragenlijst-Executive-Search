@@ -4843,6 +4843,7 @@ body.mobile-drawer-open {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 1.05s ease;
+  overflow: hidden;
 }
 
 .ch-reveal.is-expanded .ch-reveal-body {
@@ -4851,7 +4852,7 @@ body.mobile-drawer-open {
 }
 
 .ch-reveal-inner {
-  overflow: hidden;
+  min-height: 0;
   transform: translateY(-100%);
   transition: transform 1.05s ease;
 }
