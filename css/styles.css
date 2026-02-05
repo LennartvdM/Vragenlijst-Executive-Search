@@ -4700,7 +4700,7 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
 
 /* Clone of active trigger - sits above blur layer */
 .ch-trigger-clone {
-  position: fixed;
+  position: absolute;
   z-index: 7999;
   color: var(--text);
   border-bottom: 1px solid var(--text);
@@ -4724,9 +4724,9 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   font-size: 13px;
 }
 
-/* Popover panel */
+/* Popover panel - absolute so it scrolls with page */
 .ch-popover {
-  position: fixed;
+  position: absolute;
   width: 380px;
   max-width: calc(100vw - 32px);
   background: rgba(var(--cream-rgb), 0.96);
@@ -4744,7 +4744,6 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   opacity: 0;
   visibility: hidden;
   display: none;
-  /* No max-height or overflow - show full content, page scrolls behind */
   pointer-events: auto;
   transition: opacity 0.25s ease, visibility 0.25s ease;
 }
@@ -4797,7 +4796,7 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
 
 /* Safe zone (invisible) */
 .ch-safezone {
-  position: fixed;
+  position: absolute;
   z-index: 7999;
   display: none;
   pointer-events: auto;
