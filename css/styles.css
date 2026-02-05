@@ -4729,9 +4729,6 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   position: fixed;
   width: 380px;
   max-width: calc(100vw - 32px);
-  max-height: 70vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   background: rgba(var(--cream-rgb), 0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -4747,6 +4744,8 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   opacity: 0;
   visibility: hidden;
   display: none;
+  /* No max-height or overflow - show full content, page scrolls behind */
+  pointer-events: auto;
   transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 

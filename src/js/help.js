@@ -21,7 +21,6 @@ let safezoneEl = null;
 let blurLayerEl = null;
 let triggerCloneEl = null;
 let closeTimer = null;
-let scrollEl = null;
 
 // Registry of popover elements by id
 const popovers = {};
@@ -574,10 +573,7 @@ export function initHelp() {
   injectStep5LikertHelp();
   injectDeptHelp();
 
-  scrollEl = document.getElementById('contentScrollable');
-  if (scrollEl) {
-    scrollEl.addEventListener('scroll', closeActivePopover, { passive: true });
-  }
+  // No scroll-to-close - popover stays open while user scrolls to view full content
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && activePopoverId) {
