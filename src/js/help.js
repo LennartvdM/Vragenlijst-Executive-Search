@@ -190,6 +190,43 @@ function createBlurLayer() {
   document.body.appendChild(blurLayerEl);
 }
 
+function updateBlurHole(trigger) {
+  if (!blurLayerEl || !trigger) {
+    clearBlurHole();
+    return;
+  }
+
+  // Find the container holding all triggers (the span parent)
+  var container = trigger.parentElement;
+  if (!container) {
+    clearBlurHole();
+    return;
+  }
+
+  var rect = container.getBoundingClientRect();
+  var padding = 6; // Extra padding around the hole
+  var W = window.innerWidth;
+  var H = window.innerHeight;
+
+  // Create SVG path with evenodd fill - outer rect with inner rect hole
+  var x1 = Math.max(0, rect.left - padding);
+  var y1 = Math.max(0, rect.top - padding);
+  var x2 = Math.min(W, rect.right + padding);
+  var y2 = Math.min(H, rect.bottom + padding);
+
+  // Outer rectangle (clockwise) + inner rectangle (counter-clockwise for hole)
+  var path = 'M 0 0 L ' + W + ' 0 L ' + W + ' ' + H + ' L 0 ' + H + ' Z ' +
+             'M ' + x1 + ' ' + y1 + ' L ' + x1 + ' ' + y2 + ' L ' + x2 + ' ' + y2 + ' L ' + x2 + ' ' + y1 + ' Z';
+
+  blurLayerEl.style.clipPath = 'path(evenodd, "' + path + '")';
+}
+
+function clearBlurHole() {
+  if (blurLayerEl) {
+    blurLayerEl.style.clipPath = '';
+  }
+}
+
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
@@ -342,9 +379,10 @@ function showPopover(id, trigger) {
   activePopoverId = id;
   activeTriggerEl = trigger;
 
-  // Activate blur layer - triggers elevate above it via CSS
+  // Activate blur layer with hole for trigger area
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
+    updateBlurHole(trigger);
   }
 
   requestAnimationFrame(function() {
@@ -421,6 +459,7 @@ function closeActivePopover() {
 
   if (blurLayerEl) {
     blurLayerEl.classList.remove('is-active');
+    clearBlurHole();
   }
 }
 
