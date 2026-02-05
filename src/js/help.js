@@ -369,6 +369,7 @@ function showPopover(id, trigger) {
     }
     if (activeTriggerEl) {
       activeTriggerEl.classList.remove('is-active');
+      activeTriggerEl.classList.remove('is-hidden'); // Restore visibility when switching
     }
     if (safezoneEl) {
       safezoneEl.classList.remove('is-visible');
