@@ -387,8 +387,11 @@ body {
 }
 
 /* Remove gap between consecutive indented fields for continuous line */
+.question-group .field-indent {
+  margin-bottom: 0;
+}
+
 .question-group .field-indent + .field-indent {
-  margin-top: -8px;
   padding-top: 8px;
 }
 
