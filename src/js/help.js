@@ -19,7 +19,6 @@ let activePopoverId = null;
 let activeTriggerEl = null;
 let safezoneEl = null;
 let blurLayerEl = null;
-let triggerCloneEl = null;
 let closeTimer = null;
 let scrollEl = null;
 
@@ -191,79 +190,11 @@ function createBlurLayer() {
   document.body.appendChild(blurLayerEl);
 }
 
-function createTriggerClone() {
-  triggerCloneEl = document.createElement('div');
-  triggerCloneEl.className = 'ch-trigger-clone-container';
-  document.body.appendChild(triggerCloneEl);
-
-  triggerCloneEl.addEventListener('mouseenter', cancelClose);
-  triggerCloneEl.addEventListener('mouseleave', startClose);
-}
-
-function showTriggerClone(trigger) {
-  if (!triggerCloneEl || !trigger) return;
-
-  // If trigger is already inside the clone container, don't re-clone
-  if (trigger.closest('.ch-trigger-clone-container')) {
-    return;
-  }
-
-  // Find the parent container that holds all triggers
-  var parent = trigger.parentElement;
-  if (!parent) return;
-
-  var rect = parent.getBoundingClientRect();
-  var computedStyle = window.getComputedStyle(parent);
-
-  // Clone the entire parent content
-  triggerCloneEl.innerHTML = parent.innerHTML;
-  triggerCloneEl.style.left = rect.left + 'px';
-  triggerCloneEl.style.top = rect.top + 'px';
-  triggerCloneEl.style.width = rect.width + 'px';
-  triggerCloneEl.style.height = rect.height + 'px';
-  triggerCloneEl.style.lineHeight = computedStyle.lineHeight;
-  triggerCloneEl.style.fontSize = computedStyle.fontSize;
-  triggerCloneEl.style.fontFamily = computedStyle.fontFamily;
-
-  // Wire up cloned triggers to open their respective popovers
-  var clonedTriggers = triggerCloneEl.querySelectorAll('.ch-trigger');
-  clonedTriggers.forEach(function(clonedTrigger) {
-    var helpId = clonedTrigger.dataset.help;
-
-    clonedTrigger.addEventListener('mouseenter', function() {
-      showPopover(helpId, clonedTrigger);
-    });
-    clonedTrigger.addEventListener('mouseleave', function() {
-      startClose();
-    });
-    clonedTrigger.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (activePopoverId === helpId) {
-        closeActivePopover();
-      } else {
-        showPopover(helpId, clonedTrigger);
-      }
-    });
-  });
-
-  triggerCloneEl.classList.add('is-visible');
-}
-
-function hideTriggerClone() {
-  if (triggerCloneEl) {
-    triggerCloneEl.classList.remove('is-visible');
-  }
-}
-
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
-  var hMargin = Math.max(20, rect.width * 0.08);  // 5-10% horizontal
+  var hMargin = Math.max(20, rect.width * 0.08);
   var topMargin = 20;
-
-  // Extend vertically all the way to the bottom of the viewport
-  // so the mouse can drift down freely while reading expanding content
   var bottomExtent = window.innerHeight - rect.bottom;
 
   safezoneEl.style.left = (rect.left - hMargin) + 'px';
@@ -290,8 +221,6 @@ function createPopoverElement(id, html) {
   pop.addEventListener('mouseleave', startClose);
 
   // Handle reveal sections inside popovers
-  // Reveals collapse on mouseleave with a delay, EXCEPT the bottom-most
-  // reveal ignores downward mouse exits (generous vertical safe zone).
   var reveals = pop.querySelectorAll('.ch-reveal');
   var lastReveal = reveals[reveals.length - 1];
   reveals.forEach(function(reveal) {
@@ -314,7 +243,6 @@ function createPopoverElement(id, html) {
 
     reveal.addEventListener('mouseenter', function() {
       cancelCollapse();
-      // Collapse sibling reveals
       reveals.forEach(function(sib) {
         if (sib !== reveal) {
           if (sib._cancelCollapse) sib._cancelCollapse();
@@ -322,14 +250,12 @@ function createPopoverElement(id, html) {
         }
       });
       reveal.classList.add('is-expanded');
-      // Recalculate safe zone as the grid transition runs
       updateSafezone();
       var frames = [150, 350, 600, 1050];
       frames.forEach(function(ms) { setTimeout(updateSafezone, ms); });
     });
 
     reveal.addEventListener('mouseleave', function(e) {
-      // Bottom reveal: don't collapse if mouse went downward
       if (reveal === lastReveal) {
         var rect = reveal.getBoundingClientRect();
         if (e.clientY >= rect.bottom - 2) {
@@ -352,7 +278,6 @@ function createTrigger(id, text) {
   trigger.dataset.help = id;
   trigger.textContent = text;
 
-  // Desktop: hover
   trigger.addEventListener('mouseenter', function() {
     showPopover(id, trigger);
   });
@@ -360,7 +285,6 @@ function createTrigger(id, text) {
     startClose();
   });
 
-  // Mobile: tap toggle
   trigger.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -381,32 +305,25 @@ function createTrigger(id, text) {
 function showPopover(id, trigger) {
   cancelClose();
 
-  // Check if trigger is in clone container (switching between cloned triggers)
-  var isInClone = trigger.closest('.ch-trigger-clone-container');
+  // If same popover already open with same trigger, just keep it open
+  if (activePopoverId === id && activeTriggerEl === trigger) {
+    return;
+  }
 
-  // Close different popover if open
-  if (activePopoverId && activePopoverId !== id) {
-    // When switching between cloned triggers, just close the popover
-    // without hiding the clone or blur layer
-    if (isInClone) {
-      var oldPop = popovers[activePopoverId];
-      if (oldPop) {
-        oldPop.classList.remove('is-open');
-        oldPop.querySelectorAll('.ch-reveal.is-expanded').forEach(function(r) {
-          r.classList.remove('is-expanded');
-        });
-      }
-      // Remove active state from previous trigger
-      if (activeTriggerEl) {
-        activeTriggerEl.classList.remove('is-active');
-      }
-      if (safezoneEl) {
-        safezoneEl.classList.remove('is-visible');
-      }
-      activePopoverId = null;
-      activeTriggerEl = null;
-    } else {
-      closeActivePopover();
+  // Close any open popover first (clean slate)
+  if (activePopoverId) {
+    var oldPop = popovers[activePopoverId];
+    if (oldPop) {
+      oldPop.classList.remove('is-open');
+      oldPop.querySelectorAll('.ch-reveal.is-expanded').forEach(function(r) {
+        r.classList.remove('is-expanded');
+      });
+    }
+    if (activeTriggerEl) {
+      activeTriggerEl.classList.remove('is-active');
+    }
+    if (safezoneEl) {
+      safezoneEl.classList.remove('is-visible');
     }
   }
 
@@ -425,14 +342,9 @@ function showPopover(id, trigger) {
   activePopoverId = id;
   activeTriggerEl = trigger;
 
-  // Activate blur layer and show trigger clone above it
+  // Activate blur layer - triggers elevate above it via CSS
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
-  }
-
-  // Only create clone if trigger is not already in clone container
-  if (!isInClone) {
-    showTriggerClone(trigger);
   }
 
   requestAnimationFrame(function() {
@@ -443,7 +355,6 @@ function showPopover(id, trigger) {
 function positionPopoverNear(trigger, pop) {
   var rect = trigger.getBoundingClientRect();
 
-  // Temporarily show to measure
   pop.style.visibility = 'hidden';
   pop.style.display = 'block';
   pop.style.opacity = '0';
@@ -457,7 +368,6 @@ function positionPopoverNear(trigger, pop) {
   var isMobile = window.innerWidth <= 768;
 
   if (isMobile) {
-    // Center on screen, below trigger
     left = Math.max(16, (window.innerWidth - popWidth) / 2);
     top = rect.bottom + 12;
     if (top + popHeight > window.innerHeight - 16) {
@@ -465,12 +375,10 @@ function positionPopoverNear(trigger, pop) {
     }
     pop.classList.add('ch-arrow-up');
   } else {
-    // Prefer below trigger (matches mask reveal animation direction)
     left = rect.left + (rect.width / 2) - (popWidth / 2);
     top = rect.bottom + 12;
 
     if (top + popHeight > window.innerHeight - 16) {
-      // Not enough room below, show above
       top = rect.top - popHeight - 12;
       pop.classList.remove('ch-arrow-up');
     } else {
@@ -478,7 +386,6 @@ function positionPopoverNear(trigger, pop) {
     }
   }
 
-  // Viewport bounds
   if (left + popWidth > window.innerWidth - 16) {
     left = window.innerWidth - popWidth - 16;
   }
@@ -500,7 +407,6 @@ function closeActivePopover() {
       });
     }
 
-    // Remove active state from triggers
     if (activeTriggerEl) {
       activeTriggerEl.classList.remove('is-active');
       activeTriggerEl = null;
@@ -516,8 +422,6 @@ function closeActivePopover() {
   if (blurLayerEl) {
     blurLayerEl.classList.remove('is-active');
   }
-
-  hideTriggerClone();
 }
 
 function startClose() {
@@ -576,7 +480,6 @@ function injectStep5LikertHelp() {
 }
 
 function injectDeptHelp() {
-  // Add "Verschilt het per afdeling?" to all Likert steps (5-10)
   for (var stepId = 5; stepId <= 10; stepId++) {
     var step = document.querySelector('.step[data-step="' + stepId + '"]');
     if (!step) continue;
@@ -587,7 +490,6 @@ function injectDeptHelp() {
     var span = likertHeader.querySelector('span');
     if (!span) continue;
 
-    // Add separator if there's already a trigger (step 5)
     if (span.querySelector('.ch-trigger')) {
       var sep = document.createElement('span');
       sep.className = 'ch-trigger-sep';
@@ -604,39 +506,31 @@ function injectDeptHelp() {
 // ============================================================================
 
 export function initHelp() {
-  // Guard against double init
   if (document.querySelector('.ch-trigger')) return;
 
-  // Create shared infrastructure
   createSafezone();
   createBlurLayer();
-  createTriggerClone();
 
-  // Create popovers (shared across triggers)
   createPopoverElement('cbs', getCBSContent());
   createPopoverElement('likert', getLikertContent());
   createPopoverElement('dept', getDeptContent());
 
-  // Inject triggers at the right DOM positions
   injectStep2Help();
   injectStep3Help();
   injectStep5LikertHelp();
   injectDeptHelp();
 
-  // Close on scroll
   scrollEl = document.getElementById('contentScrollable');
   if (scrollEl) {
     scrollEl.addEventListener('scroll', closeActivePopover, { passive: true });
   }
 
-  // Close on Escape
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && activePopoverId) {
       closeActivePopover();
     }
   });
 
-  // Close on outside click (useful for mobile)
   document.addEventListener('mousedown', function(e) {
     if (activePopoverId && !e.target.closest('.ch-popover') && !e.target.closest('.ch-trigger')) {
       closeActivePopover();
