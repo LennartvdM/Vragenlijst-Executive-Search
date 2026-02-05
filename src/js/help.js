@@ -422,7 +422,7 @@ function positionPopoverNear(trigger, pop) {
   pop.style.opacity = '';
 
   var left, top;
-  var isMobile = window.innerWidth <= 768;
+  var isMobile = window.innerWidth <= window.CONFIG.MOBILE_BREAKPOINT;
 
   if (isMobile) {
     left = Math.max(16, (window.innerWidth - popWidth) / 2);

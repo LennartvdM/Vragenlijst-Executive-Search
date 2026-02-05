@@ -28,9 +28,9 @@ const CONSTANTS = {
     beleid_samenstelling: 'conditional-beleid_samenstelling'
   },
 
-  // Answer values that trigger conditional sections (for "Anders" options)
+  // Answer values that trigger conditional sections (non-"Ja" triggers)
   CONDITIONAL_VALUES: {
-    beleid_samenstelling: 'Anders'
+    beleid_samenstelling: 'anders'
   },
 
   // Required fields when conditional is triggered (for completion tracking)
@@ -57,8 +57,8 @@ const CONSTANTS = {
       requiredFields: ['aantal_rvt', 'rvt_buiten_europa']
     },
     beleid_samenstelling: {
-      triggerValue: 'Anders',
-      requiredFields: ['beleid_anders_toelichting']
+      triggerValue: 'anders',
+      requiredFields: ['beleid_samenstelling_anders']
     }
   },
 
@@ -80,12 +80,6 @@ const CONSTANTS = {
     SUBMIT_ERROR: 'Er ging iets mis bij het verzenden. Probeer het opnieuw.',
     SESSION_EXPIRED: 'Uw sessie is verlopen. Log opnieuw in.',
     STORAGE_ERROR: 'Kan gegevens niet opslaan. Controleer of uw browser localStorage ondersteunt.'
-  },
-
-  // API actions
-  API_ACTIONS: {
-    VALIDATE_CODE: 'validateCode',
-    SUBMIT_SURVEY: 'submitSurvey'
   },
 
   // CSS classes
@@ -125,7 +119,6 @@ Object.freeze(CONSTANTS.CONDITIONAL_VALUES);
 Object.freeze(CONSTANTS.CONDITIONAL_REQUIREMENTS);
 Object.freeze(CONSTANTS.UI);
 Object.freeze(CONSTANTS.ERRORS);
-Object.freeze(CONSTANTS.API_ACTIONS);
 Object.freeze(CONSTANTS.CSS);
 Object.freeze(CONSTANTS.TIMEOUTS);
 Object.freeze(CONSTANTS.RETRY);

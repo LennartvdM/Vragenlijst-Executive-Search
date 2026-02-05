@@ -3,11 +3,13 @@
 Audit van de Monitoring Cultureel Talent naar de Top 2026 front-end codebase.
 Datum: 5 februari 2026
 
+**Status: opgeruimd.** Bugs, dode code en inconsistenties uit secties 1, 2 en 4 zijn gefixed. Sectie 3 (duplicatiepatronen) en sectie 5 (structurele observaties) zijn toekomstige verbeteringen die refactoring vereisen.
+
 ---
 
 ## Samenvatting
 
-De codebase is functioneel solide en goed gestructureerd voor een vanilla JS project. De modulaire opzet (IIFE + ES6 via Vite) werkt, de state management is helder, en de API-client is robuust. Maar er is **technische schuld** opgebouwd: duplicatie, inconsistenties tussen configuratielagen, en twee concrete bugs. Hieronder alles gegroepeerd per categorie.
+De codebase is functioneel solide en goed gestructureerd voor een vanilla JS project. De modulaire opzet (IIFE + ES6 via Vite) werkt, de state management is helder, en de API-client is robuust. Er was technische schuld opgebouwd: duplicatie, inconsistenties tussen configuratielagen, en drie concrete bugs. Hieronder alles gegroepeerd per categorie.
 
 ---
 

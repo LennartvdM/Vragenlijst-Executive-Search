@@ -220,8 +220,7 @@ var App = (function() {
    * @param {HTMLElement} originElement - The element to expand from (usually the login button)
    */
   function transitionToSurvey(originElement) {
-    var MOBILE_BREAKPOINT = 768;
-    var isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    var isMobile = window.innerWidth <= CONFIG.MOBILE_BREAKPOINT;
 
     // On mobile, skip the container transform animation - just load and show
     if (isMobile) {
@@ -534,8 +533,7 @@ var App = (function() {
    */
   function transitionToLogin() {
     var FADE_DURATION = 500;
-    var MOBILE_BREAKPOINT = 768;
-    var isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    var isMobile = window.innerWidth <= CONFIG.MOBILE_BREAKPOINT;
 
     // Reset login button from any lingering loading state
     var loginBtn = document.getElementById('loginBtn');

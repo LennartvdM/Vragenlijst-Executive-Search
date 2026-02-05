@@ -246,11 +246,11 @@ export function clearFormAndRestart(showStep) {
   });
 
   document.querySelectorAll('.conditional').forEach(conditional => {
-    conditional.classList.remove(window.CONSTANTS.CSS.VISIBLE);
+    conditional.classList.remove(window.CONSTANTS.CSS.SHOW);
   });
 
   document.querySelectorAll('.comments-field').forEach(field => {
-    field.classList.remove(window.CONSTANTS.CSS.VISIBLE);
+    field.classList.remove(window.CONSTANTS.CSS.SHOW);
   });
 
   document.querySelectorAll('.section-header').forEach(header => {

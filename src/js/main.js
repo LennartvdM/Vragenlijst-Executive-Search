@@ -41,10 +41,6 @@ function initSurvey() {
   modals.initPreviewMode(state.session);
   progress.initProgress();
 
-  // Initialize alignment rig
-  setTimeout(progress.updateAlignmentRig, 50);
-  window.addEventListener('resize', progress.updateAlignmentRig);
-
   // Setup remaining functionality
   setupInputListeners();
   setupAutoSave();
@@ -360,19 +356,6 @@ document.addEventListener('surveyVisible', () => {
   progress.updateMobileHighlighter();
   scroll.updateFadeGradients();
   scroll.updateCustomScrollbar();
-});
-
-// Auto-initialize on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-  const formEl = document.getElementById('monitoringForm');
-  if (formEl) {
-    state.setSession(window.Storage.getSession());
-    if (!state.session || !state.session.orgCode) {
-      window.location.href = '/index.html';
-      return;
-    }
-    initSurvey();
-  }
 });
 
 // Export Survey module for use by App.js

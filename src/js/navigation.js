@@ -102,7 +102,7 @@ export function showStep(step) {
   if (btnPrev) btnPrev.style.display = showPrev ? 'block' : 'none';
   if (btnPrevTop) btnPrevTop.style.display = showPrev ? 'block' : 'none';
 
-  if (step === 13) {
+  if (step === window.CONFIG.SIGN_STEP) {
     if (btnNext) {
       btnNext.textContent = 'Controleren';
       btnNext.style.display = 'block';
@@ -166,7 +166,7 @@ export function goToStep(step) {
  */
 export function triggerPassingEffect(fromStep, toStep) {
   // Skip passing effect on mobile - it's a desktop sidebar animation
-  if (window.innerWidth <= 768) return;
+  if (window.innerWidth <= window.CONFIG.MOBILE_BREAKPOINT) return;
 
   const direction = toStep > fromStep ? 1 : -1;
   const travelTime = 350;
@@ -199,10 +199,10 @@ export function triggerPassingEffect(fromStep, toStep) {
  */
 export function nextStep() {
   saveScrollPosition();
-  if (state.currentStep === 13) {
+  if (state.currentStep === window.CONFIG.SIGN_STEP) {
     state.setCurrentStep(window.CONFIG.REVIEW_STEP);
     showStep(state.currentStep);
-  } else if (state.currentStep < 13) {
+  } else if (state.currentStep < window.CONFIG.SIGN_STEP) {
     state.setCurrentStep(state.currentStep + 1);
     showStep(state.currentStep);
   }
