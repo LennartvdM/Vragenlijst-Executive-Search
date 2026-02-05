@@ -4773,8 +4773,8 @@ body.mobile-drawer-open {
   position: fixed;
   inset: 0;
   z-index: 7998;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   background: rgba(var(--brown-rgb), 0.03);
   pointer-events: none;
   opacity: 0;
