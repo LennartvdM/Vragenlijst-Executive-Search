@@ -998,6 +998,12 @@ body {
   transition: transform 0.6s ease-out;
 }
 
+/* Gentle nudge on hover for non-active items */
+.index-item:not(.active):not(.passing):hover .label {
+  transform: translateX(3px);
+  transition: transform 0.15s ease-out;
+}
+
 .index-item.active .label {
   font-weight: 600;
   transform: translateX(-32px) scale(1.1);
@@ -3744,6 +3750,10 @@ input[inputmode="numeric"] {
 
   .index-item:hover {
     background: rgba(255, 255, 255, 0.5);
+  }
+
+  .index-item:not(.active):not(.passing):hover .label {
+    transform: none; /* No nudge on mobile */
   }
 
   .index-divider {
