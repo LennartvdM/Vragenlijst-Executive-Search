@@ -21,6 +21,7 @@ let safezoneEl = null;
 let blurLayerEl = null;
 let triggerCloneEl = null;
 let closeTimer = null;
+let scrollEl = null;
 
 // Registry of popover elements by id
 const popovers = {};
@@ -208,16 +209,18 @@ function createTriggerClone() {
   });
 }
 
-// Position clone exactly over the active trigger
+// Position clone exactly over the active trigger (absolute positioning)
 function showTriggerClone(trigger) {
   if (!triggerCloneEl || !trigger) return;
 
   var rect = trigger.getBoundingClientRect();
   var style = window.getComputedStyle(trigger);
+  var scrollY = window.scrollY || document.documentElement.scrollTop;
+  var scrollX = window.scrollX || document.documentElement.scrollLeft;
 
   triggerCloneEl.textContent = trigger.textContent;
-  triggerCloneEl.style.left = rect.left + 'px';
-  triggerCloneEl.style.top = rect.top + 'px';
+  triggerCloneEl.style.left = (rect.left + scrollX) + 'px';
+  triggerCloneEl.style.top = (rect.top + scrollY) + 'px';
   triggerCloneEl.style.fontSize = style.fontSize;
   triggerCloneEl.style.fontFamily = style.fontFamily;
   triggerCloneEl.style.fontWeight = style.fontWeight;
@@ -240,12 +243,14 @@ function hideTriggerClone() {
 function positionSafezone(pop) {
   if (!safezoneEl) return;
   var rect = pop.getBoundingClientRect();
+  var scrollY = window.scrollY || document.documentElement.scrollTop;
+  var scrollX = window.scrollX || document.documentElement.scrollLeft;
   var hMargin = Math.max(20, rect.width * 0.08);
   var topMargin = 20;
   var bottomExtent = window.innerHeight - rect.bottom;
 
-  safezoneEl.style.left = (rect.left - hMargin) + 'px';
-  safezoneEl.style.top = (rect.top - topMargin) + 'px';
+  safezoneEl.style.left = (rect.left + scrollX - hMargin) + 'px';
+  safezoneEl.style.top = (rect.top + scrollY - topMargin) + 'px';
   safezoneEl.style.width = (rect.width + hMargin * 2) + 'px';
   safezoneEl.style.height = (rect.height + topMargin + bottomExtent) + 'px';
   safezoneEl.classList.add('is-visible');
@@ -403,6 +408,9 @@ function showPopover(id, trigger) {
 
 function positionPopoverNear(trigger, pop) {
   var rect = trigger.getBoundingClientRect();
+  // Get scroll offset for absolute positioning (document-relative)
+  var scrollY = window.scrollY || document.documentElement.scrollTop;
+  var scrollX = window.scrollX || document.documentElement.scrollLeft;
 
   pop.style.visibility = 'hidden';
   pop.style.display = 'block';
@@ -418,17 +426,17 @@ function positionPopoverNear(trigger, pop) {
 
   if (isMobile) {
     left = Math.max(16, (window.innerWidth - popWidth) / 2);
-    top = rect.bottom + 12;
-    if (top + popHeight > window.innerHeight - 16) {
-      top = Math.max(16, rect.top - popHeight - 12);
+    top = rect.bottom + scrollY + 12;
+    if (rect.bottom + popHeight > window.innerHeight - 16) {
+      top = rect.top + scrollY - popHeight - 12;
     }
     pop.classList.add('ch-arrow-up');
   } else {
-    left = rect.left + (rect.width / 2) - (popWidth / 2);
-    top = rect.bottom + 12;
+    left = rect.left + scrollX + (rect.width / 2) - (popWidth / 2);
+    top = rect.bottom + scrollY + 12;
 
-    if (top + popHeight > window.innerHeight - 16) {
-      top = rect.top - popHeight - 12;
+    if (rect.bottom + popHeight > window.innerHeight - 16) {
+      top = rect.top + scrollY - popHeight - 12;
       pop.classList.remove('ch-arrow-up');
     } else {
       pop.classList.add('ch-arrow-up');
@@ -573,7 +581,19 @@ export function initHelp() {
   injectStep5LikertHelp();
   injectDeptHelp();
 
-  // No scroll-to-close - popover stays open while user scrolls to view full content
+  // On scroll, hide clone but keep popover open - allows normal page scroll
+  scrollEl = document.getElementById('contentScrollable');
+  if (scrollEl) {
+    scrollEl.addEventListener('scroll', function() {
+      // Just hide the clone, don't close the popover
+      if (triggerCloneEl) {
+        triggerCloneEl.classList.remove('is-visible');
+      }
+      if (activeTriggerEl) {
+        activeTriggerEl.classList.remove('is-hidden');
+      }
+    }, { passive: true });
+  }
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && activePopoverId) {
