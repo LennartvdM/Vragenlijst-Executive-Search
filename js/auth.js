@@ -285,8 +285,8 @@
         resetLoginUI(loginBtn, btnText, btnLoading, btnLoadingText, retryProgress);
       }
     } catch (error) {
-      const isServerConfig = error instanceof ApiError && (error.code === 'AUTH_REDIRECT' || error.code === 'REDIRECT_ERROR' || error.code === 'PARSE_ERROR');
-      const message = isServerConfig
+      var isServerConfig = error instanceof ApiError && (error.code === 'AUTH_REDIRECT' || error.code === 'REDIRECT_ERROR' || error.code === 'PARSE_ERROR');
+      var message = isServerConfig
         ? 'De server is tijdelijk niet beschikbaar. Probeer het later opnieuw of neem contact op met de beheerder.'
         : CONSTANTS.ERRORS.NETWORK_ERROR;
       showError(errorDiv, message);
@@ -365,11 +365,4 @@
     element.style.display = 'flex';
   }
 
-  // Export functions for use in other modules (if needed)
-  window.AuthModule = {
-    getSession: Storage.getSession,
-    clearSession: Storage.clearSession,
-    saveSession: Storage.saveSession,
-    isSessionValid: Storage.isSessionValid
-  };
 })();

@@ -192,17 +192,6 @@ const Storage = (function() {
     return forms.find(f => f.id === id) || null;
   }
 
-  /**
-   * Delete a submitted form from archive
-   * @param {string} id - The form ID to delete
-   * @returns {boolean} Success status
-   */
-  function deleteSubmittedForm(id) {
-    const forms = getSubmittedForms();
-    const filtered = forms.filter(f => f.id !== id);
-    return setJSON(CONFIG.STORAGE_KEYS.SUBMITTED_FORMS, filtered);
-  }
-
   // Public API
   return {
     isAvailable,
@@ -219,8 +208,7 @@ const Storage = (function() {
     clearFormData,
     getSubmittedForms,
     addSubmittedForm,
-    getSubmittedFormById,
-    deleteSubmittedForm
+    getSubmittedFormById
   };
 })();
 

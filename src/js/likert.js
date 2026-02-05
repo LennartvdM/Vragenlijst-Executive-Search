@@ -126,7 +126,6 @@ export function resetLikertTable(tableId) {
  * Initialize mobile-friendly Likert scale controls
  */
 export function initMobileLikert() {
-  const MOBILE_BREAKPOINT = 768;
   const LIKERT_OPTIONS = [
     { value: '0', label: 'Niet' },
     { value: '1', label: 'Enigszins' },
@@ -309,7 +308,7 @@ export function initMobileLikert() {
   }
 
   function handleResponsive() {
-    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    const isMobile = window.innerWidth <= window.CONFIG.MOBILE_BREAKPOINT;
 
     document.querySelectorAll('.likert-table tbody tr').forEach(row => {
       if (isMobile) {

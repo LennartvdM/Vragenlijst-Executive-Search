@@ -41,9 +41,19 @@ const CONFIG = {
   SESSION_TIMEOUT: 24 * 60 * 60 * 1000,
 
   /**
+   * Mobile breakpoint width in pixels
+   */
+  MOBILE_BREAKPOINT: 768,
+
+  /**
    * Total number of steps in the survey wizard (0-13 = content, 14 = review, 15 = success)
    */
   TOTAL_STEPS: 16,
+
+  /**
+   * Sign step index - the last content step before review
+   */
+  SIGN_STEP: 13,
 
   /**
    * Review step index - shows overview of incomplete fields

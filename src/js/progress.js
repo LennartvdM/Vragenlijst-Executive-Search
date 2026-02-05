@@ -253,9 +253,3 @@ export function updateSectionStatus(sectionName) {
 export function updateAllSections() {
   Object.keys(window.CONFIG.SECTION_FIELDS).forEach(updateSectionStatus);
 }
-
-/**
- * Alignment rig removed: the divider line was rendering on top of Likert table content.
- * Kept as no-op for backwards compatibility with main.js calls.
- */
-export function updateAlignmentRig() {}

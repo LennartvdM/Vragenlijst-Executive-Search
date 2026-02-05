@@ -9,14 +9,9 @@ import * as state from './state.js';
  * Load scroll positions from localStorage
  */
 export function loadScrollPositions() {
-  try {
-    const saved = localStorage.getItem(window.CONFIG.STORAGE_KEYS.SCROLL_POSITIONS);
-    if (saved) {
-      state.setScrollPositions(JSON.parse(saved));
-    }
-  } catch (e) {
-    console.warn('Could not load scroll positions:', e);
-    state.setScrollPositions({});
+  const saved = window.Storage.getJSON(window.CONFIG.STORAGE_KEYS.SCROLL_POSITIONS, null);
+  if (saved) {
+    state.setScrollPositions(saved);
   }
 }
 
@@ -24,11 +19,7 @@ export function loadScrollPositions() {
  * Save scroll positions to localStorage
  */
 export function persistScrollPositions() {
-  try {
-    localStorage.setItem(window.CONFIG.STORAGE_KEYS.SCROLL_POSITIONS, JSON.stringify(state.scrollPositions));
-  } catch (e) {
-    console.warn('Could not save scroll positions:', e);
-  }
+  window.Storage.setJSON(window.CONFIG.STORAGE_KEYS.SCROLL_POSITIONS, state.scrollPositions);
 }
 
 /**
@@ -207,9 +198,5 @@ export function updateFadeGradients() {
  */
 export function clearScrollPositions() {
   state.setScrollPositions({});
-  try {
-    localStorage.removeItem(window.CONFIG.STORAGE_KEYS.SCROLL_POSITIONS);
-  } catch (e) {
-    console.warn('Could not clear scroll positions:', e);
-  }
+  window.Storage.remove(window.CONFIG.STORAGE_KEYS.SCROLL_POSITIONS);
 }

@@ -149,5 +149,5 @@ export const CONDITIONAL_PARENT_MAP = {
   'rvc_buiten_europa': { parent: 'heeft_rvc', value: 'Ja' },
   'aantal_rvt': { parent: 'heeft_rvt', value: 'Ja' },
   'rvt_buiten_europa': { parent: 'heeft_rvt', value: 'Ja' },
-  'beleid_samenstelling_anders': { parent: 'beleid_samenstelling', value: 'Anders' }
+  'beleid_samenstelling_anders': { parent: 'beleid_samenstelling', value: 'anders' }
 };
