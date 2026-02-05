@@ -4704,11 +4704,10 @@ body:has(.ch-blur-layer.is-active) .ch-help-bar .ch-trigger {
 .ch-trigger-clone-container {
   position: fixed;
   z-index: 7999;
-  font-size: 13px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: none;
+  /* Font properties set dynamically from parent to match exactly */
 }
 
 .ch-trigger-clone-container.is-visible {

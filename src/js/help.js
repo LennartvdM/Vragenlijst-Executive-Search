@@ -220,7 +220,10 @@ function showTriggerClone(trigger) {
   triggerCloneEl.style.left = rect.left + 'px';
   triggerCloneEl.style.top = rect.top + 'px';
   triggerCloneEl.style.width = rect.width + 'px';
-  triggerCloneEl.style.textAlign = computedStyle.textAlign;
+  triggerCloneEl.style.height = rect.height + 'px';
+  triggerCloneEl.style.lineHeight = computedStyle.lineHeight;
+  triggerCloneEl.style.fontSize = computedStyle.fontSize;
+  triggerCloneEl.style.fontFamily = computedStyle.fontFamily;
 
   // Wire up cloned triggers to open their respective popovers
   var clonedTriggers = triggerCloneEl.querySelectorAll('.ch-trigger');
