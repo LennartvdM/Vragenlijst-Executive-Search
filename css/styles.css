@@ -4852,6 +4852,13 @@ body.mobile-drawer-open {
 
 .ch-reveal-inner {
   overflow: hidden;
+  transform: translateY(-100%);
+  transition: transform 1.05s ease;
+}
+
+.ch-reveal.is-expanded .ch-reveal-inner {
+  transform: translateY(0);
+  transition: transform 0.25s ease;
 }
 
 .ch-reveal-inner p {
