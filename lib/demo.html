@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@vragenlijst/forms — Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Page chrome — not part of the library */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--vl-color-backdrop, linear-gradient(135deg, #f3ece2 0%, #f0e6d1 50%, #f8f5f2 100%));
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .demo-header {
+      text-align: center;
+      margin-bottom: 32px;
+      color: var(--vl-color-text, #1d1d30);
+    }
+    .demo-header h1 { font-size: 24px; margin-bottom: 8px; }
+    .demo-header p { font-size: 14px; color: var(--vl-color-text-muted, #7a7a96); }
+    .demo-themes {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .demo-themes button {
+      padding: 8px 16px;
+      border: 2px solid var(--vl-color-sand-dark, #adbcd2);
+      border-radius: 8px;
+      background: white;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .demo-themes button:hover { border-color: var(--vl-color-primary, #8caef4); }
+    .demo-themes button.active {
+      border-color: var(--vl-color-accent, #111162);
+      background: var(--vl-color-sand-light, #f1f4f8);
+      font-weight: 600;
+    }
+    #form-root {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    /* Step visibility */
+    .vl-step { display: none; }
+    .vl-step.active { display: block; }
+    /* Comment fields hidden by default */
+    .vl-comments-field { display: none; }
+    .vl-comments-field.show { display: block; margin-top: 8px; }
+    .vl-comments-toggle {
+      background: none;
+      border: none;
+      color: var(--vl-color-text-muted, #7a7a96);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+    .vl-comments-toggle:hover { color: var(--vl-color-accent, #111162); }
+    /* Status bar */
+    .demo-status {
+      max-width: 900px;
+      margin: 16px auto 0;
+      padding: 12px 20px;
+      background: white;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--vl-color-text-light, #3c3c5d);
+      display: flex;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-header">
+    <h1>@vragenlijst/forms</h1>
+    <p>Schema-driven form component library — Demo</p>
+  </div>
+
+  <div class="demo-themes">
+    <button class="active" data-theme="default">Default</button>
+    <button data-theme="warm">Warm</button>
+    <button data-theme="teal">Teal</button>
+  </div>
+
+  <div id="form-root"></div>
+
+  <div class="demo-status">
+    <span id="status-step">Step: 0</span>
+    <span id="status-progress">Progress: 0%</span>
+    <span id="status-data">Fields: 0</span>
+  </div>
+
+  <!-- Library CSS -->
+  <link rel="stylesheet" href="src/css/index.css">
+
+  <!-- Theme stylesheets (only one active at a time) -->
+  <link rel="stylesheet" href="src/themes/default.css" id="theme-default">
+  <link rel="stylesheet" href="src/themes/warm.css" id="theme-warm" disabled>
+  <link rel="stylesheet" href="src/themes/teal.css" id="theme-teal" disabled>
+
+  <script type="module">
+    import { renderForm, initForm, calculateProgress } from './src/index.js';
+
+    // ── Sample Schema ──────────────────────────────────────────
+    const schema = {
+      steps: [
+        {
+          id: 0,
+          title: 'Welcome',
+          type: 'welcome',
+          content: {
+            heading: 'Employee Engagement Survey 2026',
+            intro: 'Welcome to the annual engagement survey. Your feedback helps us build a better workplace.'
+          },
+          fields: [
+            { type: 'text', name: 'org_name', label: 'Organization name', required: true, placeholder: 'Enter your organization name' }
+          ]
+        },
+        {
+          id: 1,
+          title: 'Goals',
+          sectionNum: '1',
+          subtitle: 'Does your organization have diversity targets?',
+          fields: [
+            {
+              type: 'radio-cards',
+              name: 'has_target',
+              options: [
+                { value: 'Yes', label: 'Yes', description: 'We have set targets' },
+                { value: 'No', label: 'No', description: 'We have not set targets' }
+              ],
+              conditional: {
+                trigger: 'Yes',
+                fields: [
+                  { type: 'number', name: 'target_pct', label: 'Target percentage', placeholder: 'e.g. 30%', compact: true, maxLength: 3 },
+                  { type: 'number', name: 'target_year', label: 'Target year', placeholder: 'e.g. 2028', compact: true, maxLength: 4 }
+                ]
+              }
+            },
+            {
+              type: 'info-block',
+              content: 'Diversity targets typically include representation across:\n\n1. <strong>Gender</strong> — Male, female, and non-binary\n2. <strong>Ethnicity</strong> — Cultural background diversity\n3. <strong>Age</strong> — Generational balance'
+            }
+          ]
+        },
+        {
+          id: 2,
+          title: 'Quantitative',
+          sectionNum: '2',
+          subtitle: 'Organizational headcount data',
+          fields: [
+            { type: 'number', name: 'total_staff', label: 'Total number of <span class="label-highlight">employees</span>', group: 'staff' },
+            { type: 'number', name: 'diverse_staff', label: 'Of which from <span class="label-highlight">diverse backgrounds</span>', group: 'staff', indent: true, hint: 'If exact numbers are unavailable, an estimate is acceptable.' },
+            { type: 'checkbox', name: 'diverse_estimated', label: 'This is an estimate', group: 'staff', indent: true },
+            { type: 'number', name: 'leadership_count', label: 'Number in <span class="label-highlight">leadership</span>', group: 'leadership' },
+            { type: 'number', name: 'diverse_leadership', label: 'Of which from <span class="label-highlight">diverse backgrounds</span>', group: 'leadership', indent: true }
+          ]
+        },
+        {
+          id: 3,
+          title: 'Leadership',
+          sectionNum: '3.1',
+          subtitle: 'Leadership commitment',
+          likert: {
+            id: 'likert-leadership',
+            prefix: 'lead',
+            questions: [
+              'Senior leadership is committed to diversity goals and policies',
+              'Leadership actively champions the importance of cultural diversity',
+              'Leadership demonstrably drives toward desired results',
+              'Sufficient resources (budget, staff, technology) are allocated to diversity goals',
+              'Leadership takes ultimate responsibility for the diversity strategy'
+            ]
+          },
+          toelichting: 'leadership_notes'
+        },
+        {
+          id: 4,
+          title: 'Strategy',
+          sectionNum: '3.2',
+          subtitle: 'Strategy and management',
+          likert: {
+            id: 'likert-strategy',
+            prefix: 'strat',
+            questions: [
+              'Diversity is a business case for our organization',
+              'The organization pursues explicit diversity targets',
+              'How these targets will be achieved and by when is documented',
+              'Teams report on achieving diversity objectives',
+              'Managers are evaluated on achieving diversity targets'
+            ]
+          }
+        },
+        {
+          id: 5,
+          title: 'Open Feedback',
+          sectionNum: '4',
+          subtitle: 'Your thoughts',
+          fields: [
+            { type: 'textarea', name: 'motivation', label: 'What is your primary motivation for diversity policies?' },
+            { type: 'textarea', name: 'biggest_barrier', label: 'What is the biggest barrier you experience?' },
+            { type: 'textarea', name: 'biggest_enabler', label: 'What works best to advance diversity?' }
+          ]
+        },
+        {
+          id: 6,
+          title: 'Sign Off',
+          sectionNum: '5',
+          subtitle: 'Signature',
+          introText: 'Please confirm the accuracy of the information provided.',
+          fields: [
+            { type: 'date', name: 'sign_date', label: 'Date' },
+            { type: 'text', name: 'signee_name', label: 'Name of signatory' },
+            { type: 'checkbox', name: 'confirmation', label: 'I confirm that the information provided is accurate' }
+          ]
+        }
+      ],
+      likertOptions: [
+        { value: 0, label: 'Not at all' },
+        { value: 1, label: 'Somewhat' },
+        { value: 2, label: 'Mostly' },
+        { value: 3, label: 'Fully' }
+      ],
+      labels: {
+        next: 'Next',
+        previous: 'Previous',
+        reset: '\u21BA',
+        commentToggle: 'Leave a comment',
+        commentPlaceholder: 'Optional comment...',
+        toelichtingLabel: 'Notes (optional)',
+        toelichtingPlaceholder: 'Explain your answers...',
+        likertHeader: 'Achieved:'
+      }
+    };
+
+    // ── Render + Initialize ────────────────────────────────────
+    const root = document.getElementById('form-root');
+    root.innerHTML = renderForm(schema, { includeNav: false });
+
+    const formController = initForm(root.querySelector('.vl-form'), {
+      onStepChange(newStep, oldStep, direction) {
+        updateStatus();
+      },
+      onFormChange(name, value) {
+        updateStatus();
+      }
+    });
+
+    function updateStatus() {
+      const state = formController.getState();
+      const progress = formController.getProgress();
+      const data = formController.getFormData();
+      const filledFields = Object.values(data).filter(v => v && v.toString().trim()).length;
+
+      document.getElementById('status-step').textContent = `Step: ${state.currentStep + 1} / ${state.totalSteps}`;
+      document.getElementById('status-progress').textContent = `Progress: ${progress}%`;
+      document.getElementById('status-data').textContent = `Fields filled: ${filledFields}`;
+    }
+
+    // ── Theme Switching ────────────────────────────────────────
+    document.querySelector('.demo-themes').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-theme]');
+      if (!btn) return;
+
+      const theme = btn.dataset.theme;
+
+      document.querySelectorAll('.demo-themes button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      ['default', 'warm', 'teal'].forEach(t => {
+        const link = document.getElementById(`theme-${t}`);
+        if (link) link.disabled = (t !== theme);
+      });
+    });
+
+    updateStatus();
+  </script>
+</body>
+</html>

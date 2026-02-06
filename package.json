@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:lib": "vite build -c lib/vite.config.js",
     "build:html": "node scripts/build-survey-html.js",
     "preview": "vite preview",
     "postinstall": "npm run build:html && npm run build"

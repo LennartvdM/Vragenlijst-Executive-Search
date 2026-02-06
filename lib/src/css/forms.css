@@ -1,0 +1,206 @@
+/**
+ * Form Elements — @vragenlijst/forms
+ *
+ * Field wrapper, text input, textarea, number, date, checkbox, hints, validation
+ */
+
+/* Field wrapper */
+.vl-field {
+  margin-bottom: var(--vl-space-lg);
+}
+
+.vl-field label {
+  display: block;
+  font-size: var(--vl-font-size-base);
+  font-weight: var(--vl-font-weight-medium);
+  color: var(--vl-color-text);
+  margin-bottom: var(--vl-space-sm);
+}
+
+/* Text, number, date, email inputs + textarea + select */
+.vl-field input[type="text"],
+.vl-field input[type="number"],
+.vl-field input[type="date"],
+.vl-field input[type="email"],
+.vl-field input[type="password"],
+.vl-field textarea,
+.vl-field select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--vl-color-sand-dark);
+  border-radius: var(--vl-radius-base);
+  font-size: var(--vl-font-size-base);
+  font-family: var(--vl-font-family);
+  background: var(--vl-color-input);
+  color: var(--vl-color-text);
+  transition: all var(--vl-transition-slow);
+  opacity: 0.6;
+}
+
+/* Filled state — inputs become fully opaque when they have content */
+.vl-field input:not(:placeholder-shown),
+.vl-field textarea:not(:placeholder-shown) {
+  opacity: 1;
+}
+
+/* Focus ring */
+.vl-field input:focus,
+.vl-field textarea:focus,
+.vl-field select:focus {
+  outline: none;
+  border-color: var(--vl-color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--vl-color-primary-rgb), 0.25);
+  opacity: 1;
+}
+
+/* Error state */
+.vl-field input.vl-error,
+.vl-field textarea.vl-error {
+  border-color: var(--vl-color-error);
+}
+
+/* Textarea specifics */
+.vl-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Hint text */
+.vl-field__hint {
+  display: block;
+  font-size: var(--vl-font-size-xs);
+  color: var(--vl-color-text-muted);
+  margin-top: var(--vl-space-sm);
+}
+
+/* Validation message */
+.vl-field__validation {
+  display: block;
+  font-size: var(--vl-font-size-xs);
+  color: var(--vl-color-error);
+  margin-top: var(--vl-space-sm);
+  animation: vl-validation-fade-in 0.2s ease;
+}
+
+@keyframes vl-validation-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Compact variant — inline label + narrow input */
+.vl-field--compact {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-sm);
+  margin-right: var(--vl-space-xl);
+  margin-bottom: var(--vl-space-md);
+}
+
+.vl-field--compact label {
+  margin-bottom: 0;
+  white-space: nowrap;
+  font-size: var(--vl-font-size-sm);
+}
+
+.vl-field--compact input {
+  width: 104px;
+  padding: 6px 10px;
+  font-size: var(--vl-font-size-base);
+  text-align: center;
+  border-radius: var(--vl-radius-sm);
+}
+
+/* Input wrapper (for suffixes like % or year) */
+.vl-field__input-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-xs);
+}
+
+.vl-field__suffix {
+  font-size: var(--vl-font-size-base);
+  color: var(--vl-color-text-light);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+/* Indented sub-field (with vertical rule) */
+.vl-field--indent {
+  padding-left: var(--vl-space-xl);
+}
+
+/* Checkbox field */
+.vl-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: var(--vl-font-weight-normal);
+  cursor: pointer;
+  font-size: var(--vl-font-size-sm);
+  color: var(--vl-color-text-light);
+  opacity: 0.7;
+}
+
+.vl-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: var(--vl-color-accent);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.vl-checkbox:has(input:checked) {
+  opacity: 1;
+}
+
+/* Question group — vertical rule for nested sub-fields */
+.vl-question-group .vl-field--indent {
+  margin-left: var(--vl-space-sm);
+  padding-left: var(--vl-space-lg);
+  border-left: 1px solid var(--vl-color-sand);
+  margin-bottom: 0;
+}
+
+.vl-question-group .vl-field--indent + .vl-field--indent {
+  padding-top: var(--vl-space-sm);
+}
+
+.vl-question-group .vl-field:not(.vl-field--indent) + .vl-field--indent {
+  margin-top: var(--vl-space-sm);
+  padding-top: var(--vl-space-md);
+}
+
+.vl-question-group .vl-field--indent:last-child {
+  padding-bottom: var(--vl-space-xs);
+  margin-bottom: var(--vl-space-xl);
+}
+
+/* Info block — callout for definitions/explanations */
+.vl-info-block {
+  background: var(--vl-color-sand-light);
+  border-left: 3px solid var(--vl-color-accent);
+  padding: var(--vl-space-base) var(--vl-space-lg);
+  margin: var(--vl-space-sm) 0 var(--vl-space-xl) 0;
+  border-radius: 0 var(--vl-radius-sm) var(--vl-radius-sm) 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--vl-color-text-light);
+}
+
+.vl-info-block p {
+  margin: 0 0 var(--vl-space-sm) 0;
+}
+
+.vl-info-block p:last-child {
+  margin-bottom: 0;
+}
+
+/* Hide number input spinners */
+.vl-form input[inputmode="numeric"]::-webkit-outer-spin-button,
+.vl-form input[inputmode="numeric"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.vl-form input[inputmode="numeric"] {
+  -moz-appearance: textfield;
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@vragenlijst/forms",
+  "version": "0.1.0",
+  "description": "Schema-driven form component library with opinionated design",
+  "type": "module",
+  "main": "dist/vragenlijst-forms.js",
+  "module": "dist/vragenlijst-forms.es.js",
+  "style": "dist/vragenlijst.css",
+  "exports": {
+    ".": {
+      "import": "./dist/vragenlijst-forms.es.js",
+      "require": "./dist/vragenlijst-forms.js"
+    },
+    "./css": "./dist/vragenlijst.css",
+    "./css/*": "./src/css/*",
+    "./themes/*": "./src/themes/*"
+  },
+  "files": [
+    "dist/",
+    "src/css/",
+    "src/themes/"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --open lib/demo.html"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  },
+  "keywords": ["forms", "survey", "likert", "design-system", "vanilla-js"],
+  "license": "MIT"
+}

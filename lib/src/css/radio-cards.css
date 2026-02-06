@@ -1,0 +1,175 @@
+/**
+ * Radio Cards — @vragenlijst/forms
+ *
+ * Rich radio button cards with selection state,
+ * conditional-awaiting indicator, and animated radio dot.
+ */
+
+.vl-option-cards {
+  margin-bottom: var(--vl-space-base);
+}
+
+.vl-option-card {
+  border: 2px solid var(--vl-color-sand-dark);
+  border-radius: var(--vl-radius-md);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vl-space-md);
+  background: var(--vl-color-surface);
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: all var(--vl-transition-base);
+}
+
+.vl-option-card:hover {
+  border-color: var(--vl-color-primary);
+  background: var(--vl-color-sand-light);
+  opacity: 0.85;
+}
+
+.vl-option-card.selected {
+  border-color: var(--vl-color-accent);
+  background: var(--vl-color-sand-light);
+  opacity: 1;
+  box-shadow: 0 4px 16px rgba(var(--vl-color-accent-rgb), 0.15);
+  transform: translateY(-2px);
+}
+
+/* Awaiting conditional — selected but child fields incomplete */
+.vl-option-card.selected.awaiting-conditional {
+  border-color: var(--vl-color-primary);
+  box-shadow: 0 2px 8px rgba(var(--vl-color-primary-rgb), 0.2);
+  transform: translateY(-1px);
+}
+
+/* Conditional satisfied — everything filled */
+.vl-option-card.selected.conditional-satisfied {
+  border-color: var(--vl-color-accent);
+  box-shadow: 0 6px 20px rgba(var(--vl-color-accent-rgb), 0.2);
+  transform: translateY(-3px);
+}
+
+/* Hide native radio */
+.vl-option-card input {
+  display: none;
+}
+
+/* Custom radio indicator */
+.vl-option-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--vl-color-text-light);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--vl-transition-base);
+  position: relative;
+}
+
+.vl-option-card:hover .vl-option-radio {
+  background: rgba(var(--vl-color-accent-rgb), 0.12);
+  border-color: var(--vl-color-primary);
+}
+
+.vl-option-card.selected .vl-option-radio {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* Contracting ring animation */
+@keyframes vl-ring-contract {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes vl-dot-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.vl-option-card.selected .vl-option-radio::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--vl-color-accent);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: vl-ring-contract 0.25s linear forwards;
+}
+
+.vl-option-card.selected .vl-option-radio::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--vl-color-accent);
+  border-radius: 50%;
+  animation: vl-dot-fade-in 0.12s linear forwards;
+}
+
+/* Card content */
+.vl-option-content h3 {
+  font-size: var(--vl-font-size-base);
+  font-weight: var(--vl-font-weight-medium);
+  color: var(--vl-color-text);
+  margin-bottom: 2px;
+}
+
+.vl-option-content p {
+  font-size: var(--vl-font-size-xs);
+  color: var(--vl-color-text-muted);
+  line-height: 1.4;
+}
+
+/* Question header (label + reset button) */
+.vl-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--vl-space-sm);
+}
+
+.vl-question-header label {
+  font-size: var(--vl-font-size-base);
+  font-weight: var(--vl-font-weight-medium);
+  color: var(--vl-color-text);
+}
+
+/* Reset button */
+.vl-reset-btn {
+  background: none;
+  border: 1px solid var(--vl-color-sand-dark);
+  border-radius: var(--vl-radius-sm);
+  padding: 4px 10px;
+  font-size: var(--vl-font-size-base);
+  color: var(--vl-color-text-muted);
+  cursor: pointer;
+  transition: all var(--vl-transition-base);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vl-reset-btn.has-value {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vl-reset-btn:hover {
+  border-color: var(--vl-color-primary);
+  color: var(--vl-color-accent);
+  background: var(--vl-color-sand-light);
+}

@@ -1,0 +1,16 @@
+/**
+ * @vragenlijst/forms — All component styles
+ *
+ * Import this single file to get the full design system,
+ * or import individual modules for tree-shaking.
+ */
+
+@import './tokens.css';
+@import './base.css';
+@import './buttons.css';
+@import './forms.css';
+@import './radio-cards.css';
+@import './conditionals.css';
+@import './likert.css';
+@import './modals.css';
+@import './progress.css';

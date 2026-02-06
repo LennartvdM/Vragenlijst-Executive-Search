@@ -1,0 +1,38 @@
+/**
+ * Teal Theme — @vragenlijst/forms
+ *
+ * Cool teal/emerald palette for a more corporate feel.
+ * Import after the base CSS to override the default palette.
+ *
+ * Usage:
+ *   @import '@vragenlijst/forms/css';
+ *   @import '@vragenlijst/forms/themes/teal.css';
+ */
+
+:root {
+  --vl-color-primary: #7cc5c0;
+  --vl-color-primary-light: #b3ddd9;
+  --vl-color-primary-dark: #4ea8a2;
+  --vl-color-primary-rgb: 124, 197, 192;
+
+  --vl-color-accent: #1a5c57;
+  --vl-color-accent-dark: #0f3d3a;
+  --vl-color-accent-rgb: 26, 92, 87;
+
+  --vl-color-highlight: #e8a091;
+  --vl-color-highlight-dark: #d4836f;
+
+  --vl-color-surface: #f8fcfc;
+  --vl-color-surface-rgb: 248, 252, 252;
+  --vl-color-input: #ffffff;
+  --vl-color-backdrop: linear-gradient(135deg, #e8f4f3 0%, #dff0ee 50%, #f2f9f8 100%);
+
+  --vl-color-sand: #d4e8e6;
+  --vl-color-sand-light: #eaf4f3;
+  --vl-color-sand-dark: #a8c9c6;
+  --vl-color-sand-rgb: 212, 232, 230;
+
+  --vl-color-text: #1a2d2c;
+  --vl-color-text-light: #3c5957;
+  --vl-color-text-muted: #6b8a88;
+}
