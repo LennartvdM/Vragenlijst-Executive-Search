@@ -1,0 +1,332 @@
+/**
+ * Likert Table — @vragenlijst/forms
+ *
+ * Desktop: HTML table with custom radio overlays + highlight pills
+ * Mobile:  Segmented button controls with touch sliding
+ */
+
+/* ===== Desktop Table ===== */
+
+.vl-likert-table {
+  width: 100%;
+  font-size: var(--vl-font-size-sm);
+  border-collapse: collapse;
+  margin-bottom: var(--vl-space-base);
+  overflow: visible;
+  table-layout: fixed;
+}
+
+.vl-likert-table tbody {
+  overflow: visible;
+}
+
+.vl-likert-table th {
+  background: var(--vl-color-sand);
+  padding: 10px 4px;
+  font-weight: var(--vl-font-weight-semibold);
+  text-align: center;
+  color: var(--vl-color-text);
+  border-bottom: 2px solid var(--vl-color-sand-dark);
+}
+
+.vl-likert-table th:first-child {
+  text-align: left;
+  width: 45%;
+  padding-left: var(--vl-space-sm);
+  border-radius: var(--vl-radius-base) 0 0 0;
+}
+
+.vl-likert-table th:not(:first-child) {
+  width: 13.75%;
+}
+
+.vl-likert-table th.vl-likert-header-label {
+  color: var(--vl-color-accent-dark);
+}
+
+.vl-likert-table th:last-child {
+  border-radius: 0 var(--vl-radius-base) 0 0;
+}
+
+.vl-likert-table td {
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--vl-color-sand);
+  text-align: center;
+  color: var(--vl-color-text-light);
+  position: relative;
+  z-index: 1;
+}
+
+.vl-likert-table td:first-child {
+  text-align: left;
+  padding-left: var(--vl-space-sm);
+}
+
+.vl-likert-table td .q-num {
+  color: var(--vl-color-text-muted);
+  font-weight: var(--vl-font-weight-medium);
+  margin-right: 2px;
+}
+
+.vl-likert-table tbody tr {
+  opacity: 0.85;
+  transition: opacity var(--vl-transition-base), background var(--vl-transition-base);
+  position: relative;
+}
+
+.vl-likert-table tbody tr.answered {
+  opacity: 1;
+}
+
+/* ===== Pill Highlight (positioned by JS) ===== */
+
+.vl-likert-pill {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 36px;
+  background: rgba(var(--vl-color-muted-rgb), 0.12);
+  border-radius: var(--vl-radius-pill);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: vl-pill-fade-in 0.2s linear forwards;
+}
+
+.vl-likert-pill.fade-out {
+  animation: vl-pill-fade-out 0.2s linear forwards;
+}
+
+@keyframes vl-pill-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes vl-pill-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ===== Custom Radio (built from scratch) ===== */
+
+/* Hide native radio but keep it functional for form data */
+.vl-likert-table input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.vl-likert-radio {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* Base circle */
+.vl-likert-radio::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--vl-color-text-light);
+  border-radius: 50%;
+  background: white;
+  box-sizing: border-box;
+  transition: border-color var(--vl-transition-fast);
+}
+
+.vl-likert-radio:hover::before {
+  border-color: var(--vl-color-text);
+}
+
+/* Ghost dot on hover */
+.vl-likert-radio::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vl-color-text-light);
+  opacity: 0;
+  transition: opacity var(--vl-transition-fast);
+}
+
+.vl-likert-radio:hover::after {
+  opacity: 0.4;
+}
+
+/* Selected */
+.vl-likert-radio.selected::after {
+  background: var(--vl-color-accent);
+  opacity: 1;
+}
+
+.vl-likert-radio.selected::before {
+  border-color: var(--vl-color-accent);
+}
+
+/* Target ring animation */
+.vl-likert-radio .target-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--vl-color-accent);
+  border-radius: 50%;
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vl-likert-radio.selected .target-ring {
+  animation: vl-likert-ring-contract 0.25s linear forwards;
+}
+
+@keyframes vl-likert-ring-contract {
+  0% { opacity: 1; transform: scale(1.8); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* Answered row checkmark */
+.vl-likert-table tbody tr.answered::after {
+  content: '\2713';
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--vl-color-accent);
+  font-weight: var(--vl-font-weight-bold);
+  font-size: var(--vl-font-size-base);
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.vl-likert-table tbody tr.answered.just-answered::after {
+  animation: vl-checkmark-pop 0.25s linear;
+}
+
+@keyframes vl-checkmark-pop {
+  0% { transform: translateY(-50%) scale(0.5); opacity: 0; }
+  70% { transform: translateY(-50%) scale(1.15); opacity: 0.5; }
+  100% { transform: translateY(-50%) scale(1); opacity: 0.4; }
+}
+
+/* Missing row arrow indicator */
+.vl-likert-table.has-missing tbody tr:not(.answered)::after {
+  content: '\2039';
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--vl-color-highlight-dark);
+  font-weight: 900;
+  font-size: 20px;
+  pointer-events: none;
+  opacity: 0.5;
+  animation: vl-arrow-bounce 2s ease-in-out infinite;
+}
+
+@keyframes vl-arrow-bounce {
+  0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.5; }
+  50% { transform: translateY(-50%) translateX(-3px); opacity: 0.7; }
+}
+
+/* ===== Likert Header (section header + reset btn) ===== */
+
+.vl-likert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--vl-space-sm);
+}
+
+.vl-likert-header .vl-reset-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: all var(--vl-transition-base);
+}
+
+.vl-likert-header.has-value .vl-reset-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===== Mobile Segmented Controls ===== */
+
+.vl-likert-segment {
+  display: none;  /* shown only at mobile breakpoint via JS */
+  position: relative;
+  border-radius: var(--vl-radius-base);
+  background: var(--vl-color-sand-light);
+  border: 1px solid var(--vl-color-sand-dark);
+  overflow: hidden;
+  margin: var(--vl-space-sm) 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.vl-likert-segment.visible {
+  display: flex;
+}
+
+.vl-likert-segment-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(25% - 2px);
+  height: calc(100% - 4px);
+  background: white;
+  border-radius: var(--vl-radius-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform var(--vl-transition-base);
+  z-index: 0;
+  opacity: 0;
+}
+
+.vl-likert-segment.has-selection .vl-likert-segment-slider {
+  opacity: 1;
+}
+
+.vl-likert-segment-slider.no-transition {
+  transition: none;
+}
+
+.vl-likert-segment-option {
+  flex: 1;
+  padding: 10px 4px;
+  font-size: var(--vl-font-size-xs);
+  font-family: var(--vl-font-family);
+  font-weight: var(--vl-font-weight-medium);
+  color: var(--vl-color-text-muted);
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: color var(--vl-transition-fast);
+}
+
+.vl-likert-segment-option.selected {
+  color: var(--vl-color-accent);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.vl-likert-segment-option.hover {
+  color: var(--vl-color-accent);
+}
+
+.vl-likert-segment-label {
+  pointer-events: none;
+}

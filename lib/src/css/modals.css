@@ -1,0 +1,153 @@
+/**
+ * Modal Dialogs — @vragenlijst/forms
+ *
+ * Overlay + centered content card with icon variants.
+ */
+
+.vl-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--vl-space-lg);
+  backdrop-filter: blur(4px);
+}
+
+.vl-modal-overlay[hidden] {
+  display: none;
+}
+
+.vl-modal {
+  background: white;
+  border-radius: var(--vl-radius-lg);
+  padding: var(--vl-space-3xl);
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--vl-shadow-xl);
+  animation: vl-modal-slide-in 0.3s linear;
+}
+
+@keyframes vl-modal-slide-in {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.vl-modal h2 {
+  font-size: var(--vl-font-size-2xl);
+  font-weight: var(--vl-font-weight-semibold);
+  color: var(--vl-color-text);
+  margin: 0 0 var(--vl-space-md) 0;
+}
+
+.vl-modal__text {
+  font-size: var(--vl-font-size-md);
+  color: var(--vl-color-text-light);
+  line-height: var(--vl-line-height);
+  margin: 0 0 var(--vl-space-xl) 0;
+}
+
+.vl-modal__text--warning {
+  color: var(--vl-color-warning-dark);
+}
+
+/* Icon circle */
+.vl-modal__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--vl-space-lg);
+}
+
+.vl-modal__icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.vl-modal__icon--info {
+  background: linear-gradient(135deg, var(--vl-color-sand-light) 0%, var(--vl-color-primary-light) 100%);
+}
+
+.vl-modal__icon--info svg {
+  color: var(--vl-color-accent);
+}
+
+.vl-modal__icon--warning {
+  background: linear-gradient(135deg, var(--vl-color-warning-light) 0%, var(--vl-color-warning) 30%, var(--vl-color-warning-light) 100%);
+}
+
+.vl-modal__icon--warning svg {
+  color: var(--vl-color-warning);
+}
+
+.vl-modal__icon--error {
+  background: linear-gradient(135deg, var(--vl-color-danger-light) 0%, var(--vl-color-danger-medium) 100%);
+}
+
+.vl-modal__icon--error svg {
+  color: var(--vl-color-danger);
+}
+
+.vl-modal__icon--success {
+  background: linear-gradient(135deg, var(--vl-color-success-light) 0%, var(--vl-color-success) 100%);
+}
+
+.vl-modal__icon--success svg {
+  color: white;
+}
+
+/* Button row */
+.vl-modal__buttons {
+  display: flex;
+  gap: var(--vl-space-md);
+  justify-content: center;
+}
+
+.vl-modal__buttons .vl-btn {
+  flex: 1;
+  padding: 12px 20px;
+}
+
+/* Link below buttons */
+.vl-modal__link {
+  display: inline-block;
+  margin-top: var(--vl-space-base);
+  font-size: var(--vl-font-size-base);
+  color: var(--vl-color-accent);
+  text-decoration: none;
+  font-weight: var(--vl-font-weight-medium);
+  transition: all var(--vl-transition-base);
+}
+
+.vl-modal__link:hover {
+  color: var(--vl-color-accent-dark);
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .vl-modal {
+    padding: 30px var(--vl-space-xl);
+  }
+
+  .vl-modal h2 {
+    font-size: var(--vl-font-size-xl);
+  }
+
+  .vl-modal__buttons {
+    flex-direction: column;
+  }
+
+  .vl-modal__buttons .vl-btn {
+    width: 100%;
+  }
+}

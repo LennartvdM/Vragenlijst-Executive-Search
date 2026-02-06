@@ -1,0 +1,61 @@
+/**
+ * Conditional Fields — @vragenlijst/forms
+ *
+ * Animated reveal/hide for fields that depend on a parent selection.
+ * Uses max-height + opacity for smooth expand/collapse.
+ */
+
+.vl-conditional {
+  margin-left: var(--vl-space-2xl);
+  padding: var(--vl-space-base);
+  padding-right: 0;
+  border-left: 2px solid var(--vl-color-primary);
+  margin-top: 0;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, rgba(var(--vl-color-primary-rgb), 0.08) 0%, transparent 100%);
+  border-radius: 0 var(--vl-radius-base) var(--vl-radius-base) 0;
+
+  /* Collapsed by default */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition:
+    max-height var(--vl-transition-slow),
+    opacity 0.2s linear,
+    padding var(--vl-transition-slow);
+  visibility: hidden;
+  width: calc(100% - var(--vl-space-2xl));
+}
+
+.vl-conditional.show {
+  max-height: 500px;
+  opacity: 1;
+  padding-top: var(--vl-space-base);
+  padding-bottom: var(--vl-space-base);
+  visibility: visible;
+}
+
+/* Compact fields inside conditionals */
+.vl-conditional .vl-field--compact {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-sm);
+  margin-right: var(--vl-space-xl);
+  margin-bottom: var(--vl-space-md);
+}
+
+.vl-conditional .vl-field--compact label {
+  margin-bottom: 0;
+  white-space: nowrap;
+  font-size: var(--vl-font-size-sm);
+}
+
+.vl-conditional .vl-field--compact input {
+  width: 104px;
+  padding: 6px 10px;
+  font-size: var(--vl-font-size-base);
+  text-align: center;
+  border-radius: var(--vl-radius-sm);
+}

@@ -1,0 +1,38 @@
+/**
+ * Warm Theme — @vragenlijst/forms
+ *
+ * Salmon/terracotta palette — the original Talent naar de Top warmth.
+ * Import this file after the base CSS to override the default palette.
+ *
+ * Usage:
+ *   @import '@vragenlijst/forms/css';
+ *   @import '@vragenlijst/forms/themes/warm.css';
+ */
+
+:root {
+  --vl-color-primary: #e8a091;
+  --vl-color-primary-light: #f5c4b8;
+  --vl-color-primary-dark: #d4836f;
+  --vl-color-primary-rgb: 232, 160, 145;
+
+  --vl-color-accent: #c4785a;
+  --vl-color-accent-dark: #a85c46;
+  --vl-color-accent-rgb: 196, 120, 90;
+
+  --vl-color-highlight: #7cc5c0;
+  --vl-color-highlight-dark: #5ba8a3;
+
+  --vl-color-surface: #fffbf7;
+  --vl-color-surface-rgb: 255, 251, 247;
+  --vl-color-input: #ffffff;
+  --vl-color-backdrop: linear-gradient(135deg, #f5ede4 0%, #f0e2d4 50%, #faf5f0 100%);
+
+  --vl-color-sand: #f5e6d3;
+  --vl-color-sand-light: #faf3ea;
+  --vl-color-sand-dark: #d4c4b0;
+  --vl-color-sand-rgb: 245, 230, 211;
+
+  --vl-color-text: #4a3728;
+  --vl-color-text-light: #7a6555;
+  --vl-color-text-muted: #9a8777;
+}

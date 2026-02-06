@@ -1,0 +1,94 @@
+/**
+ * Progress Bar — @vragenlijst/forms
+ *
+ * Horizontal bar with gradient fill + percentage label.
+ * Includes step dot indicators.
+ */
+
+/* ===== Progress Bar ===== */
+
+.vl-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-sm);
+}
+
+.vl-progress__bar {
+  flex: 1;
+  height: 8px;
+  background: var(--vl-color-sand);
+  border-radius: var(--vl-radius-pill);
+  overflow: hidden;
+}
+
+.vl-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--vl-color-primary) 0%, var(--vl-color-accent) 100%);
+  border-radius: var(--vl-radius-pill);
+  transition: width var(--vl-transition-slow);
+  width: 0;
+}
+
+.vl-progress__label {
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-semibold);
+  color: var(--vl-color-text-muted);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ===== Step Dots ===== */
+
+.vl-progress-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--vl-space-sm) 0;
+}
+
+.vl-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vl-color-sand-dark);
+  transition: all var(--vl-transition-base);
+}
+
+.vl-progress-dot--active {
+  background: var(--vl-color-accent);
+  transform: scale(1.25);
+}
+
+.vl-progress-dot--complete {
+  background: var(--vl-color-accent);
+  opacity: 0.6;
+}
+
+.vl-progress-dot--partial {
+  background: var(--vl-color-primary);
+  opacity: 0.8;
+}
+
+/* ===== Sidebar Navigation Status Dots ===== */
+
+.vl-nav-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--vl-color-sand-dark);
+  flex-shrink: 0;
+  transition: all 0.6s ease-out;
+}
+
+.vl-nav-status--active {
+  background: var(--vl-color-highlight);
+  transform: scale(1.2);
+}
+
+.vl-nav-status--complete {
+  background: var(--vl-color-accent);
+}
+
+.vl-nav-status--partial {
+  background: var(--vl-color-primary);
+}

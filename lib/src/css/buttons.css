@@ -1,0 +1,108 @@
+/**
+ * Buttons — @vragenlijst/forms
+ *
+ * Variants: primary, secondary, tertiary, danger
+ * Modifiers: --full, --small, --loading, --disabled
+ */
+
+.vl-btn {
+  padding: 12px 36px;
+  font-size: var(--vl-font-size-base);
+  font-family: var(--vl-font-family);
+  font-weight: var(--vl-font-weight-semibold);
+  border-radius: var(--vl-radius-base);
+  border: none;
+  cursor: pointer;
+  transition: all var(--vl-transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vl-space-sm);
+  flex-shrink: 0;
+  line-height: 1;
+  text-decoration: none;
+}
+
+/* Primary — gradient fill */
+.vl-btn--primary {
+  background: linear-gradient(135deg, var(--vl-color-primary) 0%, var(--vl-color-accent) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(var(--vl-color-accent-rgb), 0.3);
+}
+
+.vl-btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(var(--vl-color-accent-rgb), 0.4);
+}
+
+.vl-btn--primary:disabled,
+.vl-btn--primary.vl-btn--disabled {
+  background: var(--vl-color-sand-dark);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.5;
+}
+
+/* Secondary — outlined surface */
+.vl-btn--secondary {
+  background: var(--vl-color-surface);
+  border: 2px solid var(--vl-color-sand-dark);
+  color: var(--vl-color-text);
+}
+
+.vl-btn--secondary:hover {
+  background: var(--vl-color-sand-light);
+  border-color: var(--vl-color-primary);
+}
+
+/* Tertiary — ghost outline */
+.vl-btn--tertiary {
+  background: transparent;
+  border: 2px solid var(--vl-color-accent);
+  color: var(--vl-color-accent);
+}
+
+.vl-btn--tertiary:hover {
+  background: rgba(var(--vl-color-accent-rgb), 0.1);
+}
+
+/* Danger — destructive action */
+.vl-btn--danger {
+  background: linear-gradient(135deg, var(--vl-color-danger) 0%, var(--vl-color-danger-dark) 100%);
+  color: white;
+  cursor: pointer;
+}
+
+.vl-btn--danger:hover {
+  background: linear-gradient(135deg, var(--vl-color-danger-dark) 0%, var(--vl-color-danger-darker) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--vl-color-danger-rgb), 0.3);
+}
+
+/* Modifiers */
+.vl-btn--full {
+  width: 100%;
+}
+
+.vl-btn--small {
+  padding: 8px 20px;
+  font-size: var(--vl-font-size-sm);
+}
+
+/* Loading state */
+.vl-btn--loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.vl-btn__spinner {
+  width: 18px;
+  height: 18px;
+  animation: vl-spin 1s linear infinite;
+}
+
+@keyframes vl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
