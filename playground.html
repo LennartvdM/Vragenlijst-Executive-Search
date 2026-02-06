@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Surface Preview Lab</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="/css/flatpickr-theme.css">
+  <style>
+    /* ── Playground layout ────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream, #fffbf7);
+      color: var(--text, #4a3728);
+      min-height: 100vh;
+    }
+
+    .pg-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Header bar ──────────────────────────────────── */
+    .pg-header {
+      grid-column: 1 / -1;
+      background: var(--terracotta, #c4785a);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .pg-header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .pg-header .pg-badge {
+      font-size: 11px;
+      background: rgba(255,255,255,0.2);
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-weight: 500;
+    }
+
+    .pg-header .pg-back {
+      margin-left: auto;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .pg-header .pg-back:hover { color: white; }
+
+    /* ── Controls panel (left sidebar) ───────────────── */
+    .pg-controls {
+      padding: 20px;
+      border-right: 1px solid rgba(74, 55, 40, 0.08);
+      overflow-y: auto;
+      background: rgba(245, 230, 211, 0.15);
+    }
+
+    .pg-controls h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light, #7a6555);
+      margin: 0 0 12px 0;
+    }
+
+    .pg-controls h2:not(:first-child) { margin-top: 24px; }
+
+    .pg-control {
+      margin-bottom: 12px;
+    }
+
+    .pg-control label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text, #4a3728);
+    }
+
+    .pg-control input[type="range"] {
+      width: 100%;
+      accent-color: var(--terracotta, #c4785a);
+    }
+
+    .pg-control select,
+    .pg-control input[type="number"] {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid rgba(74, 55, 40, 0.15);
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      color: var(--text);
+    }
+
+    .pg-control .pg-value {
+      font-size: 11px;
+      color: var(--text-light, #7a6555);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pg-control-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .pg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border: 1px solid rgba(74, 55, 40, 0.15);
+      border-radius: 8px;
+      background: white;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pg-btn:hover {
+      border-color: var(--terracotta);
+      background: rgba(196, 120, 90, 0.05);
+    }
+    .pg-btn-primary {
+      background: var(--terracotta);
+      color: white;
+      border-color: var(--terracotta);
+    }
+    .pg-btn-primary:hover {
+      background: #b06a4e;
+    }
+
+    .pg-separator {
+      border: none;
+      border-top: 1px solid rgba(74, 55, 40, 0.08);
+      margin: 20px 0;
+    }
+
+    .pg-log {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      background: rgba(74, 55, 40, 0.04);
+      border: 1px solid rgba(74, 55, 40, 0.08);
+      border-radius: 8px;
+      padding: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: var(--text-light);
+    }
+
+    .pg-log:empty::before {
+      content: 'Hover over a sidebar item to see events...';
+      color: rgba(74, 55, 40, 0.3);
+      font-style: italic;
+    }
+
+    /* ── Preview area (main) ─────────────────────────── */
+    .pg-main {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px;
+      overflow: auto;
+      position: relative;
+    }
+
+    /* Survey container in playground — override normal centering */
+    .pg-main .container {
+      position: relative;
+      transform-origin: top center;
+    }
+
+    /* Make all steps visible at once if "show all" is on */
+    .pg-main.show-all-steps .step { display: block !important; }
+    .pg-main.show-all-steps .step.active { display: block !important; }
+
+    /* ── Status indicator ────────────────────────────── */
+    .pg-status {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--text);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      z-index: 10000;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+    .pg-status.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Surface preview overrides for playground ────── */
+    .surface-preview {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ── Checkbox toggle ─────────────────────────────── */
+    .pg-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .pg-toggle input[type="checkbox"] {
+      accent-color: var(--terracotta);
+    }
+    .pg-toggle label {
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    /* ── Fill some dummy data visual indicators ─────── */
+    .pg-fill-status {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg-layout">
+    <header class="pg-header">
+      <h1>Surface Preview Lab</h1>
+      <span class="pg-badge">Playground</span>
+      <a href="/" class="pg-back">Terug naar formulier</a>
+    </header>
+
+    <aside class="pg-controls">
+      <h2>Preview Settings</h2>
+
+      <div class="pg-control">
+        <label for="ctl-scale">Scale</label>
+        <input type="range" id="ctl-scale" min="0.2" max="1" step="0.05" value="0.55">
+        <div class="pg-value" id="val-scale">0.55</div>
+      </div>
+
+      <div class="pg-control">
+        <label for="ctl-width">Preview width (px)</label>
+        <input type="range" id="ctl-width" min="200" max="700" step="10" value="380">
+        <div class="pg-value" id="val-width">380px</div>
+      </div>
+
+      <div class="pg-control">
+        <label for="ctl-maxheight">Max height (px)</label>
+        <input type="range" id="ctl-maxheight" min="150" max="600" step="10" value="320">
+        <div class="pg-value" id="val-maxheight">320px</div>
+      </div>
+
+      <div class="pg-control">
+        <label for="ctl-gap">Gap (px)</label>
+        <input type="range" id="ctl-gap" min="0" max="40" step="2" value="12">
+        <div class="pg-value" id="val-gap">12px</div>
+      </div>
+
+      <div class="pg-control-row">
+        <div class="pg-control">
+          <label for="ctl-delay-in">Delay in (ms)</label>
+          <input type="number" id="ctl-delay-in" min="0" max="1000" step="50" value="250">
+        </div>
+        <div class="pg-control">
+          <label for="ctl-delay-out">Delay out (ms)</label>
+          <input type="number" id="ctl-delay-out" min="0" max="1000" step="50" value="150">
+        </div>
+      </div>
+
+      <div class="pg-control">
+        <label for="ctl-place">Placement</label>
+        <select id="ctl-place">
+          <option value="right" selected>Right</option>
+          <option value="left">Left</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </div>
+
+      <div class="pg-control">
+        <label for="ctl-align">Alignment</label>
+        <select id="ctl-align">
+          <option value="start" selected>Start</option>
+          <option value="center">Center</option>
+          <option value="end">End</option>
+        </select>
+      </div>
+
+      <hr class="pg-separator">
+      <h2>Actions</h2>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="pg-btn pg-btn-primary" id="btn-apply">Apply settings</button>
+        <button class="pg-btn" id="btn-reset">Reset defaults</button>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="pg-btn" id="btn-fill-some">Fill random data</button>
+        <button class="pg-btn" id="btn-clear-data">Clear all data</button>
+      </div>
+
+      <div class="pg-toggle">
+        <input type="checkbox" id="ctl-show-all">
+        <label for="ctl-show-all">Show all steps at once</label>
+      </div>
+
+      <div class="pg-toggle">
+        <input type="checkbox" id="ctl-show-footer" checked>
+        <label for="ctl-show-footer">Show footer with fill status</label>
+      </div>
+
+      <hr class="pg-separator">
+      <h2>Event Log</h2>
+      <div class="pg-log" id="event-log"></div>
+    </aside>
+
+    <main class="pg-main" id="pg-main">
+      <div id="survey-mount" style="opacity:0;transition:opacity 0.3s ease;"></div>
+    </main>
+  </div>
+
+  <div class="pg-status" id="pg-status"></div>
+
+  <!-- Load survey dependencies for rendering -->
+  <script src="/js/config.js"></script>
+  <script src="/js/constants.js"></script>
+  <script src="/js/storage.js"></script>
+
+  <script type="module">
+    // ── Surface engine (inline, avoids separate fetch) ───────────
+    const Surface = (() => {
+      let overlay = null;
+      let activePreview = null;
+      let hideTimeout = null;
+      let showTimeout = null;
+
+      function init() {
+        if (overlay) return;
+        overlay = document.createElement('div');
+        overlay.className = 'surface-overlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+        document.body.appendChild(overlay);
+      }
+
+      function preview(trigger, opts = {}) {
+        const cfg = {
+          place: opts.place || 'right',
+          align: opts.align || 'start',
+          gap: opts.gap ?? 12,
+          delay: opts.delay || { in: 250, out: 150 },
+          previewScale: opts.previewScale ?? 0.55,
+          previewWidth: opts.previewWidth ?? 380,
+          previewMaxHeight: opts.previewMaxHeight ?? 320,
+          cloneFrom: opts.cloneFrom,
+          transform: opts.transform,
+          footer: opts.footer,
+          showFooter: opts.showFooter ?? true,
+        };
+        trigger.addEventListener('mouseenter', () => handleEnter(trigger, cfg));
+        trigger.addEventListener('mouseleave', () => handleLeave(cfg));
+      }
+
+      function handleEnter(trigger, cfg) {
+        if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+        if (showTimeout) { clearTimeout(showTimeout); showTimeout = null; }
+        if (activePreview && activePreview._trigger === trigger) return;
+        showTimeout = setTimeout(() => { showTimeout = null; showPreview(trigger, cfg); }, cfg.delay.in);
+      }
+
+      function handleLeave(cfg) {
+        if (showTimeout) { clearTimeout(showTimeout); showTimeout = null; }
+        hideTimeout = setTimeout(() => { hideTimeout = null; hidePreviewAnim(); }, cfg.delay.out);
+      }
+
+      function showPreview(trigger, cfg) {
+        hidePreviewNow();
+        if (!cfg.cloneFrom) return;
+        const source = cfg.cloneFrom();
+        if (!source) return;
+        init();
+
+        const container = document.createElement('div');
+        container.className = 'surface-preview';
+        container.style.cssText = `
+          position:absolute;pointer-events:auto;
+          background:var(--cream,#fffbf7);border-radius:10px;
+          box-shadow:0 8px 32px rgba(74,55,40,0.18),0 2px 8px rgba(74,55,40,0.08);
+          overflow:hidden;opacity:0;transform:scale(0.96);
+          transition:opacity 180ms ease,transform 180ms ease;
+          width:${cfg.previewWidth}px;max-height:${cfg.previewMaxHeight}px;
+        `;
+
+        const body = document.createElement('div');
+        body.className = 'surface-preview-body';
+        const innerW = cfg.previewWidth / cfg.previewScale;
+        body.style.cssText = `
+          width:${innerW}px;transform:scale(${cfg.previewScale});
+          transform-origin:top left;overflow:hidden;
+          max-height:${cfg.previewMaxHeight / cfg.previewScale}px;
+        `;
+
+        const clone = source.cloneNode(true);
+        clone.querySelectorAll('input,textarea,select,button').forEach(el => {
+          el.setAttribute('tabindex', '-1');
+          el.setAttribute('disabled', '');
+        });
+        clone.querySelectorAll('a').forEach(a => { a.removeAttribute('href'); a.style.pointerEvents = 'none'; });
+        if (cfg.transform) cfg.transform(clone);
+
+        body.appendChild(clone);
+        container.appendChild(body);
+
+        if (cfg.footer && cfg.showFooter) {
+          const footer = document.createElement('div');
+          footer.className = 'surface-preview-footer';
+          footer.style.cssText = `
+            padding:8px 14px;font-size:12px;color:var(--text-light,#7a6555);
+            border-top:1px solid rgba(74,55,40,0.08);
+            background:rgba(245,230,211,0.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+          `;
+          footer.textContent = cfg.footer;
+          container.appendChild(footer);
+        }
+
+        overlay.appendChild(container);
+        positionPreview(container, trigger, cfg);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            container.style.opacity = '1';
+            container.style.transform = 'scale(1)';
+          });
+        });
+
+        container.addEventListener('mouseenter', () => { if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; } });
+        container.addEventListener('mouseleave', () => {
+          hideTimeout = setTimeout(() => { hideTimeout = null; hidePreviewAnim(); }, cfg.delay.out);
+        });
+
+        activePreview = container;
+        activePreview._trigger = trigger;
+
+        // Log event
+        logEvent('show', trigger.querySelector('.label')?.textContent || trigger.textContent.trim());
+      }
+
+      function positionPreview(container, trigger, cfg) {
+        const tr = trigger.getBoundingClientRect();
+        const vw = window.innerWidth, vh = window.innerHeight;
+        void container.offsetHeight;
+        const cw = container.offsetWidth, ch = container.offsetHeight;
+        let left, top;
+
+        if (cfg.place === 'right') left = tr.right + cfg.gap;
+        else if (cfg.place === 'left') left = tr.left - cfg.gap - cw;
+        else if (cfg.place === 'top') top = tr.top - cfg.gap - ch;
+        else if (cfg.place === 'bottom') top = tr.bottom + cfg.gap;
+
+        if (cfg.place === 'left' || cfg.place === 'right') {
+          if (cfg.align === 'start') top = tr.top;
+          else if (cfg.align === 'center') top = tr.top + tr.height / 2 - ch / 2;
+          else top = tr.bottom - ch;
+        } else {
+          if (cfg.align === 'start') left = tr.left;
+          else if (cfg.align === 'center') left = tr.left + tr.width / 2 - cw / 2;
+          else left = tr.right - cw;
+        }
+
+        if (left + cw > vw - 8) left = vw - cw - 8;
+        if (left < 8) left = 8;
+        if (top + ch > vh - 8) top = vh - ch - 8;
+        if (top < 8) top = 8;
+
+        container.style.left = left + 'px';
+        container.style.top = top + 'px';
+      }
+
+      function hidePreviewNow() {
+        if (!activePreview) return;
+        const el = activePreview; activePreview = null; el.remove();
+      }
+
+      function hidePreviewAnim() {
+        if (!activePreview) return;
+        const el = activePreview; activePreview = null;
+        el.style.opacity = '0'; el.style.transform = 'scale(0.96)';
+        setTimeout(() => el.remove(), 200);
+        logEvent('hide');
+      }
+
+      function destroy() {
+        hidePreviewNow();
+        if (overlay) { overlay.remove(); overlay = null; }
+      }
+
+      return { init, preview, destroy };
+    })();
+
+    // ── Playground state ─────────────────────────────────────────
+    let currentSettings = getDefaults();
+    let surveyRoot = null;
+
+    function getDefaults() {
+      return {
+        scale: 0.55, width: 380, maxHeight: 320, gap: 12,
+        delayIn: 250, delayOut: 150, place: 'right', align: 'start',
+        showFooter: true, showAll: false,
+      };
+    }
+
+    function readSettings() {
+      return {
+        scale: parseFloat(document.getElementById('ctl-scale').value),
+        width: parseInt(document.getElementById('ctl-width').value),
+        maxHeight: parseInt(document.getElementById('ctl-maxheight').value),
+        gap: parseInt(document.getElementById('ctl-gap').value),
+        delayIn: parseInt(document.getElementById('ctl-delay-in').value),
+        delayOut: parseInt(document.getElementById('ctl-delay-out').value),
+        place: document.getElementById('ctl-place').value,
+        align: document.getElementById('ctl-align').value,
+        showFooter: document.getElementById('ctl-show-footer').checked,
+        showAll: document.getElementById('ctl-show-all').checked,
+      };
+    }
+
+    function writeSettings(s) {
+      document.getElementById('ctl-scale').value = s.scale;
+      document.getElementById('ctl-width').value = s.width;
+      document.getElementById('ctl-maxheight').value = s.maxHeight;
+      document.getElementById('ctl-gap').value = s.gap;
+      document.getElementById('ctl-delay-in').value = s.delayIn;
+      document.getElementById('ctl-delay-out').value = s.delayOut;
+      document.getElementById('ctl-place').value = s.place;
+      document.getElementById('ctl-align').value = s.align;
+      document.getElementById('ctl-show-footer').checked = s.showFooter;
+      document.getElementById('ctl-show-all').checked = s.showAll;
+      updateValueDisplays();
+    }
+
+    function updateValueDisplays() {
+      document.getElementById('val-scale').textContent = document.getElementById('ctl-scale').value;
+      document.getElementById('val-width').textContent = document.getElementById('ctl-width').value + 'px';
+      document.getElementById('val-maxheight').textContent = document.getElementById('ctl-maxheight').value + 'px';
+      document.getElementById('val-gap').textContent = document.getElementById('ctl-gap').value + 'px';
+    }
+
+    // ── Event log ────────────────────────────────────────────────
+    function logEvent(type, detail) {
+      const log = document.getElementById('event-log');
+      const ts = new Date().toLocaleTimeString('nl', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const line = detail ? `[${ts}] ${type}: ${detail}` : `[${ts}] ${type}`;
+      log.textContent += (log.textContent ? '\n' : '') + line;
+      log.scrollTop = log.scrollHeight;
+    }
+    // Export for inline Surface
+    window.logEvent = logEvent;
+
+    // ── Status toast ─────────────────────────────────────────────
+    let statusTimer;
+    function showStatus(msg) {
+      const el = document.getElementById('pg-status');
+      el.textContent = msg;
+      el.classList.add('visible');
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(() => el.classList.remove('visible'), 2000);
+    }
+
+    // ── Step footer helper ───────────────────────────────────────
+    function getStepFooter(root, stepIndex) {
+      const labels = {
+        0: 'Welkom', 1: 'Streefcijfer', 2: 'Kwantitatief',
+        3: 'Bestuursorganen', 5: 'Leiderschap', 6: 'Strategie',
+        7: 'HR Management', 8: 'Communicatie', 9: 'Kennis',
+        10: 'Klimaat', 11: 'Motivatie', 12: 'Aanvullend', 13: 'Ondertekenen'
+      };
+      const step = root.querySelector(`.step[data-step="${stepIndex}"]`);
+      if (!step) return labels[stepIndex] || `Stap ${stepIndex + 1}`;
+
+      const fields = step.querySelectorAll('input[name], textarea[name], select[name]');
+      const radioGroups = new Set();
+      let total = 0, filled = 0;
+      fields.forEach(f => {
+        if (f.type === 'radio') {
+          if (radioGroups.has(f.name)) return;
+          radioGroups.add(f.name);
+          total++;
+          if (step.querySelector(`input[name="${f.name}"]:checked`)) filled++;
+        } else if (f.type !== 'checkbox' && f.type !== 'hidden') {
+          total++;
+          if (f.value && f.value.trim()) filled++;
+        }
+      });
+      if (total === 0) return labels[stepIndex] || `Stap ${stepIndex + 1}`;
+      const pct = Math.round((filled / total) * 100);
+      return `${filled}/${total} ingevuld \u00b7 ${pct}%`;
+    }
+
+    // ── Attach previews with current settings ────────────────────
+    function attachPreviews() {
+      Surface.destroy();
+
+      if (!surveyRoot) return;
+      const s = currentSettings;
+
+      const navItems = surveyRoot.querySelectorAll('.index-item');
+      const skipSteps = [4, 14, 15];
+
+      navItems.forEach(navItem => {
+        const stepIndex = parseInt(navItem.dataset.step, 10);
+        if (isNaN(stepIndex) || skipSteps.includes(stepIndex)) return;
+
+        Surface.preview(navItem, {
+          place: s.place,
+          align: s.align,
+          gap: s.gap,
+          delay: { in: s.delayIn, out: s.delayOut },
+          previewScale: s.scale,
+          previewWidth: s.width,
+          previewMaxHeight: s.maxHeight,
+          showFooter: s.showFooter,
+
+          cloneFrom: () => surveyRoot.querySelector(`.step[data-step="${stepIndex}"]`),
+
+          transform: (clone) => {
+            clone.querySelectorAll('.form-nav, .nav-buttons').forEach(el => el.remove());
+            clone.querySelectorAll('.comments-section').forEach(el => el.remove());
+            clone.style.display = 'block';
+            clone.classList.add('active');
+            clone.querySelectorAll('.likert-pill-highlight').forEach(p => { p.style.opacity = '1'; });
+            clone.querySelectorAll('input, textarea').forEach(inp => { if (inp.value) inp.style.opacity = '1'; });
+            clone.querySelectorAll('.option-card.selected').forEach(c => { c.style.opacity = '1'; });
+          },
+
+          footer: getStepFooter(surveyRoot, stepIndex),
+        });
+      });
+
+      logEvent('init', `Attached previews (scale=${s.scale}, ${s.place}/${s.align})`);
+    }
+
+    // ── Fill random data for testing ─────────────────────────────
+    function fillRandomData() {
+      if (!surveyRoot) return;
+      const form = surveyRoot.querySelector('#monitoringForm');
+      if (!form) return;
+
+      // Text inputs
+      const textInputs = form.querySelectorAll('input[type="text"][name]');
+      const names = ['Rijksmuseum', 'ABN AMRO', 'NS', 'KLM', 'Gemeente Amsterdam'];
+      textInputs.forEach((inp, i) => {
+        if (!inp.value) inp.value = names[i % names.length] || 'Testwaarde';
+      });
+
+      // Number inputs
+      form.querySelectorAll('input[inputmode="numeric"][name]').forEach(inp => {
+        if (!inp.value) inp.value = Math.floor(Math.random() * 100) + 1;
+      });
+
+      // Select random radio options
+      const radioGroups = {};
+      form.querySelectorAll('input[type="radio"]').forEach(r => {
+        if (!radioGroups[r.name]) radioGroups[r.name] = [];
+        radioGroups[r.name].push(r);
+      });
+      Object.values(radioGroups).forEach(radios => {
+        const checked = radios.find(r => r.checked);
+        if (!checked) {
+          const pick = radios[Math.floor(Math.random() * radios.length)];
+          pick.checked = true;
+          // Activate option card if present
+          const card = pick.closest('.option-card');
+          if (card) {
+            card.closest('.option-cards')?.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+          }
+        }
+      });
+
+      // Textareas
+      form.querySelectorAll('textarea[name]').forEach(ta => {
+        if (!ta.value) ta.value = 'Dit is een voorbeeld antwoord voor de preview test.';
+      });
+
+      showStatus('Random data ingevuld');
+      logEvent('fill', 'Random data inserted');
+      // Re-attach so footers update
+      attachPreviews();
+    }
+
+    function clearAllData() {
+      if (!surveyRoot) return;
+      const form = surveyRoot.querySelector('#monitoringForm');
+      if (!form) return;
+
+      form.querySelectorAll('input[type="text"], input[inputmode="numeric"], textarea').forEach(f => { f.value = ''; });
+      form.querySelectorAll('input[type="radio"]:checked').forEach(r => { r.checked = false; });
+      form.querySelectorAll('.option-card.selected').forEach(c => c.classList.remove('selected'));
+
+      showStatus('Data gewist');
+      logEvent('clear', 'All data cleared');
+      attachPreviews();
+    }
+
+    // ── Bootstrap ────────────────────────────────────────────────
+    async function bootstrap() {
+      // Load survey HTML
+      const mount = document.getElementById('survey-mount');
+      try {
+        const res = await fetch('/views/survey.html');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        mount.innerHTML = await res.text();
+      } catch (e) {
+        mount.innerHTML = `<p style="color:var(--error);padding:40px;">Kon survey HTML niet laden: ${e.message}<br>Run <code>npm run build:html</code> eerst.</p>`;
+        mount.style.opacity = '1';
+        return;
+      }
+
+      surveyRoot = mount.querySelector('.container');
+      if (!surveyRoot) {
+        mount.innerHTML = '<p style="color:var(--error);padding:40px;">.container niet gevonden in survey HTML</p>';
+        mount.style.opacity = '1';
+        return;
+      }
+
+      // Make step 0 visible by default
+      const firstStep = surveyRoot.querySelector('.step[data-step="0"]');
+      if (firstStep) firstStep.classList.add('active');
+
+      // Make sidebar items clickable to switch steps
+      surveyRoot.querySelectorAll('.index-item[data-step]').forEach(item => {
+        item.style.cursor = 'pointer';
+        item.addEventListener('click', (e) => {
+          // Don't interfere with preview hovering
+          const stepIdx = parseInt(item.dataset.step, 10);
+          if (isNaN(stepIdx)) return;
+
+          // Deactivate all, activate clicked
+          surveyRoot.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+          const target = surveyRoot.querySelector(`.step[data-step="${stepIdx}"]`);
+          if (target) target.classList.add('active');
+
+          // Update sidebar highlight
+          surveyRoot.querySelectorAll('.index-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+
+          logEvent('navigate', `Step ${stepIdx}`);
+        });
+      });
+
+      // Fade in
+      mount.style.opacity = '1';
+
+      // Attach previews
+      attachPreviews();
+      logEvent('ready', 'Survey loaded, previews attached');
+      showStatus('Playground ready');
+    }
+
+    // ── Wire up controls ─────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // Range sliders: live value display
+      ['ctl-scale', 'ctl-width', 'ctl-maxheight', 'ctl-gap'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateValueDisplays);
+      });
+
+      // Apply button
+      document.getElementById('btn-apply').addEventListener('click', () => {
+        currentSettings = readSettings();
+        attachPreviews();
+        showStatus('Settings applied');
+      });
+
+      // Reset button
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        currentSettings = getDefaults();
+        writeSettings(currentSettings);
+        attachPreviews();
+        showStatus('Defaults restored');
+      });
+
+      // Fill / Clear
+      document.getElementById('btn-fill-some').addEventListener('click', fillRandomData);
+      document.getElementById('btn-clear-data').addEventListener('click', clearAllData);
+
+      // Show all steps toggle
+      document.getElementById('ctl-show-all').addEventListener('change', (e) => {
+        document.getElementById('pg-main').classList.toggle('show-all-steps', e.target.checked);
+      });
+
+      // Show footer toggle — live
+      document.getElementById('ctl-show-footer').addEventListener('change', () => {
+        currentSettings = readSettings();
+        attachPreviews();
+      });
+
+      // Boot
+      bootstrap();
+    });
+  </script>
+</body>
+</html>

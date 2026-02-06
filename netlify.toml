@@ -27,6 +27,13 @@
   status = 200
   force = true
 
+# Hidden playground for Surface preview experiments
+[[redirects]]
+  from = "/xq7k-preview-lab"
+  to = "/playground.html"
+  status = 200
+  force = true
+
 # Headers for security
 [[headers]]
   for = "/*"
