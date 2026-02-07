@@ -203,6 +203,8 @@ function createTriggerClone() {
   triggerCloneEl.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
+    // On hover-capable devices, don't close on click — mouse-out handles it.
+    if (window.matchMedia('(hover: hover)').matches) return;
     if (activePopoverId) {
       closeActivePopover();
     }
@@ -340,6 +342,9 @@ function createTrigger(id, text) {
   trigger.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
+    // On hover-capable devices, don't toggle on click — hover handles it.
+    // Clicking while hovering causes a flicker loop (close → mouseenter → reopen).
+    if (window.matchMedia('(hover: hover)').matches) return;
     if (activePopoverId === id) {
       closeActivePopover();
     } else {
