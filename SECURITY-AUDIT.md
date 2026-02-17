@@ -117,7 +117,7 @@ This data appears in:
 The full Google Apps Script execution URL is committed to the repository:
 
 ```
-AKfycbw4ZABLfBqi4_l_zcSBnSqP9UgmJsRk3RLjMoF42p55kG-AefL1QgYo2G4Fnlfh1qf7WQ
+AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg
 ```
 
 Anyone with this URL can directly call the GAS endpoint, bypassing the Netlify proxy entirely. The URL is also visible in browser DevTools, page source, and git history.
