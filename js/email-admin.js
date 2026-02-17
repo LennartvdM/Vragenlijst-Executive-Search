@@ -3,6 +3,7 @@
  *
  * Standalone admin tool for composing and bulk-sending styled invitation emails.
  * Uses localStorage for recipient persistence and Google Apps Script for sending.
+ * Version 3 deployment — updated 2026-02-17
  */
 (function () {
   'use strict';
