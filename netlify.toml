@@ -34,6 +34,13 @@
   status = 200
   force = true
 
+# Hidden Email CMS for sending styled invitation emails
+[[redirects]]
+  from = "/m9v2-email-cms"
+  to = "/email-admin.html"
+  status = 200
+  force = true
+
 # Headers for security
 [[headers]]
   for = "/*"
@@ -43,7 +50,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; img-src 'self' data: https://monitoringtalentnaardetop.nl; frame-src 'self' blob:; frame-ancestors 'none'"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
 # No aggressive caching during development - let browser check for updates
