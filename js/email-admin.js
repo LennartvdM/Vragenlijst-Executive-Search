@@ -507,34 +507,64 @@
 
     // Try direct GAS first, fall back to proxy
     const endpoints = [
-      GAS_URL + '?' + params.toString(),
-      PROXY_URL + '?' + params.toString()
+      { url: GAS_URL + '?' + params.toString(), label: 'direct' },
+      { url: PROXY_URL + '?' + params.toString(), label: 'proxy' }
     ];
 
-    for (const url of endpoints) {
+    console.log('[EmailCMS] ─── SEND EMAIL ───');
+    console.log('[EmailCMS]   To:', recipient.email);
+    console.log('[EmailCMS]   Params:', Object.fromEntries(params));
+
+    for (const endpoint of endpoints) {
       try {
+        console.log(`[EmailCMS]   Trying ${endpoint.label}: ${endpoint.url.substring(0, 120)}...`);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-        const response = await fetch(url, { method: 'GET', signal: controller.signal });
+        const response = await fetch(endpoint.url, { method: 'GET', signal: controller.signal });
         clearTimeout(timeoutId);
 
-        if (!response.ok) continue;
+        console.log(`[EmailCMS]   ${endpoint.label} response: status=${response.status}, type=${response.type}, url=${response.url}`);
+
+        if (!response.ok) {
+          console.warn(`[EmailCMS]   ${endpoint.label} HTTP error: ${response.status} ${response.statusText}`);
+          continue;
+        }
 
         const text = await response.text();
+        console.log(`[EmailCMS]   ${endpoint.label} body:`, text.substring(0, 500));
+
         if (text.includes('accounts.google.com') || text.includes('ServiceLogin')) {
+          console.error('[EmailCMS]   Redirected to Google login!');
           throw new Error('GAS requires reauthorization');
         }
 
-        const data = JSON.parse(text);
-        if (data.success) return { success: true };
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseErr) {
+          console.error(`[EmailCMS]   ${endpoint.label} JSON parse failed:`, parseErr.message);
+          console.error(`[EmailCMS]   Raw body:`, text.substring(0, 300));
+          continue;
+        }
+
+        console.log(`[EmailCMS]   ${endpoint.label} parsed:`, data);
+
+        if (data.success) {
+          console.log('[EmailCMS]   ✓ Email sent successfully');
+          return { success: true };
+        }
+        console.warn(`[EmailCMS]   ${endpoint.label} returned success=false:`, data.error);
         return { success: false, error: data.error || 'Onbekende fout' };
       } catch (err) {
+        console.error(`[EmailCMS]   ${endpoint.label} error:`, err.name, err.message);
         if (err.message === 'GAS requires reauthorization') throw err;
         // Try next endpoint
         continue;
       }
     }
+
+    console.error('[EmailCMS] ─── BOTH ENDPOINTS FAILED ───');
 
     throw new Error('Beide endpoints niet bereikbaar');
   }
