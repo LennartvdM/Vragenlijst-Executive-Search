@@ -131,11 +131,11 @@
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding-bottom: 16px;">
-                    <!-- Logo mark -->
+                    <!-- Logo mark (inline SVG as data URI for email compatibility) -->
                     <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                       <tr>
                         <td style="width:40px; height:40px; font-size:0; line-height:0;">
-                          <img src="https://monitoringtalentnaardetop.nl/favicon.svg" width="40" height="40" alt="" style="display:block; width:40px; height:40px;">
+                          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 57.614 67.051'%3E%3Cg transform='translate(-741 -4156)'%3E%3Cpath d='M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0' transform='translate(740.999 4117.211)' fill='%23ffffff'/%3E%3Cpath d='M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588' transform='translate(741 4134.599)' fill='%23ffffff'/%3E%3Cpath d='M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356' transform='translate(723.664 4155.999)' fill='%23ffffff'/%3E%3C/g%3E%3C/svg%3E" width="40" height="40" alt="" style="display:block; width:40px; height:40px;">
                         </td>
                       </tr>
                     </table>
@@ -507,34 +507,64 @@
 
     // Try direct GAS first, fall back to proxy
     const endpoints = [
-      GAS_URL + '?' + params.toString(),
-      PROXY_URL + '?' + params.toString()
+      { url: GAS_URL + '?' + params.toString(), label: 'direct' },
+      { url: PROXY_URL + '?' + params.toString(), label: 'proxy' }
     ];
 
-    for (const url of endpoints) {
+    console.log('[EmailCMS] ─── SEND EMAIL ───');
+    console.log('[EmailCMS]   To:', recipient.email);
+    console.log('[EmailCMS]   Params:', Object.fromEntries(params));
+
+    for (const endpoint of endpoints) {
       try {
+        console.log(`[EmailCMS]   Trying ${endpoint.label}: ${endpoint.url.substring(0, 120)}...`);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-        const response = await fetch(url, { method: 'GET', signal: controller.signal });
+        const response = await fetch(endpoint.url, { method: 'GET', signal: controller.signal });
         clearTimeout(timeoutId);
 
-        if (!response.ok) continue;
+        console.log(`[EmailCMS]   ${endpoint.label} response: status=${response.status}, type=${response.type}, url=${response.url}`);
+
+        if (!response.ok) {
+          console.warn(`[EmailCMS]   ${endpoint.label} HTTP error: ${response.status} ${response.statusText}`);
+          continue;
+        }
 
         const text = await response.text();
+        console.log(`[EmailCMS]   ${endpoint.label} body:`, text.substring(0, 500));
+
         if (text.includes('accounts.google.com') || text.includes('ServiceLogin')) {
+          console.error('[EmailCMS]   Redirected to Google login!');
           throw new Error('GAS requires reauthorization');
         }
 
-        const data = JSON.parse(text);
-        if (data.success) return { success: true };
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseErr) {
+          console.error(`[EmailCMS]   ${endpoint.label} JSON parse failed:`, parseErr.message);
+          console.error(`[EmailCMS]   Raw body:`, text.substring(0, 300));
+          continue;
+        }
+
+        console.log(`[EmailCMS]   ${endpoint.label} parsed:`, data);
+
+        if (data.success) {
+          console.log('[EmailCMS]   ✓ Email sent successfully');
+          return { success: true };
+        }
+        console.warn(`[EmailCMS]   ${endpoint.label} returned success=false:`, data.error);
         return { success: false, error: data.error || 'Onbekende fout' };
       } catch (err) {
+        console.error(`[EmailCMS]   ${endpoint.label} error:`, err.name, err.message);
         if (err.message === 'GAS requires reauthorization') throw err;
         // Try next endpoint
         continue;
       }
     }
+
+    console.error('[EmailCMS] ─── BOTH ENDPOINTS FAILED ───');
 
     throw new Error('Beide endpoints niet bereikbaar');
   }
