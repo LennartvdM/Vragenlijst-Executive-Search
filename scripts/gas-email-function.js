@@ -85,17 +85,8 @@ function buildEmailHtml(naam, code, subject, surveyUrl, previewUrl, deadline, co
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px;overflow:hidden;">' +
     '<tr>' +
 
-    // .index sidebar strip
-    '<td width="48" style="width:48px;background:linear-gradient(180deg,rgba(140,174,244,0.2) 0%,rgba(225,233,244,0.35) 100%);vertical-align:top;border-radius:12px 0 0 12px;">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
-    '<tr><td style="padding:24px 0 16px;text-align:center;"><span style="font-size:9px;font-weight:600;color:#1d1d30;opacity:0.55;letter-spacing:-0.2px;line-height:1.2;">Monitoring<br>Cultureel</span></td></tr>' +
-    '<tr><td style="padding:0 12px 16px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="height:4px;background-color:rgba(173,188,210,0.4);border-radius:2px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="width:0%;height:4px;background:linear-gradient(135deg,#8caef4 0%,#111162 100%);border-radius:2px;font-size:0;">&nbsp;</td><td style="font-size:0;">&nbsp;</td></tr></table></td></tr></table></td></tr>' +
-    '<tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#d27b4b;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#1d1d30;font-weight:600;">Welkom</td></tr></table></td></tr>' +
-    '<tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">Streefcijfer</td></tr></table></td></tr>' +
-    '<tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">Kwantitatief</td></tr></table></td></tr>' +
-    '<tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">Leiderschap</td></tr></table></td></tr>' +
-    '<tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">&#8230;</td></tr></table></td></tr>' +
-    '</table></td>' +
+    // .index sidebar strip (decorative)
+    '<td width="48" style="width:48px;background:linear-gradient(180deg,rgba(140,174,244,0.2) 0%,rgba(225,233,244,0.35) 100%);vertical-align:top;border-radius:12px 0 0 12px;">&nbsp;</td>' +
 
     // .content area
     '<td style="background-color:#fafbfc;vertical-align:top;border-radius:0 12px 12px 0;">' +
