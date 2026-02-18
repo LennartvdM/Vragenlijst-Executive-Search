@@ -68,99 +68,109 @@ function handleSendEmail(params) {
  * Build the HTML email body
  */
 function buildEmailHtml(naam, code, subject, surveyUrl, previewUrl, deadline, contactPerson, contactEmail, senderName) {
+  var logoSvg = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 57.614 67.051\'%3E%3Cg transform=\'translate(-741 -4156)\'%3E%3Cpath d=\'M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0\' transform=\'translate(740.999 4117.211)\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588\' transform=\'translate(741 4134.599)\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356\' transform=\'translate(723.664 4155.999)\' fill=\'%23ffffff\'/%3E%3C/g%3E%3C/svg%3E';
+
   return '<!DOCTYPE html>' +
     '<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
     '<title>' + escHtml(subject) + '</title>' +
     '<style>body,table,td{margin:0;padding:0}body{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;display:block}</style>' +
     '</head>' +
-    '<body style="margin:0;padding:0;background-color:#f3ece2;font-family:\'Segoe UI\',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">' +
+    '<body style="margin:0;padding:0;background-color:#f3ece2;font-family:\'Inter\',\'Segoe UI\',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3ece2;">' +
     '<tr><td align="center" style="padding:40px 20px;">' +
-    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:16px;overflow:hidden;max-width:600px;box-shadow:0 4px 24px rgba(17,17,98,0.08);">' +
 
-    // Top accent bar
-    '<tr><td style="height:4px;background:linear-gradient(90deg,#8caef4 0%,#111162 100%);font-size:0;line-height:0;">&nbsp;</td></tr>' +
+    // Outline stroke wrapper (simulates ::before outline)
+    '<table role="presentation" width="612" cellpadding="0" cellspacing="0" style="max-width:612px;background-color:#fafbfc;border-radius:22px;box-shadow:0 8px 32px rgba(8,9,30,0.15),0 2px 8px rgba(8,9,30,0.1);">' +
+    '<tr><td style="padding:6px;">' +
 
-    // Header
-    '<tr><td style="background-color:#111162;padding:48px 40px 40px;text-align:center;">' +
+    // Inner card
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#fafbfc;border-radius:16px;overflow:hidden;">' +
+
+    // Header — matches .login-header gradient
+    '<tr><td style="background:linear-gradient(135deg,#8caef4 0%,#111162 100%);padding:40px 32px;text-align:center;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
-    '<tr><td align="center" style="padding-bottom:20px;">' +
+    '<tr><td align="center" style="padding-bottom:16px;">' +
+    // Logo icon — frosted glass container like .logo-icon
     '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">' +
-    '<tr><td style="width:48px;height:48px;font-size:0;line-height:0;">' +
-    '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 57.614 67.051\'%3E%3Cg transform=\'translate(-741 -4156)\'%3E%3Cpath d=\'M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0\' transform=\'translate(740.999 4117.211)\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588\' transform=\'translate(741 4134.599)\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356\' transform=\'translate(723.664 4155.999)\' fill=\'%23ffffff\'/%3E%3C/g%3E%3C/svg%3E" width="48" height="48" alt="" style="display:block;width:48px;height:48px;">' +
+    '<tr><td style="width:56px;height:64px;background-color:rgba(255,255,255,0.25);border-radius:12px;text-align:center;vertical-align:middle;">' +
+    '<img src="' + logoSvg + '" width="38" height="38" alt="" style="display:inline-block;width:38px;height:38px;opacity:0.87;">' +
     '</td></tr></table>' +
     '</td></tr>' +
     '<tr><td align="center">' +
-    '<h1 style="margin:0;color:#ffffff;font-family:\'Segoe UI\',Helvetica,Arial,sans-serif;font-size:24px;font-weight:700;line-height:1.3;letter-spacing:-0.01em;">Monitoring Cultureel Talent<br>naar de Top</h1>' +
-    '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:14px auto 0;"><tr>' +
-    '<td style="background-color:rgba(140,174,244,0.25);border-radius:20px;padding:4px 16px;">' +
-    '<span style="color:rgba(255,255,255,0.8);font-family:\'Segoe UI\',Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;">2026</span>' +
+    '<h1 style="margin:0 0 8px;color:rgba(255,255,255,0.87);font-family:\'Inter\',\'Segoe UI\',Helvetica,Arial,sans-serif;font-size:20px;font-weight:600;line-height:1.3;">Monitoring Cultureel Talent naar&nbsp;de&nbsp;Top</h1>' +
+    // Year badge — white pill like .year-badge
+    '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>' +
+    '<td style="background-color:rgba(255,255,255,0.95);border-radius:20px;padding:6px 18px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">' +
+    '<span style="color:#1d1d30;font-family:\'Inter\',\'Segoe UI\',Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;">2026</span>' +
     '</td></tr></table>' +
     '</td></tr>' +
     '</table></td></tr>' +
 
     // Body
-    '<tr><td style="padding:44px 44px 36px;">' +
-    '<p style="margin:0 0 20px;color:#1d1d30;font-size:17px;font-weight:500;line-height:1.6;">Geachte ' + escHtml(naam) + ',</p>' +
-    '<p style="margin:0 0 32px;color:#3c3c5d;font-size:15px;line-height:1.7;">Wij vragen u de monitoring in te vullen v&oacute;&oacute;r <strong style="color:#111162;font-weight:700;">' + escHtml(deadline) + '</strong>.</p>' +
+    '<tr><td style="padding:32px 32px 28px;">' +
+    '<p style="margin:0 0 20px;color:#1d1d30;font-size:16px;line-height:1.6;">Geachte ' + escHtml(naam) + ',</p>' +
+    '<p style="margin:0 0 28px;color:#3c3c5d;font-size:14.5px;line-height:1.7;">Wij vragen u de monitoring in te vullen v&oacute;&oacute;r <strong style="color:#1d1d30;font-weight:600;">' + escHtml(deadline) + '</strong>.</p>' +
 
-    // Code box
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">' +
-    '<tr><td style="background:linear-gradient(135deg,#f1f4f8 0%,#e1e9f4 100%);border-radius:14px;border-left:4px solid #111162;padding:28px 28px 28px 32px;text-align:center;">' +
-    '<p style="margin:0 0 10px;color:#7a7a96;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;">Uw toegangscode</p>' +
-    '<p style="margin:0;color:#111162;font-size:32px;font-weight:700;letter-spacing:6px;font-family:\'SF Mono\',\'Fira Code\',\'Courier New\',monospace;">' + escHtml(code) + '</p>' +
+    // Code card — styled like .option-card.selected
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">' +
+    '<tr><td style="border:2px solid #111162;border-radius:10px;background-color:#f1f4f8;padding:24px;text-align:center;box-shadow:0 4px 16px rgba(17,17,98,0.15);">' +
+    '<p style="margin:0 0 8px;color:#7a7a96;font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:1px;">Uw toegangscode</p>' +
+    '<p style="margin:0;color:#111162;font-size:28px;font-weight:700;letter-spacing:5px;font-family:\'SF Mono\',\'Fira Code\',\'Courier New\',monospace;">' + escHtml(code) + '</p>' +
     '</td></tr></table>' +
 
-    // CTA button
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;">' +
+    // CTA button — matches .btn-primary
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px;">' +
     '<tr><td align="center"><table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
-    '<td style="background:linear-gradient(135deg,#8caef4 0%,#111162 100%);border-radius:12px;">' +
-    '<a href="' + escHtml(surveyUrl) + '" target="_blank" style="display:inline-block;padding:16px 40px;color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;letter-spacing:0.02em;">Ga naar de vragenlijst &rarr;</a>' +
+    '<td style="background:linear-gradient(135deg,#8caef4 0%,#111162 100%);border-radius:10px;box-shadow:0 4px 12px rgba(17,17,98,0.3);">' +
+    '<a href="' + escHtml(surveyUrl) + '" target="_blank" style="display:inline-block;padding:14px 32px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;">Ga naar de vragenlijst &rarr;</a>' +
     '</td></tr></table></td></tr></table>' +
 
-    // Preview link
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 40px;">' +
-    '<tr><td align="center"><a href="' + escHtml(previewUrl) + '" target="_blank" style="color:#8caef4;font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(140,174,244,0.4);">Bekijk het inkijkexemplaar &rarr;</a></td></tr></table>' +
+    // Preview link — matches .preview-link
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">' +
+    '<tr><td align="center"><a href="' + escHtml(previewUrl) + '" target="_blank" style="color:#3c3c5d;font-size:12px;font-weight:400;text-decoration:none;opacity:0.7;">Bekijk inkijkexemplaar &rarr;</a></td></tr></table>' +
 
     // Divider
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;"><tr><td align="center"><table role="presentation" width="80" cellpadding="0" cellspacing="0"><tr><td style="height:2px;background:linear-gradient(90deg,transparent 0%,#e1e9f4 50%,transparent 100%);font-size:0;line-height:0;">&nbsp;</td></tr></table></td></tr></table>' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;"><tr><td style="border-top:1px solid #e1e9f4;font-size:0;line-height:0;">&nbsp;</td></tr></table>' +
 
-    // Practical
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;"><tr><td>' +
-    '<p style="margin:0 0 14px;color:#111162;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Praktisch</p>' +
+    // Practical — checkmarks like .login-info li
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;"><tr><td>' +
+    '<p style="margin:0 0 12px;color:#1d1d30;font-size:15px;font-weight:600;">Praktisch</p>' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
-    '<tr><td style="padding:6px 0;color:#3c3c5d;font-size:14px;line-height:1.7;"><span style="color:#8caef4;font-weight:700;">&#8226;</span>&nbsp;&nbsp;Duurt 20&#8211;30 minuten, u kunt tussendoor stoppen</td></tr>' +
-    '<tr><td style="padding:6px 0;color:#3c3c5d;font-size:14px;line-height:1.7;"><span style="color:#8caef4;font-weight:700;">&#8226;</span>&nbsp;&nbsp;U kunt meerdere keren verzenden &#8212; de laatste versie telt</td></tr>' +
-    '<tr><td style="padding:6px 0;color:#3c3c5d;font-size:14px;line-height:1.7;"><span style="color:#8caef4;font-weight:700;">&#8226;</span>&nbsp;&nbsp;Houd uw personeelscijfers bij de hand</td></tr>' +
-    '<tr><td style="padding:6px 0;color:#3c3c5d;font-size:14px;line-height:1.7;"><span style="color:#8caef4;font-weight:700;">&#8226;</span>&nbsp;&nbsp;Uw voortgang is gekoppeld aan uw apparaat, niet aan uw code</td></tr>' +
+    '<tr><td style="padding:5px 0 5px 24px;color:#3c3c5d;font-size:14px;line-height:1.6;"><span style="color:#111162;font-weight:700;margin-left:-24px;margin-right:10px;">&check;</span>Duurt 20&#8211;30 minuten, u kunt tussendoor stoppen</td></tr>' +
+    '<tr><td style="padding:5px 0 5px 24px;color:#3c3c5d;font-size:14px;line-height:1.6;"><span style="color:#111162;font-weight:700;margin-left:-24px;margin-right:10px;">&check;</span>U kunt meerdere keren verzenden, de laatste versie telt</td></tr>' +
+    '<tr><td style="padding:5px 0 5px 24px;color:#3c3c5d;font-size:14px;line-height:1.6;"><span style="color:#111162;font-weight:700;margin-left:-24px;margin-right:10px;">&check;</span>Houd uw personeelscijfers bij de hand</td></tr>' +
+    '<tr><td style="padding:5px 0 5px 24px;color:#3c3c5d;font-size:14px;line-height:1.6;"><span style="color:#111162;font-weight:700;margin-left:-24px;margin-right:10px;">&check;</span>Uw voortgang is gekoppeld aan uw apparaat, niet aan uw code</td></tr>' +
     '</table></td></tr></table>' +
 
-    // Privacy
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">' +
-    '<tr><td style="background-color:#f8f9fb;border-radius:12px;border:1px solid #e8ecf2;padding:22px 26px;">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-bottom:10px;"><span style="display:inline-block;background-color:#e1e9f4;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;color:#7a7a96;text-transform:uppercase;letter-spacing:0.5px;">Privacy</span></td></tr></table>' +
-    '<p style="margin:0 0 12px;color:#3c3c5d;font-size:13px;line-height:1.7;">Uw antwoorden worden beveiligd opgeslagen in uw browser, lokaal op uw apparaat. Hierdoor kunt u tussendoor stoppen en later verdergaan, maar:</p>' +
+    // Privacy — matches .info-block (border-left + sand-light bg)
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">' +
+    '<tr><td style="background-color:#f1f4f8;border-left:3px solid #111162;border-radius:0 6px 6px 0;padding:16px 20px;">' +
+    '<p style="margin:0 0 10px;color:#3c3c5d;font-size:13.5px;line-height:1.6;">Uw antwoorden worden opgeslagen in uw browser, lokaal op uw apparaat. U kunt tussendoor stoppen en later verdergaan, maar:</p>' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
-    '<tr><td style="padding:3px 0;color:#7a7a96;font-size:13px;line-height:1.6;">&#8226;&nbsp;Op een ander apparaat begint u met een leeg formulier.</td></tr>' +
-    '<tr><td style="padding:3px 0;color:#7a7a96;font-size:13px;line-height:1.6;">&#8226;&nbsp;Als u uw browsergegevens wist, zijn uw conceptantwoorden weg.</td></tr>' +
-    '<tr><td style="padding:3px 0;color:#7a7a96;font-size:13px;line-height:1.6;">&#8226;&nbsp;Ieder formulier ontvangen wij zodra u verzendt.</td></tr>' +
+    '<tr><td style="padding:3px 0;color:#3c3c5d;font-size:13px;line-height:1.6;">&#8226;&nbsp;Op een ander apparaat begint u met een leeg formulier.</td></tr>' +
+    '<tr><td style="padding:3px 0;color:#3c3c5d;font-size:13px;line-height:1.6;">&#8226;&nbsp;Als u uw browsergegevens wist, zijn uw conceptantwoorden weg.</td></tr>' +
+    '<tr><td style="padding:3px 0;color:#3c3c5d;font-size:13px;line-height:1.6;">&#8226;&nbsp;Ieder formulier ontvangen wij zodra u verzendt.</td></tr>' +
     '</table></td></tr></table>' +
 
     // Contact
-    '<p style="margin:0 0 28px;color:#7a7a96;font-size:14px;line-height:1.6;">Bij vragen: ' + escHtml(contactPerson) + ' via <a href="mailto:' + escHtml(contactEmail) + '" style="color:#111162;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(17,17,98,0.3);">' + escHtml(contactEmail) + '</a></p>' +
+    '<p style="margin:0 0 24px;color:#3c3c5d;font-size:13px;line-height:1.6;">Nog vragen? Neem contact op met ' + escHtml(contactPerson) + ' via <a href="mailto:' + escHtml(contactEmail) + '" style="color:#111162;font-weight:500;text-decoration:none;">' + escHtml(contactEmail) + '</a></p>' +
+
+    // Divider
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;"><tr><td style="border-top:1px solid #e1e9f4;font-size:0;line-height:0;">&nbsp;</td></tr></table>' +
 
     // Closing
-    '<p style="margin:0 0 4px;color:#3c3c5d;font-size:15px;line-height:1.6;">Met vriendelijke groet,</p>' +
-    '<p style="margin:0;color:#111162;font-size:15px;font-weight:700;line-height:1.6;">' + escHtml(senderName) + '</p>' +
+    '<p style="margin:0 0 4px;color:#3c3c5d;font-size:14px;line-height:1.6;">Met vriendelijke groet,</p>' +
+    '<p style="margin:0;color:#1d1d30;font-size:14px;font-weight:600;line-height:1.6;">' + escHtml(senderName) + '</p>' +
 
     '</td></tr>' +
 
-    // Footer
-    '<tr><td style="background:linear-gradient(135deg,#f1f4f8 0%,#e1e9f4 100%);padding:24px 44px;text-align:center;">' +
-    '<p style="margin:0;color:#7a7a96;font-size:12px;line-height:1.6;">U ontvangt deze e-mail omdat uw organisatie deelneemt aan de<br>Monitoring Cultureel Talent naar de Top 2026.</p>' +
+    // Footer — sidebar gradient style
+    '<tr><td style="background:linear-gradient(180deg,rgba(140,174,244,0.15) 0%,rgba(225,233,244,0.3) 100%);padding:20px 32px;text-align:center;">' +
+    '<p style="margin:0;color:#7a7a96;font-size:12px;line-height:1.5;">U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.</p>' +
     '</td></tr>' +
 
-    '</table></td></tr></table></body></html>';
+    '</table></td></tr></table>' + // inner card + outline stroke
+    '</td></tr></table></body></html>';
 }
 
 /**
