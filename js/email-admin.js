@@ -122,211 +122,185 @@
     <tr>
       <td align="center" style="padding: 40px 20px;">
 
-        <!-- Outline stroke (simulated via outer table) -->
-        <table role="presentation" width="612" cellpadding="0" cellspacing="0" style="max-width:612px; background-color:#fafbfc; border-radius:22px; box-shadow: 0 8px 32px rgba(8,9,30,0.15), 0 2px 8px rgba(8,9,30,0.1);">
+        <!-- .container outline stroke -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:#fafbfc; border-radius:18px; box-shadow: 0 8px 32px rgba(8,9,30,0.15), 0 2px 8px rgba(8,9,30,0.1);">
           <tr>
             <td style="padding: 6px;">
 
-              <!-- Inner card -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#fafbfc; border-radius:16px; overflow:hidden;">
-
-                <!-- Header — matches .login-header gradient -->
+              <!-- .container inner — sidebar + content -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px; overflow:hidden;">
                 <tr>
-                  <td style="background: linear-gradient(135deg, #8caef4 0%, #111162 100%); padding: 40px 32px; text-align: center;">
+
+                  <!-- .index sidebar strip -->
+                  <td width="48" style="width:48px; background: linear-gradient(180deg, rgba(140,174,244,0.2) 0%, rgba(225,233,244,0.35) 100%); vertical-align:top; border-radius:12px 0 0 12px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <!-- Sidebar title -->
                       <tr>
-                        <td align="center" style="padding-bottom: 16px;">
-                          <!-- Logo icon — frosted glass container like .logo-icon -->
-                          <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                            <tr>
-                              <td style="width:56px; height:64px; background-color:rgba(255,255,255,0.25); border-radius:12px; text-align:center; vertical-align:middle;">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 57.614 67.051'%3E%3Cg transform='translate(-741 -4156)'%3E%3Cpath d='M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0' transform='translate(740.999 4117.211)' fill='%23ffffff'/%3E%3Cpath d='M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588' transform='translate(741 4134.599)' fill='%23ffffff'/%3E%3Cpath d='M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356' transform='translate(723.664 4155.999)' fill='%23ffffff'/%3E%3C/g%3E%3C/svg%3E" width="38" height="38" alt="" style="display:inline-block; width:38px; height:38px; opacity:0.87;">
-                              </td>
-                            </tr>
+                        <td style="padding:24px 0 16px; text-align:center;">
+                          <span style="font-size:9px; font-weight:600; color:#1d1d30; opacity:0.55; letter-spacing:-0.2px; line-height:1.2;">Monitoring<br>Cultureel</span>
+                        </td>
+                      </tr>
+                      <!-- Progress bar -->
+                      <tr>
+                        <td style="padding:0 12px 16px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr><td style="height:4px; background-color:rgba(173,188,210,0.4); border-radius:2px;">
+                              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="width:0%; height:4px; background:linear-gradient(135deg,#8caef4 0%,#111162 100%); border-radius:2px; font-size:0;">&nbsp;</td><td style="font-size:0;">&nbsp;</td></tr></table>
+                            </td></tr>
                           </table>
                         </td>
                       </tr>
-                      <tr>
-                        <td align="center">
-                          <h1 style="margin:0 0 8px; color:rgba(255,255,255,0.87); font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; font-size:20px; font-weight:600; line-height:1.3;">
-                            Monitoring Cultureel Talent naar&nbsp;de&nbsp;Top
-                          </h1>
-                          <!-- Year badge — white pill like .year-badge -->
-                          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-                            <tr>
-                              <td style="background-color:rgba(255,255,255,0.95); border-radius:20px; padding:6px 18px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-                                <span style="color:#1d1d30; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; font-size:14px; font-weight:600;">2026</span>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
+                      <!-- Decorative nav dots -->
+                      <tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#d27b4b;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#1d1d30;font-weight:600;">Welkom</td></tr></table></td></tr>
+                      <tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">Streefcijfer</td></tr></table></td></tr>
+                      <tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">Kwantitatief</td></tr></table></td></tr>
+                      <tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">Leiderschap</td></tr></table></td></tr>
+                      <tr><td style="padding:4px 0 4px 14px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:8px;height:8px;border-radius:50%;background:#adbcd2;" width="8">&nbsp;</td><td style="padding-left:6px;font-size:10px;color:#7a7a96;">&#8230;</td></tr></table></td></tr>
                     </table>
                   </td>
-                </tr>
 
-                <!-- Body -->
-                <tr>
-                  <td style="padding: 32px 32px 28px;">
-                    <!-- Greeting -->
-                    <p style="margin:0 0 20px; color:#1d1d30; font-size:16px; line-height:1.6;">
-                      Geachte ${naam},
-                    </p>
+                  <!-- .content area -->
+                  <td style="background-color:#fafbfc; vertical-align:top; border-radius:0 12px 12px 0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
 
-                    <!-- Main text -->
-                    <p style="margin:0 0 28px; color:#3c3c5d; font-size:14.5px; line-height:1.7;">
-                      Wij vragen u de monitoring in te vullen v&oacute;&oacute;r <strong style="color:#1d1d30; font-weight:600;">${deadline}</strong>.
-                    </p>
-
-                    <!-- Access code card — styled like .option-card.selected -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
+                      <!-- Content header with progress dots -->
                       <tr>
-                        <td style="border:2px solid #111162; border-radius:10px; background-color:#f1f4f8; padding:24px; text-align:center; box-shadow:0 4px 16px rgba(17,17,98,0.15);">
-                          <p style="margin:0 0 8px; color:#7a7a96; font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:1px;">
-                            Uw toegangscode
-                          </p>
-                          <p style="margin:0; color:#111162; font-size:28px; font-weight:700; letter-spacing:5px; font-family:'SF Mono','Fira Code','Courier New',monospace;">
-                            ${code}
+                        <td style="padding: 20px 28px 0;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+                            <td style="font-size:0; line-height:0;">
+                              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#111162;margin-right:4px;">&nbsp;</span><!--
+                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
+                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
+                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
+                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;">&nbsp;</span>
+                            </td>
+                          </tr></table>
+                        </td>
+                      </tr>
+
+                      <!-- Step heading — h1 style -->
+                      <tr>
+                        <td style="padding: 20px 28px 8px;">
+                          <h1 style="margin:0; color:#1d1d30; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; font-size:24px; font-weight:600; line-height:1.3; letter-spacing:-0.3px;">
+                            Monitoring Cultureel Talent naar de Top 2026
+                          </h1>
+                        </td>
+                      </tr>
+
+                      <!-- Subtitle -->
+                      <tr>
+                        <td style="padding: 0 28px 24px;">
+                          <p style="margin:0; color:#7a7a96; font-size:15px; line-height:1.55; letter-spacing:0.01em;">
+                            Geachte ${naam}, wij vragen u de monitoring in te vullen v&oacute;&oacute;r <strong style="color:#1d1d30; font-weight:600;">${deadline}</strong>.
                           </p>
                         </td>
                       </tr>
-                    </table>
 
-                    <!-- CTA button — matches .btn-primary -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px;">
+                      <!-- Code box — .option-card.selected -->
                       <tr>
-                        <td align="center">
+                        <td style="padding: 0 28px 24px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="border:2px solid #111162; border-radius:10px; background-color:#f1f4f8; padding:20px; text-align:center; box-shadow:0 4px 16px rgba(17,17,98,0.15);">
+                                <p style="margin:0 0 6px; color:#7a7a96; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:1px;">Uw toegangscode</p>
+                                <p style="margin:0; color:#111162; font-size:26px; font-weight:700; letter-spacing:5px; font-family:'SF Mono','Fira Code','Courier New',monospace;">${code}</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
+                      <!-- CTA button — .btn-primary -->
+                      <tr>
+                        <td style="padding: 0 28px 8px;" align="center">
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
                               <td style="background:linear-gradient(135deg, #8caef4 0%, #111162 100%); border-radius:10px; box-shadow:0 4px 12px rgba(17,17,98,0.3);">
-                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:14px 32px; color:#ffffff; text-decoration:none; font-size:15px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">
-                                  Ga naar de vragenlijst &rarr;
-                                </a>
+                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 28px; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">Ga naar de vragenlijst &rarr;</a>
                               </td>
                             </tr>
                           </table>
                         </td>
                       </tr>
-                    </table>
 
-                    <!-- Preview link — matches .preview-link style -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+                      <!-- Preview link -->
                       <tr>
-                        <td align="center">
-                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; font-weight:400; text-decoration:none; opacity:0.7;">
-                            Bekijk inkijkexemplaar &rarr;
-                          </a>
+                        <td style="padding: 0 28px 24px;" align="center">
+                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:none; opacity:0.7;">Bekijk inkijkexemplaar &rarr;</a>
                         </td>
                       </tr>
-                    </table>
 
-                    <!-- Divider — matches .login-footer border-top -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                      <!-- Divider -->
+                      <tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4; font-size:0;">&nbsp;</td></tr></table></td></tr>
+
+                      <!-- Praktisch heading -->
                       <tr>
-                        <td style="border-top:1px solid #e1e9f4; font-size:0; line-height:0;">&nbsp;</td>
+                        <td style="padding: 20px 28px 10px;">
+                          <p style="margin:0; color:#1d1d30; font-size:14px; font-weight:600;">Praktisch</p>
+                        </td>
                       </tr>
-                    </table>
 
-                    <!-- Practical section — checkmarks like .login-info li -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                      <!-- Checklist items -->
+                      <tr><td style="padding:3px 28px 3px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>Duurt 20&#8211;30 minuten, u kunt tussendoor stoppen</td></tr>
+                      <tr><td style="padding:3px 28px 3px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>U kunt meerdere keren verzenden, de laatste versie telt</td></tr>
+                      <tr><td style="padding:3px 28px 3px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>Houd uw personeelscijfers bij de hand</td></tr>
+                      <tr><td style="padding:3px 28px 16px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>Voortgang gekoppeld aan uw apparaat, niet aan uw code</td></tr>
+
+                      <!-- Privacy — .info-block -->
                       <tr>
-                        <td>
-                          <p style="margin:0 0 12px; color:#1d1d30; font-size:15px; font-weight:600;">
-                            Praktisch
-                          </p>
+                        <td style="padding: 0 28px 20px;">
                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
-                              <td style="padding:5px 0 5px 24px; color:#3c3c5d; font-size:14px; line-height:1.6; position:relative;">
-                                <span style="color:#111162; font-weight:700; margin-left:-24px; margin-right:10px;">&check;</span>Duurt 20&#8211;30 minuten, u kunt tussendoor stoppen
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="padding:5px 0 5px 24px; color:#3c3c5d; font-size:14px; line-height:1.6;">
-                                <span style="color:#111162; font-weight:700; margin-left:-24px; margin-right:10px;">&check;</span>U kunt meerdere keren verzenden, de laatste versie telt
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="padding:5px 0 5px 24px; color:#3c3c5d; font-size:14px; line-height:1.6;">
-                                <span style="color:#111162; font-weight:700; margin-left:-24px; margin-right:10px;">&check;</span>Houd uw personeelscijfers bij de hand
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="padding:5px 0 5px 24px; color:#3c3c5d; font-size:14px; line-height:1.6;">
-                                <span style="color:#111162; font-weight:700; margin-left:-24px; margin-right:10px;">&check;</span>Uw voortgang is gekoppeld aan uw apparaat, niet aan uw code
+                              <td style="background:linear-gradient(135deg, #f1f4f8 0%, #e1e9f4 100%); border-left:3px solid #111162; border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:#3c3c5d; line-height:1.6;">
+                                Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.
                               </td>
                             </tr>
                           </table>
                         </td>
                       </tr>
-                    </table>
 
-                    <!-- Privacy notice — matches .info-block (border-left + sand-light bg) -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
+                      <!-- Contact -->
                       <tr>
-                        <td style="background-color:#f1f4f8; border-left:3px solid #111162; border-radius:0 6px 6px 0; padding:16px 20px;">
-                          <p style="margin:0 0 10px; color:#3c3c5d; font-size:13.5px; line-height:1.6;">
-                            Uw antwoorden worden opgeslagen in uw browser, lokaal op uw apparaat. U kunt tussendoor stoppen en later verdergaan, maar:
+                        <td style="padding: 0 28px 16px;">
+                          <p style="margin:0; color:#7a7a96; font-size:12px; line-height:1.6;">
+                            Vragen? ${contactPerson} via <a href="mailto:${contactEmail}" style="color:#111162; font-weight:500; text-decoration:none;">${contactEmail}</a>
                           </p>
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="padding:3px 0; color:#3c3c5d; font-size:13px; line-height:1.6;">
-                                &#8226;&nbsp; Op een ander apparaat begint u met een leeg formulier.
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="padding:3px 0; color:#3c3c5d; font-size:13px; line-height:1.6;">
-                                &#8226;&nbsp; Als u uw browsergegevens wist, zijn uw conceptantwoorden weg.
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="padding:3px 0; color:#3c3c5d; font-size:13px; line-height:1.6;">
-                                &#8226;&nbsp; Ieder formulier ontvangen wij zodra u verzendt.
-                              </td>
-                            </tr>
-                          </table>
                         </td>
                       </tr>
-                    </table>
 
-                    <!-- Contact — matches .contact-email style -->
-                    <p style="margin:0 0 24px; color:#3c3c5d; font-size:13px; line-height:1.6;">
-                      Nog vragen? Neem contact op met ${contactPerson} via
-                      <a href="mailto:${contactEmail}" style="color:#111162; font-weight:500; text-decoration:none;">${contactEmail}</a>
-                    </p>
+                      <!-- Divider -->
+                      <tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4; font-size:0;">&nbsp;</td></tr></table></td></tr>
 
-                    <!-- Divider -->
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
+                      <!-- Closing -->
                       <tr>
-                        <td style="border-top:1px solid #e1e9f4; font-size:0; line-height:0;">&nbsp;</td>
+                        <td style="padding: 16px 28px 24px;">
+                          <p style="margin:0 0 4px; color:#3c3c5d; font-size:13px; line-height:1.6;">Met vriendelijke groet,</p>
+                          <p style="margin:0; color:#1d1d30; font-size:13px; font-weight:600; line-height:1.6;">${senderName}</p>
+                        </td>
                       </tr>
+
                     </table>
-
-                    <!-- Closing -->
-                    <p style="margin:0 0 4px; color:#3c3c5d; font-size:14px; line-height:1.6;">
-                      Met vriendelijke groet,
-                    </p>
-                    <p style="margin:0; color:#1d1d30; font-size:14px; font-weight:600; line-height:1.6;">
-                      ${senderName}
-                    </p>
                   </td>
-                </tr>
 
-                <!-- Footer — sidebar gradient style -->
-                <tr>
-                  <td style="background: linear-gradient(180deg, rgba(140,174,244,0.15) 0%, rgba(225,233,244,0.3) 100%); padding:20px 32px; text-align:center;">
-                    <p style="margin:0; color:#7a7a96; font-size:12px; line-height:1.5;">
-                      U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.
-                    </p>
-                  </td>
                 </tr>
-
               </table>
-              <!-- /Inner card -->
+              <!-- /.container inner -->
 
             </td>
           </tr>
         </table>
-        <!-- /Outline stroke -->
+        <!-- /.container outline stroke -->
+
+        <!-- Footer outside card -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
+          <tr>
+            <td style="padding:16px 20px; text-align:center;">
+              <p style="margin:0; color:#7a7a96; font-size:11px; line-height:1.5;">
+                U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.
+              </p>
+            </td>
+          </tr>
+        </table>
 
       </td>
     </tr>
