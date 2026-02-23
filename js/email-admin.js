@@ -27,7 +27,19 @@
     deadline: '',
     senderName: 'Commissie Monitoring Talent naar de Top',
     contactPerson: '',
-    contactEmail: ''
+    contactEmail: '',
+    // Editable mail text fields
+    heading: 'Monitoring Cultureel Talent naar de Top 2026',
+    introText: 'Geachte {naam}, wij vragen u de monitoring in te vullen vóór {deadline}.',
+    codeLabel: 'Uw toegangscode',
+    ctaText: 'Ga naar de vragenlijst →',
+    previewLinkText: 'Bekijk inkijkexemplaar →',
+    praktischHeading: 'Praktisch',
+    checklistItems: 'Duurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nHoud uw personeelscijfers bij de hand\nVoortgang gekoppeld aan uw apparaat, niet aan uw code',
+    privacyText: 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.',
+    contactText: 'Vragen? {contactPerson} via {contactEmail}',
+    closingText: 'Met vriendelijke groet,',
+    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.'
   };
 
   const SEND_DELAY_MS = 1500; // Delay between consecutive sends to avoid rate-limiting
@@ -89,6 +101,15 @@
   // Email HTML Template
   // ---------------------------------------------------------------------------
 
+  function replaceTextPlaceholders(text, vars) {
+    return text
+      .replace(/\{naam\}/g, vars.naam)
+      .replace(/\{deadline\}/g, vars.deadline)
+      .replace(/\{contactPerson\}/g, vars.contactPerson)
+      .replace(/\{contactEmail\}/g, vars.contactEmail)
+      .replace(/\{code\}/g, vars.code);
+  }
+
   function generateEmailHtml(recipient) {
     const s = settings;
     const naam = esc(recipient?.name || '[naam]');
@@ -99,6 +120,31 @@
     const contactPerson = esc(s.contactPerson || '[contactpersoon]');
     const contactEmail = esc(s.contactEmail || '[email]');
     const senderName = esc(s.senderName || 'Commissie Monitoring Talent naar de Top');
+
+    const vars = { naam, deadline, contactPerson, contactEmail, code };
+
+    const heading = esc(s.heading || DEFAULT_SETTINGS.heading);
+    const introHtml = esc(replaceTextPlaceholders(s.introText || DEFAULT_SETTINGS.introText, vars));
+    const codeLabel = esc(s.codeLabel || DEFAULT_SETTINGS.codeLabel);
+    const ctaText = esc(s.ctaText || DEFAULT_SETTINGS.ctaText);
+    const previewLinkText = esc(s.previewLinkText || DEFAULT_SETTINGS.previewLinkText);
+    const praktischHeading = esc(s.praktischHeading || DEFAULT_SETTINGS.praktischHeading);
+    const privacyText = esc(s.privacyText || DEFAULT_SETTINGS.privacyText);
+    const closingText = esc(s.closingText || DEFAULT_SETTINGS.closingText);
+    const footerText = esc(s.footerText || DEFAULT_SETTINGS.footerText);
+
+    // Parse contact text with placeholders, build HTML with mailto link
+    const contactRaw = s.contactText || DEFAULT_SETTINGS.contactText;
+    const contactHtml = esc(replaceTextPlaceholders(contactRaw, vars))
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:#111162; font-weight:500; text-decoration:none;">${contactEmail}</a>`);
+
+    // Build checklist rows from newline-separated text
+    const checklistRaw = s.checklistItems || DEFAULT_SETTINGS.checklistItems;
+    const checklistLines = checklistRaw.split('\n').map(l => l.trim()).filter(Boolean);
+    const checklistHtml = checklistLines.map((item, i) => {
+      const padding = i === checklistLines.length - 1 ? '3px 28px 16px 46px' : '3px 28px 3px 46px';
+      return `<tr><td style="padding:${padding}; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>${esc(item)}</td></tr>`;
+    }).join('\n                      ');
 
     return `<!DOCTYPE html>
 <html lang="nl" xmlns="http://www.w3.org/1999/xhtml">
@@ -159,7 +205,7 @@
                       <tr>
                         <td style="padding: 20px 28px 8px;">
                           <h1 style="margin:0; color:#1d1d30; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; font-size:24px; font-weight:600; line-height:1.3; letter-spacing:-0.3px;">
-                            Monitoring Cultureel Talent naar de Top 2026
+                            ${heading}
                           </h1>
                         </td>
                       </tr>
@@ -168,7 +214,7 @@
                       <tr>
                         <td style="padding: 0 28px 24px;">
                           <p style="margin:0; color:#7a7a96; font-size:15px; line-height:1.55; letter-spacing:0.01em;">
-                            Geachte ${naam}, wij vragen u de monitoring in te vullen v&oacute;&oacute;r <strong style="color:#1d1d30; font-weight:600;">${deadline}</strong>.
+                            ${introHtml}
                           </p>
                         </td>
                       </tr>
@@ -179,7 +225,7 @@
                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                               <td style="border:2px solid #111162; border-radius:10px; background-color:#f1f4f8; padding:20px; text-align:center; box-shadow:0 4px 16px rgba(17,17,98,0.15);">
-                                <p style="margin:0 0 6px; color:#7a7a96; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:1px;">Uw toegangscode</p>
+                                <p style="margin:0 0 6px; color:#7a7a96; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:1px;">${codeLabel}</p>
                                 <p style="margin:0; color:#111162; font-size:26px; font-weight:700; letter-spacing:5px; font-family:'SF Mono','Fira Code','Courier New',monospace;">${code}</p>
                               </td>
                             </tr>
@@ -193,7 +239,7 @@
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
                               <td style="background:linear-gradient(135deg, #8caef4 0%, #111162 100%); border-radius:10px; box-shadow:0 4px 12px rgba(17,17,98,0.3);">
-                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 28px; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">Ga naar de vragenlijst &rarr;</a>
+                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 28px; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
                               </td>
                             </tr>
                           </table>
@@ -203,7 +249,7 @@
                       <!-- Preview link -->
                       <tr>
                         <td style="padding: 0 28px 24px;" align="center">
-                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:none; opacity:0.7;">Bekijk inkijkexemplaar &rarr;</a>
+                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:none; opacity:0.7;">${previewLinkText}</a>
                         </td>
                       </tr>
 
@@ -213,15 +259,12 @@
                       <!-- Praktisch heading -->
                       <tr>
                         <td style="padding: 20px 28px 10px;">
-                          <p style="margin:0; color:#1d1d30; font-size:14px; font-weight:600;">Praktisch</p>
+                          <p style="margin:0; color:#1d1d30; font-size:14px; font-weight:600;">${praktischHeading}</p>
                         </td>
                       </tr>
 
                       <!-- Checklist items -->
-                      <tr><td style="padding:3px 28px 3px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>Duurt 20&#8211;30 minuten, u kunt tussendoor stoppen</td></tr>
-                      <tr><td style="padding:3px 28px 3px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>U kunt meerdere keren verzenden, de laatste versie telt</td></tr>
-                      <tr><td style="padding:3px 28px 3px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>Houd uw personeelscijfers bij de hand</td></tr>
-                      <tr><td style="padding:3px 28px 16px 46px; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>Voortgang gekoppeld aan uw apparaat, niet aan uw code</td></tr>
+                      ${checklistHtml}
 
                       <!-- Privacy — .info-block -->
                       <tr>
@@ -229,7 +272,7 @@
                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                               <td style="background:linear-gradient(135deg, #f1f4f8 0%, #e1e9f4 100%); border-left:3px solid #111162; border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:#3c3c5d; line-height:1.6;">
-                                Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.
+                                ${privacyText}
                               </td>
                             </tr>
                           </table>
@@ -240,7 +283,7 @@
                       <tr>
                         <td style="padding: 0 28px 16px;">
                           <p style="margin:0; color:#7a7a96; font-size:12px; line-height:1.6;">
-                            Vragen? ${contactPerson} via <a href="mailto:${contactEmail}" style="color:#111162; font-weight:500; text-decoration:none;">${contactEmail}</a>
+                            ${contactHtml}
                           </p>
                         </td>
                       </tr>
@@ -251,7 +294,7 @@
                       <!-- Closing -->
                       <tr>
                         <td style="padding: 16px 28px 24px;">
-                          <p style="margin:0 0 4px; color:#3c3c5d; font-size:13px; line-height:1.6;">Met vriendelijke groet,</p>
+                          <p style="margin:0 0 4px; color:#3c3c5d; font-size:13px; line-height:1.6;">${closingText}</p>
                           <p style="margin:0; color:#1d1d30; font-size:13px; font-weight:600; line-height:1.6;">${senderName}</p>
                         </td>
                       </tr>
@@ -273,7 +316,7 @@
           <tr>
             <td style="padding:16px 20px; text-align:center;">
               <p style="margin:0; color:#7a7a96; font-size:11px; line-height:1.5;">
-                U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.
+                ${footerText}
               </p>
             </td>
           </tr>
@@ -476,7 +519,18 @@
       deadline: settings.deadline || '',
       contactPerson: settings.contactPerson || '',
       contactEmail: settings.contactEmail || '',
-      senderName: settings.senderName || ''
+      senderName: settings.senderName || '',
+      heading: settings.heading || DEFAULT_SETTINGS.heading,
+      introText: settings.introText || DEFAULT_SETTINGS.introText,
+      codeLabel: settings.codeLabel || DEFAULT_SETTINGS.codeLabel,
+      ctaText: settings.ctaText || DEFAULT_SETTINGS.ctaText,
+      previewLinkText: settings.previewLinkText || DEFAULT_SETTINGS.previewLinkText,
+      praktischHeading: settings.praktischHeading || DEFAULT_SETTINGS.praktischHeading,
+      checklistItems: settings.checklistItems || DEFAULT_SETTINGS.checklistItems,
+      privacyText: settings.privacyText || DEFAULT_SETTINGS.privacyText,
+      contactText: settings.contactText || DEFAULT_SETTINGS.contactText,
+      closingText: settings.closingText || DEFAULT_SETTINGS.closingText,
+      footerText: settings.footerText || DEFAULT_SETTINGS.footerText
     });
 
     // Try direct GAS first, fall back to proxy
@@ -704,9 +758,14 @@
   // Settings Sync
   // ---------------------------------------------------------------------------
 
+  const ALL_SETTING_FIELDS = [
+    'subject', 'surveyUrl', 'previewUrl', 'deadline', 'senderName', 'contactPerson', 'contactEmail',
+    'heading', 'introText', 'codeLabel', 'ctaText', 'previewLinkText',
+    'praktischHeading', 'checklistItems', 'privacyText', 'contactText', 'closingText', 'footerText'
+  ];
+
   function syncSettingsFromUI() {
-    const fields = ['subject', 'surveyUrl', 'previewUrl', 'deadline', 'senderName', 'contactPerson', 'contactEmail'];
-    for (const field of fields) {
+    for (const field of ALL_SETTING_FIELDS) {
       const el = document.getElementById('setting-' + field);
       if (el) settings[field] = el.value;
     }
@@ -714,8 +773,7 @@
   }
 
   function syncSettingsToUI() {
-    const fields = ['subject', 'surveyUrl', 'previewUrl', 'deadline', 'senderName', 'contactPerson', 'contactEmail'];
-    for (const field of fields) {
+    for (const field of ALL_SETTING_FIELDS) {
       const el = document.getElementById('setting-' + field);
       if (el) el.value = settings[field] || '';
     }
@@ -915,11 +973,11 @@
       }
     });
 
-    // Settings debounced save + preview update
+    // Settings debounced save + preview update (covers all .ea-grid containers)
     let settingsTimer;
-    const settingsContainer = document.querySelector('.ea-grid');
-    if (settingsContainer) {
-      settingsContainer.addEventListener('input', function () {
+    const settingsContainers = document.querySelectorAll('.ea-grid');
+    for (const container of settingsContainers) {
+      container.addEventListener('input', function () {
         clearTimeout(settingsTimer);
         settingsTimer = setTimeout(() => {
           syncSettingsFromUI();

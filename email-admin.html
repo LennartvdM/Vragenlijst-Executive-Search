@@ -102,6 +102,68 @@
       </div>
     </section>
 
+    <!-- Mail Text Editor -->
+    <section class="ea-card">
+      <div class="ea-card-header" data-action="toggleSection" data-target="mailTextBody">
+        <h2>E-mailtekst</h2>
+        <svg class="ea-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="ea-card-body" id="mailTextBody">
+        <p class="ea-field-hint ea-section-hint">Pas de tekst van de e-mail aan. Gebruik <code>{naam}</code>, <code>{deadline}</code>, <code>{contactPerson}</code>, <code>{contactEmail}</code> en <code>{code}</code> als tijdelijke aanduidingen.</p>
+        <div class="ea-grid">
+          <div class="ea-field ea-full">
+            <label for="setting-heading">Koptekst</label>
+            <input type="text" id="setting-heading" value="Monitoring Cultureel Talent naar de Top 2026">
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-introText">Inleidende tekst</label>
+            <input type="text" id="setting-introText" value="Geachte {naam}, wij vragen u de monitoring in te vullen vóór {deadline}.">
+          </div>
+          <div class="ea-field">
+            <label for="setting-codeLabel">Label toegangscode</label>
+            <input type="text" id="setting-codeLabel" value="Uw toegangscode">
+          </div>
+          <div class="ea-field">
+            <label for="setting-ctaText">Knoptekst</label>
+            <input type="text" id="setting-ctaText" value="Ga naar de vragenlijst →">
+          </div>
+          <div class="ea-field">
+            <label for="setting-previewLinkText">Inkijkexemplaar-link</label>
+            <input type="text" id="setting-previewLinkText" value="Bekijk inkijkexemplaar →">
+          </div>
+          <div class="ea-field">
+            <label for="setting-praktischHeading">Sectiekop praktisch</label>
+            <input type="text" id="setting-praktischHeading" value="Praktisch">
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-checklistItems">Checklistitems <span class="ea-label-hint">(één item per regel)</span></label>
+            <textarea id="setting-checklistItems" rows="4">Duurt 20–30 minuten, u kunt tussendoor stoppen
+U kunt meerdere keren verzenden, de laatste versie telt
+Houd uw personeelscijfers bij de hand
+Voortgang gekoppeld aan uw apparaat, niet aan uw code</textarea>
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-privacyText">Privacytekst</label>
+            <textarea id="setting-privacyText" rows="2">Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.</textarea>
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-contactText">Contacttekst</label>
+            <input type="text" id="setting-contactText" value="Vragen? {contactPerson} via {contactEmail}">
+          </div>
+          <div class="ea-field">
+            <label for="setting-closingText">Afsluiting</label>
+            <input type="text" id="setting-closingText" value="Met vriendelijke groet,">
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-footerText">Voettekst</label>
+            <input type="text" id="setting-footerText" value="U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.">
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Email Preview -->
     <section class="ea-card">
       <div class="ea-card-header">

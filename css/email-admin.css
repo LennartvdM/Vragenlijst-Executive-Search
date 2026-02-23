@@ -301,6 +301,34 @@ body {
   opacity: 0.6;
 }
 
+.ea-field textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.ea-section-hint {
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.ea-section-hint code {
+  background: var(--sand-light);
+  border: 1px solid var(--sand-dark);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 12px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--terracotta);
+}
+
+.ea-label-hint {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 /* ==========================================================================
    Buttons
    ========================================================================== */
