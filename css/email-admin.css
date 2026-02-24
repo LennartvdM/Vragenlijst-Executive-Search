@@ -569,7 +569,7 @@ body {
 
 /* Example row (greyed out, non-interactive) */
 .ea-row-example {
-  opacity: 0.45;
+  opacity: 0.55;
   pointer-events: none;
   user-select: none;
 }
