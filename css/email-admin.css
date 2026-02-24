@@ -567,6 +567,62 @@ body {
   color: var(--text-light);
 }
 
+/* Example row (greyed out, non-interactive) */
+.ea-row-example {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ea-row-example td {
+  border-bottom-style: dashed;
+}
+
+.ea-cell-muted {
+  font-style: italic;
+  color: var(--text-muted) !important;
+}
+
+/* Incomplete row (missing email or name) */
+.ea-row-incomplete {
+  background: var(--sand-light);
+}
+
+/* Inline editable inputs in table cells */
+.ea-inline-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1.5px solid var(--sand-dark);
+  border-radius: 6px;
+  background: var(--input-fill);
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.ea-inline-input:focus {
+  outline: none;
+  border-color: var(--salmon);
+  box-shadow: 0 0 0 2px rgba(var(--salmon-rgb), 0.2);
+}
+
+.ea-inline-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.ea-row-incomplete .ea-inline-input:not(:focus) {
+  border-color: transparent;
+  background: transparent;
+}
+
+.ea-row-incomplete .ea-inline-input:not(:focus):hover {
+  border-color: var(--sand-dark);
+  background: var(--input-fill);
+}
+
 /* Status badges */
 .ea-status {
   display: inline-flex;
@@ -597,6 +653,17 @@ body {
 .ea-status-error {
   background: var(--error-light);
   color: var(--error);
+}
+
+.ea-status-example {
+  background: var(--sand);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.ea-status-incomplete {
+  background: var(--warning-light);
+  color: var(--warning);
 }
 
 /* Delete button */
