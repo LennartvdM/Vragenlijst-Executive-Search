@@ -13,6 +13,7 @@
     initDemoMode();
     setupEventListeners();
     renderContactEmail();
+    prefillCodeFromURL();
   });
 
   /**
@@ -363,6 +364,26 @@
       span.textContent = message;
     }
     element.style.display = 'flex';
+  }
+
+  /**
+   * Pre-fill the code input fields from a ?code= URL parameter.
+   * Used when a recipient clicks the personalized link from the invitation email.
+   */
+  function prefillCodeFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('code');
+    if (!code) return;
+
+    var clean = code.toUpperCase().replace(/[\s\-_]/g, '');
+    if (clean.length < 6) return;
+
+    var part1 = document.getElementById('orgCodePart1');
+    var part2 = document.getElementById('orgCodePart2');
+    if (part1 && part2) {
+      part1.value = clean.substring(0, 3);
+      part2.value = clean.substring(3, 6);
+    }
   }
 
 })();

@@ -62,7 +62,14 @@ function handleSendEmail(params) {
       return jsonResponse({ success: false, error: 'Geen e-mailadres opgegeven' });
     }
 
-    var htmlBody = buildEmailHtml(naam, code, subject, surveyUrl, previewUrl, deadline, contactPerson, contactEmail, senderName, textFields);
+    // The surveyUrl is already personalized with ?code= by the Email CMS client.
+    // If not, append the code as a fallback.
+    var personalSurveyUrl = surveyUrl;
+    if (surveyUrl && code && surveyUrl.indexOf('code=') === -1) {
+      personalSurveyUrl = surveyUrl + (surveyUrl.indexOf('?') >= 0 ? '&' : '?') + 'code=' + encodeURIComponent(code);
+    }
+
+    var htmlBody = buildEmailHtml(naam, code, subject, personalSurveyUrl, previewUrl, deadline, contactPerson, contactEmail, senderName, textFields);
 
     MailApp.sendEmail({
       to: to,
