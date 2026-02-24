@@ -44,6 +44,50 @@
 
   const SEND_DELAY_MS = 1500; // Delay between consecutive sends to avoid rate-limiting
 
+  // Pre-populated access codes. First entry is a greyed-out example row.
+  const DEFAULT_CODES = [
+    { code: 'YAW-PG7', name: 'Voorbeeldorganisatie', isExample: true },
+    { code: 'LYD-EY3' },
+    { code: 'ZKN-QD4' },
+    { code: '5HP-YMK' },
+    { code: '3BM-FP6' },
+    { code: 'NR6-ZZF' },
+    { code: '3AG-HF6' },
+    { code: '38P-QJB' },
+    { code: 'JRB-4P8' },
+    { code: 'F5K-E62' },
+    { code: '9WX-X5Q' },
+    { code: '2B2-DEW' },
+    { code: 'JF9-Y24' },
+    { code: 'S3Y-W9F' },
+    { code: 'K5Y-9EI' },
+    { code: 'EA7-FUX' },
+    { code: '3KN-V85' },
+    { code: '6JV-PPB' },
+    { code: 'FG7-VVB' },
+    { code: 'F4M-V25' },
+    { code: 'R8W-3KN' },
+    { code: '4YT-HBM' },
+    { code: 'JC6-PWQ' },
+    { code: '2XF-9VN' },
+    { code: 'KM3-8TL' },
+    { code: 'BZ7-5RC' },
+    { code: 'N4P-QYW' },
+    { code: '6HS-DJX' },
+    { code: 'TVL-2F8' },
+    { code: 'W9C-MK3' },
+    { code: 'H5B-7ZR' },
+    { code: 'PXN-4GJ' },
+    { code: '3QY-LV6' },
+    { code: '8FM-TCW' },
+    { code: 'DK2-9HN' },
+    { code: 'ZJR-5PL' },
+    { code: 'VN7-QX4' },
+    { code: '9CW-B3T' },
+    { code: 'LY6-KM8' },
+    { code: '5TP-HZJ' }
+  ];
+
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
@@ -360,20 +404,28 @@
     }
 
     // Check for duplicate email
-    if (recipients.some(r => r.email.toLowerCase() === email.toLowerCase())) {
+    if (recipients.some(r => r.email && r.email.toLowerCase() === email.toLowerCase())) {
       showToast('Dit e-mailadres is al toegevoegd', 'error');
       return false;
     }
 
-    recipients.push({
-      id: generateId(),
-      email,
-      name,
-      code,
-      status: 'pending',
-      selected: false,
-      error: null
-    });
+    // If a pre-populated row with this code exists, update it instead of adding
+    const existingByCode = recipients.find(r => r.code === code && !r.isExample && !r.email);
+    if (existingByCode) {
+      existingByCode.email = email;
+      existingByCode.name = name;
+    } else {
+      recipients.push({
+        id: generateId(),
+        email,
+        name,
+        code,
+        status: 'pending',
+        selected: false,
+        error: null,
+        isExample: false
+      });
+    }
 
     saveRecipients();
     renderTable();
@@ -445,21 +497,36 @@
       }
 
       let added = 0;
+      let updated = 0;
       let skipped = 0;
       for (const row of parsed) {
-        const isDuplicate = recipients.some(r => r.email.toLowerCase() === row.email.toLowerCase());
+        const codeUpper = row.code.trim().toUpperCase();
+
+        // Check if a pre-populated row with this code exists (update it)
+        const existingByCode = recipients.find(r => r.code === codeUpper && !r.isExample);
+        if (existingByCode && !existingByCode.email) {
+          existingByCode.email = row.email.trim();
+          existingByCode.name = row.name.trim() || existingByCode.name;
+          updated++;
+          continue;
+        }
+
+        // Check for duplicate email
+        const isDuplicate = row.email && recipients.some(r => r.email && r.email.toLowerCase() === row.email.toLowerCase());
         if (isDuplicate) {
           skipped++;
           continue;
         }
+
         recipients.push({
           id: generateId(),
           email: row.email.trim(),
           name: row.name.trim(),
-          code: row.code.trim().toUpperCase(),
+          code: codeUpper,
           status: 'pending',
           selected: false,
-          error: null
+          error: null,
+          isExample: false
         });
         added++;
       }
@@ -469,9 +536,11 @@
       updateCounts();
       updatePreview();
 
-      let msg = `${added} ontvanger${added !== 1 ? 's' : ''} ge\u00EFmporteerd`;
-      if (skipped > 0) msg += `, ${skipped} duplica${skipped !== 1 ? 'ten' : 'at'} overgeslagen`;
-      showToast(msg, 'success');
+      const parts = [];
+      if (added > 0) parts.push(`${added} ontvanger${added !== 1 ? 's' : ''} toegevoegd`);
+      if (updated > 0) parts.push(`${updated} bestaande code${updated !== 1 ? 's' : ''} bijgewerkt`);
+      if (skipped > 0) parts.push(`${skipped} duplica${skipped !== 1 ? 'ten' : 'at'} overgeslagen`);
+      showToast(parts.join(', ') || 'Geen wijzigingen', parts.length > 0 ? 'success' : 'info');
     };
     reader.readAsText(file);
   }
@@ -601,7 +670,7 @@
     if (sendingInProgress) return;
     sendingInProgress = true;
 
-    const toSend = recipients.filter(r => recipientIds.includes(r.id) && r.status !== 'sent');
+    const toSend = recipients.filter(r => recipientIds.includes(r.id) && r.status !== 'sent' && !r.isExample && r.email && r.name);
     const total = toSend.length;
     let completed = 0;
     let succeeded = 0;
@@ -683,11 +752,27 @@
     const tbody = document.getElementById('recipientTableBody');
     if (!tbody) return;
 
-    tbody.innerHTML = recipients.map(r => `
-      <tr data-id="${r.id}">
-        <td><input type="checkbox" class="row-check" data-id="${r.id}" ${r.selected ? 'checked' : ''}></td>
-        <td class="ea-cell-email">${esc(r.email)}</td>
-        <td class="ea-cell-name">${esc(r.name)}</td>
+    tbody.innerHTML = recipients.map(r => {
+      if (r.isExample) {
+        return `
+      <tr data-id="${r.id}" class="ea-row-example">
+        <td></td>
+        <td class="ea-cell-email ea-cell-muted">voorbeeld@organisatie.nl</td>
+        <td class="ea-cell-name ea-cell-muted">${esc(r.name)}</td>
+        <td class="ea-cell-code">${esc(r.code)}</td>
+        <td>${renderStatus(r)}</td>
+        <td></td>
+      </tr>`;
+      }
+
+      const isComplete = r.email && r.name;
+      const rowClass = isComplete ? '' : 'ea-row-incomplete';
+
+      return `
+      <tr data-id="${r.id}" class="${rowClass}">
+        <td><input type="checkbox" class="row-check" data-id="${r.id}" ${r.selected ? 'checked' : ''} ${!isComplete ? 'disabled' : ''}></td>
+        <td class="ea-cell-email"><input type="email" class="ea-inline-input" data-id="${r.id}" data-field="email" placeholder="E-mailadres" value="${esc(r.email)}"></td>
+        <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}"></td>
         <td class="ea-cell-code">${esc(r.code)}</td>
         <td>${renderStatus(r)}</td>
         <td>
@@ -695,8 +780,8 @@
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5.333 4V2.667a1.333 1.333 0 0 1 1.334-1.334h2.666a1.333 1.333 0 0 1 1.334 1.334V4m2 0v9.333a1.333 1.333 0 0 1-1.334 1.334H4.667a1.333 1.333 0 0 1-1.334-1.334V4h9.334Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </td>
-      </tr>
-    `).join('');
+      </tr>`;
+    }).join('');
 
     // Show/hide empty state
     const emptyEl = document.getElementById('emptyState');
@@ -711,6 +796,12 @@
   }
 
   function renderStatus(r) {
+    if (r.isExample) {
+      return '<span class="ea-status ea-status-example">Voorbeeld</span>';
+    }
+    if (!r.email || !r.name) {
+      return '<span class="ea-status ea-status-incomplete">Onvolledig</span>';
+    }
     switch (r.status) {
       case 'pending':
         return '<span class="ea-status ea-status-pending">Wachtrij</span>';
@@ -726,9 +817,10 @@
   }
 
   function updateCounts() {
-    const selected = recipients.filter(r => r.selected);
+    const sendable = recipients.filter(r => !r.isExample && r.email && r.name);
+    const selected = sendable.filter(r => r.selected);
     const pendingSel = selected.filter(r => r.status !== 'sent');
-    const allPending = recipients.filter(r => r.status !== 'sent');
+    const allPending = sendable.filter(r => r.status !== 'sent');
 
     const countEl = document.getElementById('recipientCount');
     const selCountEl = document.getElementById('selectedCount');
@@ -736,7 +828,7 @@
     const btn1 = document.getElementById('btnSendSelected');
     const btn2 = document.getElementById('btnSendAll');
 
-    if (countEl) countEl.textContent = recipients.length;
+    if (countEl) countEl.textContent = recipients.filter(r => !r.isExample).length;
     if (selCountEl) selCountEl.textContent = pendingSel.length;
     if (totalPendingEl) totalPendingEl.textContent = allPending.length;
 
@@ -927,10 +1019,48 @@
   // Initialization
   // ---------------------------------------------------------------------------
 
+  function ensureDefaultCodes() {
+    // If no recipients exist, populate from DEFAULT_CODES
+    if (recipients.length === 0) {
+      recipients = DEFAULT_CODES.map(entry => ({
+        id: generateId(),
+        email: '',
+        name: entry.name || '',
+        code: entry.code,
+        status: 'pending',
+        selected: false,
+        error: null,
+        isExample: !!entry.isExample
+      }));
+      saveRecipients();
+      return;
+    }
+
+    // Ensure example row is always first and marked
+    const existingCodes = new Set(recipients.map(r => r.code));
+    const example = DEFAULT_CODES.find(d => d.isExample);
+    if (example && !existingCodes.has(example.code)) {
+      recipients.unshift({
+        id: generateId(),
+        email: '',
+        name: example.name || '',
+        code: example.code,
+        status: 'pending',
+        selected: false,
+        error: null,
+        isExample: true
+      });
+      saveRecipients();
+    }
+  }
+
   function init() {
     // Load persisted state
     recipients = loadRecipients();
     settings = loadSettings();
+
+    // Ensure default access codes are present
+    ensureDefaultCodes();
 
     // Sync settings to UI
     syncSettingsToUI();
@@ -970,6 +1100,36 @@
         // Re-check the selectAll after render
         const sa = document.getElementById('selectAll');
         if (sa) sa.checked = checked;
+      }
+    });
+
+    // Inline edit handler for table email/name inputs
+    let inlineTimer;
+    document.addEventListener('input', function (e) {
+      if (e.target.classList.contains('ea-inline-input')) {
+        const id = e.target.dataset.id;
+        const field = e.target.dataset.field;
+        const r = recipients.find(r => r.id === id);
+        if (r && (field === 'email' || field === 'name')) {
+          r[field] = e.target.value.trim();
+          clearTimeout(inlineTimer);
+          inlineTimer = setTimeout(() => {
+            saveRecipients();
+            updateCounts();
+            // Update the row class without full re-render (avoids losing focus)
+            const row = e.target.closest('tr');
+            if (row) {
+              const isComplete = r.email && r.name;
+              row.className = isComplete ? '' : 'ea-row-incomplete';
+              // Update status cell
+              const statusCell = row.querySelector('td:nth-child(5)');
+              if (statusCell) statusCell.innerHTML = renderStatus(r);
+              // Update checkbox disabled state
+              const checkbox = row.querySelector('.row-check');
+              if (checkbox) checkbox.disabled = !isComplete;
+            }
+          }, 300);
+        }
       }
     });
 
