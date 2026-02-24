@@ -1042,22 +1042,31 @@
       return;
     }
 
-    // Ensure example row is always first and marked
+    // Backfill any missing codes from DEFAULT_CODES
     const existingCodes = new Set(recipients.map(r => r.code));
-    const example = DEFAULT_CODES.find(d => d.isExample);
-    if (example && !existingCodes.has(example.code)) {
-      recipients.unshift({
-        id: generateId(),
-        email: '',
-        name: example.name || '',
-        code: example.code,
-        status: 'pending',
-        selected: false,
-        error: null,
-        isExample: true
-      });
-      saveRecipients();
+    let changed = false;
+    for (const entry of DEFAULT_CODES) {
+      if (!existingCodes.has(entry.code)) {
+        const row = {
+          id: generateId(),
+          email: '',
+          name: entry.name || '',
+          code: entry.code,
+          status: 'pending',
+          selected: false,
+          error: null,
+          isExample: !!entry.isExample
+        };
+        // Example row goes first, others append at the end
+        if (entry.isExample) {
+          recipients.unshift(row);
+        } else {
+          recipients.push(row);
+        }
+        changed = true;
+      }
     }
+    if (changed) saveRecipients();
   }
 
   function init() {
