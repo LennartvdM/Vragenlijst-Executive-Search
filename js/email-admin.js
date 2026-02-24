@@ -157,9 +157,13 @@
   function generateEmailHtml(recipient) {
     const s = settings;
     const naam = esc(recipient?.name || '[naam]');
-    const code = esc(recipient?.code || 'ABC-DEF');
+    const rawCode = recipient?.code || 'ABC-DEF';
+    const code = esc(rawCode);
     const deadline = esc(s.deadline || '[deadline]');
-    const surveyUrl = esc(s.surveyUrl || '#');
+    const baseSurveyUrl = s.surveyUrl || '#';
+    const surveyUrl = baseSurveyUrl !== '#'
+      ? esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode))
+      : '#';
     const previewUrl = esc(s.previewUrl || '#');
     const contactPerson = esc(s.contactPerson || '[contactpersoon]');
     const contactEmail = esc(s.contactEmail || '[email]');
@@ -583,7 +587,9 @@
       naam: recipient.name,
       code: recipient.code,
       subject: settings.subject,
-      surveyUrl: settings.surveyUrl || '',
+      surveyUrl: settings.surveyUrl
+        ? settings.surveyUrl + (settings.surveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(recipient.code)
+        : '',
       previewUrl: settings.previewUrl || '',
       deadline: settings.deadline || '',
       contactPerson: settings.contactPerson || '',
