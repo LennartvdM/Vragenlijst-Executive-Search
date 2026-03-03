@@ -64,7 +64,7 @@
     const deadline = esc(s.deadline || '[deadline]');
     const baseSurveyUrl = s.surveyUrl || 'https://monitorcultuur.nl/';
     const surveyUrl = esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode));
-    const previewUrl = esc(s.previewUrl || '#');
+    const previewUrl = esc(s.previewUrl || 'https://monitorcultuur.nl/inkijkexemplaar');
     const contactPerson = esc(s.contactPerson || '[contactpersoon]');
     const contactEmail = esc(s.contactEmail || '[email]');
     const senderName = esc(s.senderName || DEFAULTS.senderName);
