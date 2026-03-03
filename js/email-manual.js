@@ -213,28 +213,33 @@
     // Generate HTML email using shared template
     const html = window.EmailTemplate.buildEmailHtml(recipient, settings);
     iframe.srcdoc = html;
-
-    // Update mailto link
-    updateMailtoLink(recipient);
   }
 
   // ---------------------------------------------------------------------------
-  // Mailto link generation
+  // .eml file download — opens as draft in Outlook / Thunderbird / Apple Mail
   // ---------------------------------------------------------------------------
 
-  function updateMailtoLink(recipient) {
-    const btn = document.getElementById('btnMailto');
-    const plainText = window.EmailTemplate.buildPlainText(recipient, settings);
-    const subject = settings.subject || DEFAULT_SETTINGS.subject;
+  function downloadEml() {
+    const recipient = recipients.find(r => r.id === selectedId);
+    if (!recipient) return;
 
-    // mailto: has URL length limits (~2000 chars). Truncate if needed.
-    const body = plainText.length > 1800
-      ? plainText.substring(0, 1800) + '\n\n[Tekst ingekort — kopieer de HTML-versie voor de volledige e-mail]'
-      : plainText;
+    const emlContent = window.EmailTemplate.buildEml(recipient, settings);
+    const blob = new Blob([emlContent], { type: 'message/rfc822' });
+    const url = URL.createObjectURL(blob);
 
-    btn.href = 'mailto:' + encodeURIComponent(recipient.email)
-      + '?subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(body);
+    const a = document.createElement('a');
+    a.href = url;
+    // Filename: organisatie-naam.eml (sanitized)
+    const safeName = (recipient.name || recipient.email || 'email')
+      .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .toLowerCase()
+      .slice(0, 50);
+    a.download = safeName + '.eml';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showToast('E-mail gedownload — dubbelklik om te openen in Outlook', 'success');
   }
 
   // ---------------------------------------------------------------------------
@@ -568,6 +573,9 @@
         }
         break;
       }
+      case 'downloadEml':
+        downloadEml();
+        break;
       case 'nextUnsent':
         selectNextUnsent();
         break;
@@ -635,12 +643,6 @@
         e.preventDefault();
         handleAction(actionEl.dataset.action, actionEl);
       }
-    });
-
-    // mailto link — don't prevent default (let it open)
-    document.getElementById('btnMailto').addEventListener('click', function (e) {
-      // Just let the default mailto: behavior happen
-      // Don't call e.preventDefault()
     });
 
     // Settings input change — debounced save

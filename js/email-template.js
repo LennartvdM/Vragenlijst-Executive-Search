@@ -335,12 +335,85 @@
   }
 
   // ---------------------------------------------------------------------------
+  // Build .eml file (RFC 2822 + MIME multipart/alternative)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Encode a UTF-8 string as RFC 2047 encoded-word for email headers.
+   */
+  function encodeRfc2047(str) {
+    return '=?UTF-8?B?' + btoa(unescape(encodeURIComponent(str))) + '?=';
+  }
+
+  /**
+   * Base64-encode a UTF-8 string with line wrapping at 76 chars (RFC 2045).
+   */
+  function base64Utf8(str) {
+    const raw = btoa(unescape(encodeURIComponent(str)));
+    return raw.match(/.{1,76}/g).join('\r\n');
+  }
+
+  /**
+   * Build a .eml file string that Outlook/Thunderbird/Apple Mail can open
+   * as a ready-to-send draft with full HTML formatting.
+   *
+   * @param {Object} recipient  { name, email, code }
+   * @param {Object} settings   Full settings object
+   * @returns {string} Complete .eml file content
+   */
+  function buildEml(recipient, settings) {
+    const s = settings || {};
+    const subject = s.subject || DEFAULTS.subject;
+    const toEmail = recipient?.email || '';
+    const toName = recipient?.name || '';
+    const senderName = s.senderName || DEFAULTS.senderName;
+
+    const htmlBody = buildEmailHtml(recipient, settings);
+    const textBody = buildPlainText(recipient, settings);
+
+    const boundary = 'boundary-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+    // Format "To" with display name if available
+    const toHeader = toName
+      ? encodeRfc2047(toName) + ' <' + toEmail + '>'
+      : toEmail;
+
+    const lines = [
+      'MIME-Version: 1.0',
+      'Subject: ' + encodeRfc2047(subject),
+      'To: ' + toHeader,
+      'X-Unsent: 1',
+      'Content-Type: multipart/alternative; boundary="' + boundary + '"',
+      '',
+      'This is a multi-part message in MIME format.',
+      '',
+      '--' + boundary,
+      'Content-Type: text/plain; charset=utf-8',
+      'Content-Transfer-Encoding: base64',
+      '',
+      base64Utf8(textBody),
+      '',
+      '--' + boundary,
+      'Content-Type: text/html; charset=utf-8',
+      'Content-Transfer-Encoding: base64',
+      '',
+      base64Utf8(htmlBody),
+      '',
+      '--' + boundary + '--',
+      ''
+    ];
+
+    return lines.join('\r\n');
+  }
+
+  // ---------------------------------------------------------------------------
   // Expose on window
   // ---------------------------------------------------------------------------
 
   window.EmailTemplate = {
     buildEmailHtml: buildEmailHtml,
     buildPlainText: buildPlainText,
+    buildEml: buildEml,
     DEFAULTS: DEFAULTS
   };
 
