@@ -186,20 +186,28 @@
                       <!-- CTA button -->
                       <tr>
                         <td style="padding: 0 28px 8px;" align="center">
+                          <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:42px;v-text-anchor:middle;width:220px;" arcsize="24%" strokecolor="#111162" fillcolor="#111162">
+                            <w:anchorlock/>
+                            <center style="color:#ffffff;font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;">${ctaText}</center>
+                          </v:roundrect>
+                          <![endif]-->
+                          <!--[if !mso]><!-->
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
-                              <td style="background:linear-gradient(135deg, #8caef4 0%, #111162 100%); border-radius:10px; box-shadow:0 4px 12px rgba(17,17,98,0.3);">
+                              <td bgcolor="#111162" style="background:linear-gradient(135deg, #8caef4 0%, #111162 100%); border-radius:10px; box-shadow:0 4px 12px rgba(17,17,98,0.3);">
                                 <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 28px; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
                               </td>
                             </tr>
                           </table>
+                          <!--<![endif]-->
                         </td>
                       </tr>
 
                       <!-- Preview link -->
                       <tr>
                         <td style="padding: 0 28px 24px;" align="center">
-                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:none; opacity:0.7;">${previewLinkText}</a>
+                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:underline;">${previewLinkText}</a>
                         </td>
                       </tr>
 
@@ -354,6 +362,69 @@
   }
 
   /**
+   * Encode a UTF-8 string as quoted-printable (RFC 2045).
+   * More compatible with email clients than base64 for HTML content —
+   * ASCII passes through unchanged so links remain intact.
+   */
+  function encodeQuotedPrintable(str) {
+    const utf8 = unescape(encodeURIComponent(str));
+    let result = '';
+    let lineLen = 0;
+
+    for (let i = 0; i < utf8.length; i++) {
+      const c = utf8.charCodeAt(i);
+
+      // Hard line break: \r\n or lone \n → CRLF
+      if (c === 0x0D && i + 1 < utf8.length && utf8.charCodeAt(i + 1) === 0x0A) {
+        result += '\r\n';
+        lineLen = 0;
+        i++;
+        continue;
+      }
+      if (c === 0x0A) {
+        result += '\r\n';
+        lineLen = 0;
+        continue;
+      }
+
+      // Printable ASCII (33-126) except '=' passes through; tab and space too
+      let encoded;
+      if ((c >= 33 && c <= 126 && c !== 61) || c === 9 || c === 32) {
+        encoded = String.fromCharCode(c);
+      } else {
+        encoded = '=' + c.toString(16).toUpperCase().padStart(2, '0');
+      }
+
+      // Soft line break at 75 chars (leave room for trailing =)
+      if (lineLen + encoded.length >= 76) {
+        result += '=\r\n';
+        lineLen = 0;
+      }
+
+      result += encoded;
+      lineLen += encoded.length;
+    }
+
+    return result;
+  }
+
+  /**
+   * Format a Date object as RFC 2822 date string for email headers.
+   */
+  function formatRfc2822Date(date) {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const pad = n => n < 10 ? '0' + n : '' + n;
+    const offset = -date.getTimezoneOffset();
+    const sign = offset >= 0 ? '+' : '-';
+    const absOff = Math.abs(offset);
+    const tz = sign + pad(Math.floor(absOff / 60)) + pad(absOff % 60);
+    return days[date.getDay()] + ', ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' +
+      date.getFullYear() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' +
+      pad(date.getSeconds()) + ' ' + tz;
+  }
+
+  /**
    * Build a .eml file string that Outlook/Thunderbird/Apple Mail can open
    * as a ready-to-send draft with full HTML formatting.
    *
@@ -367,37 +438,48 @@
     const toEmail = recipient?.email || '';
     const toName = recipient?.name || '';
     const senderName = s.senderName || DEFAULTS.senderName;
+    const contactEmail = s.contactEmail || '';
 
     const htmlBody = buildEmailHtml(recipient, settings);
     const textBody = buildPlainText(recipient, settings);
 
-    const boundary = 'boundary-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    const boundary = '----=_Part_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    const messageId = '<' + Date.now().toString(36) + '.' + Math.random().toString(36).slice(2, 10) + '@monitoringtalent.local>';
 
     // Format "To" with display name if available
     const toHeader = toName
       ? encodeRfc2047(toName) + ' <' + toEmail + '>'
       : toEmail;
 
+    // Format "From" — use contact email if available, otherwise placeholder
+    const fromEmail = contactEmail || 'noreply@monitoringtalent.local';
+    const fromHeader = senderName
+      ? encodeRfc2047(senderName) + ' <' + fromEmail + '>'
+      : fromEmail;
+
     const lines = [
-      'MIME-Version: 1.0',
-      'Subject: ' + encodeRfc2047(subject),
+      'Date: ' + formatRfc2822Date(new Date()),
+      'From: ' + fromHeader,
       'To: ' + toHeader,
+      'Subject: ' + encodeRfc2047(subject),
+      'Message-ID: ' + messageId,
+      'MIME-Version: 1.0',
       'X-Unsent: 1',
       'Content-Type: multipart/alternative; boundary="' + boundary + '"',
       '',
       'This is a multi-part message in MIME format.',
       '',
       '--' + boundary,
-      'Content-Type: text/plain; charset=utf-8',
-      'Content-Transfer-Encoding: base64',
+      'Content-Type: text/plain; charset="utf-8"',
+      'Content-Transfer-Encoding: quoted-printable',
       '',
-      base64Utf8(textBody),
+      encodeQuotedPrintable(textBody),
       '',
       '--' + boundary,
-      'Content-Type: text/html; charset=utf-8',
-      'Content-Transfer-Encoding: base64',
+      'Content-Type: text/html; charset="utf-8"',
+      'Content-Transfer-Encoding: quoted-printable',
       '',
-      base64Utf8(htmlBody),
+      encodeQuotedPrintable(htmlBody),
       '',
       '--' + boundary + '--',
       ''
