@@ -223,6 +223,15 @@
     const recipient = recipients.find(r => r.id === selectedId);
     if (!recipient) return;
 
+    // Ensure latest settings are captured (debounce may not have fired)
+    syncSettingsFromUI();
+
+    // Warn if survey URL is empty — links won't work
+    if (!settings.surveyUrl) {
+      showToast('Let op: geen URL ingesteld — links in de e-mail werken niet. Stel de URL in bij Instellingen.', 'error');
+      return;
+    }
+
     const emlContent = window.EmailTemplate.buildEml(recipient, settings);
     const blob = new Blob([emlContent], { type: 'message/rfc822' });
     const url = URL.createObjectURL(blob);

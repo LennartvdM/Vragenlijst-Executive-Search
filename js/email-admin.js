@@ -751,6 +751,8 @@
   // ---------------------------------------------------------------------------
 
   function downloadSingleEml(recipient) {
+    // Ensure latest settings are captured
+    syncSettingsFromUI();
     const emlContent = window.EmailTemplate.buildEml(recipient, settings);
     const blob = new Blob([emlContent], { type: 'message/rfc822' });
     const url = URL.createObjectURL(blob);
