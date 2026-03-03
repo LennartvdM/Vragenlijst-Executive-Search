@@ -438,19 +438,28 @@
     return true;
   }
 
-  function removeRecipient(id) {
-    recipients = recipients.filter(r => r.id !== id);
+  function clearRecipientFields(id) {
+    const r = recipients.find(r => r.id === id);
+    if (!r) return;
+    r.email = '';
+    r.name = r.isExample ? r.name : '';
+    r.status = 'pending';
+    r.selected = false;
+    r.error = null;
     saveRecipients();
     renderTable();
     updateCounts();
+    updatePreview();
   }
 
   function clearAllRecipients() {
     recipients = [];
     saveRecipients();
+    ensureDefaultCodes();
     renderTable();
     updateCounts();
-    showToast('Alle ontvangers verwijderd', 'info');
+    updatePreview();
+    showToast('Lijst gereset \u2014 alle e-mailadressen en namen gewist', 'info');
   }
 
   // ---------------------------------------------------------------------------
@@ -777,13 +786,13 @@
       return `
       <tr data-id="${r.id}" class="${rowClass}">
         <td><input type="checkbox" class="row-check" data-id="${r.id}" ${r.selected ? 'checked' : ''} ${!isComplete ? 'disabled' : ''}></td>
-        <td class="ea-cell-email"><input type="email" class="ea-inline-input" data-id="${r.id}" data-field="email" placeholder="E-mailadres" value="${esc(r.email)}"></td>
-        <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}"></td>
+        <td class="ea-cell-email"><input type="email" class="ea-inline-input" data-id="${r.id}" data-field="email" placeholder="E-mailadres" value="${esc(r.email)}" autocomplete="off"></td>
+        <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}" autocomplete="off"></td>
         <td class="ea-cell-code">${esc(r.code)}</td>
         <td>${renderStatus(r)}</td>
         <td>
-          <button class="ea-btn-delete" data-action="deleteRecipient" data-id="${r.id}" title="Verwijderen">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5.333 4V2.667a1.333 1.333 0 0 1 1.334-1.334h2.666a1.333 1.333 0 0 1 1.334 1.334V4m2 0v9.333a1.333 1.333 0 0 1-1.334 1.334H4.667a1.333 1.333 0 0 1-1.334-1.334V4h9.334Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <button class="ea-btn-delete" data-action="deleteRecipient" data-id="${r.id}" title="Wissen">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14h12M9.354 2.354a1 1 0 0 1 1.414 0l2.878 2.878a1 1 0 0 1 0 1.414L6.5 13.793 2.207 9.5l7.147-7.146Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.707l4.293 4.293" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
           </button>
         </td>
       </tr>`;
@@ -963,7 +972,7 @@
 
       case 'deleteRecipient': {
         const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
-        if (id) removeRecipient(id);
+        if (id) clearRecipientFields(id);
         break;
       }
 
@@ -1004,6 +1013,14 @@
 
       case 'cancelConfirm':
         hideConfirm();
+        break;
+
+      case 'resetAll':
+        showConfirm(
+          'Lijst resetten',
+          'Alle e-mailadressen en namen worden gewist. De toegangscodes blijven behouden. Weet u het zeker?',
+          () => clearAllRecipients()
+        );
         break;
 
       case 'toggleSection': {
