@@ -385,10 +385,9 @@
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   }
 
-  function addRecipient(email, name, code) {
+  function addRecipient(email, name) {
     email = (email || '').trim();
     name = (name || '').trim();
-    code = (code || '').trim().toUpperCase();
 
     if (!email) {
       showToast('Vul een e-mailadres in', 'error');
@@ -402,10 +401,6 @@
       showToast('Vul een naam in', 'error');
       return false;
     }
-    if (!code) {
-      showToast('Vul een code in', 'error');
-      return false;
-    }
 
     // Check for duplicate email
     if (recipients.some(r => r.email && r.email.toLowerCase() === email.toLowerCase())) {
@@ -413,22 +408,14 @@
       return false;
     }
 
-    // If a pre-populated row with this code exists, update it instead of adding
-    const existingByCode = recipients.find(r => r.code === code && !r.isExample && !r.email);
-    if (existingByCode) {
-      existingByCode.email = email;
-      existingByCode.name = name;
+    // Auto-assign to the next empty code row
+    const emptyRow = recipients.find(r => !r.isExample && !r.email && r.code);
+    if (emptyRow) {
+      emptyRow.email = email;
+      emptyRow.name = name;
     } else {
-      recipients.push({
-        id: generateId(),
-        email,
-        name,
-        code,
-        status: 'pending',
-        selected: false,
-        error: null,
-        isExample: false
-      });
+      showToast('Alle codes zijn al toegewezen — maak eerst een code vrij', 'error');
+      return false;
     }
 
     saveRecipients();
@@ -960,11 +947,9 @@
       case 'addRecipient': {
         const emailEl = document.getElementById('add-email');
         const nameEl = document.getElementById('add-name');
-        const codeEl = document.getElementById('add-code');
-        if (addRecipient(emailEl.value, nameEl.value, codeEl.value)) {
+        if (addRecipient(emailEl.value, nameEl.value)) {
           emailEl.value = '';
           nameEl.value = '';
-          codeEl.value = '';
           emailEl.focus();
         }
         break;
