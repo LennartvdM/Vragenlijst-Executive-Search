@@ -747,6 +747,48 @@
   }
 
   // ---------------------------------------------------------------------------
+  // .eml Download (manual send via Outlook)
+  // ---------------------------------------------------------------------------
+
+  function downloadSingleEml(recipient) {
+    const emlContent = window.EmailTemplate.buildEml(recipient, settings);
+    const blob = new Blob([emlContent], { type: 'message/rfc822' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    const safeName = (recipient.name || recipient.email || 'email')
+      .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .toLowerCase()
+      .slice(0, 50);
+    a.download = safeName + '.eml';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function downloadBulkEml(recipientIds) {
+    const toDownload = recipients.filter(r =>
+      recipientIds.includes(r.id) && !r.isExample && r.email && r.name && r.status !== 'sent'
+    );
+
+    if (toDownload.length === 0) {
+      showToast('Geen ontvangers om te downloaden', 'error');
+      return;
+    }
+
+    // Download one by one with a short delay so the browser doesn't block them
+    for (let i = 0; i < toDownload.length; i++) {
+      downloadSingleEml(toDownload[i]);
+      if (i < toDownload.length - 1) {
+        await sleep(300);
+      }
+    }
+
+    showToast(`${toDownload.length} .eml-bestand${toDownload.length !== 1 ? 'en' : ''} gedownload`, 'success');
+  }
+
+  // ---------------------------------------------------------------------------
   // UI Rendering
   // ---------------------------------------------------------------------------
 
@@ -777,7 +819,10 @@
         <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}" autocomplete="one-time-code" name="rcpt-name-${r.id}"></td>
         <td class="ea-cell-code">${esc(r.code)}</td>
         <td>${renderStatus(r)}</td>
-        <td>
+        <td class="ea-cell-actions">
+          ${isComplete ? `<button class="ea-btn-icon" data-action="downloadRowEml" data-id="${r.id}" title="Download .eml voor Outlook">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.667 6.667 8 10l3.333-3.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>` : ''}
           <button class="ea-btn-delete" data-action="deleteRecipient" data-id="${r.id}" title="Wissen">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14h12M9.354 2.354a1 1 0 0 1 1.414 0l2.878 2.878a1 1 0 0 1 0 1.414L6.5 13.793 2.207 9.5l7.147-7.146Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.707l4.293 4.293" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
           </button>
@@ -836,6 +881,17 @@
 
     if (btn1 && !sendingInProgress) btn1.disabled = pendingSel.length === 0;
     if (btn2 && !sendingInProgress) btn2.disabled = allPending.length === 0;
+
+    // .eml download buttons
+    const selEmlCountEl = document.getElementById('selectedEmlCount');
+    const totalEmlCountEl = document.getElementById('totalEmlCount');
+    const btnDlSel = document.getElementById('btnDownloadSelected');
+    const btnDlAll = document.getElementById('btnDownloadAll');
+
+    if (selEmlCountEl) selEmlCountEl.textContent = pendingSel.length;
+    if (totalEmlCountEl) totalEmlCountEl.textContent = allPending.length;
+    if (btnDlSel) btnDlSel.disabled = pendingSel.length === 0;
+    if (btnDlAll) btnDlAll.disabled = allPending.length === 0;
   }
 
   function updatePreview() {
@@ -958,6 +1014,30 @@
       case 'deleteRecipient': {
         const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
         if (id) clearRecipientFields(id);
+        break;
+      }
+
+      case 'downloadRowEml': {
+        const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
+        const r = recipients.find(r => r.id === id);
+        if (r && r.email && r.name) {
+          downloadSingleEml(r);
+          showToast(`${r.name}.eml gedownload`, 'success');
+        }
+        break;
+      }
+
+      case 'downloadSelectedEml': {
+        const selected = recipients.filter(r => r.selected && r.status !== 'sent' && !r.isExample && r.email && r.name);
+        if (selected.length === 0) return;
+        downloadBulkEml(selected.map(r => r.id));
+        break;
+      }
+
+      case 'downloadAllEml': {
+        const pending = recipients.filter(r => r.status !== 'sent' && !r.isExample && r.email && r.name);
+        if (pending.length === 0) return;
+        downloadBulkEml(pending.map(r => r.id));
         break;
       }
 
