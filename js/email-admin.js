@@ -22,7 +22,7 @@
 
   const DEFAULT_SETTINGS = {
     subject: 'Monitoring Cultureel Talent naar de Top 2026',
-    surveyUrl: '',
+    surveyUrl: 'https://monitorcultuur.nl/',
     previewUrl: '',
     deadline: '',
     senderName: 'Commissie Monitoring Talent naar de Top',
