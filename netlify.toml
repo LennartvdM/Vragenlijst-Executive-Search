@@ -41,6 +41,13 @@
   status = 200
   force = true
 
+# Hidden manual email sender (no DNS required — send from own mail client)
+[[redirects]]
+  from = "/m9v2-email-handmatig"
+  to = "/email-manual.html"
+  status = 200
+  force = true
+
 # Headers for security
 [[headers]]
   for = "/*"
