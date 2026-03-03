@@ -786,8 +786,8 @@
       return `
       <tr data-id="${r.id}" class="${rowClass}">
         <td><input type="checkbox" class="row-check" data-id="${r.id}" ${r.selected ? 'checked' : ''} ${!isComplete ? 'disabled' : ''}></td>
-        <td class="ea-cell-email"><input type="email" class="ea-inline-input" data-id="${r.id}" data-field="email" placeholder="E-mailadres" value="${esc(r.email)}" autocomplete="off"></td>
-        <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}" autocomplete="off"></td>
+        <td class="ea-cell-email"><input type="text" inputmode="email" class="ea-inline-input" data-id="${r.id}" data-field="email" placeholder="E-mailadres" value="${esc(r.email)}" autocomplete="one-time-code" name="rcpt-email-${r.id}"></td>
+        <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}" autocomplete="one-time-code" name="rcpt-name-${r.id}"></td>
         <td class="ea-cell-code">${esc(r.code)}</td>
         <td>${renderStatus(r)}</td>
         <td>
