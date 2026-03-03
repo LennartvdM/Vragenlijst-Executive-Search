@@ -62,11 +62,9 @@
     const rawCode = recipient?.code || 'ABC-DEF';
     const code = esc(rawCode);
     const deadline = esc(s.deadline || '[deadline]');
-    const baseSurveyUrl = s.surveyUrl || '#';
-    const surveyUrl = baseSurveyUrl !== '#'
-      ? esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode))
-      : '#';
-    const previewUrl = esc(s.previewUrl || '#');
+    const baseSurveyUrl = s.surveyUrl || 'https://monitorcultuur.nl/';
+    const surveyUrl = esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode));
+    const previewUrl = esc(s.previewUrl || 'https://monitorcultuur.nl/inkijkexemplaar');
     const contactPerson = esc(s.contactPerson || '[contactpersoon]');
     const contactEmail = esc(s.contactEmail || '[email]');
     const senderName = esc(s.senderName || DEFAULTS.senderName);
@@ -301,10 +299,8 @@
     const naam = recipient?.name || '[naam]';
     const rawCode = recipient?.code || 'ABC-DEF';
     const deadline = s.deadline || '[deadline]';
-    const baseSurveyUrl = s.surveyUrl || '';
-    const surveyUrl = baseSurveyUrl
-      ? baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode)
-      : '';
+    const baseSurveyUrl = s.surveyUrl || 'https://monitorcultuur.nl/';
+    const surveyUrl = baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode);
     const previewUrl = s.previewUrl || '';
     const contactPerson = s.contactPerson || '[contactpersoon]';
     const contactEmail = s.contactEmail || '[email]';
