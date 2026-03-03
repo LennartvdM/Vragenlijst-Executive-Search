@@ -687,6 +687,33 @@ body {
   color: var(--error);
 }
 
+/* Per-row download button */
+.ea-btn-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.ea-btn-icon:hover {
+  background: rgba(var(--salmon-rgb), 0.15);
+  color: var(--salmon-dark);
+}
+
+.ea-cell-actions {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
 /* Empty state */
 .ea-empty {
   text-align: center;

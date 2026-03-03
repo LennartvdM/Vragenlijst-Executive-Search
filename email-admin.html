@@ -211,7 +211,6 @@ Voortgang gekoppeld aan uw apparaat, niet aan uw code</textarea>
         <div class="ea-add-form">
           <input type="text" inputmode="email" id="add-email" placeholder="E-mailadres" class="ea-add-email" autocomplete="one-time-code" name="add-rcpt-email">
           <input type="text" id="add-name" placeholder="Naam organisatie" class="ea-add-name" autocomplete="one-time-code" name="add-rcpt-org">
-          <input type="text" id="add-code" placeholder="ABC-DEF" maxlength="7" class="ea-add-code" autocomplete="one-time-code" name="add-rcpt-code">
           <button class="ea-btn ea-btn-primary ea-btn-sm" data-action="addRecipient">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3.333v9.334M3.333 8h9.334" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Toevoegen
@@ -260,6 +259,16 @@ Voortgang gekoppeld aan uw apparaat, niet aan uw code</textarea>
           Alles verzenden (<span id="totalPendingCount">0</span>)
         </button>
       </div>
+      <div class="ea-send-actions" style="margin-top: 8px;">
+        <button class="ea-btn ea-btn-secondary" data-action="downloadSelectedEml" id="btnDownloadSelected" disabled>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.667 6.667 8 10l3.333-3.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Selectie .eml (<span id="selectedEmlCount">0</span>)
+        </button>
+        <button class="ea-btn ea-btn-primary" data-action="downloadAllEml" id="btnDownloadAll" disabled>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.667 6.667 8 10l3.333-3.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Alle .eml downloaden (<span id="totalEmlCount">0</span>)
+        </button>
+      </div>
     </div>
   </div>
 
@@ -281,6 +290,7 @@ Voortgang gekoppeld aan uw apparaat, niet aan uw code</textarea>
     </div>
   </div>
 
+  <script src="/js/email-template.js"></script>
   <script src="/js/email-admin.js"></script>
 </body>
 </html>
