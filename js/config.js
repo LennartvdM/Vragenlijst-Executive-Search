@@ -1,5 +1,5 @@
 /**
- * Configuration for Monitoring Cultureel Talent naar de Top
+ * Configuration for Monitoring Cultureel Talent naar de Top 2026
  *
  * SETUP INSTRUCTIONS:
  * 1. Deploy the Google Apps Script (see docs/google-apps-script.js)
