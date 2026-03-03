@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Handmatig Versturen — Monitoring Cultureel Talent naar de Top 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/email-admin.css">
+  <style>
+    /* ==========================================================================
+       Manual Email Sender — Additional Styles
+       Builds on top of email-admin.css
+       ========================================================================== */
+
+    /* Two-pane layout: list + preview side by side on desktop */
+    .em-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .em-split > .ea-card {
+      margin-bottom: 0;
+    }
+
+    /* Recipient list pane */
+    .em-list-pane {
+      max-height: calc(100vh - 260px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .em-list-pane .ea-card-body {
+      overflow-y: auto;
+      padding: 0;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Recipient rows */
+    .em-recipient {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--sand);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .em-recipient:hover {
+      background: var(--sand-light);
+    }
+
+    .em-recipient.active {
+      background: rgba(var(--salmon-rgb), 0.12);
+      border-left: 3px solid var(--terracotta);
+      padding-left: 17px;
+    }
+
+    .em-recipient.sent {
+      opacity: 0.55;
+    }
+
+    .em-recipient-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .em-recipient-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .em-recipient-email {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .em-recipient-code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--terracotta);
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .em-recipient-check {
+      flex-shrink: 0;
+    }
+
+    .em-recipient-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--success);
+      cursor: pointer;
+    }
+
+    /* Progress summary at top of list */
+    .em-progress-summary {
+      padding: 16px 20px;
+      border-bottom: 2px solid var(--sand);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .em-progress-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--sand);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .em-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--salmon) 0%, var(--terracotta) 100%);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .em-progress-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+
+    /* Filter/sort row */
+    .em-list-toolbar {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--sand);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .em-filter-btn {
+      padding: 5px 12px;
+      border: 1.5px solid var(--sand-dark);
+      border-radius: 20px;
+      background: var(--cream);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .em-filter-btn:hover {
+      border-color: var(--salmon);
+      color: var(--text);
+    }
+
+    .em-filter-btn.active {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: #fff;
+    }
+
+    .em-filter-spacer {
+      flex: 1;
+    }
+
+    /* Preview pane */
+    .em-preview-pane .ea-card-body {
+      padding: 0;
+    }
+
+    .em-preview-pane .ea-card-body.em-has-selection {
+      padding: 0;
+    }
+
+    .em-action-bar {
+      display: flex;
+      gap: 8px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--sand);
+      flex-wrap: wrap;
+    }
+
+    .em-action-bar .ea-btn {
+      flex: 1;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    .em-btn-mailto {
+      background: var(--success);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 138, 78, 0.3);
+    }
+
+    .em-btn-mailto:hover:not(:disabled) {
+      background: #247a42;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(45, 138, 78, 0.4);
+    }
+
+    .em-btn-copy-html {
+      background: var(--terracotta);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(var(--terracotta-rgb), 0.3);
+    }
+
+    .em-btn-copy-html:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(var(--terracotta-rgb), 0.4);
+    }
+
+    .em-btn-next {
+      background: var(--sand-light);
+      border: 2px solid var(--sand-dark);
+      color: var(--text);
+    }
+
+    .em-btn-next:hover:not(:disabled) {
+      border-color: var(--salmon);
+      background: var(--cream);
+    }
+
+    .em-preview-iframe-wrap {
+      border-top: none;
+    }
+
+    .em-preview-iframe-wrap iframe {
+      width: 100%;
+      height: 700px;
+      border: none;
+      display: block;
+      background: var(--void-1);
+    }
+
+    /* Empty selection state */
+    .em-empty-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 32px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .em-empty-preview svg {
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .em-empty-preview p {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .em-empty-preview .em-empty-hint {
+      font-size: 13px;
+      font-weight: 400;
+      margin-top: 6px;
+      opacity: 0.7;
+    }
+
+    /* Empty list state */
+    .em-empty-list {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .em-empty-list svg {
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .em-empty-list p {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .em-empty-list .em-empty-hint {
+      font-size: 13px;
+      font-weight: 400;
+      margin-top: 6px;
+      opacity: 0.7;
+    }
+
+    /* Settings collapsed by default with visual indicator */
+    .em-settings-toggle {
+      cursor: pointer;
+    }
+
+    /* Recipient status dot */
+    .em-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .em-status-dot.pending {
+      background: var(--sand-dark);
+    }
+
+    .em-status-dot.sent {
+      background: var(--success);
+    }
+
+    /* Back link to CMS */
+    .em-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 12px;
+      transition: color 0.15s ease;
+    }
+
+    .em-back-link:hover {
+      color: #fff;
+    }
+
+    /* Responsive: stack on mobile */
+    @media (max-width: 768px) {
+      .em-split {
+        grid-template-columns: 1fr;
+      }
+
+      .em-list-pane {
+        max-height: none;
+      }
+
+      .em-list-pane .ea-card-body {
+        max-height: 400px;
+      }
+
+      .em-action-bar .ea-btn {
+        min-width: 0;
+      }
+
+      .em-preview-iframe-wrap iframe {
+        height: 500px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .em-action-bar {
+        flex-direction: column;
+      }
+
+      .em-action-bar .ea-btn {
+        width: 100%;
+      }
+    }
+
+    /* Override page max-width for split layout */
+    .ea-page.em-wide {
+      max-width: 1200px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative background shapes -->
+  <div class="logo-decor">
+    <div class="logo-decor-shape logo-decor-bottom-left">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.614 67.051">
+        <g transform="translate(-741 -4156)">
+          <path d="M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0" transform="translate(740.999 4117.211)" fill="#c4785a"/>
+          <path d="M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588" transform="translate(741 4134.599)" fill="#c4785a"/>
+          <path d="M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356" transform="translate(723.664 4155.999)" fill="#c4785a"/>
+        </g>
+      </svg>
+    </div>
+    <div class="logo-decor-shape logo-decor-top-right">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.614 67.051">
+        <g transform="translate(-741 -4156)">
+          <path d="M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0" transform="translate(740.999 4117.211)" fill="#c4785a"/>
+          <path d="M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588" transform="translate(741 4134.599)" fill="#c4785a"/>
+          <path d="M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356" transform="translate(723.664 4155.999)" fill="#c4785a"/>
+        </g>
+      </svg>
+    </div>
+    <div class="logo-decor-shape logo-decor-center-right">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.614 67.051">
+        <g transform="translate(-741 -4156)">
+          <path d="M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0" transform="translate(740.999 4117.211)" fill="#c4785a"/>
+          <path d="M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588" transform="translate(741 4134.599)" fill="#c4785a"/>
+          <path d="M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356" transform="translate(723.664 4155.999)" fill="#c4785a"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="ea-page em-wide">
+    <!-- Header Card -->
+    <div class="ea-header-card">
+      <div class="ea-header-gradient">
+        <a href="/m9v2-email-cms" class="em-back-link">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Terug naar Email CMS
+        </a>
+        <div class="ea-logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.614 67.051">
+            <g transform="translate(-741 -4156)">
+              <path d="M48.72,105.206,30.284,91.174a2.438,2.438,0,0,0-2.951,0L8.9,105.205a3.1,3.1,0,0,1-4.337-.588L.634,99.459a3.094,3.094,0,0,1,.587-4.338l24.1-18.347a5.748,5.748,0,0,1,6.964,0l24.1,18.347a3.094,3.094,0,0,1,.59,4.336h0l-3.927,5.16a3.094,3.094,0,0,1-4.336.589h0" transform="translate(740.999 4117.211)" fill="#ffffff"/>
+              <path d="M48.719,67.465,34.359,56.536a9.17,9.17,0,0,0-11.106,0L8.9,67.465a3.094,3.094,0,0,1-4.337-.588L.632,61.718a3.094,3.094,0,0,1,.587-4.336h0L16.239,45.95a20.75,20.75,0,0,1,25.136,0L56.394,57.384a3.1,3.1,0,0,1,.588,4.336h0l-3.924,5.157a3.1,3.1,0,0,1-4.337.588" transform="translate(741 4134.599)" fill="#ffffff"/>
+              <path d="M58.5,12.356A12.355,12.355,0,1,1,46.143,0h0A12.355,12.355,0,0,1,58.5,12.356" transform="translate(723.664 4155.999)" fill="#ffffff"/>
+            </g>
+          </svg>
+        </div>
+        <h1>Handmatig Versturen</h1>
+        <p class="ea-subtitle">Stuur e-mails vanuit uw eigen mailprogramma</p>
+      </div>
+    </div>
+
+    <!-- Settings (collapsed by default) -->
+    <section class="ea-card">
+      <div class="ea-card-header collapsed" data-action="toggleSection" data-target="settingsBody">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.55 11.25a1.237 1.237 0 0 0 .248 1.365l.045.045a1.5 1.5 0 1 1-2.122 2.122l-.045-.045a1.237 1.237 0 0 0-1.365-.247 1.237 1.237 0 0 0-.75 1.132V15.75a1.5 1.5 0 0 1-3 0v-.068a1.237 1.237 0 0 0-.81-1.132 1.237 1.237 0 0 0-1.365.247l-.045.045a1.5 1.5 0 1 1-2.122-2.122l.045-.045a1.237 1.237 0 0 0 .247-1.365 1.237 1.237 0 0 0-1.132-.75H2.25a1.5 1.5 0 0 1 0-3h.068a1.237 1.237 0 0 0 1.132-.81 1.237 1.237 0 0 0-.247-1.365l-.045-.045a1.5 1.5 0 1 1 2.122-2.122l.045.045a1.237 1.237 0 0 0 1.365.248H6.75a1.237 1.237 0 0 0 .75-1.133V2.25a1.5 1.5 0 0 1 3 0v.068a1.237 1.237 0 0 0 .75 1.132 1.237 1.237 0 0 0 1.365-.247l.045-.045a1.5 1.5 0 1 1 2.122 2.122l-.045.045a1.237 1.237 0 0 0-.248 1.365v.06a1.237 1.237 0 0 0 1.133.75h.128a1.5 1.5 0 0 1 0 3h-.068a1.237 1.237 0 0 0-1.132.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Instellingen
+        </h2>
+        <svg class="ea-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="ea-card-body collapsed" id="settingsBody">
+        <div class="ea-grid">
+          <div class="ea-field ea-full">
+            <label for="setting-subject">Onderwerp</label>
+            <input type="text" id="setting-subject" value="Monitoring Cultureel Talent naar de Top 2026">
+          </div>
+          <div class="ea-field">
+            <label for="setting-surveyUrl">URL vragenlijst</label>
+            <input type="url" id="setting-surveyUrl" placeholder="https://monitoringtalentnaardetop.nl">
+          </div>
+          <div class="ea-field">
+            <label for="setting-previewUrl">URL inkijkexemplaar</label>
+            <input type="url" id="setting-previewUrl" placeholder="https://monitoringtalentnaardetop.nl/inkijkexemplaar">
+          </div>
+          <div class="ea-field">
+            <label for="setting-deadline">Deadline</label>
+            <input type="text" id="setting-deadline" placeholder="bijv. 1 april 2026">
+          </div>
+          <div class="ea-field">
+            <label for="setting-senderName">Afzendernaam</label>
+            <input type="text" id="setting-senderName" value="Commissie Monitoring Talent naar de Top">
+          </div>
+          <div class="ea-field">
+            <label for="setting-contactPerson">Contactpersoon</label>
+            <input type="text" id="setting-contactPerson" placeholder="Naam contactpersoon">
+          </div>
+          <div class="ea-field">
+            <label for="setting-contactEmail">Contact e-mail</label>
+            <input type="email" id="setting-contactEmail" placeholder="email@voorbeeld.nl">
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <div class="ea-header-actions">
+            <label class="ea-btn ea-btn-sm ea-btn-secondary ea-file-label">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.667 6.667 8 10l3.333-3.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              CSV importeren
+              <input type="file" id="csvImport" accept=".csv,.txt,.tsv" hidden>
+            </label>
+            <button class="ea-btn ea-btn-sm ea-btn-secondary" data-action="exportCsv">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.333 5.333 8 2 4.667 5.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 2v8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              CSV exporteren
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Split layout: list + preview -->
+    <div class="em-split">
+      <!-- Left: Recipient list -->
+      <section class="ea-card em-list-pane">
+        <div class="ea-card-header">
+          <h2>Ontvangers <span class="ea-badge" id="recipientCount">0</span></h2>
+        </div>
+
+        <!-- Progress -->
+        <div class="em-progress-summary">
+          <div class="em-progress-bar">
+            <div class="em-progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+          <span class="em-progress-text" id="progressText">0 van 0 verstuurd</span>
+        </div>
+
+        <!-- Filter toolbar -->
+        <div class="em-list-toolbar">
+          <button class="em-filter-btn active" data-action="filterAll">Alle</button>
+          <button class="em-filter-btn" data-action="filterPending">Te versturen</button>
+          <button class="em-filter-btn" data-action="filterSent">Verstuurd</button>
+          <span class="em-filter-spacer"></span>
+          <button class="ea-btn ea-btn-sm em-btn-next" data-action="nextUnsent" id="btnNextUnsent" title="Selecteer de volgende onverstuurde ontvanger">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.25 10.5L8.75 7l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Volgende
+          </button>
+        </div>
+
+        <!-- Recipient list -->
+        <div class="ea-card-body">
+          <div id="recipientList"></div>
+          <div class="em-empty-list" id="emptyList">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M42 8H6a2 2 0 0 0-2 2v28a2 2 0 0 0 2 2h36a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2Z" stroke="#adbcd2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m4 10 20 16L44 10" stroke="#adbcd2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p>Geen ontvangers gevonden</p>
+            <p class="em-empty-hint">Open de instellingen hierboven en importeer een CSV-bestand, of voeg ontvangers toe via de Email CMS.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Preview + actions -->
+      <section class="ea-card em-preview-pane">
+        <div class="ea-card-header">
+          <h2 id="previewTitle">E-mailvoorbeeld</h2>
+        </div>
+
+        <!-- Action buttons (hidden until selection) -->
+        <div class="em-action-bar" id="actionBar" style="display:none;">
+          <a class="ea-btn em-btn-mailto" id="btnMailto" href="#" title="Open in uw mailprogramma (platte tekst)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 4H2l6 4.5L14 4Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Open in Mail
+          </a>
+          <button class="ea-btn em-btn-copy-html" data-action="copyHtml" title="Kopieer de HTML-e-mail naar het klembord">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.333 5.333V3.2c0-.747 0-1.12.146-1.405a1.333 1.333 0 0 1 .583-.583C6.347 1.067 6.72 1.067 7.467 1.067h5.333c.747 0 1.12 0 1.405.145.251.128.455.332.583.583.146.285.146.658.146 1.405v5.333c0 .747 0 1.12-.146 1.406a1.333 1.333 0 0 1-.583.582c-.285.146-.658.146-1.405.146H10.667" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="1.067" y="5.333" width="9.6" height="9.6" rx="1.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Kopieer HTML
+          </button>
+          <button class="ea-btn em-btn-copy-html" data-action="copyRichText" title="Kopieer de opgemaakte e-mail (plakken als rich text)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 7h8M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Kopieer Opgemaakt
+          </button>
+        </div>
+
+        <div class="ea-card-body">
+          <!-- Empty state -->
+          <div class="em-empty-preview" id="emptyPreview">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <rect x="8" y="12" width="48" height="40" rx="4" stroke="#adbcd2" stroke-width="2"/>
+              <path d="M8 22h48" stroke="#adbcd2" stroke-width="2"/>
+              <circle cx="16" cy="17" r="2" fill="#adbcd2"/>
+              <circle cx="22" cy="17" r="2" fill="#adbcd2"/>
+              <circle cx="28" cy="17" r="2" fill="#adbcd2"/>
+              <path d="M20 32h24M20 38h16M20 44h20" stroke="#adbcd2" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p>Selecteer een ontvanger</p>
+            <p class="em-empty-hint">Klik op een ontvanger in de lijst om de gepersonaliseerde e-mail te bekijken.</p>
+          </div>
+
+          <!-- Preview iframe -->
+          <div class="em-preview-iframe-wrap" id="previewWrap" style="display:none;">
+            <iframe id="emailPreview" title="E-mailvoorbeeld"></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="ea-toast-container"></div>
+
+  <!-- Confirmation modal -->
+  <div class="ea-modal-overlay" id="confirmModal" style="display:none;">
+    <div class="ea-modal">
+      <div class="ea-modal-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 9.333v4.667M14 18.667h.012" stroke="#111162" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.114 4.262 2.052 21.334a2.167 2.167 0 0 0 1.886 3.25h20.124a2.167 2.167 0 0 0 1.886-3.25L15.886 4.262a2.167 2.167 0 0 0-3.772 0Z" stroke="#111162" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3 id="confirmTitle">Bevestiging</h3>
+      <p id="confirmMessage">Weet u zeker dat u deze actie wilt uitvoeren?</p>
+      <div class="ea-modal-actions">
+        <button class="ea-btn ea-btn-secondary" data-action="cancelConfirm">Annuleren</button>
+        <button class="ea-btn ea-btn-primary" data-action="proceedConfirm" id="confirmBtn">Bevestigen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/email-template.js"></script>
+  <script src="/js/email-manual.js"></script>
+</body>
+</html>
