@@ -4444,17 +4444,19 @@ input[inputmode="numeric"] {
     display: none;
   }
 
-  /* Show progress dots above cards in swipe mode */
+  /* Show progress dots above cards in swipe mode.
+     Extra top padding (40px) absorbs the shift when the mobile browser's
+     URL bar collapses and the viewport expands upward. */
   .container:has(.swipe-horizontal) .progress-dots-top {
     display: flex !important;
-    padding: 10px 0 0;
+    padding: 40px 0 0;
   }
 
   /* The scrollable wrapper stretches to fill available viewport.
-     Subtract 34px for the progress dots row above the cards. */
+     Subtract 64px for the progress dots row above the cards (40px top padding + 24px dots). */
   .content-scrollable-wrapper:has(.swipe-horizontal) {
     overflow: visible;
-    height: calc(100dvh - 74px - 34px - env(safe-area-inset-bottom, 0px));
+    height: calc(100dvh - 74px - 64px - env(safe-area-inset-bottom, 0px));
   }
 
   /* --- The scroll-snap container (full viewport width) --- */
@@ -4470,7 +4472,7 @@ input[inputmode="numeric"] {
     scrollbar-width: none;
     -ms-overflow-style: none;
     /* Full height minus the fixed bottom nav and dots */
-    height: calc(100dvh - 74px - 34px - env(safe-area-inset-bottom, 0px));
+    height: calc(100dvh - 74px - 64px - env(safe-area-inset-bottom, 0px));
     max-height: none;
     padding: 0;
     margin: 0;
@@ -4557,7 +4559,7 @@ input[inputmode="numeric"] {
     content: '';
     display: block;
     position: sticky;
-    height: 12px;
+    height: 20px;
     margin-left: -20px;
     margin-right: -20px;
     background: var(--cream);
@@ -4567,14 +4569,14 @@ input[inputmode="numeric"] {
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
-    top: -12px;
-    margin-top: -12px;
+    top: -20px;
+    margin-top: -20px;
     border-radius: 0 0 20px 20px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    bottom: -12px;
-    margin-bottom: -12px;
+    bottom: -20px;
+    margin-bottom: -20px;
     border-radius: 20px 20px 0 0;
   }
 
@@ -4628,20 +4630,20 @@ input[inputmode="numeric"] {
   /* Adjust inner masks for smaller padding and border-radius */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    height: 10px;
+    height: 16px;
     margin-left: -16px;
     margin-right: -16px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
-    top: -10px;
-    margin-top: -10px;
+    top: -16px;
+    margin-top: -16px;
     border-radius: 0 0 16px 16px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    bottom: -10px;
-    margin-bottom: -10px;
+    bottom: -16px;
+    margin-bottom: -16px;
     border-radius: 16px 16px 0 0;
   }
 
