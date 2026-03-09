@@ -4534,10 +4534,33 @@ input[inputmode="numeric"] {
     overflow: hidden;
   }
 
-  /* Remove pseudo-element masks — overflow clipping handles border-radius now */
+  /* Curved inner masks for swipe cards — sticky so they stay visible during scroll.
+     Uses negative margins to extend into card padding, creating edge-to-edge mask.
+     top/bottom values match the negative margins so the border edge sticks at the card edge. */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    display: none;
+    content: '';
+    display: block;
+    position: sticky;
+    height: 24px;
+    margin-left: -20px;
+    margin-right: -20px;
+    background: var(--cream);
+    z-index: 10;
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::before {
+    top: -24px;
+    margin-top: -24px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    bottom: -24px;
+    margin-bottom: -24px;
+    border-radius: 20px 20px 0 0;
   }
 
   /* Disable the old slide animations when swiping */
@@ -4587,7 +4610,25 @@ input[inputmode="numeric"] {
     border-radius: 16px;
   }
 
-  /* Masks removed — overflow clipping handles border-radius via translateZ(0) */
+  /* Adjust inner masks for smaller padding and border-radius */
+  .content-scrollable.swipe-horizontal .step.swipe-step::before,
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    height: 20px;
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::before {
+    top: -20px;
+    margin-top: -20px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    bottom: -20px;
+    margin-bottom: -20px;
+    border-radius: 16px 16px 0 0;
+  }
 
   .content-scrollable:not(.swipe-horizontal) {
     max-height: none;
