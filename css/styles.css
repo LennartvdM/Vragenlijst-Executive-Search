@@ -4444,10 +4444,17 @@ input[inputmode="numeric"] {
     display: none;
   }
 
-  /* The scrollable wrapper stretches to fill available viewport */
+  /* Show progress dots above cards in swipe mode */
+  .container:has(.swipe-horizontal) .progress-dots-top {
+    display: flex !important;
+    padding: 10px 0 0;
+  }
+
+  /* The scrollable wrapper stretches to fill available viewport.
+     Subtract 34px for the progress dots row above the cards. */
   .content-scrollable-wrapper:has(.swipe-horizontal) {
     overflow: visible;
-    height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
+    height: calc(100dvh - 74px - 34px - env(safe-area-inset-bottom, 0px));
   }
 
   /* --- The scroll-snap container (full viewport width) --- */
@@ -4462,8 +4469,8 @@ input[inputmode="numeric"] {
     /* Hide native scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* Full height minus the fixed bottom nav */
-    height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
+    /* Full height minus the fixed bottom nav and dots */
+    height: calc(100dvh - 74px - 34px - env(safe-area-inset-bottom, 0px));
     max-height: none;
     padding: 0;
     margin: 0;
@@ -4481,9 +4488,10 @@ input[inputmode="numeric"] {
     min-width: fit-content;
     height: 100%;
     /* Horizontal gap between cards, plus padding so first/last cards center perfectly.
-       Horizontal padding must equal (100vw - cardWidth) / 2 = (56px / 2) = 28px */
+       Horizontal padding must equal (100vw - cardWidth) / 2 = (56px / 2) = 28px.
+       Vertical padding gives room for card box-shadow to render without clipping. */
     gap: 12px;
-    padding: 8px 28px;
+    padding: 24px 28px;
     box-sizing: border-box;
   }
 
@@ -4515,6 +4523,13 @@ input[inputmode="numeric"] {
     /* Force compositing layer so overflow clips to border-radius in Safari */
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
+    /* Hide native scrollbar — it extends past the card's border-radius */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::-webkit-scrollbar {
+    display: none;
   }
 
   /* Prevent any child from causing horizontal overflow inside cards */
@@ -4542,7 +4557,7 @@ input[inputmode="numeric"] {
     content: '';
     display: block;
     position: sticky;
-    height: 24px;
+    height: 12px;
     margin-left: -20px;
     margin-right: -20px;
     background: var(--cream);
@@ -4552,14 +4567,14 @@ input[inputmode="numeric"] {
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
-    top: -24px;
-    margin-top: -24px;
+    top: -12px;
+    margin-top: -12px;
     border-radius: 0 0 20px 20px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    bottom: -24px;
-    margin-bottom: -24px;
+    bottom: -12px;
+    margin-bottom: -12px;
     border-radius: 20px 20px 0 0;
   }
 
@@ -4598,7 +4613,7 @@ input[inputmode="numeric"] {
      Horizontal padding = (100vw - cardWidth) / 2 = (36px / 2) = 18px */
   .content-scrollable.swipe-horizontal > form {
     gap: 8px;
-    padding: 6px 18px;
+    padding: 20px 18px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step {
@@ -4613,20 +4628,20 @@ input[inputmode="numeric"] {
   /* Adjust inner masks for smaller padding and border-radius */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    height: 20px;
+    height: 10px;
     margin-left: -16px;
     margin-right: -16px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
-    top: -20px;
-    margin-top: -20px;
+    top: -10px;
+    margin-top: -10px;
     border-radius: 0 0 16px 16px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    bottom: -20px;
-    margin-bottom: -20px;
+    bottom: -10px;
+    margin-bottom: -10px;
     border-radius: 16px 16px 0 0;
   }
 
