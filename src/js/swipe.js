@@ -63,10 +63,9 @@ export function scrollToStep(step, smooth = true) {
   const stepEl = swipeContainer.querySelector(`.step[data-step="${step}"]`);
   if (!stepEl) return false;
 
-  // Calculate position: each step is container-width wide
+  // Center the step element within the scroll container
   const containerWidth = swipeContainer.offsetWidth;
-  const stepIndex = getStepDOMIndex(step);
-  const scrollLeft = stepIndex * containerWidth;
+  const scrollLeft = stepEl.offsetLeft - (containerWidth - stepEl.offsetWidth) / 2;
 
   swipeContainer.scrollTo({
     left: scrollLeft,
@@ -126,10 +125,20 @@ function onSwipeEnd() {
   const containerWidth = swipeContainer.offsetWidth;
   if (containerWidth === 0) return;
 
-  // Figure out which step is centered
-  const scrollLeft = swipeContainer.scrollLeft;
-  const rawIndex = Math.round(scrollLeft / containerWidth);
-  const newStep = getStepFromDOMIndex(rawIndex);
+  // Figure out which step is centered by finding closest to viewport center
+  const scrollCenter = swipeContainer.scrollLeft + containerWidth / 2;
+  const steps = swipeContainer.querySelectorAll('.step');
+  let closestIndex = 0;
+  let closestDist = Infinity;
+  steps.forEach((step, i) => {
+    const stepCenter = step.offsetLeft + step.offsetWidth / 2;
+    const dist = Math.abs(stepCenter - scrollCenter);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestIndex = i;
+    }
+  });
+  const newStep = getStepFromDOMIndex(closestIndex);
 
   if (newStep === state.currentStep) return;
 
