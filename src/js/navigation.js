@@ -10,59 +10,75 @@ import { getIncompleteItems, toggleConditional } from './validation.js';
 import { saveFormData } from './form.js';
 import { updateAllSections } from './progress.js';
 import { refreshLikertPills } from './likert.js';
+import { isSwipeMode, scrollToStep } from './swipe.js';
 
 /**
  * Show a specific step
  * @param {number} step - Step index to show
  */
 export function showStep(step) {
-  document.querySelectorAll('.step').forEach(s => {
-    s.classList.remove(window.CONSTANTS.CSS.ACTIVE, 'slide-up', 'slide-down');
-  });
+  // In swipe mode on mobile, navigate by scrolling the horizontal container
+  if (isSwipeMode()) {
+    const shouldAnimate = state.previousStep !== -1 && state.previousStep !== step;
+    scrollToStep(step, shouldAnimate);
 
-  const stepEl = document.querySelector(`.step[data-step="${step}"]`);
-  if (stepEl) {
-    const scrollableContainer = getScrollableContainer();
-    const savedPosition = state.scrollPositions[step];
-    const hasSavedPosition = typeof savedPosition === 'number' && savedPosition > 0;
-    const shouldAnimate = state.previousStep !== -1 && state.previousStep !== step && !hasSavedPosition;
-
-    if (shouldAnimate) {
-      stepEl.classList.add(window.CONSTANTS.CSS.ACTIVE);
-
-      if (scrollableContainer) {
-        scrollableContainer.style.scrollBehavior = 'auto';
-        scrollableContainer.scrollTop = 0;
-        scrollableContainer.style.scrollBehavior = '';
-        scrollableContainer.classList.add('animating');
-      }
-
-      if (step > state.previousStep) {
-        stepEl.classList.add('slide-up');
-      } else {
-        stepEl.classList.add('slide-down');
-      }
-
-      setTimeout(() => {
-        if (scrollableContainer) {
-          scrollableContainer.classList.remove('animating');
-        }
-        updateFadeGradients();
-      }, 400);
-    } else {
-      stepEl.classList.add(window.CONSTANTS.CSS.ACTIVE);
-
-      if (scrollableContainer && hasSavedPosition) {
-        scrollableContainer.style.scrollBehavior = 'auto';
-        scrollableContainer.scrollTop = savedPosition;
-        scrollableContainer.style.scrollBehavior = '';
-        updateFadeGradients();
-      } else {
-        restoreScrollPosition(step);
-      }
-    }
+    // Update active class on steps
+    document.querySelectorAll('.step').forEach(s => {
+      const stepNum = parseInt(s.dataset.step, 10);
+      s.classList.toggle(window.CONSTANTS.CSS.ACTIVE, stepNum === step);
+    });
 
     setTimeout(refreshLikertPills, 50);
+  } else {
+    // Desktop: original show/hide logic
+    document.querySelectorAll('.step').forEach(s => {
+      s.classList.remove(window.CONSTANTS.CSS.ACTIVE, 'slide-up', 'slide-down');
+    });
+
+    const stepEl = document.querySelector(`.step[data-step="${step}"]`);
+    if (stepEl) {
+      const scrollableContainer = getScrollableContainer();
+      const savedPosition = state.scrollPositions[step];
+      const hasSavedPosition = typeof savedPosition === 'number' && savedPosition > 0;
+      const shouldAnimate = state.previousStep !== -1 && state.previousStep !== step && !hasSavedPosition;
+
+      if (shouldAnimate) {
+        stepEl.classList.add(window.CONSTANTS.CSS.ACTIVE);
+
+        if (scrollableContainer) {
+          scrollableContainer.style.scrollBehavior = 'auto';
+          scrollableContainer.scrollTop = 0;
+          scrollableContainer.style.scrollBehavior = '';
+          scrollableContainer.classList.add('animating');
+        }
+
+        if (step > state.previousStep) {
+          stepEl.classList.add('slide-up');
+        } else {
+          stepEl.classList.add('slide-down');
+        }
+
+        setTimeout(() => {
+          if (scrollableContainer) {
+            scrollableContainer.classList.remove('animating');
+          }
+          updateFadeGradients();
+        }, 400);
+      } else {
+        stepEl.classList.add(window.CONSTANTS.CSS.ACTIVE);
+
+        if (scrollableContainer && hasSavedPosition) {
+          scrollableContainer.style.scrollBehavior = 'auto';
+          scrollableContainer.scrollTop = savedPosition;
+          scrollableContainer.style.scrollBehavior = '';
+          updateFadeGradients();
+        } else {
+          restoreScrollPosition(step);
+        }
+      }
+
+      setTimeout(refreshLikertPills, 50);
+    }
   }
 
   state.setPreviousStep(step);
@@ -147,10 +163,16 @@ export function showStep(step) {
  */
 export function goToStep(step) {
   if (step === state.currentStep) {
-    const scrollable = getScrollableContainer();
-    if (scrollable) {
-      scrollable.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(updateFadeGradients, 400);
+    if (isSwipeMode()) {
+      // In swipe mode, scroll the step's own vertical content to top
+      const stepEl = document.querySelector(`.step[data-step="${step}"]`);
+      if (stepEl) stepEl.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const scrollable = getScrollableContainer();
+      if (scrollable) {
+        scrollable.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(updateFadeGradients, 400);
+      }
     }
     return;
   }
@@ -255,7 +277,8 @@ export function initMobileDrawer() {
     updateMobileHighlighter();
   }, { passive: true });
 
-  // Handle swipe gestures
+  // Handle swipe gestures for drawer (edge swipe only)
+  // The horizontal step swiping is handled by CSS scroll-snap natively
   let touchStartX = 0;
   let touchEndX = 0;
 
@@ -265,17 +288,19 @@ export function initMobileDrawer() {
 
   document.addEventListener('touchend', function(e) {
     touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
+    handleDrawerSwipe();
   }, { passive: true });
 
-  function handleSwipe() {
+  function handleDrawerSwipe() {
     const swipeThreshold = 50;
     const swipeDistance = touchEndX - touchStartX;
 
-    if (swipeDistance > swipeThreshold && touchStartX < 50) {
+    // Only open drawer from left edge swipe (< 30px from edge)
+    if (swipeDistance > swipeThreshold && touchStartX < 30) {
       openMobileDrawer();
     }
 
+    // Close drawer with any leftward swipe when drawer is open
     if (swipeDistance < -swipeThreshold && index.classList.contains('mobile-open')) {
       closeMobileDrawer();
     }
