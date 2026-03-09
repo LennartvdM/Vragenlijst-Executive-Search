@@ -64,6 +64,11 @@ export function restoreScrollPosition(step) {
  * Handle scroll events - debounced save of scroll position
  */
 export function handleScroll() {
+  // In horizontal swipe mode, the main container scrolls horizontally.
+  // Vertical scroll is handled per-step by the swipe module.
+  const scrollable = getScrollableContainer();
+  if (scrollable && scrollable.classList.contains('swipe-horizontal')) return;
+
   if (state.scrollSaveTimeout) {
     clearTimeout(state.scrollSaveTimeout);
   }

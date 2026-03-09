@@ -2568,6 +2568,27 @@ input[inputmode="numeric"] {
     overflow: visible !important;
   }
 
+  /* Reset horizontal swipe layout for print */
+  .content-scrollable.swipe-horizontal {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    scroll-snap-type: none !important;
+  }
+
+  .content-scrollable.swipe-horizontal > form {
+    display: block !important;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step {
+    overflow: visible !important;
+    min-width: 0 !important;
+    flex: none !important;
+    width: 100% !important;
+    scroll-snap-align: none !important;
+    height: auto !important;
+  }
+
   /* Show all steps for printing */
   .step {
     display: flex !important;
@@ -3838,7 +3859,7 @@ input[inputmode="numeric"] {
     display: none; /* Hide header on mobile - using drawer instead */
   }
 
-  .content-scrollable {
+  .content-scrollable:not(.swipe-horizontal) {
     max-height: none; /* No height limit on mobile - page scrolls naturally */
     overflow: visible;
     padding: 0;
@@ -3907,8 +3928,8 @@ input[inputmode="numeric"] {
     font-weight: 600;
   }
 
-  /* Reset scrollable on mobile - page scrolls normally */
-  .content-scrollable {
+  /* Reset scrollable on mobile - page scrolls normally (unless swipe mode) */
+  .content-scrollable:not(.swipe-horizontal) {
     max-height: none;
     overflow: visible;
   }
@@ -4369,6 +4390,129 @@ input[inputmode="numeric"] {
   .content-scrollable-wrapper::after {
     display: none;
   }
+
+  /* ==========================================================================
+     Horizontal Swipe Navigation (mobile only)
+     Steps are laid out in a horizontal scroll-snap container.
+     Users can flick/drag between steps like a carousel.
+     ========================================================================== */
+
+  /* The scrollable form container becomes a horizontal snap scroller */
+  .content-scrollable.swipe-horizontal {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Hide the native scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* Take up all available height */
+    height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
+    max-height: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* The form inside must also be a horizontal flex container */
+  .content-scrollable.swipe-horizontal > form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    min-width: fit-content;
+    height: 100%;
+  }
+
+  .content-scrollable.swipe-horizontal::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Override: when swipe is active, the wrapper shouldn't constrain */
+  .content-scrollable-wrapper:has(.swipe-horizontal) {
+    overflow: visible;
+    height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Each step becomes a full-width snap-aligned panel */
+  .content-scrollable.swipe-horizontal .step.swipe-step {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 16px;
+    padding-bottom: 24px;
+    box-sizing: border-box;
+  }
+
+  /* Disable the old slide animations when swiping */
+  .content-scrollable.swipe-horizontal .step.slide-up,
+  .content-scrollable.swipe-horizontal .step.slide-down {
+    animation: none;
+  }
+
+  /* Subtle edge shadow on each step to suggest more content */
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 74px;
+    width: 3px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.04));
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Active step has no right shadow (current page) */
+  .content-scrollable.swipe-horizontal .step.swipe-step.active::after {
+    display: none;
+  }
+
+  /* When swipe is active, the container doesn't need column direction */
+  .swipe-horizontal + .content-footer,
+  .content-scrollable.swipe-horizontal ~ .content-footer {
+    margin-top: 0;
+  }
+
+  /* Swipe indicator dots (overlaid on the bottom nav area) */
+  .swipe-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0 2px;
+    position: fixed;
+    bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    z-index: 998;
+    pointer-events: none;
+  }
+
+  .swipe-indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sand);
+    transition: all 0.3s ease;
+  }
+
+  .swipe-indicator-dot.active {
+    width: 20px;
+    border-radius: 3px;
+    background: var(--terracotta);
+  }
+
+  .swipe-indicator-dot.filled {
+    background: var(--salmon);
+  }
 }
 
 /* ==========================================================================
@@ -4389,7 +4533,7 @@ input[inputmode="numeric"] {
     padding: 12px 8px;
   }
 
-  .content-scrollable {
+  .content-scrollable:not(.swipe-horizontal) {
     max-height: none;
     overflow: visible;
   }

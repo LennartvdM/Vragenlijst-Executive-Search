@@ -15,6 +15,7 @@ import * as review from './review.js';
 import * as utils from './utils.js';
 import * as print from './print.js';
 import * as help from './help.js';
+import * as swipe from './swipe.js';
 
 // Note: CSS is handled separately via link tags in HTML
 
@@ -55,6 +56,9 @@ function initSurvey() {
 
   // Initialize mobile drawer
   navigation.initMobileDrawer();
+
+  // Initialize horizontal swipe navigation on mobile
+  swipe.initSwipe();
 
   // Initialize mobile Likert controls
   likert.initMobileLikert();
