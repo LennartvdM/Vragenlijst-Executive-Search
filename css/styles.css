@@ -4499,6 +4499,12 @@ input[inputmode="numeric"] {
 
   /* --- Each step = its own card --- */
   .content-scrollable.swipe-horizontal .step.swipe-step {
+    /* Card geometry tokens — masks derive from these so they're always flush */
+    --card-radius: 20px;
+    --card-pad-top: 24px;
+    --card-pad-bottom: 24px;
+    --card-pad-x: 20px;
+
     display: flex;
     flex-direction: column;
     /* Slightly less than full viewport width so the next card peeks in */
@@ -4513,9 +4519,8 @@ input[inputmode="numeric"] {
     -webkit-overflow-scrolling: touch;
     /* Card styling */
     background: var(--cream);
-    border-radius: 20px;
-    padding: 24px 20px;
-    padding-bottom: 24px;
+    border-radius: var(--card-radius);
+    padding: var(--card-pad-top) var(--card-pad-x) var(--card-pad-bottom);
     box-sizing: border-box;
     box-shadow:
       0 4px 24px rgba(var(--brown-rgb), 0.12),
@@ -4551,17 +4556,19 @@ input[inputmode="numeric"] {
     overflow: hidden;
   }
 
-  /* Curved inner masks for swipe cards — sticky so they stay visible during scroll.
-     Uses negative margins to extend into card padding, creating edge-to-edge mask.
-     top/bottom values match the negative margins so the border edge sticks at the card edge. */
+  /* Curved inner masks for swipe cards.
+     Each mask is a sticky flex child whose dimensions are derived from the card's
+     own --card-pad-* / --card-radius custom properties.  This guarantees the mask
+     is always flush: negative margin = padding pulls it to the padding-box edge,
+     height = padding fills the gap exactly, and top/bottom: 0 pins it to the
+     scrollport edge so it never drifts. */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
     content: '';
     display: block;
     position: sticky;
-    height: 20px;
-    margin-left: -20px;
-    margin-right: -20px;
+    margin-left: calc(-1 * var(--card-pad-x));
+    margin-right: calc(-1 * var(--card-pad-x));
     background: var(--cream);
     z-index: 10;
     pointer-events: none;
@@ -4569,15 +4576,17 @@ input[inputmode="numeric"] {
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
-    top: -20px;
-    margin-top: -20px;
-    border-radius: 0 0 20px 20px;
+    height: var(--card-pad-top);
+    margin-top: calc(-1 * var(--card-pad-top));
+    top: 0;
+    border-radius: 0 0 var(--card-radius) var(--card-radius);
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    bottom: -20px;
-    margin-bottom: -20px;
-    border-radius: 20px 20px 0 0;
+    height: var(--card-pad-bottom);
+    margin-bottom: calc(-1 * var(--card-pad-bottom));
+    bottom: 0;
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
   }
 
   /* Disable the old slide animations when swiping */
@@ -4619,32 +4628,15 @@ input[inputmode="numeric"] {
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step {
+    /* Override card geometry — masks auto-adjust via custom properties */
+    --card-radius: 16px;
+    --card-pad-top: 20px;
+    --card-pad-bottom: 20px;
+    --card-pad-x: 16px;
     flex: 0 0 calc(100vw - 36px);
     width: calc(100vw - 36px);
     min-width: calc(100vw - 36px);
     max-width: calc(100vw - 36px);
-    padding: 20px 16px;
-    border-radius: 16px;
-  }
-
-  /* Adjust inner masks for smaller padding and border-radius */
-  .content-scrollable.swipe-horizontal .step.swipe-step::before,
-  .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    height: 16px;
-    margin-left: -16px;
-    margin-right: -16px;
-  }
-
-  .content-scrollable.swipe-horizontal .step.swipe-step::before {
-    top: -16px;
-    margin-top: -16px;
-    border-radius: 0 0 16px 16px;
-  }
-
-  .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    bottom: -16px;
-    margin-bottom: -16px;
-    border-radius: 16px 16px 0 0;
   }
 
   .content-scrollable:not(.swipe-horizontal) {
