@@ -2587,6 +2587,10 @@ input[inputmode="numeric"] {
     width: 100% !important;
     scroll-snap-align: none !important;
     height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: white !important;
   }
 
   /* Show all steps for printing */
@@ -3834,6 +3838,11 @@ input[inputmode="numeric"] {
     padding: 16px 12px;
   }
 
+  /* In swipe mode, body padding is zero — cards handle their own inset */
+  .survey-body:has(.swipe-horizontal) {
+    padding: 0;
+  }
+
   .container {
     flex-direction: column;
     border-radius: 16px;
@@ -4393,11 +4402,45 @@ input[inputmode="numeric"] {
 
   /* ==========================================================================
      Horizontal Swipe Navigation (mobile only)
-     Steps are laid out in a horizontal scroll-snap container.
-     Users can flick/drag between steps like a carousel.
+     Each step becomes its own card that physically slides across the screen.
+     The parent container becomes invisible — the cards ARE the UI.
      ========================================================================== */
 
-  /* The scrollable form container becomes a horizontal snap scroller */
+  /* --- Strip the container of all card styling in swipe mode --- */
+  .container:has(.swipe-horizontal) {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    min-height: 0;
+    overflow: visible;
+    /* Remove backdrop-filter stacking context */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* Kill the pseudo-element that draws the card outline + shadow */
+  .container:has(.swipe-horizontal)::before {
+    display: none;
+  }
+
+  /* Content wrapper becomes a transparent full-bleed column */
+  .container:has(.swipe-horizontal) > .content {
+    padding: 0;
+    width: 100%;
+  }
+
+  /* Content header hidden (already hidden on mobile, but be explicit) */
+  .container:has(.swipe-horizontal) .content-header {
+    display: none;
+  }
+
+  /* The scrollable wrapper stretches to fill available viewport */
+  .content-scrollable-wrapper:has(.swipe-horizontal) {
+    overflow: visible;
+    height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
+  }
+
+  /* --- The scroll-snap container (full viewport width) --- */
   .content-scrollable.swipe-horizontal {
     display: flex;
     flex-direction: row;
@@ -4406,49 +4449,56 @@ input[inputmode="numeric"] {
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    /* Hide the native scrollbar */
+    /* Hide native scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* Take up all available height */
+    /* Full height minus the fixed bottom nav */
     height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
     max-height: none;
     padding: 0;
     margin: 0;
   }
 
-  /* The form inside must also be a horizontal flex container */
+  .content-scrollable.swipe-horizontal::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The form inside is a horizontal flex track */
   .content-scrollable.swipe-horizontal > form {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     min-width: fit-content;
     height: 100%;
+    /* Horizontal gap between cards, plus padding so first/last cards are inset */
+    gap: 12px;
+    padding: 8px 16px;
+    box-sizing: border-box;
   }
 
-  .content-scrollable.swipe-horizontal::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Override: when swipe is active, the wrapper shouldn't constrain */
-  .content-scrollable-wrapper:has(.swipe-horizontal) {
-    overflow: visible;
-    height: calc(100dvh - 74px - env(safe-area-inset-bottom, 0px));
-  }
-
-  /* Each step becomes a full-width snap-aligned panel */
+  /* --- Each step = its own card --- */
   .content-scrollable.swipe-horizontal .step.swipe-step {
     display: flex;
     flex-direction: column;
-    flex: 0 0 100%;
-    width: 100%;
-    min-width: 100%;
-    scroll-snap-align: start;
+    /* Slightly less than full viewport width so the next card peeks in */
+    flex: 0 0 calc(100vw - 44px);
+    width: calc(100vw - 44px);
+    min-width: calc(100vw - 44px);
+    scroll-snap-align: center;
     scroll-snap-stop: always;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 20px 16px;
+    /* Card styling */
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 24px 20px;
     padding-bottom: 24px;
     box-sizing: border-box;
+    box-shadow:
+      0 4px 24px rgba(var(--brown-rgb), 0.12),
+      0 1px 4px rgba(var(--brown-rgb), 0.08);
+    /* Subtle border like the main container */
+    border: 1px solid rgba(var(--salmon-rgb), 0.15);
   }
 
   /* Disable the old slide animations when swiping */
@@ -4457,61 +4507,10 @@ input[inputmode="numeric"] {
     animation: none;
   }
 
-  /* Subtle edge shadow on each step to suggest more content */
-  .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 74px;
-    width: 3px;
-    background: linear-gradient(to right, transparent, rgba(0,0,0,0.04));
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Active step has no right shadow (current page) */
-  .content-scrollable.swipe-horizontal .step.swipe-step.active::after {
-    display: none;
-  }
-
-  /* When swipe is active, the container doesn't need column direction */
+  /* The footer stays outside the swipe area */
   .swipe-horizontal + .content-footer,
   .content-scrollable.swipe-horizontal ~ .content-footer {
     margin-top: 0;
-  }
-
-  /* Swipe indicator dots (overlaid on the bottom nav area) */
-  .swipe-indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 0 2px;
-    position: fixed;
-    bottom: calc(74px + env(safe-area-inset-bottom, 0px));
-    left: 0;
-    right: 0;
-    z-index: 998;
-    pointer-events: none;
-  }
-
-  .swipe-indicator-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--sand);
-    transition: all 0.3s ease;
-  }
-
-  .swipe-indicator-dot.active {
-    width: 20px;
-    border-radius: 3px;
-    background: var(--terracotta);
-  }
-
-  .swipe-indicator-dot.filled {
-    background: var(--salmon);
   }
 }
 
@@ -4529,8 +4528,22 @@ input[inputmode="numeric"] {
     width: 18px;
   }
 
-  .survey-body {
+  .survey-body:not(:has(.swipe-horizontal)) {
     padding: 12px 8px;
+  }
+
+  /* On extra small screens, cards are a bit narrower with tighter gaps */
+  .content-scrollable.swipe-horizontal > form {
+    gap: 8px;
+    padding: 6px 10px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step {
+    flex: 0 0 calc(100vw - 28px);
+    width: calc(100vw - 28px);
+    min-width: calc(100vw - 28px);
+    padding: 20px 16px;
+    border-radius: 16px;
   }
 
   .content-scrollable:not(.swipe-horizontal) {
