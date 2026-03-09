@@ -4493,9 +4493,10 @@ input[inputmode="numeric"] {
     flex-wrap: nowrap;
     min-width: fit-content;
     height: 100%;
-    /* Horizontal gap between cards, plus padding so first/last cards are inset */
+    /* Horizontal gap between cards, plus padding so first/last cards center perfectly.
+       Horizontal padding must equal (100vw - cardWidth) / 2 = (56px / 2) = 28px */
     gap: 12px;
-    padding: 8px 16px;
+    padding: 8px 28px;
     box-sizing: border-box;
   }
 
@@ -4574,10 +4575,11 @@ input[inputmode="numeric"] {
     padding: 12px 8px;
   }
 
-  /* On extra small screens, cards are a bit narrower with tighter gaps */
+  /* On extra small screens, cards are a bit narrower with tighter gaps.
+     Horizontal padding = (100vw - cardWidth) / 2 = (36px / 2) = 18px */
   .content-scrollable.swipe-horizontal > form {
     gap: 8px;
-    padding: 6px 10px;
+    padding: 6px 18px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step {
