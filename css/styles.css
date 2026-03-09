@@ -1224,7 +1224,8 @@ body {
   overflow-y: auto;
   overflow-x: clip; /* Clip but allow positioned elements to paint outside */
   scroll-behavior: smooth;
-  /* Vertical spacing - tighter at top, relaxed at bottom */
+  /* Vertical spacing - top matches mask height, relaxed at bottom */
+  padding-top: 12px;
   padding-bottom: 24px;
   padding-right: 40px; /* Space for checkmarks to overflow into */
   /* Extend scroll container so its clip boundary (padding-box) reaches
@@ -1295,44 +1296,30 @@ body {
   min-height: 0;
 }
 
+/* Curved inner masks — the "playing card crescent" shape.
+   Two overlapping rounded rectangles create a crescent where the inner card's
+   rounded corners taper the mask from full height (center) to 0 (corners).
+   Cream-on-cream = invisible, but clips scrolling content with a curved edge. */
 .content-scrollable-wrapper::before,
 .content-scrollable-wrapper::after {
   content: '';
   position: absolute;
   left: 0;
-  right: 40px; /* Don't cover scrollbar */
-  height: 32px;
+  right: 0;
+  height: 12px;
+  background: var(--cream);
   pointer-events: none;
   z-index: 2;
 }
 
 .content-scrollable-wrapper::before {
   top: 0;
-  background: linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
-  opacity: 0; /* Start hidden until user scrolls */
-  transition: opacity 0.3s ease;
+  border-radius: 0 0 12px 12px;
 }
 
 .content-scrollable-wrapper::after {
   bottom: 0;
-  background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
-  opacity: 0; /* Start hidden until user scrolls */
-  transition: opacity 0.3s ease;
-}
-
-/* Show gradients once user has scrolled */
-.content-scrollable-wrapper.has-scrolled::before,
-.content-scrollable-wrapper.has-scrolled::after {
-  opacity: 1;
-}
-
-/* Hide gradients when at scroll limits */
-.content-scrollable-wrapper.has-scrolled.at-top::before {
-  opacity: 0;
-}
-
-.content-scrollable-wrapper.has-scrolled.at-bottom::after {
-  opacity: 0;
+  border-radius: 12px 12px 0 0;
 }
 
 .content-footer {
@@ -4544,6 +4531,34 @@ input[inputmode="numeric"] {
     overflow: hidden;
   }
 
+  /* Curved inner masks for swipe cards — sticky so they stay visible during scroll.
+     Uses negative margins to extend into card padding, creating edge-to-edge mask. */
+  .content-scrollable.swipe-horizontal .step.swipe-step::before,
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    content: '';
+    display: block;
+    position: sticky;
+    height: 24px;
+    margin-left: -20px;
+    margin-right: -20px;
+    background: var(--cream);
+    z-index: 10;
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::before {
+    top: 0;
+    margin-top: -24px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    bottom: 0;
+    margin-bottom: -24px;
+    border-radius: 20px 20px 0 0;
+  }
+
   /* Disable the old slide animations when swiping */
   .content-scrollable.swipe-horizontal .step.slide-up,
   .content-scrollable.swipe-horizontal .step.slide-down {
@@ -4589,6 +4604,24 @@ input[inputmode="numeric"] {
     max-width: calc(100vw - 36px);
     padding: 20px 16px;
     border-radius: 16px;
+  }
+
+  /* Adjust inner masks for smaller padding and border-radius */
+  .content-scrollable.swipe-horizontal .step.swipe-step::before,
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    height: 20px;
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::before {
+    margin-top: -20px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    margin-bottom: -20px;
+    border-radius: 16px 16px 0 0;
   }
 
   .content-scrollable:not(.swipe-horizontal) {
