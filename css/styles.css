@@ -4538,7 +4538,7 @@ input[inputmode="numeric"] {
     content: '';
     display: block;
     position: sticky;
-    height: 24px;
+    height: 14px;
     margin-left: -20px;
     margin-right: -20px;
     background: var(--cream);
@@ -4609,7 +4609,7 @@ input[inputmode="numeric"] {
   /* Adjust inner masks for smaller padding and border-radius */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
-    height: 20px;
+    height: 10px;
     margin-left: -16px;
     margin-right: -16px;
   }
