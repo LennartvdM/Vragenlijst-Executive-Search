@@ -4504,10 +4504,10 @@ input[inputmode="numeric"] {
     display: flex;
     flex-direction: column;
     /* Slightly less than full viewport width so the next card peeks in */
-    flex: 0 0 calc(100vw - 44px);
-    width: calc(100vw - 44px);
-    min-width: calc(100vw - 44px);
-    max-width: calc(100vw - 44px);
+    flex: 0 0 calc(100vw - 56px);
+    width: calc(100vw - 56px);
+    min-width: calc(100vw - 56px);
+    max-width: calc(100vw - 56px);
     scroll-snap-align: center;
     scroll-snap-stop: always;
     overflow-y: auto;
@@ -4581,10 +4581,10 @@ input[inputmode="numeric"] {
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step {
-    flex: 0 0 calc(100vw - 28px);
-    width: calc(100vw - 28px);
-    min-width: calc(100vw - 28px);
-    max-width: calc(100vw - 28px);
+    flex: 0 0 calc(100vw - 36px);
+    width: calc(100vw - 36px);
+    min-width: calc(100vw - 36px);
+    max-width: calc(100vw - 36px);
     padding: 20px 16px;
     border-radius: 16px;
   }
