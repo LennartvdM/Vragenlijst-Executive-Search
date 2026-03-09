@@ -4433,6 +4433,9 @@ input[inputmode="numeric"] {
     border-radius: 0;
     min-height: 0;
     overflow: visible;
+    /* Full-bleed: remove the 40px margin so cards can peek at the edges */
+    width: 100vw;
+    max-width: 100vw;
     /* Remove backdrop-filter stacking context */
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
