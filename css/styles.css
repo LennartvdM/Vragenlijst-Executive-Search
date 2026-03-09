@@ -4557,11 +4557,14 @@ input[inputmode="numeric"] {
   }
 
   /* Curved inner masks for swipe cards.
-     Each mask is a sticky flex child whose dimensions are derived from the card's
-     own --card-pad-* / --card-radius custom properties.  This guarantees the mask
-     is always flush: negative margin = padding pulls it to the padding-box edge,
-     height = padding fills the gap exactly, and top/bottom: 0 pins it to the
-     scrollport edge so it never drifts. */
+     Each mask is a sticky flex child whose dimensions derive from the card's
+     --card-pad-* / --card-radius tokens.
+     - negative margin = padding  →  pulls border-box to the scrollport edge
+     - height = padding            →  fills the padding area exactly
+     - top/bottom = padding        →  compensates for the negative margin shift
+       (sticky constrains the *margin-box* edge, not border-box;
+        with margin-top: -P the margin-box is P above the border-box,
+        so top must equal P to pin the border-box at scrollport y=0) */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
     content: '';
@@ -4578,14 +4581,18 @@ input[inputmode="numeric"] {
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
     height: var(--card-pad-top);
     margin-top: calc(-1 * var(--card-pad-top));
-    top: 0;
+    /* Sticky `top` constrains the margin-box edge, not the border-box.
+       With margin-top: -P, margin-box top = border-box top + P.
+       To pin border-box at scrollport top (y=0): top must equal P. */
+    top: var(--card-pad-top);
     border-radius: 0 0 var(--card-radius) var(--card-radius);
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
     height: var(--card-pad-bottom);
     margin-bottom: calc(-1 * var(--card-pad-bottom));
-    bottom: 0;
+    /* Same logic mirrored: bottom must equal P to pin at scrollport bottom. */
+    bottom: var(--card-pad-bottom);
     border-radius: var(--card-radius) var(--card-radius) 0 0;
   }
 
