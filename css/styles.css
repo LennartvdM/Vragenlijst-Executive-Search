@@ -1296,30 +1296,45 @@ body {
   min-height: 0;
 }
 
-/* Curved inner masks — the "playing card crescent" shape.
-   Two overlapping rounded rectangles create a crescent where the inner card's
-   rounded corners taper the mask from full height (center) to 0 (corners).
-   Cream-on-cream = invisible, but clips scrolling content with a curved edge. */
+/* Gradient fade masks — fade content at top/bottom scroll edges */
 .content-scrollable-wrapper::before,
 .content-scrollable-wrapper::after {
   content: '';
   position: absolute;
   left: 0;
-  right: 0;
-  height: 12px;
-  background: var(--cream);
+  right: 40px; /* Don't cover scrollbar */
+  height: 32px;
   pointer-events: none;
   z-index: 2;
 }
 
 .content-scrollable-wrapper::before {
   top: 0;
-  border-radius: 0 0 12px 12px;
+  background: linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
+  opacity: 0; /* Start hidden until user scrolls */
+  transition: opacity 0.3s ease;
 }
 
 .content-scrollable-wrapper::after {
   bottom: 0;
-  border-radius: 12px 12px 0 0;
+  background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
+  opacity: 0; /* Start hidden until user scrolls */
+  transition: opacity 0.3s ease;
+}
+
+/* Show gradients once user has scrolled */
+.content-scrollable-wrapper.has-scrolled::before,
+.content-scrollable-wrapper.has-scrolled::after {
+  opacity: 1;
+}
+
+/* Hide gradients when at scroll limits */
+.content-scrollable-wrapper.has-scrolled.at-top::before {
+  opacity: 0;
+}
+
+.content-scrollable-wrapper.has-scrolled.at-bottom::after {
+  opacity: 0;
 }
 
 .content-footer {
