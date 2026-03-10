@@ -2560,7 +2560,6 @@ input[inputmode="numeric"] {
     display: block !important;
     overflow: visible !important;
     height: auto !important;
-    scroll-snap-type: none !important;
   }
 
   .content-scrollable.swipe-horizontal > form {
@@ -2572,7 +2571,6 @@ input[inputmode="numeric"] {
     min-width: 0 !important;
     flex: none !important;
     width: 100% !important;
-    scroll-snap-align: none !important;
     height: auto !important;
     box-shadow: none !important;
     border: none !important;
@@ -4465,8 +4463,10 @@ input[inputmode="numeric"] {
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;
+    /* scroll-snap disabled — custom JS spring animation handles snapping */
     -webkit-overflow-scrolling: touch;
+    /* Prevent browser momentum/inertia so our spring physics are in full control */
+    overscroll-behavior-x: none;
     /* Hide native scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -4510,8 +4510,7 @@ input[inputmode="numeric"] {
     width: calc(100vw - 56px);
     min-width: calc(100vw - 56px);
     max-width: calc(100vw - 56px);
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
+    /* snap alignment handled by JS spring animation */
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;

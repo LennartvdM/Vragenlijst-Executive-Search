@@ -1,7 +1,7 @@
 /**
  * Horizontal swipe navigation module (mobile only)
- * Transforms the step container into a horizontal scroll-snap carousel.
- * Users can flick/drag between survey steps on mobile devices.
+ * Transforms the step container into a horizontal carousel with
+ * custom spring-physics snapping (overshoot "pow" effect).
  */
 
 import * as state from './state.js';
@@ -12,9 +12,28 @@ import { saveFormData } from './form.js';
 
 let swipeContainer = null;
 let isSwipeActive = false;
-let scrollEndTimer = null;
-let lastDotStep = -1;       // tracks which dot was last highlighted during live scroll
-let rafId = null;            // for throttling live dot updates to animation frames
+let lastDotStep = -1;
+
+// --- Touch tracking ---
+let touchStartX = 0;
+let touchStartY = 0;
+let touchStartScroll = 0;
+let touchStartTime = 0;
+let lastTouchX = 0;
+let lastTouchTime = 0;
+let velocityX = 0;
+let isDragging = false;
+let directionLocked = null; // null | 'horizontal' | 'vertical'
+
+// --- Spring animation ---
+let springRAF = null;
+
+// Spring config
+const SPRING_TENSION = 0.25;    // how hard it pulls toward target (higher = snappier)
+const SPRING_DAMPING = 0.72;    // energy retention per frame (lower = less bouncy)
+const OVERSHOOT_SCALE = 1.15;   // initial velocity multiplier for the "pow" feel
+const VELOCITY_THRESHOLD = 0.3; // px/ms — minimum flick speed to advance a step
+const DIRECTION_LOCK_THRESHOLD = 8; // px — movement before locking axis
 
 /**
  * Check if we're on mobile
@@ -25,7 +44,6 @@ function isMobile() {
 
 /**
  * Initialize horizontal swipe navigation on mobile.
- * Called once after survey HTML is loaded.
  */
 export function initSwipe() {
   if (!isMobile()) return;
@@ -35,112 +53,150 @@ export function initSwipe() {
 
   isSwipeActive = true;
 
-  // Add the CSS class that activates horizontal scroll-snap layout
   swipeContainer.classList.add('swipe-horizontal');
 
-  // Make all steps visible for the horizontal layout
   const steps = swipeContainer.querySelectorAll('.step');
-  steps.forEach(step => {
-    step.classList.add('swipe-step');
-  });
+  steps.forEach(step => step.classList.add('swipe-step'));
 
-  // Scroll to the current step without animation
+  // Scroll to current step instantly
   scrollToStep(state.currentStep, false);
 
-  // Sync live dot tracker with current state
   lastDotStep = state.currentStep;
 
-  // Listen for scroll to update dots in real-time and detect settle
-  swipeContainer.addEventListener('scroll', handleSwipeScroll, { passive: true });
+  // Touch events for custom drag + spring snap
+  swipeContainer.addEventListener('touchstart', onTouchStart, { passive: true });
+  swipeContainer.addEventListener('touchmove', onTouchMove, { passive: false });
+  swipeContainer.addEventListener('touchend', onTouchEnd, { passive: true });
+  swipeContainer.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
-  // Handle resize (e.g. orientation change)
+  // Handle resize (orientation change)
   window.addEventListener('resize', handleResize);
 }
 
 /**
- * Scroll the swipe container to show a specific step
- * @param {number} step - Step index
- * @param {boolean} smooth - Whether to animate
+ * Get the scroll-left position that centers a given step.
  */
-export function scrollToStep(step, smooth = true) {
+function getStepScrollPosition(step) {
+  if (!swipeContainer) return 0;
+  const stepEl = swipeContainer.querySelector(`.step[data-step="${step}"]`);
+  if (!stepEl) return 0;
+  const containerWidth = swipeContainer.offsetWidth;
+  return stepEl.offsetLeft - (containerWidth - stepEl.offsetWidth) / 2;
+}
+
+/**
+ * Scroll to a specific step.
+ * @param {number} step - Step index
+ * @param {boolean} animated - Whether to use spring animation
+ */
+export function scrollToStep(step, animated = true) {
   if (!isSwipeActive || !swipeContainer) return false;
 
-  const stepEl = swipeContainer.querySelector(`.step[data-step="${step}"]`);
-  if (!stepEl) return false;
+  const targetScroll = getStepScrollPosition(step);
 
-  // Center the step element within the scroll container
-  const containerWidth = swipeContainer.offsetWidth;
-  const scrollLeft = stepEl.offsetLeft - (containerWidth - stepEl.offsetWidth) / 2;
+  if (!animated) {
+    cancelSpring();
+    swipeContainer.scrollLeft = targetScroll;
+    return true;
+  }
 
-  swipeContainer.scrollTo({
-    left: scrollLeft,
-    behavior: smooth ? 'smooth' : 'instant'
-  });
-
+  animateSpring(targetScroll, 0);
   return true;
 }
 
-/**
- * Get the DOM index of a step (its position among .step siblings)
- */
-function getStepDOMIndex(stepNumber) {
-  if (!swipeContainer) return 0;
-  const steps = swipeContainer.querySelectorAll('.step');
-  for (let i = 0; i < steps.length; i++) {
-    if (parseInt(steps[i].dataset.step, 10) === stepNumber) {
-      return i;
-    }
-  }
-  return 0;
-}
+// =====================
+//  Touch event handlers
+// =====================
 
-/**
- * Get the step number from a DOM index
- */
-function getStepFromDOMIndex(index) {
-  if (!swipeContainer) return 0;
-  const steps = swipeContainer.querySelectorAll('.step');
-  if (index >= 0 && index < steps.length) {
-    return parseInt(steps[index].dataset.step, 10);
-  }
-  return 0;
-}
-
-/**
- * Handle scroll events on the swipe container.
- * Updates progress dots in real-time during the swipe, then
- * performs full state sync once scrolling settles.
- */
-function handleSwipeScroll() {
+function onTouchStart(e) {
   if (!isSwipeActive) return;
 
-  // Real-time dot update (throttled to rAF)
-  if (!rafId) {
-    rafId = requestAnimationFrame(() => {
-      rafId = null;
-      updateDotsLive();
-    });
-  }
+  // Stop any running spring animation
+  cancelSpring();
 
-  // Debounced settle detection for full state sync
-  clearTimeout(scrollEndTimer);
-  scrollEndTimer = setTimeout(() => {
-    onSwipeEnd();
-  }, 100);
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  touchStartScroll = swipeContainer.scrollLeft;
+  touchStartTime = Date.now();
+  lastTouchX = touch.clientX;
+  lastTouchTime = touchStartTime;
+  velocityX = 0;
+  isDragging = true;
+  directionLocked = null;
 }
 
+function onTouchMove(e) {
+  if (!isDragging || !isSwipeActive) return;
+
+  const touch = e.touches[0];
+  const dx = touch.clientX - touchStartX;
+  const dy = touch.clientY - touchStartY;
+
+  // Lock direction after threshold
+  if (directionLocked === null) {
+    if (Math.abs(dx) > DIRECTION_LOCK_THRESHOLD || Math.abs(dy) > DIRECTION_LOCK_THRESHOLD) {
+      directionLocked = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+    }
+  }
+
+  // If vertical scroll, let it pass through to the step's own scrolling
+  if (directionLocked === 'vertical') return;
+
+  // Horizontal drag — prevent default to stop vertical scroll interference
+  e.preventDefault();
+
+  // Track velocity (exponential moving average over recent movement)
+  const now = Date.now();
+  const dt = now - lastTouchTime;
+  if (dt > 0) {
+    const instantVelocity = (lastTouchX - touch.clientX) / dt; // positive = swiping left
+    velocityX = 0.6 * instantVelocity + 0.4 * velocityX;
+  }
+  lastTouchX = touch.clientX;
+  lastTouchTime = now;
+
+  // Move scroll position 1:1 with finger
+  swipeContainer.scrollLeft = touchStartScroll - dx;
+
+  // Update dots live
+  updateDotsLive();
+}
+
+function onTouchEnd() {
+  if (!isDragging || !isSwipeActive) return;
+  isDragging = false;
+
+  if (directionLocked === 'vertical' || directionLocked === null) {
+    // Was a vertical scroll or a tap — just snap to nearest
+    snapToNearest(0);
+    return;
+  }
+
+  // Decay velocity if touch ended a while after last move
+  const timeSinceLastMove = Date.now() - lastTouchTime;
+  if (timeSinceLastMove > 80) {
+    velocityX = 0;
+  }
+
+  snapToNearest(velocityX);
+}
+
+// =====================
+//  Snap + spring physics
+// =====================
+
 /**
- * Update progress dots in real-time based on scroll position.
- * Only touches the dots — no state changes or heavy work.
+ * Determine the target step based on current position + velocity, then spring to it.
  */
-function updateDotsLive() {
+function snapToNearest(velocity) {
   if (!swipeContainer) return;
 
   const containerWidth = swipeContainer.offsetWidth;
-  if (containerWidth === 0) return;
-
   const scrollCenter = swipeContainer.scrollLeft + containerWidth / 2;
   const steps = swipeContainer.querySelectorAll('.step');
+
+  // Find closest step to current scroll center
   let closestIndex = 0;
   let closestDist = Infinity;
   steps.forEach((step, i) => {
@@ -152,42 +208,87 @@ function updateDotsLive() {
     }
   });
 
-  const nearestStep = getStepFromDOMIndex(closestIndex);
-
-  // Only update DOM if the nearest step changed
-  if (nearestStep === lastDotStep) return;
-  lastDotStep = nearestStep;
-
-  const displayStep = nearestStep <= 13 ? nearestStep : 13;
-  const dotsContainers = document.querySelectorAll('.progress-dots');
-  dotsContainers.forEach(container => {
-    const dots = container.querySelectorAll('span');
-    dots.forEach((dot, i) => {
-      dot.classList.remove(window.CONSTANTS.CSS.ACTIVE, window.CONSTANTS.CSS.DONE);
-      if (i < displayStep) dot.classList.add(window.CONSTANTS.CSS.DONE);
-      if (i === displayStep) dot.classList.add(window.CONSTANTS.CSS.ACTIVE);
-    });
-
-    if (nearestStep >= window.CONFIG.REVIEW_STEP) {
-      dots.forEach(dot => {
-        dot.classList.remove(window.CONSTANTS.CSS.ACTIVE);
-        dot.classList.add(window.CONSTANTS.CSS.DONE);
-      });
+  // If velocity is strong enough, bias toward the next/previous step
+  let targetIndex = closestIndex;
+  if (Math.abs(velocity) > VELOCITY_THRESHOLD) {
+    if (velocity > 0 && targetIndex < steps.length - 1) {
+      targetIndex = closestIndex + 1; // swipe left → next
+    } else if (velocity < 0 && targetIndex > 0) {
+      targetIndex = closestIndex - 1; // swipe right → previous
     }
-  });
+  }
+
+  const targetStep = parseInt(steps[targetIndex].dataset.step, 10);
+  const targetScroll = getStepScrollPosition(targetStep);
+
+  // Convert finger velocity (px/ms) to initial spring velocity (px/frame at ~60fps)
+  // The overshoot scale makes it feel punchier
+  const initialVelocity = velocity * 16 * OVERSHOOT_SCALE;
+
+  animateSpring(targetScroll, initialVelocity);
 }
 
 /**
- * Called when scrolling settles. Determines which step is now visible
- * and updates app state accordingly.
+ * Animate scroll position with a spring that overshoots and settles.
+ * @param {number} target - Target scrollLeft
+ * @param {number} initialVelocity - Starting velocity in px/frame (positive = scrolling right)
  */
-function onSwipeEnd() {
+function animateSpring(target, initialVelocity) {
+  cancelSpring();
+
+  let currentVelocity = initialVelocity;
+  let settled = false;
+
+  function tick() {
+    if (!swipeContainer || settled) return;
+
+    const current = swipeContainer.scrollLeft;
+    const displacement = current - target;
+
+    // Spring force pulls toward target
+    const springForce = -SPRING_TENSION * displacement;
+
+    // Apply force + damping
+    currentVelocity = (currentVelocity + springForce) * SPRING_DAMPING;
+
+    // Apply velocity
+    const newScroll = current + currentVelocity;
+    swipeContainer.scrollLeft = newScroll;
+
+    // Update dots during animation
+    updateDotsLive();
+
+    // Check if settled (close enough + slow enough)
+    if (Math.abs(displacement) < 0.5 && Math.abs(currentVelocity) < 0.5) {
+      swipeContainer.scrollLeft = target;
+      settled = true;
+      springRAF = null;
+      onSnapSettled();
+      return;
+    }
+
+    springRAF = requestAnimationFrame(tick);
+  }
+
+  springRAF = requestAnimationFrame(tick);
+}
+
+function cancelSpring() {
+  if (springRAF) {
+    cancelAnimationFrame(springRAF);
+    springRAF = null;
+  }
+}
+
+/**
+ * Called when the spring animation finishes. Full state sync.
+ */
+function onSnapSettled() {
   if (!isSwipeActive || !swipeContainer) return;
 
   const containerWidth = swipeContainer.offsetWidth;
   if (containerWidth === 0) return;
 
-  // Figure out which step is centered by finding closest to viewport center
   const scrollCenter = swipeContainer.scrollLeft + containerWidth / 2;
   const steps = swipeContainer.querySelectorAll('.step');
   let closestIndex = 0;
@@ -211,10 +312,8 @@ function onSwipeEnd() {
   state.setPreviousStep(oldStep);
   state.setCurrentStep(newStep);
 
-  // Update active classes
   updateActiveStep(newStep);
 
-  // Handle review step logic
   if (newStep === window.CONFIG.REVIEW_STEP) {
     if (!state.reviewVisited) {
       state.setReviewVisited(true);
@@ -223,7 +322,6 @@ function onSwipeEnd() {
     document.dispatchEvent(new CustomEvent('generateReview'));
   }
 
-  // Refresh UI
   updateProgress();
   updateIndex();
   updateNavButtons(newStep);
@@ -232,9 +330,66 @@ function onSwipeEnd() {
   saveFormData();
 }
 
-/**
- * Update which step has the .active class
- */
+// =====================
+//  Live dot updates
+// =====================
+
+function updateDotsLive() {
+  if (!swipeContainer) return;
+
+  const containerWidth = swipeContainer.offsetWidth;
+  if (containerWidth === 0) return;
+
+  const scrollCenter = swipeContainer.scrollLeft + containerWidth / 2;
+  const steps = swipeContainer.querySelectorAll('.step');
+  let closestIndex = 0;
+  let closestDist = Infinity;
+  steps.forEach((step, i) => {
+    const stepCenter = step.offsetLeft + step.offsetWidth / 2;
+    const dist = Math.abs(stepCenter - scrollCenter);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestIndex = i;
+    }
+  });
+
+  const nearestStep = getStepFromDOMIndex(closestIndex);
+
+  if (nearestStep === lastDotStep) return;
+  lastDotStep = nearestStep;
+
+  const displayStep = nearestStep <= 13 ? nearestStep : 13;
+  const dotsContainers = document.querySelectorAll('.progress-dots');
+  dotsContainers.forEach(container => {
+    const dots = container.querySelectorAll('span');
+    dots.forEach((dot, i) => {
+      dot.classList.remove(window.CONSTANTS.CSS.ACTIVE, window.CONSTANTS.CSS.DONE);
+      if (i < displayStep) dot.classList.add(window.CONSTANTS.CSS.DONE);
+      if (i === displayStep) dot.classList.add(window.CONSTANTS.CSS.ACTIVE);
+    });
+
+    if (nearestStep >= window.CONFIG.REVIEW_STEP) {
+      dots.forEach(dot => {
+        dot.classList.remove(window.CONSTANTS.CSS.ACTIVE);
+        dot.classList.add(window.CONSTANTS.CSS.DONE);
+      });
+    }
+  });
+}
+
+// =====================
+//  Helpers
+// =====================
+
+function getStepFromDOMIndex(index) {
+  if (!swipeContainer) return 0;
+  const steps = swipeContainer.querySelectorAll('.step');
+  if (index >= 0 && index < steps.length) {
+    return parseInt(steps[index].dataset.step, 10);
+  }
+  return 0;
+}
+
 function updateActiveStep(step) {
   if (!swipeContainer) return;
   const steps = swipeContainer.querySelectorAll('.step');
@@ -244,9 +399,6 @@ function updateActiveStep(step) {
   });
 }
 
-/**
- * Save the vertical scroll position of a step's inner content
- */
 function saveVerticalScroll(step) {
   const stepEl = swipeContainer?.querySelector(`.step[data-step="${step}"]`);
   if (stepEl) {
@@ -254,9 +406,6 @@ function saveVerticalScroll(step) {
   }
 }
 
-/**
- * Restore the vertical scroll position of a step's inner content
- */
 export function restoreVerticalScroll(step) {
   const stepEl = swipeContainer?.querySelector(`.step[data-step="${step}"]`);
   if (!stepEl) return;
@@ -269,10 +418,6 @@ export function restoreVerticalScroll(step) {
   }
 }
 
-/**
- * Update nav button visibility/labels based on current step.
- * Mirrors the logic in navigation.js showStep().
- */
 function updateNavButtons(step) {
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
@@ -309,50 +454,37 @@ function updateNavButtons(step) {
   }
 }
 
-/**
- * Handle window resize — activate/deactivate swipe mode
- */
 function handleResize() {
   if (isMobile() && !isSwipeActive) {
     initSwipe();
   } else if (!isMobile() && isSwipeActive) {
     destroySwipe();
   } else if (isMobile() && isSwipeActive) {
-    // Re-snap to current step on orientation change
     scrollToStep(state.currentStep, false);
   }
 }
 
-/**
- * Deactivate swipe mode (when switching to desktop)
- */
 function destroySwipe() {
   if (!swipeContainer) return;
 
   isSwipeActive = false;
+  cancelSpring();
   swipeContainer.classList.remove('swipe-horizontal');
 
   const steps = swipeContainer.querySelectorAll('.step');
-  steps.forEach(step => {
-    step.classList.remove('swipe-step');
-  });
+  steps.forEach(step => step.classList.remove('swipe-step'));
 
-  swipeContainer.removeEventListener('scroll', handleSwipeScroll);
-  clearTimeout(scrollEndTimer);
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  swipeContainer.removeEventListener('touchstart', onTouchStart);
+  swipeContainer.removeEventListener('touchmove', onTouchMove);
+  swipeContainer.removeEventListener('touchend', onTouchEnd);
+  swipeContainer.removeEventListener('touchcancel', onTouchEnd);
   lastDotStep = -1;
 }
 
-/**
- * Check if swipe mode is currently active
- */
 export function isSwipeMode() {
   return isSwipeActive;
 }
 
-/**
- * Clean up on full teardown
- */
 export function cleanupSwipe() {
   destroySwipe();
   window.removeEventListener('resize', handleResize);
