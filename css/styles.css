@@ -5313,11 +5313,45 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   padding: 0 10px;
 }
 
+/* Grab bar — visible on touch devices as a flick-to-dismiss affordance */
+.ch-grab-bar {
+  display: none;
+}
+
+@media (hover: none) {
+  .ch-grab-bar {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0 8px;
+    cursor: grab;
+  }
+
+  .ch-grab-bar span {
+    width: 32px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(var(--brown-rgb), 0.15);
+  }
+
+  /* On touch devices, blur layer must intercept taps */
+  .ch-blur-layer.is-active {
+    pointer-events: auto;
+  }
+
+  /* Reveal labels get a tap cursor */
+  .ch-reveal-label {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .ch-popover {
     width: calc(100vw - 32px);
     max-height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .ch-two-col {
