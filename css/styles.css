@@ -4583,7 +4583,6 @@ input[inputmode="numeric"] {
     /* Extend into horizontal padding so mask spans full inner card width */
     margin-left: calc(-1 * var(--card-pad-x));
     margin-right: calc(-1 * var(--card-pad-x));
-    background: var(--cream);
     z-index: 10;
     pointer-events: none;
     flex-shrink: 0;
@@ -4592,13 +4591,13 @@ input[inputmode="numeric"] {
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
     height: var(--card-pad-top);
     top: 0;
-    border-radius: 0 0 var(--card-radius) var(--card-radius);
+    background: linear-gradient(to bottom, var(--cream) 30%, transparent 100%);
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
     height: var(--card-pad-bottom);
     bottom: 0;
-    border-radius: var(--card-radius) var(--card-radius) 0 0;
+    background: linear-gradient(to top, var(--cream) 30%, transparent 100%);
   }
 
   /* Disable the old slide animations when swiping */
