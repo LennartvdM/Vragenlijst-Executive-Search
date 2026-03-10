@@ -931,6 +931,7 @@ body {
   transition: background 0.2s;
   position: relative;
   z-index: 1; /* Above highlighter */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .index-item:hover {
