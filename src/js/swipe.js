@@ -13,6 +13,8 @@ import { saveFormData } from './form.js';
 let swipeContainer = null;
 let isSwipeActive = false;
 let scrollEndTimer = null;
+let lastDotStep = -1;       // tracks which dot was last highlighted during live scroll
+let rafId = null;            // for throttling live dot updates to animation frames
 
 /**
  * Check if we're on mobile
@@ -45,7 +47,10 @@ export function initSwipe() {
   // Scroll to the current step without animation
   scrollToStep(state.currentStep, false);
 
-  // Listen for scroll end to detect which step we landed on
+  // Sync live dot tracker with current state
+  lastDotStep = state.currentStep;
+
+  // Listen for scroll to update dots in real-time and detect settle
   swipeContainer.addEventListener('scroll', handleSwipeScroll, { passive: true });
 
   // Handle resize (e.g. orientation change)
@@ -103,16 +108,73 @@ function getStepFromDOMIndex(index) {
 
 /**
  * Handle scroll events on the swipe container.
- * Uses a debounced "scroll end" detection to figure out which step
- * the user landed on after a swipe.
+ * Updates progress dots in real-time during the swipe, then
+ * performs full state sync once scrolling settles.
  */
 function handleSwipeScroll() {
   if (!isSwipeActive) return;
 
+  // Real-time dot update (throttled to rAF)
+  if (!rafId) {
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      updateDotsLive();
+    });
+  }
+
+  // Debounced settle detection for full state sync
   clearTimeout(scrollEndTimer);
   scrollEndTimer = setTimeout(() => {
     onSwipeEnd();
   }, 100);
+}
+
+/**
+ * Update progress dots in real-time based on scroll position.
+ * Only touches the dots — no state changes or heavy work.
+ */
+function updateDotsLive() {
+  if (!swipeContainer) return;
+
+  const containerWidth = swipeContainer.offsetWidth;
+  if (containerWidth === 0) return;
+
+  const scrollCenter = swipeContainer.scrollLeft + containerWidth / 2;
+  const steps = swipeContainer.querySelectorAll('.step');
+  let closestIndex = 0;
+  let closestDist = Infinity;
+  steps.forEach((step, i) => {
+    const stepCenter = step.offsetLeft + step.offsetWidth / 2;
+    const dist = Math.abs(stepCenter - scrollCenter);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestIndex = i;
+    }
+  });
+
+  const nearestStep = getStepFromDOMIndex(closestIndex);
+
+  // Only update DOM if the nearest step changed
+  if (nearestStep === lastDotStep) return;
+  lastDotStep = nearestStep;
+
+  const displayStep = nearestStep <= 13 ? nearestStep : 13;
+  const dotsContainers = document.querySelectorAll('.progress-dots');
+  dotsContainers.forEach(container => {
+    const dots = container.querySelectorAll('span');
+    dots.forEach((dot, i) => {
+      dot.classList.remove(window.CONSTANTS.CSS.ACTIVE, window.CONSTANTS.CSS.DONE);
+      if (i < displayStep) dot.classList.add(window.CONSTANTS.CSS.DONE);
+      if (i === displayStep) dot.classList.add(window.CONSTANTS.CSS.ACTIVE);
+    });
+
+    if (nearestStep >= window.CONFIG.REVIEW_STEP) {
+      dots.forEach(dot => {
+        dot.classList.remove(window.CONSTANTS.CSS.ACTIVE);
+        dot.classList.add(window.CONSTANTS.CSS.DONE);
+      });
+    }
+  });
 }
 
 /**
@@ -277,6 +339,8 @@ function destroySwipe() {
 
   swipeContainer.removeEventListener('scroll', handleSwipeScroll);
   clearTimeout(scrollEndTimer);
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  lastDotStep = -1;
 }
 
 /**
