@@ -1,7 +1,7 @@
 /**
  * Horizontal swipe navigation module (mobile only)
- * Transforms the step container into a horizontal carousel with
- * custom spring-physics snapping (overshoot "pow" effect).
+ * Transforms the step container into a horizontal carousel using
+ * native CSS scroll-snap for GPU-accelerated snapping.
  */
 
 import * as state from './state.js';
@@ -13,27 +13,7 @@ import { saveFormData } from './form.js';
 let swipeContainer = null;
 let isSwipeActive = false;
 let lastDotStep = -1;
-
-// --- Touch tracking ---
-let touchStartX = 0;
-let touchStartY = 0;
-let touchStartScroll = 0;
-let touchStartTime = 0;
-let lastTouchX = 0;
-let lastTouchTime = 0;
-let velocityX = 0;
-let isDragging = false;
-let directionLocked = null; // null | 'horizontal' | 'vertical'
-
-// --- Spring animation ---
-let springRAF = null;
-
-// Spring config
-const SPRING_TENSION = 0.25;    // how hard it pulls toward target (higher = snappier)
-const SPRING_DAMPING = 0.72;    // energy retention per frame (lower = less bouncy)
-const OVERSHOOT_SCALE = 1.15;   // initial velocity multiplier for the "pow" feel
-const VELOCITY_THRESHOLD = 0.3; // px/ms — minimum flick speed to advance a step
-const DIRECTION_LOCK_THRESHOLD = 8; // px — movement before locking axis
+let scrollEndTimer = null;
 
 /**
  * Check if we're on mobile
@@ -63,11 +43,9 @@ export function initSwipe() {
 
   lastDotStep = state.currentStep;
 
-  // Touch events for custom drag + spring snap
-  swipeContainer.addEventListener('touchstart', onTouchStart, { passive: true });
-  swipeContainer.addEventListener('touchmove', onTouchMove, { passive: false });
-  swipeContainer.addEventListener('touchend', onTouchEnd, { passive: true });
-  swipeContainer.addEventListener('touchcancel', onTouchEnd, { passive: true });
+  // Use native scroll events — the browser handles all touch/momentum/snapping
+  swipeContainer.addEventListener('scroll', onScroll, { passive: true });
+  swipeContainer.addEventListener('scrollend', onScrollEnd, { passive: true });
 
   // Handle resize (orientation change)
   window.addEventListener('resize', handleResize);
@@ -87,7 +65,7 @@ function getStepScrollPosition(step) {
 /**
  * Scroll to a specific step.
  * @param {number} step - Step index
- * @param {boolean} animated - Whether to use spring animation
+ * @param {boolean} animated - Whether to animate
  */
 export function scrollToStep(step, animated = true) {
   if (!isSwipeActive || !swipeContainer) return false;
@@ -95,196 +73,38 @@ export function scrollToStep(step, animated = true) {
   const targetScroll = getStepScrollPosition(step);
 
   if (!animated) {
-    cancelSpring();
     swipeContainer.scrollLeft = targetScroll;
     return true;
   }
 
-  animateSpring(targetScroll, 0);
+  swipeContainer.scrollTo({
+    left: targetScroll,
+    behavior: 'smooth'
+  });
   return true;
 }
 
 // =====================
-//  Touch event handlers
+//  Scroll event handlers
 // =====================
 
-function onTouchStart(e) {
+function onScroll() {
   if (!isSwipeActive) return;
 
-  // Stop any running spring animation
-  cancelSpring();
-
-  const touch = e.touches[0];
-  touchStartX = touch.clientX;
-  touchStartY = touch.clientY;
-  touchStartScroll = swipeContainer.scrollLeft;
-  touchStartTime = Date.now();
-  lastTouchX = touch.clientX;
-  lastTouchTime = touchStartTime;
-  velocityX = 0;
-  isDragging = true;
-  directionLocked = null;
-}
-
-function onTouchMove(e) {
-  if (!isDragging || !isSwipeActive) return;
-
-  const touch = e.touches[0];
-  const dx = touch.clientX - touchStartX;
-  const dy = touch.clientY - touchStartY;
-
-  // Lock direction after threshold
-  if (directionLocked === null) {
-    if (Math.abs(dx) > DIRECTION_LOCK_THRESHOLD || Math.abs(dy) > DIRECTION_LOCK_THRESHOLD) {
-      directionLocked = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
-    }
-  }
-
-  // If vertical scroll, let it pass through to the step's own scrolling
-  if (directionLocked === 'vertical') return;
-
-  // Horizontal drag — prevent default to stop vertical scroll interference
-  e.preventDefault();
-
-  // Track velocity (exponential moving average over recent movement)
-  const now = Date.now();
-  const dt = now - lastTouchTime;
-  if (dt > 0) {
-    const instantVelocity = (lastTouchX - touch.clientX) / dt; // positive = swiping left
-    velocityX = 0.6 * instantVelocity + 0.4 * velocityX;
-  }
-  lastTouchX = touch.clientX;
-  lastTouchTime = now;
-
-  // Move scroll position 1:1 with finger
-  swipeContainer.scrollLeft = touchStartScroll - dx;
-
-  // Update dots live
+  // Update dots live during scroll
   updateDotsLive();
+
+  // Fallback for browsers without scrollend: debounce to detect snap settlement
+  clearTimeout(scrollEndTimer);
+  scrollEndTimer = setTimeout(() => {
+    onScrollEnd();
+  }, 150);
 }
 
-function onTouchEnd() {
-  if (!isDragging || !isSwipeActive) return;
-  isDragging = false;
-
-  if (directionLocked === 'vertical' || directionLocked === null) {
-    // Was a vertical scroll or a tap — just snap to nearest
-    snapToNearest(0);
-    return;
-  }
-
-  // Decay velocity if touch ended a while after last move
-  const timeSinceLastMove = Date.now() - lastTouchTime;
-  if (timeSinceLastMove > 80) {
-    velocityX = 0;
-  }
-
-  snapToNearest(velocityX);
-}
-
-// =====================
-//  Snap + spring physics
-// =====================
-
-/**
- * Determine the target step based on current position + velocity, then spring to it.
- */
-function snapToNearest(velocity) {
-  if (!swipeContainer) return;
-
-  const containerWidth = swipeContainer.offsetWidth;
-  const scrollCenter = swipeContainer.scrollLeft + containerWidth / 2;
-  const steps = swipeContainer.querySelectorAll('.step');
-
-  // Find closest step to current scroll center
-  let closestIndex = 0;
-  let closestDist = Infinity;
-  steps.forEach((step, i) => {
-    const stepCenter = step.offsetLeft + step.offsetWidth / 2;
-    const dist = Math.abs(stepCenter - scrollCenter);
-    if (dist < closestDist) {
-      closestDist = dist;
-      closestIndex = i;
-    }
-  });
-
-  // If velocity is strong enough, bias toward the next/previous step
-  let targetIndex = closestIndex;
-  if (Math.abs(velocity) > VELOCITY_THRESHOLD) {
-    if (velocity > 0 && targetIndex < steps.length - 1) {
-      targetIndex = closestIndex + 1; // swipe left → next
-    } else if (velocity < 0 && targetIndex > 0) {
-      targetIndex = closestIndex - 1; // swipe right → previous
-    }
-  }
-
-  const targetStep = parseInt(steps[targetIndex].dataset.step, 10);
-  const targetScroll = getStepScrollPosition(targetStep);
-
-  // Convert finger velocity (px/ms) to initial spring velocity (px/frame at ~60fps)
-  // The overshoot scale makes it feel punchier
-  const initialVelocity = velocity * 16 * OVERSHOOT_SCALE;
-
-  animateSpring(targetScroll, initialVelocity);
-}
-
-/**
- * Animate scroll position with a spring that overshoots and settles.
- * @param {number} target - Target scrollLeft
- * @param {number} initialVelocity - Starting velocity in px/frame (positive = scrolling right)
- */
-function animateSpring(target, initialVelocity) {
-  cancelSpring();
-
-  let currentVelocity = initialVelocity;
-  let settled = false;
-
-  function tick() {
-    if (!swipeContainer || settled) return;
-
-    const current = swipeContainer.scrollLeft;
-    const displacement = current - target;
-
-    // Spring force pulls toward target
-    const springForce = -SPRING_TENSION * displacement;
-
-    // Apply force + damping
-    currentVelocity = (currentVelocity + springForce) * SPRING_DAMPING;
-
-    // Apply velocity
-    const newScroll = current + currentVelocity;
-    swipeContainer.scrollLeft = newScroll;
-
-    // Update dots during animation
-    updateDotsLive();
-
-    // Check if settled (close enough + slow enough)
-    if (Math.abs(displacement) < 0.5 && Math.abs(currentVelocity) < 0.5) {
-      swipeContainer.scrollLeft = target;
-      settled = true;
-      springRAF = null;
-      onSnapSettled();
-      return;
-    }
-
-    springRAF = requestAnimationFrame(tick);
-  }
-
-  springRAF = requestAnimationFrame(tick);
-}
-
-function cancelSpring() {
-  if (springRAF) {
-    cancelAnimationFrame(springRAF);
-    springRAF = null;
-  }
-}
-
-/**
- * Called when the spring animation finishes. Full state sync.
- */
-function onSnapSettled() {
+function onScrollEnd() {
   if (!isSwipeActive || !swipeContainer) return;
+
+  clearTimeout(scrollEndTimer);
 
   const containerWidth = swipeContainer.offsetWidth;
   if (containerWidth === 0) return;
@@ -301,6 +121,7 @@ function onSnapSettled() {
       closestIndex = i;
     }
   });
+
   const newStep = getStepFromDOMIndex(closestIndex);
 
   if (newStep === state.currentStep) return;
@@ -468,16 +289,14 @@ function destroySwipe() {
   if (!swipeContainer) return;
 
   isSwipeActive = false;
-  cancelSpring();
+  clearTimeout(scrollEndTimer);
   swipeContainer.classList.remove('swipe-horizontal');
 
   const steps = swipeContainer.querySelectorAll('.step');
   steps.forEach(step => step.classList.remove('swipe-step'));
 
-  swipeContainer.removeEventListener('touchstart', onTouchStart);
-  swipeContainer.removeEventListener('touchmove', onTouchMove);
-  swipeContainer.removeEventListener('touchend', onTouchEnd);
-  swipeContainer.removeEventListener('touchcancel', onTouchEnd);
+  swipeContainer.removeEventListener('scroll', onScroll);
+  swipeContainer.removeEventListener('scrollend', onScrollEnd);
   lastDotStep = -1;
 }
 

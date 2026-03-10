@@ -4478,10 +4478,9 @@ input[inputmode="numeric"] {
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    /* scroll-snap disabled — custom JS spring animation handles snapping */
     -webkit-overflow-scrolling: touch;
-    /* Prevent browser momentum/inertia so our spring physics are in full control */
-    overscroll-behavior-x: none;
+    /* Native scroll-snap for GPU-accelerated snapping */
+    scroll-snap-type: x mandatory;
     /* Hide native scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -4525,7 +4524,8 @@ input[inputmode="numeric"] {
     width: calc(100vw - 56px);
     min-width: calc(100vw - 56px);
     max-width: calc(100vw - 56px);
-    /* snap alignment handled by JS spring animation */
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
