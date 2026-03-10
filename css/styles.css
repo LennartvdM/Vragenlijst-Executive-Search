@@ -5116,9 +5116,14 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   transition: background 0.2s ease;
 }
 
-.ch-reveal:hover,
 .ch-reveal.is-expanded {
   background: rgba(var(--sand-rgb), 0.35);
+}
+
+@media (hover: hover) and (min-width: 769px) {
+  .ch-reveal:hover {
+    background: rgba(var(--sand-rgb), 0.35);
+  }
 }
 
 .ch-reveal-label {
@@ -5136,15 +5141,24 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   opacity: 0.5;
 }
 
-.ch-reveal:hover .ch-reveal-label,
 .ch-reveal.is-expanded .ch-reveal-label {
   color: var(--text);
 }
 
-.ch-reveal:hover .ch-reveal-label::after,
 .ch-reveal.is-expanded .ch-reveal-label::after {
   content: ' \2193';
   opacity: 0.3;
+}
+
+@media (hover: hover) and (min-width: 769px) {
+  .ch-reveal:hover .ch-reveal-label {
+    color: var(--text);
+  }
+
+  .ch-reveal:hover .ch-reveal-label::after {
+    content: ' \2193';
+    opacity: 0.3;
+  }
 }
 
 /* Grid-based height transition for smooth expand */
@@ -5198,8 +5212,10 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   transition: background 0.15s;
 }
 
-.ch-scale-item:hover {
-  background: rgba(var(--sand-rgb), 0.5);
+@media (hover: hover) and (min-width: 769px) {
+  .ch-scale-item:hover {
+    background: rgba(var(--sand-rgb), 0.5);
+  }
 }
 
 .ch-scale-badge {
@@ -5262,9 +5278,14 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
   transition: color 0.15s;
 }
 
-.ch-scale-reveal:hover .ch-scale-label-quote,
 .ch-scale-reveal.is-expanded .ch-scale-label-quote {
   color: var(--text);
+}
+
+@media (hover: hover) and (min-width: 769px) {
+  .ch-scale-reveal:hover .ch-scale-label-quote {
+    color: var(--text);
+  }
 }
 
 .ch-scale-detail {
@@ -5366,6 +5387,12 @@ body:has(.ch-blur-layer.is-active) .ch-trigger:not(.is-hidden) {
     max-height: 60vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* Active tap feedback for reveal labels (replaces hover) */
+  .ch-reveal-label:active {
+    color: var(--text);
+    opacity: 0.7;
   }
 
   .ch-two-col {
