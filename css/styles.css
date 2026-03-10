@@ -3752,9 +3752,11 @@ input[inputmode="numeric"] {
     border-radius: 12px;
   }
 
-  .index-item .label {
+  .index-item .label,
+  .index-item.active .label,
+  .index-item.active:hover .label {
     font-size: 14px;
-    transform: none; /* Reset desktop transform */
+    transform: none; /* Reset desktop outcrop/scale transforms */
   }
 
   .index-item .status {
@@ -3769,7 +3771,8 @@ input[inputmode="numeric"] {
     background: rgba(255, 255, 255, 0.7);
   }
 
-  .index-item.active .status {
+  .index-item.active .status,
+  .index-item.active:hover .status {
     transform: none; /* No outcrop on mobile */
   }
 
