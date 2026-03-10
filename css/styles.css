@@ -4444,19 +4444,18 @@ input[inputmode="numeric"] {
     display: none;
   }
 
-  /* Show progress dots above cards in swipe mode.
-     Extra top padding (40px) absorbs the shift when the mobile browser's
-     URL bar collapses and the viewport expands upward. */
+  /* Show progress dots above cards in swipe mode. */
   .container:has(.swipe-horizontal) .progress-dots-top {
     display: flex !important;
-    padding: 40px 0 0;
+    padding: 12px 0 0;
+    margin-bottom: 0;
   }
 
   /* The scrollable wrapper stretches to fill available viewport.
-     Subtract 64px for the progress dots row above the cards (40px top padding + 24px dots). */
+     Subtract 74px bottom nav + 22px dots row (12px pad + 10px dots). */
   .content-scrollable-wrapper:has(.swipe-horizontal) {
     overflow: visible;
-    height: calc(100dvh - 74px - 64px - env(safe-area-inset-bottom, 0px));
+    height: calc(100dvh - 74px - 22px - env(safe-area-inset-bottom, 0px));
   }
 
   /* --- The scroll-snap container (full viewport width) --- */
@@ -4471,8 +4470,8 @@ input[inputmode="numeric"] {
     /* Hide native scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* Full height minus the fixed bottom nav and dots */
-    height: calc(100dvh - 74px - 64px - env(safe-area-inset-bottom, 0px));
+    /* Full height — same as wrapper */
+    height: calc(100dvh - 74px - 22px - env(safe-area-inset-bottom, 0px));
     max-height: none;
     padding: 0;
     margin: 0;
@@ -4489,11 +4488,10 @@ input[inputmode="numeric"] {
     flex-wrap: nowrap;
     min-width: fit-content;
     height: 100%;
-    /* Horizontal gap between cards, plus padding so first/last cards center perfectly.
-       Horizontal padding must equal (100vw - cardWidth) / 2 = (56px / 2) = 28px.
-       Vertical padding gives room for card box-shadow to render without clipping. */
+    /* Horizontal padding = (100vw - cardWidth) / 2 = (56px / 2) = 28px.
+       Vertical padding just enough for box-shadow to render. */
     gap: 12px;
-    padding: 24px 28px;
+    padding: 8px 28px;
     box-sizing: border-box;
   }
 
@@ -4520,7 +4518,9 @@ input[inputmode="numeric"] {
     /* Card styling */
     background: var(--cream);
     border-radius: var(--card-radius);
-    padding: var(--card-pad-top) var(--card-pad-x) var(--card-pad-bottom);
+    /* No vertical padding — the sticky ::before / ::after masks provide it.
+       This eliminates the negative-margin trick and makes top:0 / bottom:0 trivially correct. */
+    padding: 0 var(--card-pad-x);
     box-sizing: border-box;
     box-shadow:
       0 4px 24px rgba(var(--brown-rgb), 0.12),
@@ -4557,16 +4557,16 @@ input[inputmode="numeric"] {
   }
 
   /* Curved inner masks for swipe cards.
-     Each mask is a sticky flex child whose dimensions are derived from the card's
-     own --card-pad-* / --card-radius custom properties.  This guarantees the mask
-     is always flush: negative margin = padding pulls it to the padding-box edge,
-     height = padding fills the gap exactly, and top/bottom: 0 pins it to the
-     scrollport edge so it never drifts. */
+     The card has NO vertical padding.  Instead, ::before and ::after are the
+     first / last flex children, sized to the desired padding height.  They sit
+     right at the scrollport edge (no negative margins needed), so simple
+     top: 0 / bottom: 0 keeps them pinned while content scrolls under them. */
   .content-scrollable.swipe-horizontal .step.swipe-step::before,
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
     content: '';
     display: block;
     position: sticky;
+    /* Extend into horizontal padding so mask spans full inner card width */
     margin-left: calc(-1 * var(--card-pad-x));
     margin-right: calc(-1 * var(--card-pad-x));
     background: var(--cream);
@@ -4577,14 +4577,12 @@ input[inputmode="numeric"] {
 
   .content-scrollable.swipe-horizontal .step.swipe-step::before {
     height: var(--card-pad-top);
-    margin-top: calc(-1 * var(--card-pad-top));
     top: 0;
     border-radius: 0 0 var(--card-radius) var(--card-radius);
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step::after {
     height: var(--card-pad-bottom);
-    margin-bottom: calc(-1 * var(--card-pad-bottom));
     bottom: 0;
     border-radius: var(--card-radius) var(--card-radius) 0 0;
   }
@@ -4624,7 +4622,7 @@ input[inputmode="numeric"] {
      Horizontal padding = (100vw - cardWidth) / 2 = (36px / 2) = 18px */
   .content-scrollable.swipe-horizontal > form {
     gap: 8px;
-    padding: 20px 18px;
+    padding: 6px 18px;
   }
 
   .content-scrollable.swipe-horizontal .step.swipe-step {
