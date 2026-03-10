@@ -36,6 +36,13 @@ const popovers = {};
 /** True on devices with a fine pointer (mouse). Checked once at init time. */
 let hasHover = false;
 
+/** True when hover interaction mode should be used (desktop/tablet only).
+ *  On mobile viewports (≤768px), always use touch mode regardless of hasHover,
+ *  since some mobile browsers incorrectly report (hover: hover). */
+function useHoverMode() {
+  return hasHover && window.innerWidth > (window.CONFIG?.MOBILE_BREAKPOINT || 768);
+}
+
 // ============================================================================
 // HELP CONTENT
 // ============================================================================
@@ -191,9 +198,9 @@ function createSafezone() {
   safezoneEl.className = 'ch-safezone';
   document.body.appendChild(safezoneEl);
 
-  // Safe zone only matters for mouse hover
-  safezoneEl.addEventListener('mouseenter', cancelClose);
-  safezoneEl.addEventListener('mouseleave', startClose);
+  // Safe zone only matters for mouse hover (desktop/tablet)
+  safezoneEl.addEventListener('mouseenter', function() { if (useHoverMode()) cancelClose(); });
+  safezoneEl.addEventListener('mouseleave', function() { if (useHoverMode()) startClose(); });
 }
 
 function createBlurLayer() {
@@ -203,7 +210,7 @@ function createBlurLayer() {
 
   // On touch devices, tapping the backdrop closes the popover
   blurLayerEl.addEventListener('click', function(e) {
-    if (!hasHover && activePopoverId) {
+    if (!useHoverMode() && activePopoverId) {
       e.preventDefault();
       closeActivePopover();
     }
@@ -216,18 +223,18 @@ function createTriggerClone() {
   triggerCloneEl.className = 'ch-trigger-clone';
   document.body.appendChild(triggerCloneEl);
 
-  // Hover events — desktop only
+  // Hover events — desktop/tablet only
   triggerCloneEl.addEventListener('mouseenter', function() {
-    if (hasHover) cancelClose();
+    if (useHoverMode()) cancelClose();
   });
   triggerCloneEl.addEventListener('mouseleave', function() {
-    if (hasHover) startClose();
+    if (useHoverMode()) startClose();
   });
   triggerCloneEl.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    // Desktop: hover handles it. Touch: tap clone to close.
-    if (hasHover) return;
+    // Desktop/tablet: hover handles it. Mobile touch: tap clone to close.
+    if (useHoverMode()) return;
     if (activePopoverId) closeActivePopover();
   });
 }
@@ -296,18 +303,21 @@ function createPopoverElement(id, html) {
 
   document.body.appendChild(pop);
 
-  // Desktop: hover keeps popover alive
+  // Desktop/tablet: hover keeps popover alive
   pop.addEventListener('mouseenter', function() {
-    if (hasHover) cancelClose();
+    if (useHoverMode()) cancelClose();
   });
   pop.addEventListener('mouseleave', function() {
-    if (hasHover) startClose();
+    if (useHoverMode()) startClose();
   });
 
-  // Touch: flick down to dismiss
+  // Mobile touch: flick down to dismiss
   pop.addEventListener('touchstart', onPopoverTouchStart, { passive: true });
   pop.addEventListener('touchmove', onPopoverTouchMove, { passive: false });
   pop.addEventListener('touchend', onPopoverTouchEnd, { passive: true });
+
+  // Mobile touch: tap popover body (outside reveals) should not close
+  // This prevents accidental dismissal when scrolling popover content
 
   // Handle reveal sections inside popovers
   var reveals = pop.querySelectorAll('.ch-reveal');
@@ -330,9 +340,9 @@ function createPopoverElement(id, html) {
       }
     }
 
-    // Desktop: hover to expand/collapse
+    // Desktop/tablet: hover to expand/collapse
     reveal.addEventListener('mouseenter', function() {
-      if (!hasHover) return;
+      if (!useHoverMode()) return;
       cancelCollapse();
       reveals.forEach(function(sib) {
         if (sib !== reveal) {
@@ -347,7 +357,7 @@ function createPopoverElement(id, html) {
     });
 
     reveal.addEventListener('mouseleave', function(e) {
-      if (!hasHover) return;
+      if (!useHoverMode()) return;
       if (reveal === lastReveal) {
         var rect = reveal.getBoundingClientRect();
         if (e.clientY >= rect.bottom - 2) {
@@ -357,11 +367,11 @@ function createPopoverElement(id, html) {
       scheduleCollapse();
     });
 
-    // Touch: tap label to toggle
+    // Mobile touch: tap label to toggle
     var label = reveal.querySelector('.ch-reveal-label');
     if (label) {
       label.addEventListener('click', function(e) {
-        if (hasHover) return;
+        if (useHoverMode()) return;
         e.stopPropagation();
         var wasExpanded = reveal.classList.contains('is-expanded');
         // Collapse all siblings
@@ -392,20 +402,20 @@ function createTrigger(id, text) {
   trigger.dataset.help = id;
   trigger.textContent = text;
 
-  // Desktop: hover to open/close
+  // Desktop/tablet: hover to open/close
   trigger.addEventListener('mouseenter', function() {
-    if (hasHover) showPopover(id, trigger);
+    if (useHoverMode()) showPopover(id, trigger);
   });
   trigger.addEventListener('mouseleave', function() {
-    if (hasHover) startClose();
+    if (useHoverMode()) startClose();
   });
 
-  // Touch: tap to toggle
+  // Mobile touch: tap to toggle
   trigger.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    // On hover-capable devices, don't toggle on click — hover handles it.
-    if (hasHover) return;
+    // On hover-capable devices (non-mobile), don't toggle on click — hover handles it.
+    if (useHoverMode()) return;
     if (activePopoverId === id) {
       closeActivePopover();
     } else {
@@ -421,7 +431,7 @@ function createTrigger(id, text) {
 // ============================================================================
 
 function onPopoverTouchStart(e) {
-  if (hasHover) return;
+  if (useHoverMode()) return;
   var touch = e.touches[0];
   touchStartY = touch.clientY;
   touchStartX = touch.clientX;
@@ -430,7 +440,7 @@ function onPopoverTouchStart(e) {
 }
 
 function onPopoverTouchMove(e) {
-  if (hasHover) return;
+  if (useHoverMode()) return;
   var touch = e.touches[0];
   var dy = touch.clientY - touchStartY;
   var dx = touch.clientX - touchStartX;
@@ -458,7 +468,7 @@ function onPopoverTouchMove(e) {
 }
 
 function onPopoverTouchEnd(e) {
-  if (hasHover) return;
+  if (useHoverMode()) return;
   var pop = e.currentTarget;
 
   if (isTouchDragging && touchDeltaY > 40) {
@@ -535,8 +545,8 @@ function showPopover(id, trigger) {
   // Activate blur layer and show clone above it
   if (blurLayerEl) {
     blurLayerEl.classList.add('is-active');
-    // On touch devices, blur layer needs to intercept taps
-    if (!hasHover) {
+    // On touch/mobile devices, blur layer needs to intercept taps
+    if (!useHoverMode()) {
       blurLayerEl.style.pointerEvents = 'auto';
     }
   }
