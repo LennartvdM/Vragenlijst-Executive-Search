@@ -2,14 +2,16 @@
  * Privacy Panel - Overlay Popover Component
  *
  * A compact door that expands into a centered overlay with blur backdrop.
- * Mouse-driven interaction with safe zones and popover tooltips.
+ * Desktop: hover-driven interaction with safe zones and popover tooltips.
+ * Mobile: tap triggers to toggle popovers, flick down or tap backdrop to close.
  *
  * Features:
  * - Single blur layer switches z-index: behind kamer (page blur) or above kamer (card blur)
- * - Hover triggers open popovers with information
- * - Safe zones prevent accidental closing
+ * - Desktop hover / mobile tap triggers open popovers with information
+ * - Safe zones prevent accidental closing (desktop)
  * - Clone trigger for inline links stays visible
- * - Escape key or backdrop click closes overlay
+ * - Escape key or backdrop click/tap closes overlay
+ * - Flick-to-dismiss on mobile
  * - No external dependencies
  */
 
@@ -23,6 +25,16 @@
   }
 }(typeof self !== 'undefined' ? self : this, function() {
   'use strict';
+
+  /** True on devices with a fine pointer (mouse). Checked once at init time. */
+  var hasHover = window.matchMedia('(hover: hover)').matches;
+
+  /** True when hover interaction mode should be used (desktop/tablet only).
+   *  On mobile viewports (≤768px), always use touch mode regardless of hasHover,
+   *  since some mobile browsers incorrectly report (hover: hover). */
+  function useHoverMode() {
+    return hasHover && window.innerWidth > 768;
+  }
 
   function initPanel(panel) {
     if (!panel || panel.dataset.privacyPanelInitialized) {
@@ -59,9 +71,15 @@
       overlayContainer.appendChild(kamer);
     }
 
-    // Move popovers into overlay
+    // Move popovers into overlay and inject grab bars for mobile
     popovers.forEach(function(p) {
       overlayContainer.appendChild(p);
+      // Add a grab bar at the top as a swipe-down affordance (visible on touch only via CSS)
+      var grabBar = document.createElement('div');
+      grabBar.className = 'pp-grab-bar';
+      grabBar.setAttribute('aria-hidden', 'true');
+      grabBar.innerHTML = '<span></span>';
+      p.insertBefore(grabBar, p.firstChild);
     });
 
     // Move trigger clone and safezone into overlay
@@ -90,7 +108,14 @@
 
     // State
     var activePopover = null;
+    var activeTrigger = null;
     var isOpen = false;
+
+    // Touch-to-dismiss tracking
+    var touchStartY = 0;
+    var touchStartX = 0;
+    var touchDeltaY = 0;
+    var isTouchDragging = false;
 
     /**
      * Close all popovers and reset state
@@ -98,6 +123,10 @@
     function closeAllPopovers() {
       popovers.forEach(function(p) {
         p.classList.remove('is-open', 'arrow-left');
+        // Reset any touch-drag inline styles
+        p.style.transform = '';
+        p.style.opacity = '';
+        p.style.transition = '';
       });
       triggers.forEach(function(t) {
         t.classList.remove('is-active');
@@ -109,6 +138,7 @@
         });
       }
       activePopover = null;
+      activeTrigger = null;
     }
 
     /**
@@ -205,19 +235,29 @@
       pop.style.visibility = 'hidden';
       pop.style.display = 'block';
       var popHeight = pop.offsetHeight;
-      var popWidth = 360;
+      var popWidth = pop.offsetWidth;
       pop.style.display = '';
       pop.style.visibility = '';
 
       var left, top;
 
-      if (isInlineLink) {
-        // Position to the right of inline link, vertically centered
+      if (!useHoverMode()) {
+        // Mobile: center horizontally, position below trigger
+        left = Math.max(16, (window.innerWidth - popWidth) / 2);
+        top = rect.bottom + 12;
+        // If it would go off-screen bottom, position above
+        if (rect.bottom + popHeight > window.innerHeight - 16) {
+          top = rect.top - popHeight - 12;
+        }
+        if (top < 16) top = 16;
+        pop.classList.remove('arrow-left');
+      } else if (isInlineLink) {
+        // Desktop: position to the right of inline link, vertically centered
         left = rect.right + 16;
         top = rect.top + (rect.height / 2) - (popHeight / 2);
         pop.classList.add('arrow-left');
       } else {
-        // Position above trigger link, offset to the left
+        // Desktop: position above trigger link, offset to the left
         left = rect.left - 180;
         top = rect.top - popHeight - 12;
         pop.classList.remove('arrow-left');
@@ -277,6 +317,7 @@
       }
 
       trigger.classList.add('is-active');
+      activeTrigger = trigger;
       // Sync active state to matching clone trigger
       if (triggerAreaClone) {
         var cloneMatch = triggerAreaClone.querySelector('.pp-trigger-inline[data-pop="' + trigger.dataset.pop + '"]');
@@ -289,22 +330,25 @@
       blurLayer.classList.add('above-kamer');
 
       requestAnimationFrame(function() {
-        // Always show trigger-area clone above blur
-        showTriggerAreaClone();
-        // Only show localStorage clone for voortgang popover
-        if (trigger.dataset.pop === 'voortgang') {
-          showClone();
-        } else {
-          hideClone();
+        if (useHoverMode()) {
+          // Desktop: show clones above blur
+          showTriggerAreaClone();
+          if (trigger.dataset.pop === 'voortgang') {
+            showClone();
+          } else {
+            hideClone();
+          }
         }
         positionPopover(trigger, pop);
         pop.classList.add('is-open');
         activePopover = pop;
 
-        // Position safezone after popover is visible
-        requestAnimationFrame(function() {
-          positionSafezone(pop);
-        });
+        if (useHoverMode()) {
+          // Position safezone after popover is visible (desktop only)
+          requestAnimationFrame(function() {
+            positionSafezone(pop);
+          });
+        }
       });
     }
 
@@ -318,19 +362,115 @@
       isOpen = true;
     }
 
-    // Door press handler (mousedown, not click)
+    /**
+     * Close just the popover (not the overlay), used on mobile
+     */
+    function closePopover() {
+      closeAllPopovers();
+      if (kamer) {
+        kamer.classList.remove('has-popover');
+      }
+      blurLayer.classList.remove('above-kamer');
+      hideClone();
+      hideTriggerAreaClone();
+      if (popoverSafezone) {
+        popoverSafezone.classList.remove('is-visible');
+      }
+    }
+
+    // ── Touch: flick-to-dismiss on popovers ──
+
+    function onPopoverTouchStart(e) {
+      if (useHoverMode()) return;
+      var touch = e.touches[0];
+      touchStartY = touch.clientY;
+      touchStartX = touch.clientX;
+      touchDeltaY = 0;
+      isTouchDragging = false;
+    }
+
+    function onPopoverTouchMove(e) {
+      if (useHoverMode()) return;
+      var touch = e.touches[0];
+      var dy = touch.clientY - touchStartY;
+      var dx = touch.clientX - touchStartX;
+
+      if (!isTouchDragging) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) {
+          isTouchDragging = true;
+        } else {
+          return;
+        }
+      }
+
+      touchDeltaY = dy;
+
+      if (dy > 0) {
+        e.preventDefault();
+        var pop = e.currentTarget;
+        var visualDy = dy < 80 ? dy : 80 + (dy - 80) * 0.3;
+        pop.style.transform = 'translateY(' + visualDy + 'px)';
+        pop.style.opacity = Math.max(0.3, 1 - (dy / 250));
+      }
+    }
+
+    function onPopoverTouchEnd(e) {
+      if (useHoverMode()) return;
+      var pop = e.currentTarget;
+
+      if (isTouchDragging && touchDeltaY > 40) {
+        pop.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+        pop.style.transform = 'translateY(120px)';
+        pop.style.opacity = '0';
+        setTimeout(function() {
+          closePopover();
+          pop.style.transition = '';
+          pop.style.transform = '';
+          pop.style.opacity = '';
+        }, 200);
+      } else {
+        pop.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+        pop.style.transform = '';
+        pop.style.opacity = '';
+        setTimeout(function() {
+          pop.style.transition = '';
+        }, 250);
+      }
+
+      isTouchDragging = false;
+      touchDeltaY = 0;
+    }
+
+    // ── Door handler ──
     if (door) {
+      // Desktop: mousedown for immediate response
       door.addEventListener('mousedown', function() {
-        openOverlay();
+        if (useHoverMode()) openOverlay();
+      });
+      // Mobile: click/tap
+      door.addEventListener('click', function() {
+        if (!useHoverMode()) openOverlay();
       });
     }
 
-    // Backdrop press handler - close overlay (mousedown, not click)
+    // ── Backdrop handler ──
+    // Desktop: mousedown
     overlayBackdrop.addEventListener('mousedown', function() {
-      closeEverything();
+      if (useHoverMode()) closeEverything();
+    });
+    // Mobile: click/tap
+    overlayBackdrop.addEventListener('click', function() {
+      if (!useHoverMode()) closeEverything();
     });
 
-    // Safe zone handlers for popovers and related elements
+    // ── Blur layer handler (mobile: tap to close popover) ──
+    blurLayer.addEventListener('click', function() {
+      if (!useHoverMode() && activePopover) {
+        closePopover();
+      }
+    });
+
+    // ── Safe zone handlers (desktop hover only) ──
     var popoverSafeZones = [triggerClone, popoverSafezone].filter(Boolean);
     popovers.forEach(function(p) {
       popoverSafeZones.push(p);
@@ -339,17 +479,27 @@
     popoverSafeZones.forEach(function(zone) {
       if (!zone) return;
       zone.addEventListener('mouseenter', function() {
-        cancelPopoverCloseTimer();
+        if (useHoverMode()) cancelPopoverCloseTimer();
       });
-      zone.addEventListener('mouseleave', startPopoverCloseTimer);
+      zone.addEventListener('mouseleave', function() {
+        if (useHoverMode()) startPopoverCloseTimer();
+      });
     });
 
-    // Trigger area handlers
+    // ── Touch: flick-to-dismiss on each popover ──
+    popovers.forEach(function(p) {
+      p.addEventListener('touchstart', onPopoverTouchStart, { passive: true });
+      p.addEventListener('touchmove', onPopoverTouchMove, { passive: false });
+      p.addEventListener('touchend', onPopoverTouchEnd, { passive: true });
+    });
+
+    // ── Trigger area handlers (desktop hover only) ──
     if (triggerArea) {
       triggerArea.addEventListener('mouseenter', function() {
-        cancelPopoverCloseTimer();
+        if (useHoverMode()) cancelPopoverCloseTimer();
       });
       triggerArea.addEventListener('mouseleave', function(e) {
+        if (!useHoverMode()) return;
         var toElement = e.relatedTarget;
         if (toElement && (toElement.closest('.pp-popover') || toElement.closest('.pp-popover-safezone'))) {
           return;
@@ -358,40 +508,53 @@
       });
     }
 
-    // Trigger hover handlers
+    // ── Trigger handlers ──
     triggers.forEach(function(trigger) {
+      // Desktop: hover to open
       trigger.addEventListener('mouseenter', function() {
-        openPopover(trigger);
+        if (useHoverMode()) openPopover(trigger);
+      });
+
+      // Mobile: tap to toggle
+      trigger.addEventListener('click', function(e) {
+        if (useHoverMode()) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (activePopover && activeTrigger === trigger) {
+          closePopover();
+        } else {
+          openPopover(trigger);
+        }
       });
     });
 
-    // Clone hover handler (localStorage)
+    // ── Clone hover handler (localStorage, desktop only) ──
     if (triggerClone && inlineTrigger) {
       triggerClone.addEventListener('mouseenter', function() {
-        openPopover(inlineTrigger);
+        if (useHoverMode()) openPopover(inlineTrigger);
       });
     }
 
-    // Trigger-area clone hover handlers
+    // ── Trigger-area clone handlers ──
     if (triggerAreaClone) {
-      // Map clone triggers to original triggers by data-pop
       var cloneTriggers = triggerAreaClone.querySelectorAll('.pp-trigger-inline[data-pop]');
       cloneTriggers.forEach(function(cloneTrigger) {
         var popName = cloneTrigger.dataset.pop;
-        // Find the matching original trigger in trigger-area
         var originalTrigger = triggerArea.querySelector('.pp-trigger-inline[data-pop="' + popName + '"]');
         if (originalTrigger) {
+          // Desktop: hover
           cloneTrigger.addEventListener('mouseenter', function() {
-            openPopover(originalTrigger);
+            if (useHoverMode()) openPopover(originalTrigger);
           });
         }
       });
 
-      // Safe zone: keep popover open when hovering the clone
+      // Desktop: safe zone on clone
       triggerAreaClone.addEventListener('mouseenter', function() {
-        cancelPopoverCloseTimer();
+        if (useHoverMode()) cancelPopoverCloseTimer();
       });
       triggerAreaClone.addEventListener('mouseleave', function(e) {
+        if (!useHoverMode()) return;
         var toElement = e.relatedTarget;
         if (toElement && (toElement.closest('.pp-popover') || toElement.closest('.pp-popover-safezone'))) {
           return;

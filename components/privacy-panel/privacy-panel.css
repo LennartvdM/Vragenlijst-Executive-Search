@@ -439,3 +439,74 @@ body.pp-blur-active {
   font-weight: 600;
   color: var(--pp-teal);
 }
+
+/* ==========================================================================
+   Grab Bar - Swipe-down affordance (touch devices only)
+   ========================================================================== */
+.pp-grab-bar {
+  display: none;
+}
+
+@media (hover: none) {
+  .pp-grab-bar {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0 8px;
+    cursor: grab;
+  }
+
+  .pp-grab-bar span {
+    width: 32px;
+    height: 4px;
+    background: rgba(var(--pp-text-rgb), 0.15);
+    border-radius: 2px;
+  }
+
+  /* Blur layer intercepts taps on mobile to close popover */
+  .pp-blur-layer.is-active.above-kamer {
+    pointer-events: auto;
+  }
+
+  /* Tap feedback on triggers */
+  .pp-trigger-inline:active {
+    opacity: 0.7;
+  }
+}
+
+/* ==========================================================================
+   Mobile Styles
+   ========================================================================== */
+@media (max-width: 768px) {
+  .pp-overlay-container {
+    padding: 16px;
+  }
+
+  .pp-kamer {
+    padding: 24px 20px;
+    max-width: 100%;
+  }
+
+  .pp-popover {
+    width: calc(100vw - 32px);
+    max-width: 360px;
+    max-height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide arrow on mobile — popover is centered */
+  .pp-popover::after {
+    display: none;
+  }
+
+  .pp-door {
+    max-width: 100%;
+  }
+
+  /* No hover state on mobile */
+  .pp-door:hover {
+    box-shadow:
+      0 1px 8px rgba(var(--pp-brown-rgb), 0.05),
+      0 0 0 1px rgba(var(--pp-terracotta-rgb), 0.06);
+  }
+}
