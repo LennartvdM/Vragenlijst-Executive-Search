@@ -822,6 +822,10 @@
         <td class="ea-cell-code">${esc(r.code)}</td>
         <td>${renderStatus(r)}</td>
         <td class="ea-cell-actions">
+          <button class="ea-btn ea-btn-primary ea-btn-xs ea-btn-row-add ${isComplete ? 'ea-btn-row-added' : ''}" data-action="addRowRecipient" data-id="${r.id}" ${isComplete ? 'disabled' : ''}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3.333v9.334M3.333 8h9.334" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            ${isComplete ? 'Toegevoegd' : 'Toevoegen'}
+          </button>
           ${isComplete ? `<button class="ea-btn-icon" data-action="downloadRowEml" data-id="${r.id}" title="Download .eml voor Outlook">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.667 6.667 8 10l3.333-3.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>` : ''}
@@ -1036,6 +1040,45 @@
           emailEl.value = '';
           nameEl.value = '';
           emailEl.focus();
+        }
+        break;
+      }
+
+      case 'addRowRecipient': {
+        const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
+        if (id) {
+          const r = recipients.find(r => r.id === id);
+          if (!r) break;
+          // Read current inline input values from the DOM
+          const row = document.querySelector(`tr[data-id="${id}"]`);
+          if (row) {
+            const emailInput = row.querySelector('[data-field="email"]');
+            const nameInput = row.querySelector('[data-field="name"]');
+            if (emailInput) r.email = emailInput.value.trim();
+            if (nameInput) r.name = nameInput.value.trim();
+          }
+          if (!r.email) {
+            showToast('Vul een e-mailadres in', 'error');
+            break;
+          }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email)) {
+            showToast('Ongeldig e-mailadres', 'error');
+            break;
+          }
+          if (!r.name) {
+            showToast('Vul een naam in', 'error');
+            break;
+          }
+          // Check for duplicate email (exclude self)
+          if (recipients.some(other => other.id !== id && other.email && other.email.toLowerCase() === r.email.toLowerCase())) {
+            showToast('Dit e-mailadres is al toegevoegd', 'error');
+            break;
+          }
+          saveRecipients();
+          renderTable();
+          updateCounts();
+          updatePreview();
+          showToast(`${r.name} toegevoegd`, 'success');
         }
         break;
       }

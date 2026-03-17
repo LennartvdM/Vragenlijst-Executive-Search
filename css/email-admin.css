@@ -752,8 +752,37 @@ body {
 
 .ea-cell-actions {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   align-items: center;
+}
+
+/* Per-row Toevoegen button */
+.ea-btn-xs {
+  padding: 4px 10px;
+  font-size: 12px;
+  gap: 4px;
+}
+
+.ea-btn-row-add {
+  white-space: nowrap;
+}
+
+.ea-btn-row-add svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.ea-btn-row-added {
+  background: var(--success);
+  box-shadow: none;
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ea-btn-row-added:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Empty state */
