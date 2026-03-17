@@ -112,6 +112,31 @@
     saveSettings();
   }
 
+  function loadTemplatePreset(presetKey) {
+    const presets = window.EmailTemplate && window.EmailTemplate.TEMPLATE_PRESETS;
+    if (!presets || !presets[presetKey]) return;
+
+    const preset = presets[presetKey].defaults;
+    const textFields = [
+      'subject', 'heading', 'introText', 'codeLabel', 'ctaText', 'previewLinkText',
+      'praktischHeading', 'checklistItems', 'privacyText', 'contactText', 'closingText', 'footerText'
+    ];
+    for (const field of textFields) {
+      if (preset[field] !== undefined) {
+        settings[field] = preset[field];
+      }
+    }
+    saveSettings();
+    syncSettingsToUI();
+    updatePreview();
+
+    document.querySelectorAll('.ea-preset-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.preset === presetKey);
+    });
+
+    showToast(`Template "${presets[presetKey].label}" geladen`, 'success');
+  }
+
   // ---------------------------------------------------------------------------
   // Filtering
   // ---------------------------------------------------------------------------
@@ -609,6 +634,11 @@
       case 'toggleSection': {
         const sectionTarget = target.closest('[data-target]');
         if (sectionTarget) toggleSection(sectionTarget.dataset.target);
+        break;
+      }
+      case 'loadPreset': {
+        const presetKey = target.dataset.preset;
+        if (presetKey) loadTemplatePreset(presetKey);
         break;
       }
       case 'proceedConfirm':

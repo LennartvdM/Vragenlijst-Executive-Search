@@ -329,6 +329,48 @@ body {
   font-size: 12px;
 }
 
+/* Template preset selector */
+.ea-preset-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ea-preset-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.ea-preset-btn {
+  padding: 6px 16px;
+  border: 1.5px solid var(--sand-dark);
+  border-radius: 20px;
+  background: var(--cream);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.ea-preset-btn:hover {
+  border-color: var(--salmon);
+  color: var(--text);
+}
+
+.ea-preset-btn.active {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: #fff;
+}
+
+.em-preset-bar-standalone {
+  margin-bottom: 20px;
+}
+
 /* ==========================================================================
    Buttons
    ========================================================================== */
