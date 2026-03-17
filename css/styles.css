@@ -1027,6 +1027,25 @@ body {
   transition: transform 0.06s ease-out;
 }
 
+/* Extend hit areas to fill gaps between sidebar items (seamless hover/click) */
+.index-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 4px;
+}
+
+.index-divider-sub.index-divider-clickable::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -12px;
+  height: 12px;
+}
+
 /* Index dividers for grouping navigation items */
 .index-divider {
   font-size: 10px;
@@ -3783,6 +3802,12 @@ input[inputmode="numeric"] {
 
   .index-item:not(.active):not(.passing):hover .label {
     transform: none; /* No nudge on mobile */
+  }
+
+  /* Adjust hit area extension for mobile gap size */
+  .index-item::after {
+    bottom: -6px;
+    height: 6px;
   }
 
   .index-divider {
