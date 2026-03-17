@@ -931,6 +931,33 @@
     }
   }
 
+  function loadTemplatePreset(presetKey) {
+    const presets = window.EmailTemplate && window.EmailTemplate.TEMPLATE_PRESETS;
+    if (!presets || !presets[presetKey]) return;
+
+    const preset = presets[presetKey].defaults;
+    // Only overwrite text fields, preserve connection settings (URLs, deadline, contact, sender)
+    const textFields = [
+      'subject', 'heading', 'introText', 'codeLabel', 'ctaText', 'previewLinkText',
+      'praktischHeading', 'checklistItems', 'privacyText', 'contactText', 'closingText', 'footerText'
+    ];
+    for (const field of textFields) {
+      if (preset[field] !== undefined) {
+        settings[field] = preset[field];
+      }
+    }
+    saveSettings();
+    syncSettingsToUI();
+    updatePreview();
+
+    // Update active state on preset buttons
+    document.querySelectorAll('.ea-preset-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.preset === presetKey);
+    });
+
+    showToast(`Template "${presets[presetKey].label}" geladen`, 'success');
+  }
+
   // ---------------------------------------------------------------------------
   // Toast Notifications
   // ---------------------------------------------------------------------------
@@ -1097,6 +1124,12 @@
         const header = target.closest('.ea-card-header');
         if (body) body.classList.toggle('collapsed');
         if (header) header.classList.toggle('collapsed');
+        break;
+      }
+
+      case 'loadPreset': {
+        const presetKey = target.dataset.preset;
+        if (presetKey) loadTemplatePreset(presetKey);
         break;
       }
 

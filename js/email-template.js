@@ -47,6 +47,27 @@
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.'
   };
 
+  const RESET_DEFAULTS = {
+    subject: 'Uw vragenlijst is gereset \u2014 Monitoring Cultureel Talent naar de Top 2026',
+    senderName: 'Commissie Monitoring Talent naar de Top',
+    heading: 'Uw vragenlijst is gereset',
+    introText: 'Geachte {naam}, uw eerdere inzending voor de Monitoring Cultureel Talent naar de Top is gereset. U kunt de vragenlijst opnieuw invullen v\u00f3\u00f3r {deadline}.',
+    codeLabel: 'Uw toegangscode',
+    ctaText: 'Vragenlijst opnieuw invullen \u2192',
+    previewLinkText: 'Bekijk inkijkexemplaar \u2192',
+    praktischHeading: 'Praktisch',
+    checklistItems: 'Uw eerdere antwoorden zijn gewist, u begint met een schone lei\nDuurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nVoortgang gekoppeld aan uw apparaat, niet aan uw code',
+    privacyText: 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.',
+    contactText: 'Vragen? {contactPerson} via {contactEmail}',
+    closingText: 'Met vriendelijke groet,',
+    footerText: 'U ontvangt deze e-mail omdat de inzending van uw organisatie is gereset voor de Monitoring Cultureel Talent naar de Top 2026.'
+  };
+
+  const TEMPLATE_PRESETS = {
+    uitnodiging: { label: 'Uitnodiging', defaults: DEFAULTS },
+    reset: { label: 'Reset', defaults: RESET_DEFAULTS }
+  };
+
   // ---------------------------------------------------------------------------
   // Build HTML email
   // ---------------------------------------------------------------------------
@@ -492,7 +513,9 @@
     buildEmailHtml: buildEmailHtml,
     buildPlainText: buildPlainText,
     buildEml: buildEml,
-    DEFAULTS: DEFAULTS
+    DEFAULTS: DEFAULTS,
+    RESET_DEFAULTS: RESET_DEFAULTS,
+    TEMPLATE_PRESETS: TEMPLATE_PRESETS
   };
 
 })();
