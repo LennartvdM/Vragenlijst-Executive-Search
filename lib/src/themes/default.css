@@ -1,20 +1,20 @@
 /**
  * Default Theme — @vragenlijst/forms
  *
- * The default blue-indigo palette extracted from the original survey.
+ * The default blue/indigo palette extracted from the original survey.
  * This is applied by default via tokens.css. Include this file only
  * if you need to explicitly reset after applying another theme.
  */
 
 :root {
-  --vl-color-primary: #9d9df4;
-  --vl-color-primary-light: #cecef8;
-  --vl-color-primary-dark: #6262ed;
-  --vl-color-primary-rgb: 157, 157, 244;
+  --vl-color-primary: #8caef4;
+  --vl-color-primary-light: #c5d6f8;
+  --vl-color-primary-dark: #467ded;
+  --vl-color-primary-rgb: 140, 174, 244;
 
-  --vl-color-accent: #1f1162;
-  --vl-color-accent-dark: #0e072f;
-  --vl-color-accent-rgb: 31, 17, 98;
+  --vl-color-accent: #111162;
+  --vl-color-accent-dark: #07072f;
+  --vl-color-accent-rgb: 17, 17, 98;
 
   --vl-color-highlight: #d27b4b;
   --vl-color-highlight-dark: #c15f29;
@@ -24,12 +24,12 @@
   --vl-color-input: #ffffff;
   --vl-color-backdrop: linear-gradient(135deg, #f3ece2 0%, #f0e6d1 50%, #f8f5f2 100%);
 
-  --vl-color-sand: #e4e5f4;
-  --vl-color-sand-light: #f2f3f8;
-  --vl-color-sand-dark: #b3b5d2;
-  --vl-color-sand-rgb: 228, 229, 244;
+  --vl-color-sand: #e1e9f4;
+  --vl-color-sand-light: #f1f4f8;
+  --vl-color-sand-dark: #adbcd2;
+  --vl-color-sand-rgb: 225, 233, 244;
 
-  --vl-color-text: #201d30;
-  --vl-color-text-light: #423c5d;
-  --vl-color-text-muted: #7f7a96;
+  --vl-color-text: #1d1d30;
+  --vl-color-text-light: #3c3c5d;
+  --vl-color-text-muted: #7a7a96;
 }

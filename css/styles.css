@@ -14,20 +14,20 @@
   color-scheme: light only;
 
   /* Core palette */
-  --salmon: #9d9df4;
-  --salmon-light: #cecef8;
-  --salmon-dark: #6262ed;
-  --sand: #e4e5f4;
-  --sand-light: #f2f3f8;
-  --sand-dark: #b3b5d2;
-  --terracotta: #1f1162;
-  --terracotta-dark: #0e072f;
-  --brown: #0c091e;
+  --salmon: #8caef4;
+  --salmon-light: #c5d6f8;
+  --salmon-dark: #467ded;
+  --sand: #e1e9f4;
+  --sand-light: #f1f4f8;
+  --sand-dark: #adbcd2;
+  --terracotta: #111162;
+  --terracotta-dark: #07072f;
+  --brown: #08091e;
   --cream: #fafbfc;
   --input-fill: #ffffff;
-  --text: #201d30;
-  --text-light: #423c5d;
-  --text-muted: #7f7a96;
+  --text: #1d1d30;
+  --text-light: #3c3c5d;
+  --text-muted: #7a7a96;
   --teal: #d27b4b;
   --teal-dark: #c15f29;
 
@@ -59,21 +59,21 @@
   --danger-dark: #b91c1c;
   --danger-darker: #991b1b;
 
-  /* Status: Info (indigo) */
-  --info: #6366f1;
-  --info-light: #eef2ff;
-  --info-medium: #c7d2fe;
-  --info-dark: #4338ca;
+  /* Status: Info (blue) */
+  --info: #0ea5e9;
+  --info-light: #e0f2fe;
+  --info-medium: #bae6fd;
+  --info-dark: #0369a1;
 
   /* RGB components for rgba() opacity variants */
-  --brown-rgb: 12, 9, 30;
-  --terracotta-rgb: 31, 17, 98;
-  --salmon-rgb: 157, 157, 244;
-  --sand-rgb: 228, 229, 244;
+  --brown-rgb: 8, 9, 30;
+  --terracotta-rgb: 17, 17, 98;
+  --salmon-rgb: 140, 174, 244;
+  --sand-rgb: 225, 233, 244;
   --cream-rgb: 250, 251, 252;
-  --text-rgb: 32, 29, 48;
-  --muted-rgb: 148, 148, 180;
-  --text-muted-rgb: 127, 122, 150;
+  --text-rgb: 29, 29, 48;
+  --muted-rgb: 141, 154, 180;
+  --text-muted-rgb: 122, 122, 150;
   --void-1-rgb: 226, 236, 242;
   --void-2-rgb: 209, 226, 237;
   --warning-rgb: 245, 158, 11;
@@ -3509,7 +3509,7 @@ input[inputmode="numeric"] {
   display: none; /* Hidden by default, shown via JS for public sessions */
   text-align: center;
   padding: 6px 20px;
-  border: 2px solid rgba(31, 17, 98, 0.4);
+  border: 2px solid rgba(17, 17, 98, 0.4);
   border-radius: 4px;
   opacity: 0.7;
 }
@@ -3548,9 +3548,9 @@ input[inputmode="numeric"] {
   display: none; /* Hidden by default, shown via JS for public sessions */
   text-align: center;
   padding: 8px 12px;
-  border: 1.5px solid rgba(31, 17, 98, 0.3);
+  border: 1.5px solid rgba(17, 17, 98, 0.3);
   border-radius: 6px;
-  background: rgba(31, 17, 98, 0.04);
+  background: rgba(17, 17, 98, 0.04);
   margin-bottom: 10px;
 }
 
