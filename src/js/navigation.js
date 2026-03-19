@@ -4,7 +4,7 @@
  */
 
 import * as state from './state.js';
-import { saveScrollPosition, restoreScrollPosition, updateFadeGradients, getScrollableContainer } from './scroll.js';
+import { saveScrollPosition, restoreScrollPosition, updateFadeGradients, updateCustomScrollbar, getScrollableContainer } from './scroll.js';
 import { updateProgress, updateIndex, updateMobileHighlighter, updateIndexStatus } from './progress.js';
 import { getIncompleteItems, toggleConditional } from './validation.js';
 import { saveFormData } from './form.js';
@@ -63,6 +63,7 @@ export function showStep(step) {
             scrollableContainer.classList.remove('animating');
           }
           updateFadeGradients();
+          updateCustomScrollbar();
         }, 400);
       } else {
         stepEl.classList.add(window.CONSTANTS.CSS.ACTIVE);
@@ -72,8 +73,10 @@ export function showStep(step) {
           scrollableContainer.scrollTop = savedPosition;
           scrollableContainer.style.scrollBehavior = '';
           updateFadeGradients();
+          updateCustomScrollbar();
         } else {
           restoreScrollPosition(step);
+          updateCustomScrollbar();
         }
       }
 
