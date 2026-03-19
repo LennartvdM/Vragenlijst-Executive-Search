@@ -1,5 +1,6 @@
 /**
  * Survey questions and structure data
+ * Monitoring Executive Search Code 2025
  * The HTML is generated from this data, reducing 1300+ lines to ~300 lines
  */
 
@@ -9,329 +10,346 @@ export const SURVEY_STEPS = [
     title: 'Welkom',
     type: 'welcome',
     content: {
-      heading: 'Monitoring Cultureel Talent naar de Top 2026',
-      intro: 'Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw organisatiegegevens en beleid rondom culturele diversiteit.'
+      heading: 'Monitoring Executive Search Code 2025',
+      intro: 'Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw gegevens over executive search en diversiteit.'
     },
     fields: [
-      { type: 'text', name: 'organisatie', label: 'Naam organisatie (Charter)', required: true, placeholder: 'Voer de naam van uw organisatie in' }
+      { type: 'text', name: 'organisatie', label: 'Naam bureau', required: true, placeholder: 'Voer de naam van uw bureau in' }
     ]
   },
   {
     id: 1,
     title: 'Streefcijfer',
     sectionNum: '1',
-    subtitle: 'Heeft uw organisatie een streefcijfer voor culturele diversiteit?',
+    subtitle: 'Doelpercentage vrouwen op longlist en shortlist',
+    introText: 'De Executive Search Code adviseert om te streven naar een minimum percentage van 50% vrouwen op de longlist en shortlist. Naar welk percentage vrouwen streeft u bij het presenteren van een longlist en een shortlist?',
+    fields: [
+      { type: 'number', name: 'streef_minimum', label: 'Minimaal', placeholder: 'bijv. 50', suffix: '%', compact: true, maxLength: 3 },
+      { type: 'number', name: 'streef_gemiddeld', label: 'Gemiddeld over een jaar', placeholder: 'bijv. 50', suffix: '%', compact: true, maxLength: 3 }
+    ]
+  },
+  {
+    id: 2,
+    title: 'Plaatsingen',
+    sectionNum: '2',
+    subtitle: 'Geplaatste personen in het afgelopen jaar',
+    fields: [
+      { type: 'number', name: 'aantal_geplaatst', label: 'Hoeveel personen heeft u het afgelopen jaar geplaatst?', group: 'geplaatst' },
+      { type: 'number', name: 'geplaatst_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'geplaatst', indent: true },
+      { type: 'number', name: 'geplaatst_rvb', label: 'Hoeveel personen heeft u op <span class="label-highlight">Raad van Bestuur</span> niveau geplaatst?', group: 'plaatsing_rvb' },
+      { type: 'number', name: 'rvb_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'plaatsing_rvb', indent: true },
+      { type: 'number', name: 'geplaatst_rvc_rvt', label: 'Hoeveel personen heeft u op <span class="label-highlight">RvC/RvT</span> niveau geplaatst?', group: 'plaatsing_rvc_rvt' },
+      { type: 'number', name: 'rvc_rvt_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'plaatsing_rvc_rvt', indent: true }
+    ]
+  },
+  {
+    id: 3,
+    title: 'Longlist',
+    sectionNum: '3',
+    subtitle: 'Kandidaten op de longlist',
+    fields: [
+      { type: 'number', name: 'longlist_totaal', label: 'Hoeveel kandidaten heeft u in totaal op de longlist geplaatst?', group: 'longlist_totaal' },
+      { type: 'number', name: 'longlist_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'longlist_totaal', indent: true },
+      { type: 'number', name: 'longlist_rvb', label: 'Hoeveel kandidaten heeft u op de longlist voor <span class="label-highlight">RvB</span> functies geplaatst?', group: 'longlist_rvb' },
+      { type: 'number', name: 'longlist_rvb_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'longlist_rvb', indent: true },
+      { type: 'number', name: 'longlist_rvc_rvt', label: 'Hoeveel kandidaten heeft u op de longlist voor <span class="label-highlight">RvC/RvT</span> functies geplaatst?', group: 'longlist_rvc_rvt' },
+      { type: 'number', name: 'longlist_rvc_rvt_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'longlist_rvc_rvt', indent: true }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Shortlist',
+    sectionNum: '4',
+    subtitle: 'Kandidaten op de shortlist',
+    fields: [
+      { type: 'number', name: 'shortlist_totaal', label: 'Hoeveel kandidaten heeft u in totaal op de shortlist geplaatst?', group: 'shortlist_totaal' },
+      { type: 'number', name: 'shortlist_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'shortlist_totaal', indent: true },
+      { type: 'number', name: 'shortlist_rvb', label: 'Hoeveel kandidaten heeft u op de shortlist voor <span class="label-highlight">RvB</span> functies geplaatst?', group: 'shortlist_rvb' },
+      { type: 'number', name: 'shortlist_rvb_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'shortlist_rvb', indent: true },
+      { type: 'number', name: 'shortlist_rvc_rvt', label: 'Hoeveel kandidaten heeft u op de shortlist voor <span class="label-highlight">RvC/RvT</span> functies geplaatst?', group: 'shortlist_rvc_rvt' },
+      { type: 'number', name: 'shortlist_rvc_rvt_vrouw', label: 'Hoeveel daarvan zijn vrouw?', group: 'shortlist_rvc_rvt', indent: true }
+    ]
+  },
+  {
+    id: 5,
+    title: 'Verzoeken',
+    sectionNum: '5',
+    navDividerBefore: 'Kwalitatief',
+    subtitle: 'Verzoeken omtrent geslacht kandidaten',
     fields: [
       {
         type: 'radio-cards',
-        name: 'streefcijfer',
+        name: 'verzoek_vrouw',
+        label: 'Hoe vaak heeft u het verzoek gekregen om alleen vrouwelijke kandidaten aan te leveren?',
         options: [
-          { value: 'Ja', label: 'Ja', description: 'Wij hebben een streefcijfer' },
-          { value: 'Nee', label: 'Nee', description: 'Wij hebben geen streefcijfer' }
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Vaak', label: 'Vaak' },
+          { value: 'Soms', label: 'Soms' },
+          { value: 'Nooit', label: 'Nooit' }
+        ]
+      },
+      {
+        type: 'radio-cards',
+        name: 'verzoek_man',
+        label: 'Hoe vaak heeft u het verzoek gekregen om alleen mannelijke kandidaten aan te leveren?',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Vaak', label: 'Vaak' },
+          { value: 'Soms', label: 'Soms' },
+          { value: 'Nooit', label: 'Nooit' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: 'Redenen keuze',
+    sectionNum: '6',
+    subtitle: 'Redenen voor keuze kandidaten',
+    fields: [
+      {
+        type: 'group',
+        name: 'reden_niet_vrouw',
+        label: 'Wat zijn redenen dat men niet voor een vrouw kiest?',
+        fields: [
+          { type: 'text', name: 'reden_niet_vrouw_1', label: 'Reden 1' },
+          { type: 'text', name: 'reden_niet_vrouw_2', label: 'Reden 2' }
+        ]
+      },
+      {
+        type: 'group',
+        name: 'reden_wel_vrouw',
+        label: 'Wat zijn redenen dat men wél voor een vrouw kiest?',
+        fields: [
+          { type: 'text', name: 'reden_wel_vrouw_1', label: 'Reden 1' },
+          { type: 'text', name: 'reden_wel_vrouw_2', label: 'Reden 2' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: 'Aanbod & Sectoren',
+    sectionNum: '7',
+    subtitle: 'Beschikbaarheid vrouwelijke kandidaten en sectoren',
+    fields: [
+      {
+        type: 'radio-cards',
+        name: 'aanbod_vrouw',
+        label: 'Heeft u voldoende potentieel geschikte vrouwelijke kandidaten ter beschikking om voor te dragen?',
+        options: [
+          { value: 'Ruim voldoende', label: 'Ruim voldoende' },
+          { value: 'Voldoende', label: 'Voldoende' },
+          { value: 'Onvoldoende', label: 'Onvoldoende' },
+          { value: 'Geen', label: 'Geen' }
         ],
         conditional: {
-          trigger: 'Ja',
+          trigger: ['Onvoldoende', 'Geen'],
           fields: [
-            { type: 'number', name: 'streefcijfer_percentage', label: 'Streefcijfer', placeholder: 'bijv. 99%', compact: true, maxLength: 3 },
-            { type: 'number', name: 'streefcijfer_jaar', label: 'Te behalen in', placeholder: 'bijv. 1215', compact: true, maxLength: 4 },
             {
-              type: 'radio-cards',
-              name: 'streefcijfer_gehaald',
-              label: 'Is het streefcijfer gehaald?',
-              options: [
-                { value: 'Ja', label: 'Ja' },
-                { value: 'Nee', label: 'Nee' },
-                { value: 'Gedeeltelijk', label: 'Gedeeltelijk' }
+              type: 'group',
+              name: 'reden_onvoldoende',
+              label: 'Wat zijn redenen voor onvoldoende/geen aanbod?',
+              fields: [
+                { type: 'text', name: 'reden_onvoldoende_1', label: 'Reden 1' },
+                { type: 'text', name: 'reden_onvoldoende_2', label: 'Reden 2' }
               ]
             }
           ]
         }
       },
-      {
-        type: 'info-block',
-        content: 'Talent naar de Top gebruikt de definitie van het CBS (2022):\nIemand heeft een niet-Europese achtergrond als hij/zij in een niet-Europees land is geboren of als de ouders in een niet-Europees land zijn geboren.\n\n1. <strong>Europees:</strong> Europa (inclusief Nederland), Noord-Amerika en Oceanië\n2. <strong>Niet-Europees (Buiten-Europa):</strong> Afrika, Azië, Zuid- en Midden-Amerika (Turkije definiëren we als Buiten-Europa)'
-      },
-      {
-        type: 'radio-cards',
-        name: 'definitie_afwijking',
-        label: 'Wijkt uw definitie af van bovenstaande definitie?',
-        options: [
-          { value: 'Ja', label: 'Ja' },
-          { value: 'Nee', label: 'Nee' }
-        ],
-        conditional: {
-          trigger: 'Ja',
-          fields: [
-            { type: 'textarea', name: 'eigen_definitie', label: 'Beschrijf uw definitie' }
-          ]
-        }
-      }
+      { type: 'textarea', name: 'sector_voorloper', label: 'Welke sectoren zijn wat u betreft voorloper op m/v diversiteit?' },
+      { type: 'textarea', name: 'sector_achterblijver', label: 'Welke sectoren blijven op basis van uw ervaring achter op m/v diversiteit?' }
     ]
-  },
-  {
-    id: 2,
-    title: 'Kwantitatief',
-    sectionNum: '2',
-    subtitle: 'Kwantitatieve gegevens over uw organisatie (per 31 december 2026)',
-    fields: [
-      { type: 'number', name: 'aantal_werknemers', label: 'Totaal aantal <span class="label-highlight">werknemers</span>', group: 'werknemers' },
-      { type: 'number', name: 'werknemers_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'werknemers', indent: true },
-      { type: 'checkbox', name: 'werknemers_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'werknemers', indent: true },
-      { type: 'number', name: 'aantal_top', label: 'Aantal in de <span class="label-highlight">top</span>', group: 'top' },
-      { type: 'number', name: 'top_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'top', indent: true },
-      { type: 'checkbox', name: 'top_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'top', indent: true },
-      { type: 'number', name: 'aantal_subtop', label: 'Aantal in de <span class="label-highlight">subtop</span>', group: 'subtop' },
-      { type: 'number', name: 'subtop_buiten_europa', label: 'Waarvan herkomst <span class="label-highlight">Buiten-Europa</span>', hint: 'Mocht u niet over concrete gegevens beschikken, dan kunt u een schatting geven.', group: 'subtop', indent: true },
-      { type: 'checkbox', name: 'subtop_buiten_europa_schatting', label: 'Ik heb een schatting gegeven', group: 'subtop', indent: true }
-    ]
-  },
-  {
-    id: 3,
-    title: 'Bestuursorganen',
-    sectionNum: '2.1',
-    subtitle: 'Samenstelling bestuursorganen',
-    fields: [
-      {
-        type: 'radio-cards',
-        name: 'heeft_rvb',
-        label: 'Heeft uw organisatie een Raad van Bestuur?',
-        options: [{ value: 'Ja', label: 'Ja' }, { value: 'Nee', label: 'Nee' }],
-        conditional: {
-          trigger: 'Ja',
-          fields: [
-            { type: 'number', name: 'aantal_rvb', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
-            { type: 'number', name: 'rvb_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
-          ]
-        }
-      },
-      {
-        type: 'radio-cards',
-        name: 'heeft_rvc',
-        label: 'Heeft uw organisatie een Raad van Commissarissen?',
-        options: [{ value: 'Ja', label: 'Ja' }, { value: 'Nee', label: 'Nee' }],
-        conditional: {
-          trigger: 'Ja',
-          fields: [
-            { type: 'number', name: 'aantal_rvc', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
-            { type: 'number', name: 'rvc_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
-          ]
-        }
-      },
-      {
-        type: 'radio-cards',
-        name: 'heeft_rvt',
-        label: 'Heeft uw organisatie een Raad van Toezicht?',
-        options: [{ value: 'Ja', label: 'Ja' }, { value: 'Nee', label: 'Nee' }],
-        conditional: {
-          trigger: 'Ja',
-          fields: [
-            { type: 'number', name: 'aantal_rvt', label: 'Aantal leden', placeholder: 'bijv. 5', compact: true, maxLength: 2 },
-            { type: 'number', name: 'rvt_buiten_europa', label: 'Waarvan Buiten-Europa', placeholder: 'bijv. 1', compact: true, maxLength: 2 }
-          ]
-        }
-      },
-      {
-        type: 'radio',
-        name: 'beleid_samenstelling',
-        label: 'Beleid samenstelling',
-        options: [
-          { value: 'rvb_rvc_rvt', label: 'Onze organisatie heeft bewust beleid om het aandeel mensen met herkomst Buiten-Europa in de raad van bestuur en/of raad van commissarissen/rvt te vergroten' },
-          { value: 'hogere_management', label: 'Onze organisatie heeft bewust beleid om het aandeel mensen met herkomst Buiten-Europa in hogere managementposities te vergroten' },
-          { value: 'anders', label: 'Anders' }
-        ],
-        conditional: {
-          trigger: 'anders',
-          fields: [
-            { type: 'text', name: 'beleid_samenstelling_anders', label: 'Toelichting', placeholder: 'Beschrijf uw beleid' }
-          ]
-        }
-      }
-    ]
-  },
-  {
-    id: 4,
-    title: 'Kwalitatief (intro)',
-    type: 'intro',
-    sectionNum: '3',
-    content: {
-      text: 'De volgende secties bevatten stellingen over uw diversiteitsbeleid.'
-    }
-  },
-  {
-    id: 5,
-    title: 'Leiderschap',
-    sectionNum: '3.1',
-    subtitle: 'Leiderschap',
-    likert: {
-      id: 'likert-leiderschap',
-      prefix: 'leid',
-      questions: [
-        'De top heeft zich verbonden (is gecommitteerd) aan de doelstellingen en het beleid voor meer mensen met herkomst Buiten-Europa',
-        'De top draagt het belang van culturele diversiteit actief uit',
-        'De top stuurt aanwijsbaar op het bereiken van de gewenste resultaten',
-        'De top stelt voldoende middelen (financiën, personeel, technologie) ter beschikking om de doelstellingen te kunnen realiseren',
-        'De top neemt eindverantwoordelijkheid voor het culturele diversiteitsbeleid'
-      ]
-    },
-    toelichting: 'leiderschap_toelichting'
-  },
-  {
-    id: 6,
-    title: 'Strategie',
-    sectionNum: '3.2',
-    subtitle: 'Strategie en management',
-    likert: {
-      id: 'likert-strategie',
-      prefix: 'strat',
-      questions: [
-        'Culturele diversiteit is een business case voor onze organisatie, d.w.z. voor onze organisatie is het om zakelijke of bedrijfsmatige redenen waardevol om culturele diversiteit te stimuleren',
-        'De organisatie streeft expliciete doelstellingen voor het aandeel mensen met herkomst Buiten-Europa in de top na',
-        'Vastgelegd is hoe deze doelstellingen bereikt gaan worden en op welke termijn',
-        'Bedrijfsonderdelen (business units, afdelingen, teams) rapporteren over het realiseren van culturele diversiteitdoelstellingen (via de planning en controle cyclus)',
-        'Leidinggevenden worden beoordeeld op het realiseren van culturele diversiteits-doelstellingen i.h.k.v. de periodieke beoordeling',
-        'Wij evalueren met vastgestelde regelmaat (bijvoorbeeld elk kwartaal) de resultaten van ons culturele diversiteitsbeleid',
-        'De uitkomsten van evaluaties worden gebruikt om ons culturele diversiteitsbeleid te verbeteren',
-        'Wij vergelijken ons culturele diversiteitsbeleid met dat van andere organisaties'
-      ]
-    },
-    toelichting: 'strategie_toelichting'
-  },
-  {
-    id: 7,
-    title: 'HR Management',
-    sectionNum: '3.3',
-    subtitle: 'HR Management',
-    likert: {
-      id: 'likert-hr',
-      prefix: 'hr',
-      questions: [
-        'De organisatie zet bewust maatwerkinstrumenten en regelingen in om de doorstroom van mensen met herkomst Buiten-Europa naar de top en subtop te vergroten',
-        'Bij de werving van kandidaten voor top- en subtopfuncties wordt doelbewust gestreefd naar culturele diversiteit',
-        'Subjectiviteit en stereotypering worden tegengegaan door transparante en objectieve selectieprocedures',
-        'Onze arbeidsmarktcommunicatie reflecteert ons streven naar culturele diversiteit',
-        'Begeleiding van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door opleiding en management-development',
-        'Begeleiding van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door middel van coaching en mentoring',
-        'Effectiviteit van onze HR-maatregelen ten behoeve het realiseren van culturele diversiteit wordt gemeten om beleid te kunnen verbeteren',
-        'Het aandeel met herkomst Buiten-Europa naar functieniveau en naar afdeling (business unit, team) wordt gemeten (is bekend)',
-        'Bij de personeels-/successie-planning wordt doelbewust gestreefd naar het realiseren van culturele diversiteit',
-        'Ondersteuning van de carrièreontwikkeling van mensen met herkomst Buiten-Europa door netwerken',
-        'Ondersteuning van de carrière-ontwikkeling van mensen met herkomst Buiten-Europa door rolmodellen',
-        'Ons streven naar meer mensen met herkomst Buiten-Europa in de top is geïntegreerd in al onze HR-maatregelen',
-        'Door empowerment worden mensen met herkomst Buiten-Europa gestimuleerd tot carrièreontwikkeling vanuit eigen kracht',
-        'Ongewenste uitstroom van talentvolle mensen met herkomst Buiten-Europa wordt voorkomen'
-      ]
-    },
-    toelichting: 'hr_toelichting'
   },
   {
     id: 8,
-    title: 'Communicatie',
-    sectionNum: '3.4',
-    subtitle: 'Communicatie',
-    likert: {
-      id: 'likert-communicatie',
-      prefix: 'comm',
-      questions: [
-        'De organisatie communiceert intern bewust over haar streven om het aandeel mensen met herkomst Buiten-Europa in topfuncties te verhogen',
-        'De organisatie communiceert extern bewust over haar streven om het aandeel mensen met herkomst Buiten-Europa in topfuncties te verhogen',
-        'Alle medewerkers in de organisatie zijn op de hoogte van onze strategie en beleid voor culturele diversiteit',
-        'De organisatie staat extern bekend als cultureel diversiteitsgericht',
-        'Culturele diversiteit is in onze organisatie zichtbaar in woord en beeld'
-      ]
-    },
-    toelichting: 'communicatie_toelichting'
+    title: 'M/V Diversiteit',
+    sectionNum: '8',
+    subtitle: 'Proactieve aandacht voor m/v diversiteit',
+    fields: [
+      {
+        type: 'radio-cards',
+        name: 'aandacht_mv',
+        label: 'In hoeverre brengt u m/v diversiteit proactief onder de aandacht van uw opdrachtgevers?',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Meestal wel', label: 'Meestal wel' },
+          { value: 'Meestal niet', label: 'Meestal niet' },
+          { value: 'Nooit', label: 'Nooit' }
+        ],
+        conditional: {
+          trigger: ['Meestal niet', 'Nooit'],
+          fields: [
+            { type: 'textarea', name: 'reden_niet_aandacht', label: 'Wat is hiervan de reden?' }
+          ]
+        }
+      },
+      {
+        type: 'radio-cards',
+        name: 'ondersteuning_selectie',
+        label: 'In hoeverre biedt u gedurende het selectieproces ondersteuning aan kandidaten (vooral aan kandidaten die voor het eerst worden voorgedragen) om hen op interviews voor te bereiden en hen in het proces te begeleiden?',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Meestal wel', label: 'Meestal wel' },
+          { value: 'Meestal niet', label: 'Meestal niet' },
+          { value: 'Nooit', label: 'Nooit' }
+        ],
+        conditional: {
+          trigger: ['Meestal niet', 'Nooit'],
+          fields: [
+            { type: 'textarea', name: 'reden_niet_ondersteuning', label: 'Wat is hiervan de reden?' }
+          ]
+        }
+      }
+    ]
   },
   {
     id: 9,
-    title: 'Kennis',
-    sectionNum: '3.5',
-    subtitle: 'Kennis en vaardigheden',
-    likert: {
-      id: 'likert-kennis',
-      prefix: 'kennis',
-      questions: [
-        'De organisatie beschikt over inzicht in de maatregelen die culturele diversiteit bevorderen',
-        'De organisatie beschikt over inzicht in de mechanismen die culturele diversiteit belemmeren',
-        'Leidinggevenden zijn zich bewust van de meerwaarde van culturele diversiteit',
-        'Leidinggevenden zijn zich bewust van de mechanismen (zoals stereotypen) die doorstroom van mensen met herkomst Buiten-Europa naar de top belemmeren',
-        'Leidinggevenden zetten maatregelen in die de doorstroom van mensen met herkomst Buiten-Europa naar de top bevorderen',
-        'Wij maken voortdurend gebruik van alle beschikbare kennis en ervaring voor het verbeteren van culturele diversiteit',
-        'Het periodieke medewerkers-tevredenheidsonderzoek wordt gebruikt om te sturen op culturele diversiteit',
-        'De organisatie weet waarom talentvolle medewerkers met herkomst Buiten-Europa de organisatie verlaten en gebruikt deze kennis om medewerkers te behouden'
-      ]
-    },
-    toelichting: 'kennis_toelichting'
+    title: 'Belemmeringen',
+    sectionNum: '9',
+    subtitle: 'Belemmeringen en ondersteuning bij vrouwen in topfuncties',
+    fields: [
+      {
+        type: 'group',
+        name: 'belemmering_vrouw',
+        label: 'Welke belemmeringen signaleert u bij vrouwen die u wilt plaatsen om te kiezen voor een topfunctie?',
+        fields: [
+          { type: 'text', name: 'belemmering_vrouw_1', label: 'Belemmering 1' },
+          { type: 'text', name: 'belemmering_vrouw_2', label: 'Belemmering 2' },
+          { type: 'text', name: 'belemmering_vrouw_3', label: 'Belemmering 3' }
+        ]
+      },
+      {
+        type: 'group',
+        name: 'ondersteuning_vrouw',
+        label: 'Hoe ondersteunt u hen daarbij?',
+        fields: [
+          { type: 'text', name: 'ondersteuning_vrouw_1', label: 'Ondersteuning 1' },
+          { type: 'text', name: 'ondersteuning_vrouw_2', label: 'Ondersteuning 2' },
+          { type: 'text', name: 'ondersteuning_vrouw_3', label: 'Ondersteuning 3' }
+        ]
+      }
+    ]
   },
   {
     id: 10,
-    title: 'Klimaat',
-    sectionNum: '3.6',
-    subtitle: 'Organisatieklimaat',
-    likert: {
-      id: 'likert-klimaat',
-      prefix: 'klimaat',
-      questions: [
-        'Stereotypen, vooroordelen en discriminatie worden in deze organisatie actief bestreden',
-        'De inzet van specifieke maatregelen om te investeren in mensen met herkomst Buiten-Europa teneinde culturele diversiteit in de top te vergroten, is zonder meer geaccepteerd in de organisatie',
-        'Culturele verschillen tussen medewerkers worden in de gehele organisatie - op alle niveaus en in de organisatie breed - erkend en gewaardeerd',
-        'De aandacht voor culturele diversiteit leeft binnen de organisatie - op alle niveaus en in de organisatie breed',
-        'Leidinggevenden voelen zich verantwoordelijk voor het realiseren van culturele diversiteit',
-        'De organisatie wordt door medewerkers gezien als culturele diversiteit minded'
-      ]
-    },
-    toelichting: 'klimaat_toelichting'
+    title: 'Kweekvijver',
+    sectionNum: '10',
+    subtitle: 'Investering in kweekvijver en kwaliteitswaarborging',
+    fields: [
+      {
+        type: 'radio-cards',
+        name: 'investering_kweekvijver',
+        label: 'In hoeverre investeert u tijd in het opbouwen van relaties met \'kweekvijver kandidaten\' (vrouwelijke kandidaten met executive potentieel)?',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Meestal wel', label: 'Meestal wel' },
+          { value: 'Meestal niet', label: 'Meestal niet' },
+          { value: 'Nooit', label: 'Nooit' }
+        ],
+        conditional: {
+          trigger: ['Meestal niet', 'Nooit'],
+          fields: [
+            { type: 'textarea', name: 'reden_niet_kweekvijver', label: 'Wat is hiervan de reden?' }
+          ]
+        }
+      },
+      {
+        type: 'radio-cards',
+        name: 'waarborg_kwaliteiten',
+        label: 'In hoeverre waarborgt u dat kwaliteiten van mannen en vrouwen gelijkwaardig gewaardeerd worden door opdrachtgevers? (Zo noemt de Code bijvoorbeeld het voldoende gewicht toekennen aan uiteenlopende professionele en (intrinsieke) persoonlijke kwaliteiten en het waken voor het overwaarderen van specifieke (masculiene) kwaliteiten en ervaring?)',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Meestal wel', label: 'Meestal wel' },
+          { value: 'Meestal niet', label: 'Meestal niet' },
+          { value: 'Nooit', label: 'Nooit' }
+        ]
+      },
+      { type: 'textarea', name: 'best_practices_vrouwen', label: 'Welke best practices past uw bureau toe om plaatsing van vrouwen bij opdrachtgevers te bevorderen?' }
+    ]
   },
   {
     id: 11,
-    title: 'Motivatie',
-    sectionNum: '4',
-    subtitle: 'Motivatie en blokkades',
+    title: 'Culturele Diversiteit',
+    sectionNum: '11',
+    navDividerBefore: 'Culturele Diversiteit',
+    subtitle: 'Culturele diversiteit',
+    introText: '<em>Biculturele achtergrond: mensen met een andere culturele achtergrond dan alleen de Nederlandse.</em>',
     fields: [
-      { type: 'textarea', name: 'motivatie', label: 'Wat is uw belangrijkste motivatie voor diversiteitsbeleid?' },
-      { type: 'textarea', name: 'blokkade_1', label: 'Wat is de grootste blokkade die u ervaart?' },
-      { type: 'textarea', name: 'bevorderend_1', label: 'Wat werkt het meest bevorderend?' }
+      {
+        type: 'radio-cards',
+        name: 'aandacht_cultureel',
+        label: 'In hoeverre brengt u culturele diversiteit proactief onder de aandacht bij uw opdrachtgevers?',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Meestal wel', label: 'Meestal wel' },
+          { value: 'Meestal niet', label: 'Meestal niet' },
+          { value: 'Nooit', label: 'Nooit' }
+        ]
+      },
+      {
+        type: 'radio-cards',
+        name: 'verzoek_bicultureel',
+        label: 'In hoeverre wordt door uw opdrachtgevers gevraagd om kandidaten met een biculturele achtergrond?',
+        options: [
+          { value: 'Altijd', label: 'Altijd' },
+          { value: 'Meestal wel', label: 'Meestal wel' },
+          { value: 'Meestal niet', label: 'Meestal niet' },
+          { value: 'Nooit', label: 'Nooit' }
+        ]
+      },
+      {
+        type: 'radio-cards',
+        name: 'aanbod_bicultureel',
+        label: 'Heeft u voldoende potentieel geschikte kandidaten met een biculturele achtergrond ter beschikking om voor te dragen?',
+        options: [
+          { value: 'Ruim voldoende', label: 'Ruim voldoende' },
+          { value: 'Voldoende', label: 'Voldoende' },
+          { value: 'Onvoldoende', label: 'Onvoldoende' },
+          { value: 'Geen', label: 'Geen' }
+        ]
+      },
+      {
+        type: 'group',
+        name: 'belemmering_bicultureel',
+        label: 'Welke belemmeringen signaleert u bij het plaatsen van kandidaten met een biculturele achtergrond?',
+        fields: [
+          { type: 'text', name: 'belemmering_bicultureel_1', label: 'Belemmering 1' },
+          { type: 'text', name: 'belemmering_bicultureel_2', label: 'Belemmering 2' },
+          { type: 'text', name: 'belemmering_bicultureel_3', label: 'Belemmering 3' }
+        ]
+      },
+      { type: 'textarea', name: 'best_practices_bicultureel', label: 'Welke best practices past uw bureau toe om plaatsing van kandidaten met een biculturele achtergrond bij opdrachtgevers te bevorderen?' }
     ]
   },
   {
     id: 12,
     title: 'Aanvullend',
-    sectionNum: '5',
-    subtitle: 'Aanvullende informatie',
+    sectionNum: '12',
+    navDividerBefore: 'Afsluiting',
+    subtitle: 'Aanvullende vragen',
     fields: [
-      {
-        type: 'group',
-        name: 'vraag_5a',
-        label: 'Heeft u vragen naar aanleiding van uw strategie en beleid ten behoeve van de toename van het aandeel mensen met herkomst Buiten-Europa in de top, of culturele diversiteit in het algemeen?',
-        fields: [
-          { type: 'text', name: 'vraag_5a_1', label: 'Vraag 1' },
-          { type: 'text', name: 'vraag_5a_2', label: 'Vraag 2' },
-          { type: 'text', name: 'vraag_5a_3', label: 'Vraag 3' }
-        ]
-      },
-      { type: 'textarea', name: 'voorbeeld_organisatie', label: 'Deel een voorbeeld of best practice' }
+      { type: 'textarea', name: 'nieuwe_themas', label: 'Welke (nieuwe) thema\'s of uitdagingen zijn er op dit moment in uw vakgebied van belang?' },
+      { type: 'textarea', name: 'opmerkingen_vragen', label: 'Heeft u nog opmerkingen of vragen?' }
     ]
   },
   {
     id: 13,
     title: 'Ondertekenen',
-    sectionNum: '6',
+    sectionNum: '13',
     subtitle: 'Ondertekening',
-    introText: 'Wij verzoeken de CEO/directeur als ondertekenaar van het Charter Talent naar de Top de monitorgegevens 2026 te ondertekenen.',
+    introText: 'Wij verzoeken u de monitorgegevens 2025 te ondertekenen.',
     fields: [
       { type: 'date', name: 'datum', label: 'Datum' },
-      { type: 'text', name: 'ondertekenaar', label: 'Naam CEO/directeur' },
+      { type: 'text', name: 'ondertekenaar', label: 'Naam ondertekenaar' },
       { type: 'checkbox', name: 'bevestiging', label: 'Ik bevestig dat de gegevens naar waarheid zijn ingevuld' }
     ]
   }
 ];
 
-// Likert scale options (shared across all tables)
-export const LIKERT_OPTIONS = [
-  { value: 0, label: 'Niet' },
-  { value: 1, label: 'Enigszins' },
-  { value: 2, label: 'Grotendeels' },
-  { value: 3, label: 'Volledig' }
-];
+// Likert scale options (kept for build script compatibility, not used in this survey)
+export const LIKERT_OPTIONS = [];
 
 // Navigation index items
 export const NAV_ITEMS = SURVEY_STEPS.map(step => ({

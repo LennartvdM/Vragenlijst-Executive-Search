@@ -1,5 +1,5 @@
 /**
- * Constants for Monitoring Cultureel Talent naar de Top
+ * Constants for Monitoring Executive Search Code 2025
  * Centralized magic strings and values to improve maintainability
  */
 
@@ -20,45 +20,39 @@ const CONSTANTS = {
   // Field names that trigger conditional sections
   // IDs match pattern: conditional-{fieldName} from build-survey-html.js
   CONDITIONAL_FIELDS: {
-    streefcijfer: 'conditional-streefcijfer',
-    definitie_afwijking: 'conditional-definitie_afwijking',
-    heeft_rvb: 'conditional-heeft_rvb',
-    heeft_rvc: 'conditional-heeft_rvc',
-    heeft_rvt: 'conditional-heeft_rvt',
-    beleid_samenstelling: 'conditional-beleid_samenstelling'
+    aanbod_vrouw: 'conditional-aanbod_vrouw',
+    aandacht_mv: 'conditional-aandacht_mv',
+    ondersteuning_selectie: 'conditional-ondersteuning_selectie',
+    investering_kweekvijver: 'conditional-investering_kweekvijver'
   },
 
-  // Answer values that trigger conditional sections (non-"Ja" triggers)
+  // Answer values that trigger conditional sections
+  // Supports single string or array of strings for multi-value triggers
   CONDITIONAL_VALUES: {
-    beleid_samenstelling: 'anders'
+    aanbod_vrouw: ['Onvoldoende', 'Geen'],
+    aandacht_mv: ['Meestal niet', 'Nooit'],
+    ondersteuning_selectie: ['Meestal niet', 'Nooit'],
+    investering_kweekvijver: ['Meestal niet', 'Nooit']
   },
 
   // Required fields when conditional is triggered (for completion tracking)
-  // Maps: parent field -> { triggerValue, requiredFields[] }
+  // Maps: parent field -> { triggerValue (string or array), requiredFields[] }
   CONDITIONAL_REQUIREMENTS: {
-    streefcijfer: {
-      triggerValue: 'Ja',
-      requiredFields: ['streefcijfer_percentage', 'streefcijfer_jaar']
+    aanbod_vrouw: {
+      triggerValue: ['Onvoldoende', 'Geen'],
+      requiredFields: ['reden_onvoldoende_1', 'reden_onvoldoende_2']
     },
-    definitie_afwijking: {
-      triggerValue: 'Ja',
-      requiredFields: ['eigen_definitie']
+    aandacht_mv: {
+      triggerValue: ['Meestal niet', 'Nooit'],
+      requiredFields: ['reden_niet_aandacht']
     },
-    heeft_rvb: {
-      triggerValue: 'Ja',
-      requiredFields: ['aantal_rvb', 'rvb_buiten_europa']
+    ondersteuning_selectie: {
+      triggerValue: ['Meestal niet', 'Nooit'],
+      requiredFields: ['reden_niet_ondersteuning']
     },
-    heeft_rvc: {
-      triggerValue: 'Ja',
-      requiredFields: ['aantal_rvc', 'rvc_buiten_europa']
-    },
-    heeft_rvt: {
-      triggerValue: 'Ja',
-      requiredFields: ['aantal_rvt', 'rvt_buiten_europa']
-    },
-    beleid_samenstelling: {
-      triggerValue: 'anders',
-      requiredFields: ['beleid_samenstelling_anders']
+    investering_kweekvijver: {
+      triggerValue: ['Meestal niet', 'Nooit'],
+      requiredFields: ['reden_niet_kweekvijver']
     }
   },
 
@@ -67,9 +61,9 @@ const CONSTANTS = {
     BUTTON_NEXT: 'Volgende',
     BUTTON_SUBMIT: 'Verzenden',
     BUTTON_SUBMITTING: 'Verzenden...',
-    STATUS_COMPLETE: '✓',
-    STATUS_PARTIAL: '−',
-    STATUS_EMPTY: '○'
+    STATUS_COMPLETE: '\u2713',
+    STATUS_PARTIAL: '\u2212',
+    STATUS_EMPTY: '\u25CB'
   },
 
   // Error messages (Dutch)

@@ -2259,6 +2259,28 @@ input[inputmode="numeric"] {
   margin-bottom: 12px;
 }
 
+/* Field group with shared label (e.g., "Wat zijn redenen..." with sub-fields) */
+.field-group-labeled {
+  margin-bottom: 24px;
+}
+
+.field-group-labeled .group-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.field-group-labeled .field {
+  margin-bottom: 12px;
+}
+
+.field-group-labeled .field:last-child {
+  margin-bottom: 0;
+}
+
 /* Completed section header gets extra visual polish */
 .section-header.complete {
   box-shadow: 0 2px 8px rgba(var(--terracotta-rgb), 0.1);

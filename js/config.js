@@ -1,5 +1,5 @@
 /**
- * Configuration for Monitoring Cultureel Talent naar de Top 2026
+ * Configuration for Monitoring Executive Search Code 2025
  *
  * SETUP INSTRUCTIONS:
  * 1. Deploy the Google Apps Script (see docs/google-apps-script.js)
@@ -25,13 +25,13 @@ const CONFIG = {
 
   /**
    * localStorage keys for session and form data persistence
-   * Prefixed with 'cttt_' to avoid collisions with other apps
+   * Prefixed with 'esc_' to avoid collisions with other apps
    */
   STORAGE_KEYS: {
-    SESSION: 'cttt_session',
-    FORM_DATA: 'cttt_form_data',
-    SUBMITTED_FORMS: 'cttt_submitted_forms',
-    SCROLL_POSITIONS: 'cttt_scroll_positions'
+    SESSION: 'esc_session',
+    FORM_DATA: 'esc_form_data',
+    SUBMITTED_FORMS: 'esc_submitted_forms',
+    SCROLL_POSITIONS: 'esc_scroll_positions'
   },
 
   /**
@@ -71,18 +71,18 @@ const CONFIG = {
    */
   STEP_FIELDS: {
     0: ['organisatie'],
-    1: ['streefcijfer', 'streefcijfer_gehaald', 'definitie_afwijking'],
-    2: ['aantal_werknemers', 'werknemers_buiten_europa', 'aantal_top', 'top_buiten_europa', 'aantal_subtop', 'subtop_buiten_europa'],
-    3: ['heeft_rvb', 'heeft_rvc', 'heeft_rvt', 'beleid_samenstelling'],
-    4: [], // Kwalitatieve gegevens intro - no fields, informational only
-    5: ['leid_1', 'leid_2', 'leid_3', 'leid_4', 'leid_5'],
-    6: ['strat_1', 'strat_2', 'strat_3', 'strat_4', 'strat_5', 'strat_6', 'strat_7', 'strat_8'],
-    7: ['hr_1', 'hr_2', 'hr_3', 'hr_4', 'hr_5', 'hr_6', 'hr_7', 'hr_8', 'hr_9', 'hr_10', 'hr_11', 'hr_12', 'hr_13', 'hr_14'],
-    8: ['comm_1', 'comm_2', 'comm_3', 'comm_4', 'comm_5'],
-    9: ['kennis_1', 'kennis_2', 'kennis_3', 'kennis_4', 'kennis_5', 'kennis_6', 'kennis_7', 'kennis_8'],
-    10: ['klimaat_1', 'klimaat_2', 'klimaat_3', 'klimaat_4', 'klimaat_5', 'klimaat_6'],
-    11: ['motivatie'],
-    12: ['vraag_5a_1', 'vraag_5a_2', 'vraag_5a_3', 'blokkade_1', 'bevorderend_1', 'voorbeeld_organisatie'],
+    1: ['streef_minimum', 'streef_gemiddeld'],
+    2: ['aantal_geplaatst', 'geplaatst_vrouw', 'geplaatst_rvb', 'rvb_vrouw', 'geplaatst_rvc_rvt', 'rvc_rvt_vrouw'],
+    3: ['longlist_totaal', 'longlist_vrouw', 'longlist_rvb', 'longlist_rvb_vrouw', 'longlist_rvc_rvt', 'longlist_rvc_rvt_vrouw'],
+    4: ['shortlist_totaal', 'shortlist_vrouw', 'shortlist_rvb', 'shortlist_rvb_vrouw', 'shortlist_rvc_rvt', 'shortlist_rvc_rvt_vrouw'],
+    5: ['verzoek_vrouw', 'verzoek_man'],
+    6: ['reden_niet_vrouw_1', 'reden_niet_vrouw_2', 'reden_wel_vrouw_1', 'reden_wel_vrouw_2'],
+    7: ['aanbod_vrouw', 'sector_voorloper', 'sector_achterblijver'],
+    8: ['aandacht_mv', 'ondersteuning_selectie'],
+    9: ['belemmering_vrouw_1', 'belemmering_vrouw_2', 'belemmering_vrouw_3', 'ondersteuning_vrouw_1', 'ondersteuning_vrouw_2', 'ondersteuning_vrouw_3'],
+    10: ['investering_kweekvijver', 'waarborg_kwaliteiten', 'best_practices_vrouwen'],
+    11: ['aandacht_cultureel', 'verzoek_bicultureel', 'aanbod_bicultureel', 'belemmering_bicultureel_1', 'belemmering_bicultureel_2', 'belemmering_bicultureel_3', 'best_practices_bicultureel'],
+    12: ['nieuwe_themas', 'opmerkingen_vragen'],
     13: ['datum', 'ondertekenaar', 'bevestiging']
   },
 
@@ -91,13 +91,15 @@ const CONFIG = {
    * Used to show completion status for grouped fields
    */
   SECTION_FIELDS: {
-    werknemers: ['aantal_werknemers', 'werknemers_buiten_europa'],
-    top: ['aantal_top', 'top_buiten_europa'],
-    subtop: ['aantal_subtop', 'subtop_buiten_europa'],
-    rvb: ['heeft_rvb'],
-    rvc: ['heeft_rvc'],
-    rvt: ['heeft_rvt'],
-    beleid: ['beleid_samenstelling']
+    geplaatst: ['aantal_geplaatst', 'geplaatst_vrouw'],
+    plaatsing_rvb: ['geplaatst_rvb', 'rvb_vrouw'],
+    plaatsing_rvc_rvt: ['geplaatst_rvc_rvt', 'rvc_rvt_vrouw'],
+    longlist_totaal: ['longlist_totaal', 'longlist_vrouw'],
+    longlist_rvb: ['longlist_rvb', 'longlist_rvb_vrouw'],
+    longlist_rvc_rvt: ['longlist_rvc_rvt', 'longlist_rvc_rvt_vrouw'],
+    shortlist_totaal: ['shortlist_totaal', 'shortlist_vrouw'],
+    shortlist_rvb: ['shortlist_rvb', 'shortlist_rvb_vrouw'],
+    shortlist_rvc_rvt: ['shortlist_rvc_rvt', 'shortlist_rvc_rvt_vrouw']
   },
 
   /**

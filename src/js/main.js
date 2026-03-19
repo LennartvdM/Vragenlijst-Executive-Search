@@ -258,7 +258,8 @@ function handleOptionCardClick(card) {
     const triggerValue = window.CONSTANTS.CONDITIONAL_VALUES && window.CONSTANTS.CONDITIONAL_VALUES[name]
       ? window.CONSTANTS.CONDITIONAL_VALUES[name]
       : window.CONSTANTS.ANSWERS.YES;
-    validation.toggleConditional(conditionalId, value === triggerValue);
+    const matches = Array.isArray(triggerValue) ? triggerValue.includes(value) : value === triggerValue;
+    validation.toggleConditional(conditionalId, matches);
   }
 
   // Update conditional status
