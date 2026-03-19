@@ -247,13 +247,13 @@
 
   const PRESETS = [
     { name: 'Original', bg: '#e8a091', fg: '#c4785a', bb: null, sp: null },
-    { name: 'Ocean', bg: '#91b8e8', fg: '#5a7ec4', bb: null, sp: '#795ab8' },
+    { name: 'Ocean', bg: '#91b8e8', fg: '#5a7ec4', bb: null, sp: '#6a89b0' },
     { name: 'Forest', bg: '#91c4a0', fg: '#5a8c6a', bb: null, sp: '#c49158' },
     { name: 'Lavender', bg: '#b8a0d4', fg: '#7a5a9e', bb: null, sp: '#d4a060' },
-    { name: 'Slate', bg: '#a0a8b8', fg: '#5a6478', bb: null, sp: '#947cc5' },
+    { name: 'Slate', bg: '#a0a8b8', fg: '#5a6478', bb: null, sp: '#88a1c3' },
     { name: 'Rose', bg: '#d4929a', fg: '#a8505c', bb: '#d4c0b8', sp: null },
-    { name: 'Amber', bg: '#d4b878', fg: '#a08040', bb: null, sp: '#8368b8' },
-    { name: 'Plum', bg: '#c496a8', fg: '#8a4a68', bb: '#c8b8c0', sp: '#7d68a8' },
+    { name: 'Amber', bg: '#d4b878', fg: '#a08040', bb: null, sp: '#7680b8' },
+    { name: 'Plum', bg: '#c496a8', fg: '#8a4a68', bb: '#c8b8c0', sp: '#7388a0' },
     { name: 'Sage', bg: '#a8b8a0', fg: '#687860', bb: null, sp: '#a87868' },
     { name: 'Copper', bg: '#c8a088', fg: '#906848', bb: null, sp: null },
   ];
@@ -301,8 +301,8 @@
       spPicker.value = params.sp;
       spHex.value = params.sp;
     } else {
-      spPicker.value = '#947cc5';
-      spHex.value = '#947cc5';
+      spPicker.value = '#88a1c3';
+      spHex.value = '#88a1c3';
     }
 
     function syncToggle(active, controls, toggle, label) {
