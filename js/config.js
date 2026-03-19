@@ -20,7 +20,7 @@ const CONFIG = {
    * - Demo codes (DEMO, ORG-2025-XXX) are accepted
    * - Form submissions are simulated
    */
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg/exec',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzOq9Mn0UKwrhvPWRZaJkV2b9qH1uPtuYCOp4C9QDchaWcYk3-JJUz6LF0z9WQHb7dh/exec',
   PROXY_URL: '/api/',
 
   /**

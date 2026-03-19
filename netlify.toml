@@ -10,13 +10,13 @@
 # wildcard * requires at least one character and won't match /api/?query=...
 [[redirects]]
   from = "/api/"
-  to = "https://script.google.com/macros/s/AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg/exec"
+  to = "https://script.google.com/macros/s/AKfycbzOq9Mn0UKwrhvPWRZaJkV2b9qH1uPtuYCOp4C9QDchaWcYk3-JJUz6LF0z9WQHb7dh/exec"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/*"
-  to = "https://script.google.com/macros/s/AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg/exec/:splat"
+  to = "https://script.google.com/macros/s/AKfycbzOq9Mn0UKwrhvPWRZaJkV2b9qH1uPtuYCOp4C9QDchaWcYk3-JJUz6LF0z9WQHb7dh/exec/:splat"
   status = 200
   force = true
 
