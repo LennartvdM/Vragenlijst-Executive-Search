@@ -16,38 +16,38 @@
      ---------------------------------------------------------------- */
 
   /* Primary (gradient endpoints for buttons, headers) */
-  --vl-color-primary: #8caef4;
-  --vl-color-primary-light: #c5d6f8;
-  --vl-color-primary-dark: #467ded;
-  --vl-color-primary-rgb: 140, 174, 244;
+  --vl-color-primary: #ae8cf4;
+  --vl-color-primary-light: #d6c5f8;
+  --vl-color-primary-dark: #7d46ed;
+  --vl-color-primary-rgb: 174, 140, 244;
 
   /* Accent (selection state, active indicators) */
-  --vl-color-accent: #111162;
-  --vl-color-accent-dark: #07072f;
-  --vl-color-accent-rgb: 17, 17, 98;
+  --vl-color-accent: #2c1162;
+  --vl-color-accent-dark: #14072f;
+  --vl-color-accent-rgb: 44, 17, 98;
 
   /* Highlight (teal/orange secondary accent) */
   --vl-color-highlight: #d27b4b;
   --vl-color-highlight-dark: #c15f29;
 
   /* Surfaces */
-  --vl-color-surface: #fafbfc;
-  --vl-color-surface-rgb: 250, 251, 252;
+  --vl-color-surface: #fbfafc;
+  --vl-color-surface-rgb: 251, 250, 252;
   --vl-color-input: #ffffff;
   --vl-color-backdrop: linear-gradient(135deg, #f3ece2 0%, #f0e6d1 50%, #f8f5f2 100%);
 
   /* Neutral scale */
-  --vl-color-sand: #e1e9f4;
-  --vl-color-sand-light: #f1f4f8;
-  --vl-color-sand-dark: #adbcd2;
-  --vl-color-sand-rgb: 225, 233, 244;
+  --vl-color-sand: #e7e1f4;
+  --vl-color-sand-light: #f3f1f8;
+  --vl-color-sand-dark: #b9add2;
+  --vl-color-sand-rgb: 231, 225, 244;
 
   /* Text */
-  --vl-color-text: #1d1d30;
-  --vl-color-text-light: #3c3c5d;
-  --vl-color-text-muted: #7a7a96;
-  --vl-color-text-rgb: 29, 29, 48;
-  --vl-color-text-muted-rgb: 122, 122, 150;
+  --vl-color-text: #231d30;
+  --vl-color-text-light: #473c5d;
+  --vl-color-text-muted: #837a96;
+  --vl-color-text-rgb: 35, 29, 48;
+  --vl-color-text-muted-rgb: 131, 122, 150;
 
   /* Status */
   --vl-color-error: #d64545;
@@ -64,12 +64,12 @@
   --vl-color-danger-dark: #b91c1c;
   --vl-color-danger-darker: #991b1b;
   --vl-color-danger-rgb: 220, 38, 38;
-  --vl-color-info: #0ea5e9;
-  --vl-color-info-light: #e0f2fe;
-  --vl-color-info-dark: #0369a1;
+  --vl-color-info: #7c3aed;
+  --vl-color-info-light: #ede9fe;
+  --vl-color-info-dark: #5b21b6;
 
   /* Pill / muted overlay */
-  --vl-color-muted-rgb: 141, 154, 180;
+  --vl-color-muted-rgb: 154, 141, 180;
 
   /* ----------------------------------------------------------------
      Typography

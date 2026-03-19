@@ -18,8 +18,8 @@
   --pp-terracotta-light: var(--salmon, #e8a091);
   --pp-text: var(--text, #4a3728);
   --pp-text-light: var(--text-light, #7a6555);
-  --pp-teal: var(--teal-dark, #5aada8);
-  --pp-teal-dark: var(--teal-dark, #5aada8);
+  --pp-teal: var(--teal-dark, #765aad);
+  --pp-teal-dark: var(--teal-dark, #765aad);
   --pp-card-radius: 16px;
 
   /* RGB components for rgba() usage */
@@ -28,7 +28,7 @@
   --pp-text-rgb: var(--text-rgb, 74, 55, 40);
   --pp-cream-rgb: var(--cream-rgb, 255, 251, 247);
   --pp-sand-dark-rgb: 212, 196, 168;
-  --pp-teal-rgb: 90, 173, 168;
+  --pp-teal-rgb: 118, 90, 173;
 }
 
 /* ==========================================================================
