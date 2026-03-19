@@ -6,8 +6,8 @@
  * sent from the client's own domain with perfect deliverability.
  *
  * Shares localStorage keys with email-admin.js:
- *   cttt_email_recipients — recipient list
- *   cttt_email_settings   — template settings
+ *   esc_email_recipients — recipient list
+ *   esc_email_settings   — template settings
  *
  * Depends on: js/email-template.js (window.EmailTemplate)
  */
@@ -19,8 +19,8 @@
   // ---------------------------------------------------------------------------
 
   const STORAGE_KEYS = {
-    RECIPIENTS: 'cttt_email_recipients',
-    SETTINGS: 'cttt_email_settings'
+    RECIPIENTS: 'esc_email_recipients',
+    SETTINGS: 'esc_email_settings'
   };
 
   const DEFAULT_SETTINGS = {

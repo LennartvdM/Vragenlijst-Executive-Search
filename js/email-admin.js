@@ -13,8 +13,8 @@
   // ---------------------------------------------------------------------------
 
   const STORAGE_KEYS = {
-    RECIPIENTS: 'cttt_email_recipients',
-    SETTINGS: 'cttt_email_settings'
+    RECIPIENTS: 'esc_email_recipients',
+    SETTINGS: 'esc_email_settings'
   };
 
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbw3gcRqlbc9lH0WKiR5yEeM4whu_WFVAUg9lE8cf9Uyf6C-teYRfA5CQX2tCaZZiV-nlg/exec';

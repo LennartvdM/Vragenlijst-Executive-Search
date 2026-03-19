@@ -72,8 +72,8 @@ var App = (function() {
    */
   function handleLogout() {
     try {
-      localStorage.removeItem('cttt_session');
-      localStorage.removeItem('cttt_form_data');
+      localStorage.removeItem('esc_session');
+      localStorage.removeItem('esc_form_data');
     } catch (e) {
       // Ignore storage errors
     }

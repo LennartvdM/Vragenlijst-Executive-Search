@@ -46,7 +46,8 @@ export function loadSavedFormData() {
           const triggerValue = window.CONSTANTS.CONDITIONAL_VALUES && window.CONSTANTS.CONDITIONAL_VALUES[name]
             ? window.CONSTANTS.CONDITIONAL_VALUES[name]
             : window.CONSTANTS.ANSWERS.YES;
-          if (value === triggerValue) {
+          const matches = Array.isArray(triggerValue) ? triggerValue.includes(value) : value === triggerValue;
+          if (matches) {
             toggleConditional(conditionalId, true);
           }
         }

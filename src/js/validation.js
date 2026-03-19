@@ -45,7 +45,7 @@ export function isConditionalActive(fieldName) {
   const parentInput = document.querySelector(`[name="${parentInfo.parent}"]:checked`);
   if (!parentInput) return false;
 
-  return parentInput.value === parentInfo.value;
+  return Array.isArray(parentInfo.value) ? parentInfo.value.includes(parentInput.value) : parentInput.value === parentInfo.value;
 }
 
 /**
@@ -64,7 +64,10 @@ export function checkConditionalCompletion(parentField) {
     return { triggered: false, filled: true };
   }
 
-  if (parentInput.value !== requirements.triggerValue) {
+  const triggerMatches = Array.isArray(requirements.triggerValue)
+    ? requirements.triggerValue.includes(parentInput.value)
+    : parentInput.value === requirements.triggerValue;
+  if (!triggerMatches) {
     return { triggered: false, filled: true };
   }
 

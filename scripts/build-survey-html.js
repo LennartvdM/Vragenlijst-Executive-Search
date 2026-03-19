@@ -40,7 +40,9 @@ function renderLikertTable(likert) {
 
 function renderRadioCards(field) {
   // Get trigger value for conditional - default to 'Ja' if not specified
+  // Supports single string or array of strings
   const triggerValue = field.conditional?.trigger || 'Ja';
+  const isArrayTrigger = Array.isArray(triggerValue);
 
   let conditionalHtml = '';
   if (field.conditional) {
@@ -61,9 +63,19 @@ function renderRadioCards(field) {
               </div>
             </label>`;
 
-    // Insert conditional directly after the triggering option (e.g., "Ja")
-    if (field.conditional && opt.value === triggerValue) {
-      cardHtml += conditionalHtml;
+    // Insert conditional after the triggering option
+    if (field.conditional) {
+      if (isArrayTrigger) {
+        // For array triggers, place after the last trigger value
+        const lastTrigger = triggerValue[triggerValue.length - 1];
+        if (opt.value === lastTrigger) {
+          cardHtml += conditionalHtml;
+        }
+      } else {
+        if (opt.value === triggerValue) {
+          cardHtml += conditionalHtml;
+        }
+      }
     }
 
     return cardHtml;
@@ -140,6 +152,17 @@ function renderField(field) {
               <span>${field.label}</span>
             </label>
           </div>`;
+    }
+    case 'group': {
+      let groupHtml = `
+          <div class="field-group-labeled">
+            <label class="group-label">${field.label}</label>`;
+      field.fields.forEach(f => {
+        groupHtml += renderField(f);
+      });
+      groupHtml += `
+          </div>`;
+      return groupHtml;
     }
     default: return '';
   }
@@ -228,21 +251,20 @@ function renderStep(step) {
 }
 
 function renderNavItems() {
-  return SURVEY_STEPS.map((step, i) => {
-    if (step.id === 4) {
-      return `    <div class="index-divider-sub index-divider-clickable" data-step="${step.id}" data-action="goToStep">Kwalitatief</div>`;
+  return SURVEY_STEPS.map(step => {
+    let html = '';
+
+    // Data-driven nav dividers
+    if (step.navDividerBefore) {
+      html += `    <div class="index-divider-sub">${step.navDividerBefore}</div>\n`;
     }
-    if (step.id === 11) {
-      return `    <div class="index-divider-sub">Afsluiting</div>
-    <div class="index-item" data-step="${step.id}" data-action="goToStep">
-      <span class="status">○</span>
+
+    html += `    <div class="index-item${step.id === 0 ? ' active' : ''}" data-step="${step.id}" data-action="goToStep">
+      <span class="status">\u25CB</span>
       <span class="label">${step.title}</span>
     </div>`;
-    }
-    return `    <div class="index-item${step.id === 0 ? ' active' : ''}" data-step="${step.id}" data-action="goToStep">
-      <span class="status">○</span>
-      <span class="label">${step.title}</span>
-    </div>`;
+
+    return html;
   }).join('\n');
 }
 
@@ -275,7 +297,7 @@ const fullHtml = `<!-- AUTO-GENERATED - Edit src/data/survey-data.js, then run: 
       <span class="preview-exit-label">Inkijkexemplaar</span>
       <a href="#" class="preview-exit-link" data-action="logout">Sluiten</a>
     </div>
-    <h2>Monitoring Cultureel</h2>
+    <h2>Executive Search Code</h2>
     <div class="index-divider-full"></div>
     <div class="progress-bar-container">
       <div class="progress-bar" id="progressBar">
@@ -292,7 +314,7 @@ ${renderNavItems()}
       <a href="#" class="sidebar-privacy-link" id="sidebarPrivacyLink">Uw gegevens</a>
     </div>
     <div class="back-to-login-banner">
-      <a href="#" class="back-to-login-link" data-action="logout">← Terug naar inloggen</a>
+      <a href="#" class="back-to-login-link" data-action="logout">\u2190 Terug naar inloggen</a>
     </div>
     <div class="preview-exit-banner preview-exit-banner-bottom" id="previewExitBannerBottom">
     </div>
