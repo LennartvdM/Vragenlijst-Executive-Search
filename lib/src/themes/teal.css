@@ -1,7 +1,7 @@
 /**
  * Teal Theme — @vragenlijst/forms
  *
- * Cool violet palette for a more corporate feel.
+ * Cool blue-indigo palette for a more corporate feel.
  * Import after the base CSS to override the default palette.
  *
  * Usage:
@@ -10,29 +10,29 @@
  */
 
 :root {
-  --vl-color-primary: #947cc5;
-  --vl-color-primary-light: #c1b3dd;
-  --vl-color-primary-dark: #6c4ea8;
-  --vl-color-primary-rgb: 148, 124, 197;
+  --vl-color-primary: #88a1c3;
+  --vl-color-primary-light: #bac8db;
+  --vl-color-primary-dark: #5d7ba5;
+  --vl-color-primary-rgb: 136, 161, 195;
 
-  --vl-color-accent: #301a5c;
-  --vl-color-accent-dark: #1e0f3d;
-  --vl-color-accent-rgb: 48, 26, 92;
+  --vl-color-accent: #253b5c;
+  --vl-color-accent-dark: #17263d;
+  --vl-color-accent-rgb: 37, 59, 92;
 
   --vl-color-highlight: #e8a091;
   --vl-color-highlight-dark: #d4836f;
 
-  --vl-color-surface: #f9f8fc;
-  --vl-color-surface-rgb: 249, 248, 252;
+  --vl-color-surface: #f9fafc;
+  --vl-color-surface-rgb: 249, 250, 252;
   --vl-color-input: #ffffff;
-  --vl-color-backdrop: linear-gradient(135deg, #ece8f4 0%, #e5dff0 50%, #f4f2f9 100%);
+  --vl-color-backdrop: linear-gradient(135deg, #eaeef4 0%, #e2e8ef 50%, #f3f6f9 100%);
 
-  --vl-color-sand: #dbd4e8;
-  --vl-color-sand-light: #edeaf4;
-  --vl-color-sand-dark: #b3a8c9;
-  --vl-color-sand-rgb: 219, 212, 232;
+  --vl-color-sand: #d8dee7;
+  --vl-color-sand-light: #eceff4;
+  --vl-color-sand-dark: #aeb9c8;
+  --vl-color-sand-rgb: 216, 222, 231;
 
-  --vl-color-text: #201a2d;
-  --vl-color-text-light: #463c59;
-  --vl-color-text-muted: #756b8a;
+  --vl-color-text: #1d242d;
+  --vl-color-text-light: #414b58;
+  --vl-color-text-muted: #707b89;
 }

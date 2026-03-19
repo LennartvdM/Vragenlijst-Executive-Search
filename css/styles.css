@@ -14,20 +14,20 @@
   color-scheme: light only;
 
   /* Core palette */
-  --salmon: #ae8cf4;
-  --salmon-light: #d6c5f8;
-  --salmon-dark: #7d46ed;
-  --sand: #e7e1f4;
-  --sand-light: #f3f1f8;
-  --sand-dark: #b9add2;
-  --terracotta: #2c1162;
-  --terracotta-dark: #14072f;
-  --brown: #0f081e;
-  --cream: #fbfafc;
+  --salmon: #9d9df4;
+  --salmon-light: #cecef8;
+  --salmon-dark: #6262ed;
+  --sand: #e4e5f4;
+  --sand-light: #f2f3f8;
+  --sand-dark: #b3b5d2;
+  --terracotta: #1f1162;
+  --terracotta-dark: #0e072f;
+  --brown: #0c091e;
+  --cream: #fafbfc;
   --input-fill: #ffffff;
-  --text: #231d30;
-  --text-light: #473c5d;
-  --text-muted: #837a96;
+  --text: #201d30;
+  --text-light: #423c5d;
+  --text-muted: #7f7a96;
   --teal: #d27b4b;
   --teal-dark: #c15f29;
 
@@ -59,21 +59,21 @@
   --danger-dark: #b91c1c;
   --danger-darker: #991b1b;
 
-  /* Status: Info (violet) */
-  --info: #7c3aed;
-  --info-light: #ede9fe;
-  --info-medium: #ddd6fe;
-  --info-dark: #5b21b6;
+  /* Status: Info (indigo) */
+  --info: #6366f1;
+  --info-light: #eef2ff;
+  --info-medium: #c7d2fe;
+  --info-dark: #4338ca;
 
   /* RGB components for rgba() opacity variants */
-  --brown-rgb: 15, 8, 30;
-  --terracotta-rgb: 44, 17, 98;
-  --salmon-rgb: 174, 140, 244;
-  --sand-rgb: 231, 225, 244;
-  --cream-rgb: 251, 250, 252;
-  --text-rgb: 35, 29, 48;
-  --muted-rgb: 154, 141, 180;
-  --text-muted-rgb: 131, 122, 150;
+  --brown-rgb: 12, 9, 30;
+  --terracotta-rgb: 31, 17, 98;
+  --salmon-rgb: 157, 157, 244;
+  --sand-rgb: 228, 229, 244;
+  --cream-rgb: 250, 251, 252;
+  --text-rgb: 32, 29, 48;
+  --muted-rgb: 148, 148, 180;
+  --text-muted-rgb: 127, 122, 150;
   --void-1-rgb: 243, 236, 226;
   --void-2-rgb: 240, 230, 209;
   --warning-rgb: 245, 158, 11;
@@ -3509,7 +3509,7 @@ input[inputmode="numeric"] {
   display: none; /* Hidden by default, shown via JS for public sessions */
   text-align: center;
   padding: 6px 20px;
-  border: 2px solid rgba(44, 17, 98, 0.4);
+  border: 2px solid rgba(31, 17, 98, 0.4);
   border-radius: 4px;
   opacity: 0.7;
 }
@@ -3548,9 +3548,9 @@ input[inputmode="numeric"] {
   display: none; /* Hidden by default, shown via JS for public sessions */
   text-align: center;
   padding: 8px 12px;
-  border: 1.5px solid rgba(44, 17, 98, 0.3);
+  border: 1.5px solid rgba(31, 17, 98, 0.3);
   border-radius: 6px;
-  background: rgba(44, 17, 98, 0.04);
+  background: rgba(31, 17, 98, 0.04);
   margin-bottom: 10px;
 }
 

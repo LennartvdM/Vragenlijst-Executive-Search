@@ -14,19 +14,19 @@
 :root {
   color-scheme: light only;
 
-  --salmon: #ae8cf4;
-  --salmon-light: #d6c5f8;
-  --salmon-dark: #7d46ed;
-  --sand: #e7e1f4;
-  --sand-light: #f3f1f8;
-  --sand-dark: #b9add2;
-  --terracotta: #2c1162;
-  --terracotta-dark: #14072f;
-  --cream: #fbfafc;
+  --salmon: #9d9df4;
+  --salmon-light: #cecef8;
+  --salmon-dark: #6262ed;
+  --sand: #e4e5f4;
+  --sand-light: #f2f3f8;
+  --sand-dark: #b3b5d2;
+  --terracotta: #1f1162;
+  --terracotta-dark: #0e072f;
+  --cream: #fafbfc;
   --input-fill: #ffffff;
-  --text: #231d30;
-  --text-light: #473c5d;
-  --text-muted: #837a96;
+  --text: #201d30;
+  --text-light: #423c5d;
+  --text-muted: #7f7a96;
 
   --void-1: #f3ece2;
   --void-2: #f0e6d1;
@@ -38,12 +38,12 @@
   --success-light: #e8f5e9;
   --warning: #f59e0b;
   --warning-light: #fff8e1;
-  --info: #7c3aed;
+  --info: #6366f1;
 
   --outline-width: 6px;
-  --terracotta-rgb: 44, 17, 98;
-  --salmon-rgb: 174, 140, 244;
-  --brown-rgb: 15, 8, 30;
+  --terracotta-rgb: 31, 17, 98;
+  --salmon-rgb: 157, 157, 244;
+  --brown-rgb: 12, 9, 30;
 }
 
 body {
