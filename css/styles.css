@@ -1182,6 +1182,38 @@ body {
   color: var(--terracotta);
 }
 
+.org-info-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.org-info-links .sidebar-privacy-link {
+  margin-top: 0;
+}
+
+.btn-print-sidebar {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  transition: color 0.2s ease;
+}
+
+.btn-print-sidebar:hover {
+  color: var(--terracotta);
+}
+
+.btn-print-sidebar svg {
+  flex-shrink: 0;
+}
+
 .back-to-login-banner {
   display: flex;
   justify-content: center;
