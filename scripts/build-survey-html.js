@@ -328,6 +328,13 @@ ${renderNavItems()}
           <p class="preview-info-box-title">Inkijkexemplaar</p>
           <p class="preview-info-box-subtitle">Ingevulde gegevens worden niet verstuurd</p>
         </div>
+        <button type="button" class="btn-print-subtle" data-action="printForm" title="Afdrukken">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+        </button>
         <div class="nav-buttons nav-buttons-top" id="navButtonsTop">
           <button type="button" class="btn btn-secondary btn-small" id="btnPrevTop" data-action="prevStep" style="display:none;">Vorige</button>
           <button type="button" class="btn btn-tertiary btn-small" id="btnGoToReviewTop" data-action="goToReview" style="display:none;">Controle</button>
