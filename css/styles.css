@@ -1155,6 +1155,38 @@ body {
   color: var(--terracotta);
 }
 
+.org-info-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.org-info-links .sidebar-privacy-link {
+  margin-top: 0;
+}
+
+.btn-print-sidebar {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  transition: color 0.2s ease;
+}
+
+.btn-print-sidebar:hover {
+  color: var(--terracotta);
+}
+
+.btn-print-sidebar svg {
+  flex-shrink: 0;
+}
+
 .back-to-login-banner {
   display: flex;
   justify-content: center;
@@ -1222,29 +1254,6 @@ body {
   align-items: center;
   gap: 16px;
   min-height: 40px;
-}
-
-/* Print button in header — secondary but visible */
-.btn-print-subtle {
-  background: none;
-  border: 1px solid var(--sand-dark);
-  color: var(--text-light);
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.btn-print-subtle:hover {
-  color: var(--terracotta);
-  border-color: var(--salmon);
-  background: var(--sand-light);
 }
 
 /* Small button variant for top nav */
