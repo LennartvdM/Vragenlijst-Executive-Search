@@ -344,6 +344,7 @@ ${renderNavItems()}
         <div class="print-header">
           <h1>Monitoring Executive Search Code 2025</h1>
           <p id="printHeaderOrg"></p>
+          <p id="printHeaderDate"></p>
         </div>
         <form id="monitoringForm">
 ${SURVEY_STEPS.map(renderStep).join('\n')}

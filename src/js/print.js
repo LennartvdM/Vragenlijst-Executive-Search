@@ -9,18 +9,34 @@ import { showStep } from './navigation.js';
 import { getFormData } from './form.js';
 
 /**
+ * Populate the print header with org name and date
+ */
+function populatePrintHeader(orgName) {
+  const headerOrg = document.getElementById('printHeaderOrg');
+  if (headerOrg) {
+    headerOrg.textContent = orgName || '';
+  }
+
+  const headerDate = document.getElementById('printHeaderDate');
+  if (headerDate) {
+    const now = new Date();
+    const formatted = now.toLocaleDateString('nl-NL', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+    headerDate.textContent = `Afgedrukt op ${formatted}`;
+  }
+}
+
+/**
  * Print the complete form with all pages
  */
 export function printForm() {
   const originalStep = state.currentStep;
 
-  // Populate print header with org name
-  const printHeaderOrg = document.getElementById('printHeaderOrg');
-  if (printHeaderOrg && state.session) {
-    printHeaderOrg.textContent = state.session.orgName || '';
-  }
+  populatePrintHeader(state.session?.orgName);
 
   // Show all content steps (0-13), hide review (14) and success (15)
+  // Step 0 is hidden by CSS (folded into print header), but needs .active for DOM
   const steps = document.querySelectorAll('.step');
   steps.forEach(step => {
     const stepNum = parseInt(step.dataset.step, 10);
@@ -86,6 +102,8 @@ export function printArchivedForm(formId) {
       field.value = value;
     }
   }
+
+  populatePrintHeader(archivedForm.orgName || data.orgName);
 
   // Show all content steps for printing
   const steps = document.querySelectorAll('.step');
