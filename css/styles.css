@@ -2586,7 +2586,11 @@ input[inputmode="numeric"] {
   .nav-buttons,
   .btn-print,
   .comments-section,
-  .back-to-login-banner {
+  .back-to-login-banner,
+  .content-header,
+  .content-footer,
+  .mobile-menu-btn,
+  .mobile-overlay {
     display: none !important;
   }
 
@@ -2610,6 +2614,32 @@ input[inputmode="numeric"] {
     padding: 20px !important;
     min-height: auto !important;
     overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .content-scrollable-wrapper {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .content-scrollable-wrapper::before,
+  .content-scrollable-wrapper::after {
+    display: none !important;
+  }
+
+  .custom-scrollbar {
+    display: none !important;
+  }
+
+  .content-scrollable {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    padding-right: 20px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
   /* Reset horizontal swipe layout for print */
@@ -2649,8 +2679,8 @@ input[inputmode="numeric"] {
   }
 
   /* Hide review and success steps in print */
-  .step[data-step="13"],
-  .step[data-step="14"] {
+  .step[data-step="14"],
+  .step[data-step="15"] {
     display: none !important;
   }
 

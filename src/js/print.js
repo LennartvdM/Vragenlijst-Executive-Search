@@ -14,9 +14,17 @@ import { getFormData } from './form.js';
 export function printForm() {
   const originalStep = state.currentStep;
 
+  // Populate print header with org name
+  const printHeaderOrg = document.getElementById('printHeaderOrg');
+  if (printHeaderOrg && state.session) {
+    printHeaderOrg.textContent = state.session.orgName || '';
+  }
+
+  // Show all content steps (0-13), hide review (14) and success (15)
   const steps = document.querySelectorAll('.step');
   steps.forEach(step => {
-    if (step.dataset.step !== '6') {
+    const stepNum = parseInt(step.dataset.step, 10);
+    if (stepNum <= 13) {
       step.classList.add('active');
     }
   });
