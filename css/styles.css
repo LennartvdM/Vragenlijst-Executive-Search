@@ -3820,6 +3820,38 @@ input[inputmode="numeric"] {
 }
 
 /* ==========================================================================
+   Submitting Modal
+   ========================================================================== */
+
+.submitting-modal {
+  z-index: 1100;
+}
+
+.submitting-modal-content {
+  max-width: 400px;
+}
+
+.submitting-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.submitting-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--sand);
+  border-top-color: var(--terracotta);
+  border-radius: 50%;
+  animation: submittingSpin 0.8s linear infinite;
+  margin-bottom: 24px;
+}
+
+@keyframes submittingSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
    Archived Forms Section
    ========================================================================== */
 

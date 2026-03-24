@@ -468,6 +468,29 @@ ${SURVEY_STEPS.map(renderStep).join('\n')}
       <button type="button" class="btn btn-primary" data-action="closePreviewModal">Begrepen</button>
     </div>
   </div>
+</div>
+
+<div id="submittingModal" class="modal-overlay submitting-modal" style="display: none;">
+  <div class="modal-content submitting-modal-content">
+    <div id="submittingStateLoading" class="submitting-state">
+      <div class="submitting-spinner"></div>
+      <h2>Bezig met verzenden</h2>
+      <p class="modal-text">Uw formulier wordt verstuurd. Dit kan even duren.</p>
+    </div>
+    <div id="submittingStateError" class="submitting-state" style="display: none;">
+      <div class="modal-icon modal-icon-error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <h2>Verzenden mislukt</h2>
+      <p class="modal-text" id="submittingErrorText">Er is iets misgegaan bij het verzenden. Controleer uw internetverbinding en probeer het opnieuw.</p>
+      <div class="modal-buttons">
+        <button type="button" class="btn btn-secondary" data-action="cancelSubmit">Terug</button>
+        <button type="button" class="btn btn-primary" data-action="retrySubmit">Opnieuw proberen</button>
+      </div>
+    </div>
+  </div>
 </div>`;
 
 // Write output

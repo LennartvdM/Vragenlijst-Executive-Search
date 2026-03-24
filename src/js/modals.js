@@ -124,6 +124,42 @@ export function hideErrorModal() {
 }
 
 /**
+ * Show the submitting modal in loading state
+ */
+export function showSubmittingModal() {
+  const modal = document.getElementById('submittingModal');
+  const loading = document.getElementById('submittingStateLoading');
+  const error = document.getElementById('submittingStateError');
+  if (modal) {
+    if (loading) loading.style.display = '';
+    if (error) error.style.display = 'none';
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+/**
+ * Switch the submitting modal to error state
+ */
+export function showSubmittingError() {
+  const loading = document.getElementById('submittingStateLoading');
+  const error = document.getElementById('submittingStateError');
+  if (loading) loading.style.display = 'none';
+  if (error) error.style.display = '';
+}
+
+/**
+ * Hide the submitting modal
+ */
+export function hideSubmittingModal() {
+  const modal = document.getElementById('submittingModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+/**
  * Show the preview mode modal (for public access submission attempt)
  */
 export function showPreviewModal() {
