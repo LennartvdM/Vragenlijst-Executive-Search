@@ -2562,7 +2562,15 @@ input[inputmode="numeric"] {
    ========================================================================== */
 
 @media print {
-  /* Reset page */
+
+  /* ================================================================
+     PAGE SETUP — A4 portrait
+     ================================================================ */
+  @page {
+    size: A4 portrait;
+    margin: 18mm 16mm 20mm 16mm;
+  }
+
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -2572,13 +2580,18 @@ input[inputmode="numeric"] {
     background: white !important;
     padding: 0 !important;
     margin: 0 !important;
+    font-size: 10pt !important;
+    line-height: 1.45 !important;
+    color: #2a2a2a !important;
   }
 
   .survey-body {
     padding: 0 !important;
   }
 
-  /* Hide non-print elements */
+  /* ================================================================
+     HIDE UI CHROME
+     ================================================================ */
   .index,
   .progress-dots,
   .progress-dots-top,
@@ -2586,33 +2599,80 @@ input[inputmode="numeric"] {
   .nav-buttons,
   .btn-print,
   .comments-section,
-  .back-to-login-banner {
+  .back-to-login-banner,
+  .content-header,
+  .content-footer,
+  .mobile-menu-btn,
+  .mobile-overlay,
+  .custom-scrollbar,
+  .logo-decor,
+  .reset-btn,
+  .likert-header,
+  .likert-pill-highlight,
+  .preview-exit-banner,
+  .preview-info-box,
+  .noscript,
+  noscript {
     display: none !important;
   }
 
-  /* Container styling for print */
+  /* Hide review, success, and welcome (folded into header) */
+  .step[data-step="0"],
+  .step[data-step="14"],
+  .step[data-step="15"] {
+    display: none !important;
+  }
+
+  /* ================================================================
+     LAYOUT RESETS — flatten everything to a single column
+     ================================================================ */
   .container {
+    display: block !important;
     box-shadow: none !important;
     background: white !important;
     max-width: 100% !important;
     width: 100% !important;
     border-radius: 0 !important;
     min-height: auto !important;
+    border: none !important;
   }
 
-  /* Hide compound shape pseudo-elements for print */
   .container::before,
   .login-card::before {
     display: none !important;
   }
 
   .content {
-    padding: 20px !important;
+    display: block !important;
+    padding: 0 !important;
     min-height: auto !important;
     overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
   }
 
-  /* Reset horizontal swipe layout for print */
+  .content-scrollable-wrapper {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .content-scrollable-wrapper::before,
+  .content-scrollable-wrapper::after {
+    display: none !important;
+  }
+
+  .content-scrollable {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Reset mobile swipe layout */
   .content-scrollable.swipe-horizontal {
     display: block !important;
     overflow: visible !important;
@@ -2633,99 +2693,466 @@ input[inputmode="numeric"] {
     border: none !important;
     border-radius: 0 !important;
     background: white !important;
+    padding: 0 !important;
   }
 
-  /* Show all steps for printing */
+  .content-scrollable.swipe-horizontal .step.swipe-step::before,
+  .content-scrollable.swipe-horizontal .step.swipe-step::after {
+    display: none !important;
+  }
+
+  /* ================================================================
+     PRINT HEADER
+     ================================================================ */
+  .print-header {
+    display: block !important;
+    text-align: left;
+    margin-bottom: 24pt;
+    padding-bottom: 10pt;
+    border-bottom: 1.5pt solid #c4785a;
+  }
+
+  .print-header h1 {
+    font-size: 16pt !important;
+    font-weight: 700 !important;
+    color: #4a3728 !important;
+    margin: 0 0 3pt 0 !important;
+    padding: 0 !important;
+    letter-spacing: -0.01em;
+  }
+
+  .print-header p {
+    font-size: 10pt !important;
+    color: #7a6555 !important;
+    margin: 0 !important;
+  }
+
+  .print-header p:empty {
+    display: none !important;
+  }
+
+  /* ================================================================
+     STEPS — each section of the survey
+     ================================================================ */
   .step {
-    display: flex !important;
-    page-break-inside: avoid;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 20px;
+    display: block !important;
+    margin-bottom: 0 !important;
+    padding: 14pt 0 10pt 0 !important;
+    border-bottom: none !important;
+    border-top: 0.75pt solid #d5d0cb !important;
+    page-break-inside: auto;
   }
 
-  .step:last-child {
-    border-bottom: none;
+  .step:first-of-type {
+    border-top: none !important;
   }
 
-  /* Hide review and success steps in print */
-  .step[data-step="13"],
-  .step[data-step="14"] {
+  /* Section heading */
+  .step > h1 {
+    font-size: 12pt !important;
+    font-weight: 700 !important;
+    color: #4a3728 !important;
+    margin: 0 0 2pt 0 !important;
+    padding: 0 !important;
+    page-break-after: avoid !important;
+  }
+
+  .step > h1 .section-num {
+    display: inline-block;
+    min-width: 1.6em;
+    color: #c4785a;
+    font-weight: 700;
+  }
+
+  .step > .subtitle {
+    font-size: 9pt !important;
+    color: #7a6555 !important;
+    margin: 0 0 6pt 0 !important;
+    page-break-after: avoid !important;
+  }
+
+  .step > .step-intro {
+    font-size: 9pt !important;
+    color: #555 !important;
+    margin: 0 0 8pt 0 !important;
+    line-height: 1.4 !important;
+    page-break-after: avoid !important;
+  }
+
+  .welcome-intro {
     display: none !important;
   }
 
-  /* Remove question gradients in print */
-  .form-section > .field:not(.checkbox-field)::before,
-  .form-section > .question-header::before,
-  .form-section > .likert-header::before,
-  .form-section > .question-group::before {
-    display: none !important;
-  }
-
-  /* Form sections */
+  /* ================================================================
+     FORM SECTIONS & FIELDS
+     ================================================================ */
   .form-section {
     overflow: visible !important;
     max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Option cards */
-  .option-card {
-    opacity: 1 !important;
-    break-inside: avoid;
+  /* Remove all decorative pseudo-elements on fields */
+  .form-section > .field::before,
+  .form-section > .question-header::before,
+  .form-section > .likert-header::before,
+  .form-section > .question-group::before,
+  .form-section > .field-group-labeled::before {
+    display: none !important;
   }
 
-  .option-card.selected {
-    border-color: var(--terracotta) !important;
-    background: #f5f5f5 !important;
+  /* Field layout */
+  .field {
+    margin-bottom: 6pt !important;
+    padding: 0 !important;
   }
 
-  /* Conditionals */
-  .conditional {
+  .field label,
+  .group-label {
+    font-size: 9pt !important;
+    font-weight: 600 !important;
+    color: #4a3728 !important;
     display: block !important;
+    margin-bottom: 2pt !important;
+  }
+
+  .field-group-labeled {
+    margin-bottom: 8pt !important;
+  }
+
+  .field-group-labeled .group-label {
+    font-size: 9.5pt !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Indent sub-fields */
+  .field-indent {
+    padding-left: 16pt !important;
+  }
+
+  /* Text inputs & textareas — show as underlined values */
+  .field input[type="text"],
+  .field textarea {
+    border: none !important;
+    border-bottom: 0.5pt solid #ccc !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 2pt 0 !important;
+    font-size: 10pt !important;
+    color: #2a2a2a !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+  }
+
+  .field textarea {
+    min-height: 24pt !important;
+    resize: none !important;
+  }
+
+  .input-wrapper {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 4pt !important;
+  }
+
+  .field-suffix {
+    font-size: 10pt !important;
+    color: #7a6555 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .field-hint {
+    font-size: 8pt !important;
+    color: #999 !important;
+  }
+
+  /* Compact number fields — keep them narrow */
+  .field-compact {
+    max-width: 200pt !important;
+  }
+
+  /* Question groups */
+  .question-group {
+    margin-bottom: 8pt !important;
+    padding: 0 !important;
+  }
+
+  .question-group::before {
+    display: none !important;
+  }
+
+  /* ================================================================
+     OPTION CARDS — compact inline row
+     ================================================================ */
+  .question-header {
+    margin-bottom: 4pt !important;
+    padding: 0 !important;
+  }
+
+  .question-header label {
+    font-size: 9.5pt !important;
+    font-weight: 600 !important;
+    color: #4a3728 !important;
+  }
+
+  .option-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .option-card {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 0.75pt solid #d5d0cb !important;
+    border-radius: 4pt !important;
+    padding: 3pt 10pt !important;
+    margin: 0 4pt 4pt 0 !important;
+    opacity: 1 !important;
+    background: white !important;
+    box-shadow: none !important;
+    transform: none !important;
+    cursor: default !important;
+    break-inside: avoid !important;
+    flex: none !important;
+  }
+
+  .option-card .option-content {
+    display: inline !important;
+  }
+
+  .option-card .option-content h3 {
+    font-size: 9pt !important;
+    font-weight: 400 !important;
+    color: #888 !important;
+    margin: 0 !important;
+  }
+
+  .option-card .option-content p {
+    display: none !important;
+  }
+
+  /* Selected card — highlighted */
+  .option-card.selected {
+    border-color: #c4785a !important;
+    background: #faf3ee !important;
+  }
+
+  .option-card.selected .option-content h3 {
+    font-weight: 700 !important;
+    color: #4a3728 !important;
+  }
+
+  /* Hide the custom radio visual in option cards */
+  .option-radio {
+    display: none !important;
+  }
+
+  /* ================================================================
+     CONDITIONALS
+     ================================================================ */
+  .conditional {
     max-height: none !important;
     opacity: 1 !important;
     visibility: visible !important;
+    overflow: visible !important;
+    margin-top: 4pt !important;
+    padding-left: 12pt !important;
+    border-left: 2pt solid #e8a091 !important;
   }
 
   .conditional:not(.show) {
     display: none !important;
   }
 
-  /* Tables */
-  .likert-table {
-    width: 100% !important;
+  .conditional.show {
+    display: block !important;
   }
 
-  .likert-table tr {
+  /* ================================================================
+     LIKERT TABLES — compact for portrait
+     ================================================================ */
+  .likert-table {
+    width: 100% !important;
+    font-size: 8.5pt !important;
+    border-collapse: collapse !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .likert-table thead {
+    display: table-header-group !important;
+  }
+
+  .likert-table th {
+    background: #f5f0eb !important;
+    padding: 4pt 3pt !important;
+    font-size: 7.5pt !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    color: #4a3728 !important;
+    border-bottom: 1pt solid #d5d0cb !important;
+  }
+
+  .likert-table th:first-child {
+    text-align: left !important;
+    padding-left: 6pt !important;
+    width: 50% !important;
+  }
+
+  .likert-table th.likert-header-label {
+    color: #c4785a !important;
+  }
+
+  .likert-table td {
+    padding: 4pt 3pt !important;
+    text-align: center !important;
+    border-bottom: 0.5pt solid #e8e4e0 !important;
+    position: relative !important;
+    vertical-align: middle !important;
+  }
+
+  .likert-table td:first-child {
+    text-align: left !important;
+    padding-left: 6pt !important;
+    font-size: 8.5pt !important;
+    color: #4a3728 !important;
+  }
+
+  .likert-table td .q-num {
+    color: #c4785a !important;
+    font-weight: 600 !important;
+  }
+
+  .likert-table tbody tr {
     opacity: 1 !important;
   }
 
-  /* Page breaks */
+  /* Hide the absolutely positioned checkmarks and arrows */
+  .likert-table tbody tr::after {
+    display: none !important;
+  }
+
+  /* Show likert radios as visible circles in print */
+  .likert-table input[type="radio"] {
+    position: static !important;
+    opacity: 1 !important;
+    width: 10pt !important;
+    height: 10pt !important;
+    margin: 0 auto !important;
+    display: block !important;
+    accent-color: #c4785a !important;
+  }
+
+  /* Hide the custom radio overlays — show native radio instead */
+  .likert-radio {
+    display: none !important;
+  }
+
+  /* Hide the pill highlight */
+  .likert-pill-highlight {
+    display: none !important;
+  }
+
+  /* ================================================================
+     CHECKBOX FIELDS
+     ================================================================ */
+  .checkbox-field {
+    margin-bottom: 6pt !important;
+  }
+
+  .checkbox-label {
+    font-size: 9pt !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6pt !important;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    accent-color: #c4785a !important;
+    width: 11pt !important;
+    height: 11pt !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ================================================================
+     PAGE BREAKS
+     ================================================================ */
   h1 {
-    page-break-after: avoid;
+    page-break-after: avoid !important;
+  }
+
+  .subtitle,
+  .step-intro {
+    page-break-after: avoid !important;
   }
 
   .form-section {
-    page-break-inside: avoid;
+    page-break-before: avoid !important;
   }
 
-  /* Print header */
-  .print-header {
-    display: block !important;
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--terracotta);
+  /* Allow long steps to break across pages, but keep field groups together */
+  .question-group,
+  .field-group-labeled {
+    break-inside: avoid !important;
   }
 
-  .print-header h1 {
-    font-size: 18px;
-    margin-bottom: 5px;
+  .option-cards {
+    break-inside: avoid !important;
   }
 
-  .print-header p {
-    font-size: 12px;
-    color: #666;
+  /* ================================================================
+     PRINT FOOTER — page numbers
+     ================================================================ */
+  @page {
+    @bottom-center {
+      content: counter(page);
+      font-size: 8pt;
+      color: #999;
+    }
+  }
+
+  /* ================================================================
+     CONTENTEDITABLE word counter field
+     ================================================================ */
+  .contenteditable-wrapper {
+    display: none !important;
+  }
+
+  .word-counter {
+    display: none !important;
+  }
+
+  /* ================================================================
+     INFO BLOCKS (step intro paragraphs)
+     ================================================================ */
+  .info-block {
+    font-size: 9pt !important;
+    color: #555 !important;
+    margin-bottom: 8pt !important;
+    padding: 6pt 10pt !important;
+    background: #faf8f5 !important;
+    border-left: 2pt solid #d5d0cb !important;
+    border-radius: 0 !important;
+  }
+
+  /* ================================================================
+     LABEL HIGHLIGHTS
+     ================================================================ */
+  .label-highlight {
+    font-weight: 700 !important;
+    color: #c4785a !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+
+  /* ================================================================
+     HIDE MODALS & OVERLAYS
+     ================================================================ */
+  .modal-overlay {
+    display: none !important;
   }
 }
 
