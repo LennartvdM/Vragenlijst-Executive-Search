@@ -36,6 +36,13 @@ var App = (function() {
       return;
     }
 
+    // Check localStorage availability and warn user if unavailable
+    if (!Storage.isAvailable()) {
+      var storageWarning = document.getElementById('storageWarning');
+      if (storageWarning) storageWarning.style.display = 'flex';
+      console.warn('App: localStorage is not available. Form progress will not be saved.');
+    }
+
     // Check for logout parameter
     if (window.location.search.includes('logout=1')) {
       handleLogout();

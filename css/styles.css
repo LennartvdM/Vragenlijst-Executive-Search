@@ -254,6 +254,33 @@ body {
   cursor: default;
 }
 
+/* localStorage Warning */
+.storage-warning {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  max-width: 540px;
+  width: calc(100% - 32px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.storage-warning svg {
+  flex-shrink: 0;
+  stroke: #d97706;
+}
+
 /* Demo Mode Styles */
 .demo-banner {
   background: linear-gradient(135deg, var(--info-light) 0%, var(--info-medium) 100%);
