@@ -2872,6 +2872,7 @@ input[inputmode="numeric"] {
     width: 100% !important;
     box-shadow: none !important;
     min-height: 16pt !important;
+    text-align: left !important;
   }
 
   .field textarea {
