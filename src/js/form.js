@@ -4,7 +4,7 @@
  */
 
 import * as state from './state.js';
-import { showValidationModal, showErrorModal, showPreviewModal } from './modals.js';
+import { showValidationModal, showErrorModal, showPreviewModal, showSubmittingModal, showSubmittingError, hideSubmittingModal } from './modals.js';
 import { toggleConditional, checkConditionalCompletion } from './validation.js';
 import { updateAllSections, updateIndexStatus } from './progress.js';
 import { clearScrollPositions } from './scroll.js';
@@ -107,6 +107,9 @@ export function getFormData() {
 /**
  * Submit the form to the backend
  */
+// Stored reference for retry
+let _pendingGoToStep = null;
+
 export async function submitForm(goToStep) {
   const ondertekenaar = document.querySelector('[name="ondertekenaar"]');
   const bevestiging = document.querySelector('[name="bevestiging"]');
@@ -138,19 +141,12 @@ export async function submitForm(goToStep) {
     return;
   }
 
-  const btn = document.getElementById('btnNext');
-  const btnTop = document.getElementById('btnNextTop');
-  const originalText = btn ? btn.textContent : window.CONSTANTS.UI.BUTTON_SUBMIT;
+  _pendingGoToStep = goToStep;
+  showSubmittingModal();
+  await _executeSubmit(goToStep);
+}
 
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = window.CONSTANTS.UI.BUTTON_SUBMITTING;
-  }
-  if (btnTop) {
-    btnTop.disabled = true;
-    btnTop.textContent = window.CONSTANTS.UI.BUTTON_SUBMITTING;
-  }
-
+async function _executeSubmit(goToStep) {
   try {
     const formData = getFormData();
     console.log('[FORM] Submitting survey...', { orgCode: formData.orgCode, fieldsCount: Object.keys(formData).length, method: 'POST' });
@@ -161,6 +157,7 @@ export async function submitForm(goToStep) {
       const orgName = formData.organisatie || state.session.orgName || 'Onbekende organisatie';
       window.Storage.addSubmittedForm(formData, orgName);
 
+      hideSubmittingModal();
       state.setCurrentStep(window.CONFIG.SUCCESS_STEP);
       document.dispatchEvent(new CustomEvent('showStep', { detail: { step: state.currentStep } }));
 
@@ -175,6 +172,7 @@ export async function submitForm(goToStep) {
       const orgName = formData.organisatie || state.session.orgName || 'Onbekende organisatie';
       window.Storage.addSubmittedForm(formData, orgName);
 
+      hideSubmittingModal();
       state.setCurrentStep(window.CONFIG.SUCCESS_STEP);
       document.dispatchEvent(new CustomEvent('showStep', { detail: { step: state.currentStep } }));
 
@@ -194,19 +192,26 @@ export async function submitForm(goToStep) {
     }
   } catch (e) {
     console.error('[FORM] Submit failed:', e.message, e.code || '', e);
-    showErrorModal(
-      'Verzenden mislukt',
-      window.CONSTANTS.ERRORS.SUBMIT_ERROR
-    );
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = originalText;
-    }
-    if (btnTop) {
-      btnTop.disabled = false;
-      btnTop.textContent = originalText;
-    }
+    showSubmittingError();
   }
+}
+
+/**
+ * Retry submission from the submitting modal error state
+ */
+export function retrySubmit() {
+  if (_pendingGoToStep) {
+    showSubmittingModal();
+    _executeSubmit(_pendingGoToStep);
+  }
+}
+
+/**
+ * Cancel submission and return to the review page
+ */
+export function cancelSubmit() {
+  _pendingGoToStep = null;
+  hideSubmittingModal();
 }
 
 /**

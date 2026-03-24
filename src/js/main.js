@@ -223,6 +223,14 @@ function handleAction(action, element, event) {
     case 'closePreviewModal':
       modals.hidePreviewModal();
       break;
+
+    case 'retrySubmit':
+      form.retrySubmit();
+      break;
+
+    case 'cancelSubmit':
+      form.cancelSubmit();
+      break;
   }
 }
 
