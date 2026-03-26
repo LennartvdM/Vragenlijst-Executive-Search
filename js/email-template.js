@@ -1,8 +1,7 @@
 /**
- * Shared Email Template Builder
+ * Shared Email Template Builder — Monitor Executive Search
  *
- * Ported from scripts/gas-email-function.js for client-side use.
- * Exposes window.EmailTemplate with buildEmailHtml() and buildPlainText().
+ * Exposes window.EmailTemplate with buildEmailHtml(), buildPlainText(), buildEml().
  * Used by both email-admin.js and email-manual.js.
  */
 (function () {
@@ -24,43 +23,89 @@
       .replace(/\{deadline\}/g, vars.deadline)
       .replace(/\{contactPerson\}/g, vars.contactPerson)
       .replace(/\{contactEmail\}/g, vars.contactEmail)
+      .replace(/\{contactPhone\}/g, vars.contactPhone)
       .replace(/\{code\}/g, vars.code);
   }
 
+  /**
+   * Convert newline-separated text to HTML paragraphs.
+   * Double newline = new <p>, single newline = <br>.
+   */
+  function textToHtml(text, style) {
+    if (!text) return '';
+    const paragraphs = text.split(/\n\n+/);
+    return paragraphs.map(p => {
+      const lines = esc(p.trim()).replace(/\n/g, '<br>');
+      return `<p style="${style}">${lines}</p>`;
+    }).join('\n');
+  }
+
   // ---------------------------------------------------------------------------
-  // Default text fields (same as email-admin.js / gas-email-function.js)
+  // Default text fields — Executive Search Monitor
   // ---------------------------------------------------------------------------
 
   const DEFAULTS = {
-    subject: 'Monitoring Cultureel Talent naar de Top 2026',
-    senderName: 'Commissie Monitoring Talent naar de Top',
-    heading: 'Monitoring Cultureel Talent naar de Top 2026',
-    introText: 'Geachte {naam}, wij vragen u de monitoring in te vullen v\u00f3\u00f3r {deadline}.',
-    codeLabel: 'Uw toegangscode',
-    ctaText: 'Ga naar de vragenlijst \u2192',
-    previewLinkText: 'Bekijk inkijkexemplaar \u2192',
-    praktischHeading: 'Praktisch',
-    checklistItems: 'Duurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nHoud uw personeelscijfers bij de hand\nVoortgang gekoppeld aan uw apparaat, niet aan uw code',
-    privacyText: 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.',
-    contactText: 'Vragen? {contactPerson} via {contactEmail}',
-    closingText: 'Met vriendelijke groet,',
-    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.'
+    subject: 'Monitor Executive Search \u2014 Talent naar de Top',
+    senderName: 'Talent naar de Top',
+    heading: 'Monitor Executive Search',
+    greeting: 'Beste {naam}',
+    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
+    ctaText: 'Naar de vragenlijst',
+    ctaNote: '',
+    deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
+    section2Heading: 'Wat gebeurt er met de resultaten?',
+    section2Text: 'De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.',
+    section3Heading: 'Topvrouw van het Jaar',
+    section3ImageUrl: '',
+    section3Text: 'Tot slot nog een belangrijke vraag aan u. Eerder ontving u van ons een email met suggesties over de topvrouw van het jaar. Onze vraag aan u: Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor deze award? Wij stellen uw input zeer op prijs.',
+    closingText: 'Wij wensen u veel succes met het invullen van de vragenlijst en kijken uit naar uw resultaten. Alvast hartelijk dank voor uw medewerking.\n\nMet vriendelijke groet,',
+    signer1Name: '',
+    signer1Title: '',
+    signer2Name: '',
+    signer2Title: '',
+    address: 'Sandbergplein 24\n1181 ZX Amstelveen\nNederland',
+    phone: '',
+    website: 'www.talentnaardetop.nl',
+    socialTwitter: '',
+    socialLinkedin: '',
+    socialYoutube: '',
+    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
+    webVersionUrl: '',
+    unsubscribeUrl: '',
+    profileUrl: '',
+    privacyUrl: ''
   };
 
   const RESET_DEFAULTS = {
-    subject: 'Uw vragenlijst is gereset \u2014 Monitoring Cultureel Talent naar de Top 2026',
-    senderName: 'Commissie Monitoring Talent naar de Top',
+    subject: 'Uw vragenlijst is gereset \u2014 Monitor Executive Search',
+    senderName: 'Talent naar de Top',
     heading: 'Uw vragenlijst is gereset',
-    introText: 'Geachte {naam}, uw eerdere inzending voor de Monitoring Cultureel Talent naar de Top is gereset. U kunt de vragenlijst opnieuw invullen v\u00f3\u00f3r {deadline}.',
-    codeLabel: 'Uw toegangscode',
-    ctaText: 'Vragenlijst opnieuw invullen \u2192',
-    previewLinkText: 'Bekijk inkijkexemplaar \u2192',
-    praktischHeading: 'Praktisch',
-    checklistItems: 'Uw eerdere antwoorden zijn gewist, u begint met een schone lei\nDuurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nVoortgang gekoppeld aan uw apparaat, niet aan uw code',
-    privacyText: 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.',
-    contactText: 'Vragen? {contactPerson} via {contactEmail}',
+    greeting: 'Beste {naam}',
+    bodyText: 'Uw eerdere inzending voor de Monitor Executive Search is gereset. U kunt de vragenlijst opnieuw invullen v\u00f3\u00f3r {deadline}.',
+    ctaText: 'Vragenlijst opnieuw invullen',
+    ctaNote: '',
+    deadlineContactText: 'Bij vragen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
+    section2Heading: '',
+    section2Text: '',
+    section3Heading: '',
+    section3ImageUrl: '',
+    section3Text: '',
     closingText: 'Met vriendelijke groet,',
-    footerText: 'U ontvangt deze e-mail omdat de inzending van uw organisatie is gereset voor de Monitoring Cultureel Talent naar de Top 2026.'
+    signer1Name: '',
+    signer1Title: '',
+    signer2Name: '',
+    signer2Title: '',
+    address: 'Sandbergplein 24\n1181 ZX Amstelveen\nNederland',
+    phone: '',
+    website: 'www.talentnaardetop.nl',
+    socialTwitter: '',
+    socialLinkedin: '',
+    socialYoutube: '',
+    footerText: 'U ontvangt deze e-mail omdat uw eerdere inzending is gereset voor de Monitor Executive Search.',
+    webVersionUrl: '',
+    unsubscribeUrl: '',
+    profileUrl: '',
+    privacyUrl: ''
   };
 
   const TEMPLATE_PRESETS = {
@@ -69,51 +114,192 @@
   };
 
   // ---------------------------------------------------------------------------
+  // Brand colors
+  // ---------------------------------------------------------------------------
+
+  const C = {
+    terracotta: '#c4785a',
+    terracottaDark: '#a8624a',
+    sand: '#f5f0eb',
+    white: '#ffffff',
+    text: '#333333',
+    textLight: '#666666',
+    textMuted: '#999999',
+    border: '#e0d6cc',
+    footerBg: '#f8f4f0'
+  };
+
+  // ---------------------------------------------------------------------------
   // Build HTML email
   // ---------------------------------------------------------------------------
 
-  /**
-   * @param {Object} recipient  { name, code }
-   * @param {Object} settings   Full settings object (subject, surveyUrl, previewUrl, deadline, senderName, contactPerson, contactEmail, heading, introText, ...)
-   * @returns {string} Complete HTML email string
-   */
   function buildEmailHtml(recipient, settings) {
     const s = settings || {};
     const naam = esc(recipient?.name || '[naam]');
     const rawCode = recipient?.code || 'ABC-DEF';
     const code = esc(rawCode);
     const deadline = esc(s.deadline || '[deadline]');
-    const baseSurveyUrl = s.surveyUrl || 'https://monitorcultuur.nl/';
-    const surveyUrl = esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode));
-    const previewUrl = esc(s.previewUrl || 'https://monitorcultuur.nl/inkijkexemplaar');
+    const baseSurveyUrl = s.surveyUrl || '#';
+    const surveyUrl = baseSurveyUrl !== '#'
+      ? esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode))
+      : '#';
     const contactPerson = esc(s.contactPerson || '[contactpersoon]');
     const contactEmail = esc(s.contactEmail || '[email]');
+    const contactPhone = esc(s.contactPhone || '[telefoon]');
     const senderName = esc(s.senderName || DEFAULTS.senderName);
 
-    const vars = { naam, deadline, contactPerson, contactEmail, code };
+    const vars = { naam, deadline, contactPerson, contactEmail, contactPhone, code };
 
+    // Resolve all text fields with placeholders
     const heading = esc(s.heading || DEFAULTS.heading);
-    const introHtml = esc(replaceTextPlaceholders(s.introText || DEFAULTS.introText, vars));
-    const codeLabel = esc(s.codeLabel || DEFAULTS.codeLabel);
+    const greetingText = esc(replaceTextPlaceholders(s.greeting || DEFAULTS.greeting, vars));
+    const bodyRaw = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars);
     const ctaText = esc(s.ctaText || DEFAULTS.ctaText);
-    const previewLinkText = esc(s.previewLinkText || DEFAULTS.previewLinkText);
-    const praktischHeading = esc(s.praktischHeading || DEFAULTS.praktischHeading);
-    const privacyText = esc(s.privacyText || DEFAULTS.privacyText);
-    const closingText = esc(s.closingText || DEFAULTS.closingText);
+    const ctaNote = esc(s.ctaNote || '');
+    const deadlineContactRaw = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars);
+    const section2Heading = esc(s.section2Heading || '');
+    const section2Raw = replaceTextPlaceholders(s.section2Text || '', vars);
+    const section3Heading = esc(s.section3Heading || '');
+    const section3ImageUrl = esc(s.section3ImageUrl || '');
+    const section3Raw = replaceTextPlaceholders(s.section3Text || '', vars);
+    const closingRaw = replaceTextPlaceholders(s.closingText || DEFAULTS.closingText, vars);
+    const signer1Name = esc(s.signer1Name || '');
+    const signer1Title = esc(s.signer1Title || '');
+    const signer2Name = esc(s.signer2Name || '');
+    const signer2Title = esc(s.signer2Title || '');
+    const addressRaw = s.address || DEFAULTS.address;
+    const phone = esc(s.phone || '');
+    const website = esc(s.website || DEFAULTS.website);
     const footerText = esc(s.footerText || DEFAULTS.footerText);
+    const webVersionUrl = esc(s.webVersionUrl || '');
+    const unsubscribeUrl = esc(s.unsubscribeUrl || '');
+    const profileUrl = esc(s.profileUrl || '');
+    const privacyUrl = esc(s.privacyUrl || '');
+    const socialTwitter = esc(s.socialTwitter || '');
+    const socialLinkedin = esc(s.socialLinkedin || '');
+    const socialYoutube = esc(s.socialYoutube || '');
 
-    // Build contact HTML with mailto link
-    const contactRaw = s.contactText || DEFAULTS.contactText;
-    const contactHtml = esc(replaceTextPlaceholders(contactRaw, vars))
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:#111162; font-weight:500; text-decoration:none;">${contactEmail}</a>`);
+    // Build body paragraphs
+    const pStyle = `margin:0 0 16px; color:${C.text}; font-size:15px; line-height:1.65;`;
+    const bodyHtml = textToHtml(bodyRaw, pStyle);
 
-    // Build checklist rows
-    const checklistRaw = s.checklistItems || DEFAULTS.checklistItems;
-    const checklistLines = checklistRaw.split('\n').map(l => l.trim()).filter(Boolean);
-    const checklistHtml = checklistLines.map((item, i) => {
-      const padding = i === checklistLines.length - 1 ? '3px 28px 16px 46px' : '3px 28px 3px 46px';
-      return `<tr><td style="padding:${padding}; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>${esc(item)}</td></tr>`;
-    }).join('\n                      ');
+    // Build deadline/contact HTML with mailto link
+    const deadlineContactHtml = textToHtml(deadlineContactRaw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65;`)
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
+
+    // Build closing paragraphs
+    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65;`);
+
+    // Build address lines
+    const addressHtml = esc(addressRaw).replace(/\n/g, '<br>');
+
+    // Pre-header links
+    let preheaderHtml = '';
+    if (webVersionUrl || unsubscribeUrl) {
+      const links = [];
+      if (webVersionUrl) links.push(`<a href="${webVersionUrl}" style="color:${C.textMuted}; text-decoration:underline;">Webversie</a>`);
+      if (unsubscribeUrl) links.push(`<a href="${unsubscribeUrl}" style="color:${C.textMuted}; text-decoration:underline;">Afmelden</a>`);
+      preheaderHtml = `
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
+          <tr>
+            <td style="padding:12px 0; text-align:center; font-size:12px; color:${C.textMuted};">
+              ${links.join('&nbsp;&nbsp;|&nbsp;&nbsp;')}
+            </td>
+          </tr>
+        </table>`;
+    }
+
+    // Section 2 (optional)
+    let section2Html = '';
+    if (section2Heading) {
+      const s2BodyHtml = textToHtml(section2Raw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65;`);
+      section2Html = `
+                      <!-- Divider -->
+                      <tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ${C.border}; font-size:0;">&nbsp;</td></tr></table></td></tr>
+                      <!-- Section 2 -->
+                      <tr>
+                        <td style="padding:24px 32px 0;">
+                          <h2 style="margin:0 0 12px; color:${C.text}; font-size:18px; font-weight:600; line-height:1.4;">${section2Heading}</h2>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 32px 16px;">
+                          ${s2BodyHtml}
+                        </td>
+                      </tr>`;
+    }
+
+    // Section 3 (optional)
+    let section3Html = '';
+    if (section3Heading) {
+      const s3BodyHtml = textToHtml(section3Raw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65;`);
+      const imageHtml = section3ImageUrl
+        ? `<tr><td style="padding:0 32px 16px;"><img src="${section3ImageUrl}" alt="" style="max-width:100%; height:auto; border-radius:8px; display:block;" /></td></tr>`
+        : '';
+      section3Html = `
+                      <!-- Divider -->
+                      <tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ${C.border}; font-size:0;">&nbsp;</td></tr></table></td></tr>
+                      <!-- Section 3 -->
+                      <tr>
+                        <td style="padding:24px 32px 0;">
+                          <h2 style="margin:0 0 12px; color:${C.text}; font-size:18px; font-weight:600; line-height:1.4;">${section3Heading}</h2>
+                        </td>
+                      </tr>
+                      ${imageHtml}
+                      <tr>
+                        <td style="padding:0 32px 16px;">
+                          ${s3BodyHtml}
+                        </td>
+                      </tr>`;
+    }
+
+    // CTA note (optional)
+    const ctaNoteHtml = ctaNote
+      ? `<tr><td style="padding:4px 32px 16px;" align="center"><p style="margin:0; color:${C.textLight}; font-size:13px; font-style:italic;">${ctaNote}</p></td></tr>`
+      : '';
+
+    // Signatures
+    let signatureHtml = '';
+    if (signer1Name || signer2Name) {
+      const s1 = signer1Name ? `<td style="vertical-align:top; padding-right:24px;">
+                              <p style="margin:0; color:${C.text}; font-size:14px; font-weight:600;">${signer1Name}</p>
+                              ${signer1Title ? `<p style="margin:2px 0 0; color:${C.textLight}; font-size:13px;">${signer1Title}</p>` : ''}
+                            </td>` : '';
+      const s2 = signer2Name ? `<td style="vertical-align:top;">
+                              <p style="margin:0; color:${C.text}; font-size:14px; font-weight:600;">${signer2Name}</p>
+                              ${signer2Title ? `<p style="margin:2px 0 0; color:${C.textLight}; font-size:13px;">${signer2Title}</p>` : ''}
+                            </td>` : '';
+      signatureHtml = `
+                      <tr>
+                        <td style="padding:8px 32px 24px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0"><tr>${s1}${s2}</tr></table>
+                        </td>
+                      </tr>`;
+    }
+
+    // Social links
+    let socialHtml = '';
+    const socialLinks = [];
+    if (socialTwitter) socialLinks.push(`<a href="${socialTwitter}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">t</a>`);
+    if (socialLinkedin) socialLinks.push(`<a href="${socialLinkedin}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">in</a>`);
+    if (socialYoutube) socialLinks.push(`<a href="${socialYoutube}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">yt</a>`);
+    if (socialLinks.length > 0) {
+      socialHtml = `<tr><td style="padding:8px 0 0; text-align:center;">${socialLinks.join('')}</td></tr>`;
+    }
+
+    // Footer links
+    let footerLinksHtml = '';
+    const footerLinks = [];
+    if (unsubscribeUrl) footerLinks.push(`<a href="${unsubscribeUrl}" style="color:${C.textMuted}; text-decoration:underline;">Afmelden</a>`);
+    if (profileUrl) footerLinks.push(`<a href="${profileUrl}" style="color:${C.textMuted}; text-decoration:underline;">Profiel wijzigen</a>`);
+    if (footerLinks.length > 0) {
+      footerLinksHtml = `<tr><td style="padding:12px 0 0; text-align:center; font-size:12px;">${footerLinks.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`;
+    }
+
+    // Copyright & privacy
+    let copyrightHtml = `<p style="margin:0; color:${C.textMuted}; font-size:11px;">\u00A9${new Date().getFullYear()} ${senderName}`;
+    if (privacyUrl) copyrightHtml += `&nbsp;&nbsp;|&nbsp;&nbsp;<a href="${privacyUrl}" style="color:${C.textMuted}; text-decoration:underline;">Privacy</a>`;
+    copyrightHtml += '</p>';
 
     return `<!DOCTYPE html>
 <html lang="nl" xmlns="http://www.w3.org/1999/xhtml">
@@ -132,90 +318,62 @@
     img { border: 0; display: block; }
   </style>
 </head>
-<body style="margin:0; padding:0; background-color:#f3ece2; font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3ece2;">
+<body style="margin:0; padding:0; background-color:${C.sand}; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${C.sand};">
     <tr>
-      <td align="center" style="padding: 40px 20px;">
+      <td align="center" style="padding:20px 16px 40px;">
 
-        <!-- .container outline stroke -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:#fafbfc; border-radius:18px; box-shadow: 0 8px 32px rgba(8,9,30,0.15), 0 2px 8px rgba(8,9,30,0.1);">
+        <!-- Pre-header links -->
+        ${preheaderHtml}
+
+        <!-- Header -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.terracotta}; border-radius:12px 12px 0 0;">
           <tr>
-            <td style="padding: 6px;">
+            <td style="padding:32px 32px 28px; text-align:center;">
+              <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.5px;">${senderName}</p>
+              <h1 style="margin:0; color:${C.white}; font-size:26px; font-weight:700; line-height:1.3; letter-spacing:-0.3px;">
+                ${heading}
+              </h1>
+            </td>
+          </tr>
+        </table>
 
-              <!-- .container inner — sidebar + content -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px; overflow:hidden;">
-                <tr>
+        <!-- Content area -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.white};">
 
-                  <!-- .index sidebar strip (decorative) -->
-                  <td width="48" style="width:48px; background: linear-gradient(180deg, rgba(140,174,244,0.2) 0%, rgba(225,233,244,0.35) 100%); vertical-align:top; border-radius:12px 0 0 12px;">
-                    &nbsp;
-                  </td>
+                      <!-- Spacer -->
+                      <tr><td style="height:8px;"></td></tr>
 
-                  <!-- .content area -->
-                  <td style="background-color:#fafbfc; vertical-align:top; border-radius:0 12px 12px 0;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-
-                      <!-- Content header with progress dots -->
+                      <!-- Greeting -->
                       <tr>
-                        <td style="padding: 20px 28px 0;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-                            <td style="font-size:0; line-height:0;">
-                              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#111162;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;">&nbsp;</span>
-                            </td>
-                          </tr></table>
-                        </td>
-                      </tr>
-
-                      <!-- Step heading — h1 style -->
-                      <tr>
-                        <td style="padding: 20px 28px 8px;">
-                          <h1 style="margin:0; color:#1d1d30; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; font-size:24px; font-weight:600; line-height:1.3; letter-spacing:-0.3px;">
-                            ${heading}
-                          </h1>
-                        </td>
-                      </tr>
-
-                      <!-- Subtitle -->
-                      <tr>
-                        <td style="padding: 0 28px 24px;">
-                          <p style="margin:0; color:#7a7a96; font-size:15px; line-height:1.55; letter-spacing:0.01em;">
-                            ${introHtml}
+                        <td style="padding:24px 32px 16px;">
+                          <p style="margin:0; color:${C.text}; font-size:15px; font-weight:600; line-height:1.5;">
+                            ${greetingText}
                           </p>
                         </td>
                       </tr>
 
-                      <!-- Code box -->
+                      <!-- Body text -->
                       <tr>
-                        <td style="padding: 0 28px 24px;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="border:2px solid #111162; border-radius:10px; background-color:#f1f4f8; padding:20px; text-align:center; box-shadow:0 4px 16px rgba(17,17,98,0.15);">
-                                <p style="margin:0 0 6px; color:#7a7a96; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:1px;">${codeLabel}</p>
-                                <p style="margin:0; color:#111162; font-size:26px; font-weight:700; letter-spacing:5px; font-family:'SF Mono','Fira Code','Courier New',monospace;">${code}</p>
-                              </td>
-                            </tr>
-                          </table>
+                        <td style="padding:0 32px 8px;">
+                          ${bodyHtml}
                         </td>
                       </tr>
 
                       <!-- CTA button -->
                       <tr>
-                        <td style="padding: 0 28px 8px;" align="center">
+                        <td style="padding:8px 32px 8px;" align="center">
                           <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:42px;v-text-anchor:middle;width:220px;" arcsize="24%" strokecolor="#111162" fillcolor="#111162">
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:44px;v-text-anchor:middle;width:240px;" arcsize="14%" strokecolor="${C.terracotta}" fillcolor="${C.terracotta}">
                             <w:anchorlock/>
-                            <center style="color:#ffffff;font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;">${ctaText}</center>
+                            <center style="color:#ffffff;font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">${ctaText}</center>
                           </v:roundrect>
                           <![endif]-->
                           <!--[if !mso]><!-->
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
-                              <td bgcolor="#111162" style="background:linear-gradient(135deg, #8caef4 0%, #111162 100%); border-radius:10px; box-shadow:0 4px 12px rgba(17,17,98,0.3);">
-                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 28px; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
+                              <td style="background-color:${C.terracotta}; border-radius:6px;">
+                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 32px; color:${C.white}; text-decoration:none; font-size:15px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
                               </td>
                             </tr>
                           </table>
@@ -223,76 +381,63 @@
                         </td>
                       </tr>
 
-                      <!-- Preview link -->
+                      ${ctaNoteHtml}
+
+                      <!-- Spacer -->
+                      <tr><td style="height:8px;"></td></tr>
+
+                      <!-- Deadline / contact -->
                       <tr>
-                        <td style="padding: 0 28px 24px;" align="center">
-                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:underline;">${previewLinkText}</a>
+                        <td style="padding:8px 32px 24px;">
+                          ${deadlineContactHtml}
                         </td>
                       </tr>
 
-                      <!-- Divider -->
-                      <tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4; font-size:0;">&nbsp;</td></tr></table></td></tr>
-
-                      <!-- Praktisch heading -->
-                      <tr>
-                        <td style="padding: 20px 28px 10px;">
-                          <p style="margin:0; color:#1d1d30; font-size:14px; font-weight:600;">${praktischHeading}</p>
-                        </td>
-                      </tr>
-
-                      <!-- Checklist items -->
-                      ${checklistHtml}
-
-                      <!-- Privacy info block -->
-                      <tr>
-                        <td style="padding: 0 28px 20px;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="background:linear-gradient(135deg, #f1f4f8 0%, #e1e9f4 100%); border-left:3px solid #111162; border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:#3c3c5d; line-height:1.6;">
-                                ${privacyText}
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-
-                      <!-- Contact -->
-                      <tr>
-                        <td style="padding: 0 28px 16px;">
-                          <p style="margin:0; color:#7a7a96; font-size:12px; line-height:1.6;">
-                            ${contactHtml}
-                          </p>
-                        </td>
-                      </tr>
-
-                      <!-- Divider -->
-                      <tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4; font-size:0;">&nbsp;</td></tr></table></td></tr>
+                      ${section2Html}
+                      ${section3Html}
 
                       <!-- Closing -->
                       <tr>
-                        <td style="padding: 16px 28px 24px;">
-                          <p style="margin:0 0 4px; color:#3c3c5d; font-size:13px; line-height:1.6;">${closingText}</p>
-                          <p style="margin:0; color:#1d1d30; font-size:13px; font-weight:600; line-height:1.6;">${senderName}</p>
+                        <td style="padding:16px 32px 8px;">
+                          ${closingHtml}
                         </td>
                       </tr>
 
-                    </table>
-                  </td>
+                      ${signatureHtml}
 
-                </tr>
-              </table>
-              <!-- /.container inner -->
+        </table>
+        <!-- /Content area -->
 
+        <!-- Footer -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.footerBg}; border-radius:0 0 12px 12px; border-top:1px solid ${C.border};">
+          <tr>
+            <td style="padding:24px 32px; text-align:center;">
+              <p style="margin:0 0 4px; color:${C.terracotta}; font-size:15px; font-weight:700;">${senderName}</p>
+              ${socialHtml ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${socialHtml}</table>` : ''}
+              <p style="margin:12px 0 0; color:${C.textLight}; font-size:12px; line-height:1.6;">
+                ${addressHtml}
+              </p>
+              ${phone ? `<p style="margin:4px 0 0; color:${C.textLight}; font-size:12px;">${phone}</p>` : ''}
+              <p style="margin:4px 0 0; font-size:12px;">
+                ${contactEmail ? `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>` : ''}
+                ${contactEmail && website ? '&nbsp;&nbsp;' : ''}
+                ${website ? `<a href="https://${website}" style="color:${C.terracotta}; text-decoration:none;">${website}</a>` : ''}
+              </p>
             </td>
           </tr>
         </table>
-        <!-- /.container outline stroke -->
 
-        <!-- Footer outside card -->
+        <!-- Bottom footer -->
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
+          ${footerLinksHtml}
           <tr>
-            <td style="padding:16px 20px; text-align:center;">
-              <p style="margin:0; color:#7a7a96; font-size:11px; line-height:1.5;">
+            <td style="padding:12px 20px 0; text-align:center;">
+              ${copyrightHtml}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 20px; text-align:center;">
+              <p style="margin:0; color:${C.textMuted}; font-size:11px; line-height:1.5;">
                 ${footerText}
               </p>
             </td>
@@ -307,54 +452,64 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Build plain-text email (for mailto: links)
+  // Build plain-text email
   // ---------------------------------------------------------------------------
 
-  /**
-   * @param {Object} recipient  { name, code }
-   * @param {Object} settings   Full settings object
-   * @returns {string} Plain-text email body
-   */
   function buildPlainText(recipient, settings) {
     const s = settings || {};
     const naam = recipient?.name || '[naam]';
     const rawCode = recipient?.code || 'ABC-DEF';
     const deadline = s.deadline || '[deadline]';
-    const baseSurveyUrl = s.surveyUrl || 'https://monitorcultuur.nl/';
-    const surveyUrl = baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode);
-    const previewUrl = s.previewUrl || '';
+    const baseSurveyUrl = s.surveyUrl || '';
+    const surveyUrl = baseSurveyUrl
+      ? baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode)
+      : '';
     const contactPerson = s.contactPerson || '[contactpersoon]';
     const contactEmail = s.contactEmail || '[email]';
+    const contactPhone = s.contactPhone || '[telefoon]';
     const senderName = s.senderName || DEFAULTS.senderName;
 
-    const vars = { naam, deadline, contactPerson, contactEmail, code: rawCode };
+    const vars = { naam, deadline, contactPerson, contactEmail, contactPhone, code: rawCode };
 
-    const introText = replaceTextPlaceholders(s.introText || DEFAULTS.introText, vars);
-    const closingText = s.closingText || DEFAULTS.closingText;
+    const greeting = replaceTextPlaceholders(s.greeting || DEFAULTS.greeting, vars);
+    const bodyText = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars);
+    const closingText = replaceTextPlaceholders(s.closingText || DEFAULTS.closingText, vars);
+    const deadlineContactText = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars);
 
-    // Build checklist
-    const checklistRaw = s.checklistItems || DEFAULTS.checklistItems;
-    const checklistLines = checklistRaw.split('\n').map(l => l.trim()).filter(Boolean);
-    const checklistText = checklistLines.map(item => '- ' + item).join('\n');
-
-    // Build contact line
-    const contactRaw = s.contactText || DEFAULTS.contactText;
-    const contactLine = replaceTextPlaceholders(contactRaw, vars);
-
-    let text = introText + '\n\n';
-    text += (s.codeLabel || DEFAULTS.codeLabel) + ': ' + rawCode + '\n\n';
+    let text = greeting + '\n\n';
+    text += bodyText + '\n\n';
     if (surveyUrl) {
-      text += 'Start de vragenlijst: ' + surveyUrl + '\n';
+      text += (s.ctaText || DEFAULTS.ctaText) + ': ' + surveyUrl + '\n';
+      if (s.ctaNote) text += s.ctaNote + '\n';
+      text += '\n';
     }
-    if (previewUrl) {
-      text += 'Inkijkexemplaar: ' + previewUrl + '\n';
+    text += deadlineContactText + '\n\n';
+
+    // Section 2
+    const s2h = s.section2Heading || '';
+    if (s2h) {
+      text += '---\n\n';
+      text += s2h + '\n\n';
+      text += replaceTextPlaceholders(s.section2Text || '', vars) + '\n\n';
     }
-    text += '\n';
-    text += (s.praktischHeading || DEFAULTS.praktischHeading) + ':\n';
-    text += checklistText + '\n\n';
-    text += contactLine + '\n\n';
+
+    // Section 3
+    const s3h = s.section3Heading || '';
+    if (s3h) {
+      text += '---\n\n';
+      text += s3h + '\n\n';
+      text += replaceTextPlaceholders(s.section3Text || '', vars) + '\n\n';
+    }
+
     text += closingText + '\n';
-    text += senderName;
+    if (s.signer1Name) text += s.signer1Name + (s.signer1Title ? ', ' + s.signer1Title : '') + '\n';
+    if (s.signer2Name) text += s.signer2Name + (s.signer2Title ? ', ' + s.signer2Title : '') + '\n';
+    text += '\n--\n';
+    text += senderName + '\n';
+    if (s.address) text += s.address.replace(/\n/g, ', ') + '\n';
+    if (s.phone) text += s.phone + '\n';
+    if (s.contactEmail) text += s.contactEmail + '\n';
+    if (s.website) text += s.website;
 
     return text;
   }
@@ -363,26 +518,10 @@
   // Build .eml file (RFC 2822 + MIME multipart/alternative)
   // ---------------------------------------------------------------------------
 
-  /**
-   * Encode a UTF-8 string as RFC 2047 encoded-word for email headers.
-   */
   function encodeRfc2047(str) {
     return '=?UTF-8?B?' + btoa(unescape(encodeURIComponent(str))) + '?=';
   }
 
-  /**
-   * Base64-encode a UTF-8 string with line wrapping at 76 chars (RFC 2045).
-   */
-  function base64Utf8(str) {
-    const raw = btoa(unescape(encodeURIComponent(str)));
-    return raw.match(/.{1,76}/g).join('\r\n');
-  }
-
-  /**
-   * Encode a UTF-8 string as quoted-printable (RFC 2045).
-   * More compatible with email clients than base64 for HTML content —
-   * ASCII passes through unchanged so links remain intact.
-   */
   function encodeQuotedPrintable(str) {
     const utf8 = unescape(encodeURIComponent(str));
     let result = '';
@@ -391,7 +530,6 @@
     for (let i = 0; i < utf8.length; i++) {
       const c = utf8.charCodeAt(i);
 
-      // Hard line break: \r\n or lone \n → CRLF
       if (c === 0x0D && i + 1 < utf8.length && utf8.charCodeAt(i + 1) === 0x0A) {
         result += '\r\n';
         lineLen = 0;
@@ -404,7 +542,6 @@
         continue;
       }
 
-      // Printable ASCII (33-126) except '=' passes through; tab and space too
       let encoded;
       if ((c >= 33 && c <= 126 && c !== 61) || c === 9 || c === 32) {
         encoded = String.fromCharCode(c);
@@ -412,7 +549,6 @@
         encoded = '=' + c.toString(16).toUpperCase().padStart(2, '0');
       }
 
-      // Soft line break at 75 chars (leave room for trailing =)
       if (lineLen + encoded.length >= 76) {
         result += '=\r\n';
         lineLen = 0;
@@ -425,9 +561,6 @@
     return result;
   }
 
-  /**
-   * Format a Date object as RFC 2822 date string for email headers.
-   */
   function formatRfc2822Date(date) {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -441,14 +574,6 @@
       pad(date.getSeconds()) + ' ' + tz;
   }
 
-  /**
-   * Build a .eml file string that Outlook/Thunderbird/Apple Mail can open
-   * as a ready-to-send draft with full HTML formatting.
-   *
-   * @param {Object} recipient  { name, email, code }
-   * @param {Object} settings   Full settings object
-   * @returns {string} Complete .eml file content
-   */
   function buildEml(recipient, settings) {
     const s = settings || {};
     const subject = s.subject || DEFAULTS.subject;
@@ -463,12 +588,10 @@
     const boundary = '----=_Part_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
     const messageId = '<' + Date.now().toString(36) + '.' + Math.random().toString(36).slice(2, 10) + '@monitoringtalent.local>';
 
-    // Format "To" with display name if available
     const toHeader = toName
       ? encodeRfc2047(toName) + ' <' + toEmail + '>'
       : toEmail;
 
-    // Format "From" — use contact email if available, otherwise placeholder
     const fromEmail = contactEmail || 'noreply@monitoringtalent.local';
     const fromHeader = senderName
       ? encodeRfc2047(senderName) + ' <' + fromEmail + '>'

@@ -21,25 +21,41 @@
   const PROXY_URL = '/api/';
 
   const DEFAULT_SETTINGS = {
-    subject: 'Monitoring Cultureel Talent naar de Top 2026',
-    surveyUrl: 'https://monitorcultuur.nl/',
-    previewUrl: 'https://monitorcultuur.nl/inkijkexemplaar',
+    subject: 'Monitor Executive Search \u2014 Talent naar de Top',
+    surveyUrl: '',
+    webVersionUrl: '',
     deadline: '',
-    senderName: 'Commissie Monitoring Talent naar de Top',
+    senderName: 'Talent naar de Top',
     contactPerson: '',
     contactEmail: '',
+    contactPhone: '',
     // Editable mail text fields
-    heading: 'Monitoring Cultureel Talent naar de Top 2026',
-    introText: 'Geachte {naam}, wij vragen u de monitoring in te vullen vóór {deadline}.',
-    codeLabel: 'Uw toegangscode',
-    ctaText: 'Ga naar de vragenlijst →',
-    previewLinkText: 'Bekijk inkijkexemplaar →',
-    praktischHeading: 'Praktisch',
-    checklistItems: 'Duurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nHoud uw personeelscijfers bij de hand\nVoortgang gekoppeld aan uw apparaat, niet aan uw code',
-    privacyText: 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.',
-    contactText: 'Vragen? {contactPerson} via {contactEmail}',
-    closingText: 'Met vriendelijke groet,',
-    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.'
+    heading: 'Monitor Executive Search',
+    greeting: 'Beste {naam}',
+    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
+    ctaText: 'Naar de vragenlijst',
+    ctaNote: '',
+    deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
+    section2Heading: 'Wat gebeurt er met de resultaten?',
+    section2Text: 'De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.',
+    section3Heading: 'Topvrouw van het Jaar',
+    section3ImageUrl: '',
+    section3Text: 'Tot slot nog een belangrijke vraag aan u. Eerder ontving u van ons een email met suggesties over de topvrouw van het jaar. Onze vraag aan u: Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor deze award? Wij stellen uw input zeer op prijs.',
+    closingText: 'Wij wensen u veel succes met het invullen van de vragenlijst en kijken uit naar uw resultaten. Alvast hartelijk dank voor uw medewerking.\n\nMet vriendelijke groet,',
+    signer1Name: '',
+    signer1Title: '',
+    signer2Name: '',
+    signer2Title: '',
+    address: 'Sandbergplein 24\n1181 ZX Amstelveen\nNederland',
+    phone: '',
+    website: 'www.talentnaardetop.nl',
+    socialTwitter: '',
+    socialLinkedin: '',
+    socialYoutube: '',
+    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
+    unsubscribeUrl: '',
+    profileUrl: '',
+    privacyUrl: ''
   };
 
   const SEND_DELAY_MS = 1500; // Delay between consecutive sends to avoid rate-limiting
@@ -151,230 +167,17 @@
       .replace(/\{deadline\}/g, vars.deadline)
       .replace(/\{contactPerson\}/g, vars.contactPerson)
       .replace(/\{contactEmail\}/g, vars.contactEmail)
+      .replace(/\{contactPhone\}/g, vars.contactPhone)
       .replace(/\{code\}/g, vars.code);
   }
 
   function generateEmailHtml(recipient) {
-    const s = settings;
-    const naam = esc(recipient?.name || '[naam]');
-    const rawCode = recipient?.code || 'ABC-DEF';
-    const code = esc(rawCode);
-    const deadline = esc(s.deadline || '[deadline]');
-    const baseSurveyUrl = s.surveyUrl || '#';
-    const surveyUrl = baseSurveyUrl !== '#'
-      ? esc(baseSurveyUrl + (baseSurveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(rawCode))
-      : '#';
-    const previewUrl = esc(s.previewUrl || '#');
-    const contactPerson = esc(s.contactPerson || '[contactpersoon]');
-    const contactEmail = esc(s.contactEmail || '[email]');
-    const senderName = esc(s.senderName || 'Commissie Monitoring Talent naar de Top');
-
-    const vars = { naam, deadline, contactPerson, contactEmail, code };
-
-    const heading = esc(s.heading || DEFAULT_SETTINGS.heading);
-    const introHtml = esc(replaceTextPlaceholders(s.introText || DEFAULT_SETTINGS.introText, vars));
-    const codeLabel = esc(s.codeLabel || DEFAULT_SETTINGS.codeLabel);
-    const ctaText = esc(s.ctaText || DEFAULT_SETTINGS.ctaText);
-    const previewLinkText = esc(s.previewLinkText || DEFAULT_SETTINGS.previewLinkText);
-    const praktischHeading = esc(s.praktischHeading || DEFAULT_SETTINGS.praktischHeading);
-    const privacyText = esc(s.privacyText || DEFAULT_SETTINGS.privacyText);
-    const closingText = esc(s.closingText || DEFAULT_SETTINGS.closingText);
-    const footerText = esc(s.footerText || DEFAULT_SETTINGS.footerText);
-
-    // Parse contact text with placeholders, build HTML with mailto link
-    const contactRaw = s.contactText || DEFAULT_SETTINGS.contactText;
-    const contactHtml = esc(replaceTextPlaceholders(contactRaw, vars))
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:#111162; font-weight:500; text-decoration:none;">${contactEmail}</a>`);
-
-    // Build checklist rows from newline-separated text
-    const checklistRaw = s.checklistItems || DEFAULT_SETTINGS.checklistItems;
-    const checklistLines = checklistRaw.split('\n').map(l => l.trim()).filter(Boolean);
-    const checklistHtml = checklistLines.map((item, i) => {
-      const padding = i === checklistLines.length - 1 ? '3px 28px 16px 46px' : '3px 28px 3px 46px';
-      return `<tr><td style="padding:${padding}; color:#3c3c5d; font-size:13px; line-height:1.6;"><span style="color:#111162; font-weight:700; margin-left:-18px; margin-right:8px;">&#10003;</span>${esc(item)}</td></tr>`;
-    }).join('\n                      ');
-
-    return `<!DOCTYPE html>
-<html lang="nl" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>${esc(s.subject)}</title>
-  <!--[if mso]>
-  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
-  <![endif]-->
-  <style>
-    body, table, td { margin: 0; padding: 0; }
-    body { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-    img { border: 0; display: block; }
-  </style>
-</head>
-<body style="margin:0; padding:0; background-color:#f3ece2; font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3ece2;">
-    <tr>
-      <td align="center" style="padding: 40px 20px;">
-
-        <!-- .container outline stroke -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:#fafbfc; border-radius:18px; box-shadow: 0 8px 32px rgba(8,9,30,0.15), 0 2px 8px rgba(8,9,30,0.1);">
-          <tr>
-            <td style="padding: 6px;">
-
-              <!-- .container inner — sidebar + content -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px; overflow:hidden;">
-                <tr>
-
-                  <!-- .index sidebar strip (decorative) -->
-                  <td width="48" style="width:48px; background: linear-gradient(180deg, rgba(140,174,244,0.2) 0%, rgba(225,233,244,0.35) 100%); vertical-align:top; border-radius:12px 0 0 12px;">
-                    &nbsp;
-                  </td>
-
-                  <!-- .content area -->
-                  <td style="background-color:#fafbfc; vertical-align:top; border-radius:0 12px 12px 0;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-
-                      <!-- Content header with progress dots -->
-                      <tr>
-                        <td style="padding: 20px 28px 0;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-                            <td style="font-size:0; line-height:0;">
-                              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#111162;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span><!--
-                              --><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;">&nbsp;</span>
-                            </td>
-                          </tr></table>
-                        </td>
-                      </tr>
-
-                      <!-- Step heading — h1 style -->
-                      <tr>
-                        <td style="padding: 20px 28px 8px;">
-                          <h1 style="margin:0; color:#1d1d30; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; font-size:24px; font-weight:600; line-height:1.3; letter-spacing:-0.3px;">
-                            ${heading}
-                          </h1>
-                        </td>
-                      </tr>
-
-                      <!-- Subtitle -->
-                      <tr>
-                        <td style="padding: 0 28px 24px;">
-                          <p style="margin:0; color:#7a7a96; font-size:15px; line-height:1.55; letter-spacing:0.01em;">
-                            ${introHtml}
-                          </p>
-                        </td>
-                      </tr>
-
-                      <!-- Code box — .option-card.selected -->
-                      <tr>
-                        <td style="padding: 0 28px 24px;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="border:2px solid #111162; border-radius:10px; background-color:#f1f4f8; padding:20px; text-align:center; box-shadow:0 4px 16px rgba(17,17,98,0.15);">
-                                <p style="margin:0 0 6px; color:#7a7a96; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:1px;">${codeLabel}</p>
-                                <p style="margin:0; color:#111162; font-size:26px; font-weight:700; letter-spacing:5px; font-family:'SF Mono','Fira Code','Courier New',monospace;">${code}</p>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-
-                      <!-- CTA button — .btn-primary -->
-                      <tr>
-                        <td style="padding: 0 28px 8px;" align="center">
-                          <table role="presentation" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="background:linear-gradient(135deg, #8caef4 0%, #111162 100%); border-radius:10px; box-shadow:0 4px 12px rgba(17,17,98,0.3);">
-                                <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 28px; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-
-                      <!-- Preview link -->
-                      <tr>
-                        <td style="padding: 0 28px 24px;" align="center">
-                          <a href="${previewUrl}" target="_blank" style="color:#3c3c5d; font-size:12px; text-decoration:none; opacity:0.7;">${previewLinkText}</a>
-                        </td>
-                      </tr>
-
-                      <!-- Divider -->
-                      <tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4; font-size:0;">&nbsp;</td></tr></table></td></tr>
-
-                      <!-- Praktisch heading -->
-                      <tr>
-                        <td style="padding: 20px 28px 10px;">
-                          <p style="margin:0; color:#1d1d30; font-size:14px; font-weight:600;">${praktischHeading}</p>
-                        </td>
-                      </tr>
-
-                      <!-- Checklist items -->
-                      ${checklistHtml}
-
-                      <!-- Privacy — .info-block -->
-                      <tr>
-                        <td style="padding: 0 28px 20px;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="background:linear-gradient(135deg, #f1f4f8 0%, #e1e9f4 100%); border-left:3px solid #111162; border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:#3c3c5d; line-height:1.6;">
-                                ${privacyText}
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-
-                      <!-- Contact -->
-                      <tr>
-                        <td style="padding: 0 28px 16px;">
-                          <p style="margin:0; color:#7a7a96; font-size:12px; line-height:1.6;">
-                            ${contactHtml}
-                          </p>
-                        </td>
-                      </tr>
-
-                      <!-- Divider -->
-                      <tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4; font-size:0;">&nbsp;</td></tr></table></td></tr>
-
-                      <!-- Closing -->
-                      <tr>
-                        <td style="padding: 16px 28px 24px;">
-                          <p style="margin:0 0 4px; color:#3c3c5d; font-size:13px; line-height:1.6;">${closingText}</p>
-                          <p style="margin:0; color:#1d1d30; font-size:13px; font-weight:600; line-height:1.6;">${senderName}</p>
-                        </td>
-                      </tr>
-
-                    </table>
-                  </td>
-
-                </tr>
-              </table>
-              <!-- /.container inner -->
-
-            </td>
-          </tr>
-        </table>
-        <!-- /.container outline stroke -->
-
-        <!-- Footer outside card -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
-          <tr>
-            <td style="padding:16px 20px; text-align:center;">
-              <p style="margin:0; color:#7a7a96; font-size:11px; line-height:1.5;">
-                ${footerText}
-              </p>
-            </td>
-          </tr>
-        </table>
-
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
+    // Delegate to shared template builder
+    if (window.EmailTemplate && window.EmailTemplate.buildEmailHtml) {
+      return window.EmailTemplate.buildEmailHtml(recipient, settings);
+    }
+    // Fallback: simple text
+    return '<html><body><p>Template niet geladen.</p></body></html>';
   }
 
   // ---------------------------------------------------------------------------
@@ -577,7 +380,8 @@
   }
 
   async function sendSingleEmail(recipient) {
-    const params = new URLSearchParams({
+    // Build params — send all settings fields to GAS
+    const paramObj = {
       action: 'sendEmail',
       to: recipient.email,
       naam: recipient.name,
@@ -586,23 +390,26 @@
       surveyUrl: settings.surveyUrl
         ? settings.surveyUrl + (settings.surveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(recipient.code)
         : '',
-      previewUrl: settings.previewUrl || '',
       deadline: settings.deadline || '',
       contactPerson: settings.contactPerson || '',
       contactEmail: settings.contactEmail || '',
-      senderName: settings.senderName || '',
-      heading: settings.heading || DEFAULT_SETTINGS.heading,
-      introText: settings.introText || DEFAULT_SETTINGS.introText,
-      codeLabel: settings.codeLabel || DEFAULT_SETTINGS.codeLabel,
-      ctaText: settings.ctaText || DEFAULT_SETTINGS.ctaText,
-      previewLinkText: settings.previewLinkText || DEFAULT_SETTINGS.previewLinkText,
-      praktischHeading: settings.praktischHeading || DEFAULT_SETTINGS.praktischHeading,
-      checklistItems: settings.checklistItems || DEFAULT_SETTINGS.checklistItems,
-      privacyText: settings.privacyText || DEFAULT_SETTINGS.privacyText,
-      contactText: settings.contactText || DEFAULT_SETTINGS.contactText,
-      closingText: settings.closingText || DEFAULT_SETTINGS.closingText,
-      footerText: settings.footerText || DEFAULT_SETTINGS.footerText
-    });
+      contactPhone: settings.contactPhone || '',
+      senderName: settings.senderName || ''
+    };
+    // Add all text fields
+    const textFieldKeys = [
+      'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
+      'deadlineContactText', 'section2Heading', 'section2Text',
+      'section3Heading', 'section3ImageUrl', 'section3Text',
+      'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
+      'address', 'phone', 'website', 'footerText',
+      'webVersionUrl', 'unsubscribeUrl', 'profileUrl', 'privacyUrl',
+      'socialTwitter', 'socialLinkedin', 'socialYoutube'
+    ];
+    for (const key of textFieldKeys) {
+      paramObj[key] = settings[key] || DEFAULT_SETTINGS[key] || '';
+    }
+    const params = new URLSearchParams(paramObj);
 
     // Try direct GAS first, fall back to proxy
     const endpoints = [
@@ -915,9 +722,13 @@
   // ---------------------------------------------------------------------------
 
   const ALL_SETTING_FIELDS = [
-    'subject', 'surveyUrl', 'previewUrl', 'deadline', 'senderName', 'contactPerson', 'contactEmail',
-    'heading', 'introText', 'codeLabel', 'ctaText', 'previewLinkText',
-    'praktischHeading', 'checklistItems', 'privacyText', 'contactText', 'closingText', 'footerText'
+    'subject', 'surveyUrl', 'webVersionUrl', 'deadline', 'senderName', 'contactPerson', 'contactEmail', 'contactPhone',
+    'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
+    'deadlineContactText', 'section2Heading', 'section2Text',
+    'section3Heading', 'section3ImageUrl', 'section3Text',
+    'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
+    'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialYoutube',
+    'footerText', 'unsubscribeUrl', 'profileUrl', 'privacyUrl'
   ];
 
   function syncSettingsFromUI() {
@@ -942,8 +753,12 @@
     const preset = presets[presetKey].defaults;
     // Only overwrite text fields, preserve connection settings (URLs, deadline, contact, sender)
     const textFields = [
-      'subject', 'heading', 'introText', 'codeLabel', 'ctaText', 'previewLinkText',
-      'praktischHeading', 'checklistItems', 'privacyText', 'contactText', 'closingText', 'footerText'
+      'subject', 'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
+      'deadlineContactText', 'section2Heading', 'section2Text',
+      'section3Heading', 'section3ImageUrl', 'section3Text',
+      'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
+      'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialYoutube',
+      'footerText', 'unsubscribeUrl', 'profileUrl', 'privacyUrl'
     ];
     for (const field of textFields) {
       if (preset[field] !== undefined) {
