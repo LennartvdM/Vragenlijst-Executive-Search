@@ -60,49 +60,8 @@
 
   const SEND_DELAY_MS = 1500; // Delay between consecutive sends to avoid rate-limiting
 
-  // Pre-populated access codes. First entry is a greyed-out example row.
-  const DEFAULT_CODES = [
-    { code: 'YAW-PG7', name: 'Voorbeeldorganisatie', isExample: true },
-    { code: 'LYD-EY3' },
-    { code: 'ZKN-QD4' },
-    { code: '5HP-YMK' },
-    { code: '3BM-FP6' },
-    { code: 'NR6-ZZF' },
-    { code: '3AG-HF6' },
-    { code: '38P-QJB' },
-    { code: 'JRB-4P8' },
-    { code: 'F5K-E62' },
-    { code: '9WX-X5Q' },
-    { code: '2B2-DEW' },
-    { code: 'JF9-Y24' },
-    { code: 'S3Y-W9F' },
-    { code: 'K5Y-9EI' },
-    { code: 'EA7-FUX' },
-    { code: '3KN-V85' },
-    { code: '6JV-PPB' },
-    { code: 'FG7-VVB' },
-    { code: 'F4M-V25' },
-    { code: 'R8W-3KN' },
-    { code: '4YT-HBM' },
-    { code: 'JC6-PWQ' },
-    { code: '2XF-9VN' },
-    { code: 'KM3-8TL' },
-    { code: 'BZ7-5RC' },
-    { code: 'N4P-QYW' },
-    { code: '6HS-DJX' },
-    { code: 'TVL-2F8' },
-    { code: 'W9C-MK3' },
-    { code: 'H5B-7ZR' },
-    { code: 'PXN-4GJ' },
-    { code: '3QY-LV6' },
-    { code: '8FM-TCW' },
-    { code: 'DK2-9HN' },
-    { code: 'ZJR-5PL' },
-    { code: 'VN7-QX4' },
-    { code: '9CW-B3T' },
-    { code: 'LY6-KM8' },
-    { code: '5TP-HZJ' }
-  ];
+  // Characters used for code generation (no ambiguous chars: 0/O, 1/I/L)
+  const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
   // ---------------------------------------------------------------------------
   // State
@@ -188,6 +147,23 @@
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   }
 
+  /**
+   * Generate a unique XXX-XXX access code.
+   */
+  function generateCode() {
+    const existingCodes = new Set(recipients.map(r => r.code));
+    let code;
+    do {
+      let part1 = '', part2 = '';
+      for (let i = 0; i < 3; i++) {
+        part1 += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+        part2 += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+      }
+      code = part1 + '-' + part2;
+    } while (existingCodes.has(code));
+    return code;
+  }
+
   function addRecipient(email, name) {
     email = (email || '').trim();
     name = (name || '').trim();
@@ -211,15 +187,15 @@
       return false;
     }
 
-    // Auto-assign to the next empty code row
-    const emptyRow = recipients.find(r => !r.isExample && !r.email && r.code);
-    if (emptyRow) {
-      emptyRow.email = email;
-      emptyRow.name = name;
-    } else {
-      showToast('Alle codes zijn al toegewezen — maak eerst een code vrij', 'error');
-      return false;
-    }
+    recipients.push({
+      id: generateId(),
+      email: email,
+      name: name,
+      code: generateCode(),
+      status: 'pending',
+      selected: false,
+      error: null
+    });
 
     saveRecipients();
     renderTable();
@@ -228,14 +204,8 @@
     return true;
   }
 
-  function clearRecipientFields(id) {
-    const r = recipients.find(r => r.id === id);
-    if (!r) return;
-    r.email = '';
-    r.name = r.isExample ? r.name : '';
-    r.status = 'pending';
-    r.selected = false;
-    r.error = null;
+  function removeRecipient(id) {
+    recipients = recipients.filter(r => r.id !== id);
     saveRecipients();
     renderTable();
     updateCounts();
@@ -245,11 +215,10 @@
   function clearAllRecipients() {
     recipients = [];
     saveRecipients();
-    ensureDefaultCodes();
     renderTable();
     updateCounts();
     updatePreview();
-    showToast('Lijst gereset \u2014 alle e-mailadressen en namen gewist', 'info');
+    showToast('Lijst gereset', 'info');
   }
 
   // ---------------------------------------------------------------------------
@@ -265,7 +234,7 @@
       // Split by comma, semicolon, or tab
       const parts = line.split(/[,;\t]/).map(p => p.trim().replace(/^["']|["']$/g, ''));
 
-      if (parts.length < 3) continue;
+      if (parts.length < 2) continue;
 
       // Try to detect header row
       if (!skippedHeader) {
@@ -277,12 +246,12 @@
         skippedHeader = true;
       }
 
-      // Expect: email, name, code
+      // Expect: email, name[, code (optional)]
       const email = parts[0];
       const name = parts[1];
-      const code = parts[2];
+      const code = parts[2] || '';
 
-      if (email && name && code) {
+      if (email && name) {
         results.push({ email, name, code });
       }
     }
@@ -295,25 +264,13 @@
     reader.onload = function (e) {
       const parsed = parseCSV(e.target.result);
       if (parsed.length === 0) {
-        showToast('Geen geldige rijen gevonden. Verwacht: email, naam, code', 'error');
+        showToast('Geen geldige rijen gevonden. Verwacht: email, naam', 'error');
         return;
       }
 
       let added = 0;
-      let updated = 0;
       let skipped = 0;
       for (const row of parsed) {
-        const codeUpper = row.code.trim().toUpperCase();
-
-        // Check if a pre-populated row with this code exists (update it)
-        const existingByCode = recipients.find(r => r.code === codeUpper && !r.isExample);
-        if (existingByCode && !existingByCode.email) {
-          existingByCode.email = row.email.trim();
-          existingByCode.name = row.name.trim() || existingByCode.name;
-          updated++;
-          continue;
-        }
-
         // Check for duplicate email
         const isDuplicate = row.email && recipients.some(r => r.email && r.email.toLowerCase() === row.email.toLowerCase());
         if (isDuplicate) {
@@ -325,11 +282,10 @@
           id: generateId(),
           email: row.email.trim(),
           name: row.name.trim(),
-          code: codeUpper,
+          code: row.code ? row.code.trim().toUpperCase() : generateCode(),
           status: 'pending',
           selected: false,
-          error: null,
-          isExample: false
+          error: null
         });
         added++;
       }
@@ -341,7 +297,6 @@
 
       const parts = [];
       if (added > 0) parts.push(`${added} ontvanger${added !== 1 ? 's' : ''} toegevoegd`);
-      if (updated > 0) parts.push(`${updated} bestaande code${updated !== 1 ? 's' : ''} bijgewerkt`);
       if (skipped > 0) parts.push(`${skipped} duplica${skipped !== 1 ? 'ten' : 'at'} overgeslagen`);
       showToast(parts.join(', ') || 'Geen wijzigingen', parts.length > 0 ? 'success' : 'info');
     };
@@ -479,7 +434,7 @@
     if (sendingInProgress) return;
     sendingInProgress = true;
 
-    const toSend = recipients.filter(r => recipientIds.includes(r.id) && r.status !== 'sent' && !r.isExample && r.email && r.name);
+    const toSend = recipients.filter(r => recipientIds.includes(r.id) && r.status !== 'sent' && r.email && r.name);
     const total = toSend.length;
     let completed = 0;
     let succeeded = 0;
@@ -578,7 +533,7 @@
 
   async function downloadBulkEml(recipientIds) {
     const toDownload = recipients.filter(r =>
-      recipientIds.includes(r.id) && !r.isExample && r.email && r.name && r.status !== 'sent'
+      recipientIds.includes(r.id) && r.email && r.name && r.status !== 'sent'
     );
 
     if (toDownload.length === 0) {
@@ -606,38 +561,19 @@
     if (!tbody) return;
 
     tbody.innerHTML = recipients.map(r => {
-      if (r.isExample) {
-        return `
-      <tr data-id="${r.id}" class="ea-row-example">
-        <td></td>
-        <td class="ea-cell-email ea-cell-muted">voorbeeld@organisatie.nl</td>
-        <td class="ea-cell-name ea-cell-muted">${esc(r.name)}</td>
-        <td class="ea-cell-code">${esc(r.code)}</td>
-        <td>${renderStatus(r)}</td>
-        <td></td>
-      </tr>`;
-      }
-
-      const isComplete = r.email && r.name;
-      const rowClass = isComplete ? '' : 'ea-row-incomplete';
-
       return `
-      <tr data-id="${r.id}" class="${rowClass}">
-        <td><input type="checkbox" class="row-check" data-id="${r.id}" ${r.selected ? 'checked' : ''} ${!isComplete ? 'disabled' : ''}></td>
-        <td class="ea-cell-email"><input type="text" inputmode="email" class="ea-inline-input" data-id="${r.id}" data-field="email" placeholder="E-mailadres" value="${esc(r.email)}" autocomplete="one-time-code" name="rcpt-email-${r.id}"></td>
-        <td class="ea-cell-name"><input type="text" class="ea-inline-input" data-id="${r.id}" data-field="name" placeholder="Naam organisatie" value="${esc(r.name)}" autocomplete="one-time-code" name="rcpt-name-${r.id}"></td>
+      <tr data-id="${r.id}">
+        <td><input type="checkbox" class="row-check" data-id="${r.id}" ${r.selected ? 'checked' : ''}></td>
+        <td class="ea-cell-email">${esc(r.email)}</td>
+        <td class="ea-cell-name">${esc(r.name)}</td>
         <td class="ea-cell-code">${esc(r.code)}</td>
         <td>${renderStatus(r)}</td>
         <td class="ea-cell-actions">
-          <button class="ea-btn ea-btn-primary ea-btn-xs ea-btn-row-add ${isComplete ? 'ea-btn-row-added' : ''}" data-action="addRowRecipient" data-id="${r.id}" ${isComplete ? 'disabled' : ''}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3.333v9.334M3.333 8h9.334" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            ${isComplete ? 'Toegevoegd' : 'Toevoegen'}
-          </button>
-          ${isComplete ? `<button class="ea-btn-icon" data-action="downloadRowEml" data-id="${r.id}" title="Download .eml voor Outlook">
+          <button class="ea-btn-icon" data-action="downloadRowEml" data-id="${r.id}" title="Download .eml voor Outlook">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 10v2.667A1.333 1.333 0 0 1 12.667 14H3.333A1.334 1.334 0 0 1 2 12.667V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.667 6.667 8 10l3.333-3.333" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>` : ''}
-          <button class="ea-btn-delete" data-action="deleteRecipient" data-id="${r.id}" title="Wissen">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14h12M9.354 2.354a1 1 0 0 1 1.414 0l2.878 2.878a1 1 0 0 1 0 1.414L6.5 13.793 2.207 9.5l7.147-7.146Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.707l4.293 4.293" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </button>
+          <button class="ea-btn-delete" data-action="deleteRecipient" data-id="${r.id}" title="Verwijderen">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5.333 4V2.667A1.333 1.333 0 0 1 6.667 1.333h2.666A1.333 1.333 0 0 1 10.667 2.667V4M12.667 4v9.333a1.333 1.333 0 0 1-1.334 1.334H4.667a1.333 1.333 0 0 1-1.334-1.334V4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </td>
       </tr>`;
@@ -656,12 +592,6 @@
   }
 
   function renderStatus(r) {
-    if (r.isExample) {
-      return '<span class="ea-status ea-status-example">Voorbeeld</span>';
-    }
-    if (!r.email || !r.name) {
-      return '<span class="ea-status ea-status-incomplete">Onvolledig</span>';
-    }
     switch (r.status) {
       case 'pending':
         return '<span class="ea-status ea-status-pending">Wachtrij</span>';
@@ -677,7 +607,7 @@
   }
 
   function updateCounts() {
-    const sendable = recipients.filter(r => !r.isExample && r.email && r.name);
+    const sendable = recipients.filter(r => r.email && r.name);
     const selected = sendable.filter(r => r.selected);
     const pendingSel = selected.filter(r => r.status !== 'sent');
     const allPending = sendable.filter(r => r.status !== 'sent');
@@ -688,7 +618,7 @@
     const btn1 = document.getElementById('btnSendSelected');
     const btn2 = document.getElementById('btnSendAll');
 
-    if (countEl) countEl.textContent = recipients.filter(r => !r.isExample).length;
+    if (countEl) countEl.textContent = recipients.length;
     if (selCountEl) selCountEl.textContent = pendingSel.length;
     if (totalPendingEl) totalPendingEl.textContent = allPending.length;
 
@@ -859,48 +789,9 @@
         break;
       }
 
-      case 'addRowRecipient': {
-        const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
-        if (id) {
-          const r = recipients.find(r => r.id === id);
-          if (!r) break;
-          // Read current inline input values from the DOM
-          const row = document.querySelector(`tr[data-id="${id}"]`);
-          if (row) {
-            const emailInput = row.querySelector('[data-field="email"]');
-            const nameInput = row.querySelector('[data-field="name"]');
-            if (emailInput) r.email = emailInput.value.trim();
-            if (nameInput) r.name = nameInput.value.trim();
-          }
-          if (!r.email) {
-            showToast('Vul een e-mailadres in', 'error');
-            break;
-          }
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email)) {
-            showToast('Ongeldig e-mailadres', 'error');
-            break;
-          }
-          if (!r.name) {
-            showToast('Vul een naam in', 'error');
-            break;
-          }
-          // Check for duplicate email (exclude self)
-          if (recipients.some(other => other.id !== id && other.email && other.email.toLowerCase() === r.email.toLowerCase())) {
-            showToast('Dit e-mailadres is al toegevoegd', 'error');
-            break;
-          }
-          saveRecipients();
-          renderTable();
-          updateCounts();
-          updatePreview();
-          showToast(`${r.name} toegevoegd`, 'success');
-        }
-        break;
-      }
-
       case 'deleteRecipient': {
         const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
-        if (id) clearRecipientFields(id);
+        if (id) removeRecipient(id);
         break;
       }
 
@@ -915,14 +806,14 @@
       }
 
       case 'downloadSelectedEml': {
-        const selected = recipients.filter(r => r.selected && r.status !== 'sent' && !r.isExample && r.email && r.name);
+        const selected = recipients.filter(r => r.selected && r.status !== 'sent' && r.email && r.name);
         if (selected.length === 0) return;
         downloadBulkEml(selected.map(r => r.id));
         break;
       }
 
       case 'downloadAllEml': {
-        const pending = recipients.filter(r => r.status !== 'sent' && !r.isExample && r.email && r.name);
+        const pending = recipients.filter(r => r.status !== 'sent' && r.email && r.name);
         if (pending.length === 0) return;
         downloadBulkEml(pending.map(r => r.id));
         break;
@@ -1000,57 +891,17 @@
   // Initialization
   // ---------------------------------------------------------------------------
 
-  function ensureDefaultCodes() {
-    // If no recipients exist, populate from DEFAULT_CODES
-    if (recipients.length === 0) {
-      recipients = DEFAULT_CODES.map(entry => ({
-        id: generateId(),
-        email: '',
-        name: entry.name || '',
-        code: entry.code,
-        status: 'pending',
-        selected: false,
-        error: null,
-        isExample: !!entry.isExample
-      }));
-      saveRecipients();
-      return;
-    }
-
-    // Backfill any missing codes from DEFAULT_CODES
-    const existingCodes = new Set(recipients.map(r => r.code));
-    let changed = false;
-    for (const entry of DEFAULT_CODES) {
-      if (!existingCodes.has(entry.code)) {
-        const row = {
-          id: generateId(),
-          email: '',
-          name: entry.name || '',
-          code: entry.code,
-          status: 'pending',
-          selected: false,
-          error: null,
-          isExample: !!entry.isExample
-        };
-        // Example row goes first, others append at the end
-        if (entry.isExample) {
-          recipients.unshift(row);
-        } else {
-          recipients.push(row);
-        }
-        changed = true;
-      }
-    }
-    if (changed) saveRecipients();
-  }
-
   function init() {
     // Load persisted state
     recipients = loadRecipients();
     settings = loadSettings();
 
-    // Ensure default access codes are present
-    ensureDefaultCodes();
+    // Strip legacy isExample rows from older localStorage data
+    const hadExamples = recipients.some(r => r.isExample);
+    if (hadExamples) {
+      recipients = recipients.filter(r => !r.isExample);
+      saveRecipients();
+    }
 
     // Sync settings to UI
     syncSettingsToUI();
@@ -1090,36 +941,6 @@
         // Re-check the selectAll after render
         const sa = document.getElementById('selectAll');
         if (sa) sa.checked = checked;
-      }
-    });
-
-    // Inline edit handler for table email/name inputs
-    let inlineTimer;
-    document.addEventListener('input', function (e) {
-      if (e.target.classList.contains('ea-inline-input')) {
-        const id = e.target.dataset.id;
-        const field = e.target.dataset.field;
-        const r = recipients.find(r => r.id === id);
-        if (r && (field === 'email' || field === 'name')) {
-          r[field] = e.target.value.trim();
-          clearTimeout(inlineTimer);
-          inlineTimer = setTimeout(() => {
-            saveRecipients();
-            updateCounts();
-            // Update the row class without full re-render (avoids losing focus)
-            const row = e.target.closest('tr');
-            if (row) {
-              const isComplete = r.email && r.name;
-              row.className = isComplete ? '' : 'ea-row-incomplete';
-              // Update status cell
-              const statusCell = row.querySelector('td:nth-child(5)');
-              if (statusCell) statusCell.innerHTML = renderStatus(r);
-              // Update checkbox disabled state
-              const checkbox = row.querySelector('.row-check');
-              if (checkbox) checkbox.disabled = !isComplete;
-            }
-          }, 300);
-        }
       }
     });
 
