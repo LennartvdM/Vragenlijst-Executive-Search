@@ -239,7 +239,7 @@ function buildPrintDocument(data, orgName, orgCode) {
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<title>Monitoring Executive Search Code 2025 — ${esc(orgName)}</title>
+<title>Monitoring Executive Search Code 2023 — ${esc(orgName)}</title>
 <style>
 ${getPrintCSS()}
 </style>
@@ -247,7 +247,7 @@ ${getPrintCSS()}
 <body>
 
 <div class="header">
-  <h1>Monitoring Executive Search Code 2025</h1>
+  <h1>Monitoring Executive Search Code 2023</h1>
   <div class="header-meta">
     <span>${esc(orgName)}</span>
     <span class="sep">·</span>

@@ -1,5 +1,5 @@
 /**
- * Constants for Monitoring Executive Search Code 2025
+ * Constants for Monitoring Executive Search Code 2023
  * Centralized magic strings and values to improve maintainability
  */
 
@@ -17,44 +17,14 @@ const CONSTANTS = {
     PUBLIC_NAME: 'Openbare toegang'
   },
 
-  // Field names that trigger conditional sections
-  // IDs match pattern: conditional-{fieldName} from build-survey-html.js
-  CONDITIONAL_FIELDS: {
-    aanbod_vrouw: 'conditional-aanbod_vrouw',
-    aandacht_mv: 'conditional-aandacht_mv',
-    ondersteuning_selectie: 'conditional-ondersteuning_selectie',
-    investering_kweekvijver: 'conditional-investering_kweekvijver'
-  },
+  // Field names that trigger conditional sections (none in this survey)
+  CONDITIONAL_FIELDS: {},
 
-  // Answer values that trigger conditional sections
-  // Supports single string or array of strings for multi-value triggers
-  CONDITIONAL_VALUES: {
-    aanbod_vrouw: ['Onvoldoende', 'Geen'],
-    aandacht_mv: ['Meestal niet', 'Nooit'],
-    ondersteuning_selectie: ['Meestal niet', 'Nooit'],
-    investering_kweekvijver: ['Meestal niet', 'Nooit']
-  },
+  // Answer values that trigger conditional sections (none in this survey)
+  CONDITIONAL_VALUES: {},
 
-  // Required fields when conditional is triggered (for completion tracking)
-  // Maps: parent field -> { triggerValue (string or array), requiredFields[] }
-  CONDITIONAL_REQUIREMENTS: {
-    aanbod_vrouw: {
-      triggerValue: ['Onvoldoende', 'Geen'],
-      requiredFields: ['reden_onvoldoende_1', 'reden_onvoldoende_2']
-    },
-    aandacht_mv: {
-      triggerValue: ['Meestal niet', 'Nooit'],
-      requiredFields: ['reden_niet_aandacht']
-    },
-    ondersteuning_selectie: {
-      triggerValue: ['Meestal niet', 'Nooit'],
-      requiredFields: ['reden_niet_ondersteuning']
-    },
-    investering_kweekvijver: {
-      triggerValue: ['Meestal niet', 'Nooit'],
-      requiredFields: ['reden_niet_kweekvijver']
-    }
-  },
+  // Required fields when conditional is triggered (none in this survey)
+  CONDITIONAL_REQUIREMENTS: {},
 
   // UI text
   UI: {

@@ -1,5 +1,5 @@
 /**
- * Configuration for Monitoring Executive Search Code 2025
+ * Configuration for Monitoring Executive Search Code 2023
  *
  * SETUP INSTRUCTIONS:
  * 1. Deploy the Google Apps Script (see docs/google-apps-script.js)
@@ -46,24 +46,24 @@ const CONFIG = {
   MOBILE_BREAKPOINT: 768,
 
   /**
-   * Total number of steps in the survey wizard (0-13 = content, 14 = review, 15 = success)
+   * Total number of steps in the survey wizard (0-8 = content, 9 = review, 10 = success)
    */
-  TOTAL_STEPS: 16,
+  TOTAL_STEPS: 11,
 
   /**
    * Sign step index - the last content step before review
    */
-  SIGN_STEP: 13,
+  SIGN_STEP: 8,
 
   /**
    * Review step index - shows overview of incomplete fields
    */
-  REVIEW_STEP: 14,
+  REVIEW_STEP: 9,
 
   /**
    * Success step index - shown after successful submission
    */
-  SUCCESS_STEP: 15,
+  SUCCESS_STEP: 10,
 
   /**
    * Field definitions for validation and progress tracking
@@ -73,17 +73,12 @@ const CONFIG = {
     0: ['organisatie'],
     1: ['streef_minimum', 'streef_gemiddeld'],
     2: ['aantal_geplaatst', 'geplaatst_vrouw', 'geplaatst_rvb', 'rvb_vrouw', 'geplaatst_rvc_rvt', 'rvc_rvt_vrouw'],
-    3: ['longlist_totaal', 'longlist_vrouw', 'longlist_rvb', 'longlist_rvb_vrouw', 'longlist_rvc_rvt', 'longlist_rvc_rvt_vrouw'],
-    4: ['shortlist_totaal', 'shortlist_vrouw', 'shortlist_rvb', 'shortlist_rvb_vrouw', 'shortlist_rvc_rvt', 'shortlist_rvc_rvt_vrouw'],
-    5: ['verzoek_vrouw', 'verzoek_man'],
-    6: ['reden_niet_vrouw_1', 'reden_niet_vrouw_2', 'reden_wel_vrouw_1', 'reden_wel_vrouw_2'],
-    7: ['aanbod_vrouw', 'sector_voorloper', 'sector_achterblijver'],
-    8: ['aandacht_mv', 'ondersteuning_selectie'],
-    9: ['belemmering_vrouw_1', 'belemmering_vrouw_2', 'belemmering_vrouw_3', 'ondersteuning_vrouw_1', 'ondersteuning_vrouw_2', 'ondersteuning_vrouw_3'],
-    10: ['investering_kweekvijver', 'waarborg_kwaliteiten', 'best_practices_vrouwen'],
-    11: ['aandacht_cultureel', 'verzoek_bicultureel', 'aanbod_bicultureel', 'belemmering_bicultureel_1', 'belemmering_bicultureel_2', 'belemmering_bicultureel_3', 'best_practices_bicultureel'],
-    12: ['nieuwe_themas', 'opmerkingen_vragen'],
-    13: ['datum', 'ondertekenaar', 'bevestiging']
+    3: ['verzoek_vrouw', 'verzoek_man'],
+    4: ['aanbod_vrouw', 'aandacht_mv', 'ondersteuning_selectie'],
+    5: ['investering_kweekvijver', 'waarborg_kwaliteiten', 'best_practices_vrouwen'],
+    6: ['aandacht_cultureel', 'verzoek_bicultureel', 'aanbod_bicultureel', 'belemmering_bicultureel_1', 'belemmering_bicultureel_2', 'belemmering_bicultureel_3', 'best_practices_bicultureel'],
+    7: ['opmerkingen_vragen'],
+    8: ['datum', 'ondertekenaar', 'bevestiging']
   },
 
   /**
@@ -93,13 +88,7 @@ const CONFIG = {
   SECTION_FIELDS: {
     geplaatst: ['aantal_geplaatst', 'geplaatst_vrouw'],
     plaatsing_rvb: ['geplaatst_rvb', 'rvb_vrouw'],
-    plaatsing_rvc_rvt: ['geplaatst_rvc_rvt', 'rvc_rvt_vrouw'],
-    longlist_totaal: ['longlist_totaal', 'longlist_vrouw'],
-    longlist_rvb: ['longlist_rvb', 'longlist_rvb_vrouw'],
-    longlist_rvc_rvt: ['longlist_rvc_rvt', 'longlist_rvc_rvt_vrouw'],
-    shortlist_totaal: ['shortlist_totaal', 'shortlist_vrouw'],
-    shortlist_rvb: ['shortlist_rvb', 'shortlist_rvb_vrouw'],
-    shortlist_rvc_rvt: ['shortlist_rvc_rvt', 'shortlist_rvc_rvt_vrouw']
+    plaatsing_rvc_rvt: ['geplaatst_rvc_rvt', 'rvc_rvt_vrouw']
   },
 
   /**
