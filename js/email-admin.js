@@ -22,7 +22,7 @@
 
   const DEFAULT_SETTINGS = {
     subject: 'Monitor Executive Search \u2014 Talent naar de Top',
-    surveyUrl: '',
+    surveyUrl: 'https://monitorcultuur.nl/',
     webVersionUrl: '',
     deadline: '',
     senderName: 'Talent naar de Top',
