@@ -181,16 +181,16 @@ function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson,
   var profileUrl = escHtml(tf.profileUrl || '');
   var privacyUrl = escHtml(tf.privacyUrl || '');
 
-  var pStyle = 'margin:0 0 16px; color:' + text + '; font-size:15px; line-height:1.65;';
+  var pStyle = 'margin:0 0 16px; color:' + text + '; font-size:15px; line-height:1.65; word-spacing:-0.5px;';
   var bodyHtml = textToHtmlGas(bodyRaw, pStyle);
-  var deadlineContactHtml = textToHtmlGas(deadlineContactRaw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65;');
+  var deadlineContactHtml = textToHtmlGas(deadlineContactRaw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65; word-spacing:-0.5px;');
   if (vars.contactEmail) {
     deadlineContactHtml = deadlineContactHtml.replace(
       vars.contactEmail,
       '<a href="mailto:' + vars.contactEmail + '" style="color:' + terracotta + '; text-decoration:none;">' + vars.contactEmail + '</a>'
     );
   }
-  var closingHtml = textToHtmlGas(closingRaw, 'margin:0 0 4px; color:' + text + '; font-size:15px; line-height:1.65;');
+  var closingHtml = textToHtmlGas(closingRaw, 'margin:0 0 4px; color:' + text + '; font-size:15px; line-height:1.65; word-spacing:-0.5px;');
   var addressHtml = escHtml(addressRaw).replace(/\n/g, '<br>');
 
   // Pre-header
@@ -205,7 +205,7 @@ function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson,
   // Section 2
   var section2Html = '';
   if (section2Heading) {
-    var s2Body = textToHtmlGas(section2Raw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65;');
+    var s2Body = textToHtmlGas(section2Raw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65; word-spacing:-0.5px;');
     section2Html = '<tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ' + border + '; font-size:0;">&nbsp;</td></tr></table></td></tr>' +
       '<tr><td style="padding:24px 32px 0;"><h2 style="margin:0 0 12px; color:' + text + '; font-size:18px; font-weight:600; line-height:1.4;">' + section2Heading + '</h2></td></tr>' +
       '<tr><td style="padding:0 32px 16px;">' + s2Body + '</td></tr>';
@@ -214,7 +214,7 @@ function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson,
   // Section 3
   var section3Html = '';
   if (section3Heading) {
-    var s3Body = textToHtmlGas(section3Raw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65;');
+    var s3Body = textToHtmlGas(section3Raw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65; word-spacing:-0.5px;');
     var imgHtml = section3ImageUrl ? '<tr><td style="padding:0 32px 16px;"><img src="' + section3ImageUrl + '" alt="" style="max-width:100%; height:auto; border-radius:8px; display:block;" /></td></tr>' : '';
     section3Html = '<tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ' + border + '; font-size:0;">&nbsp;</td></tr></table></td></tr>' +
       '<tr><td style="padding:24px 32px 0;"><h2 style="margin:0 0 12px; color:' + text + '; font-size:18px; font-weight:600; line-height:1.4;">' + section3Heading + '</h2></td></tr>' +
@@ -273,7 +273,7 @@ function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson,
     // Header
     '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:' + terracotta + '; border-radius:12px 12px 0 0;">' +
     '<tr><td style="padding:32px 32px 28px; text-align:center;">' +
-    '<p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.5px;">' + escHtml(senderName) + '</p>' +
+    '<p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.3px;">' + escHtml(senderName) + '</p>' +
     '<h1 style="margin:0; color:' + white + '; font-size:26px; font-weight:700; line-height:1.3; letter-spacing:-0.3px;">' + heading + '</h1>' +
     '</td></tr></table>' +
 
@@ -282,7 +282,7 @@ function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson,
     '<tr><td style="height:8px;"></td></tr>' +
 
     // Greeting
-    '<tr><td style="padding:24px 32px 16px;"><p style="margin:0; color:' + text + '; font-size:15px; font-weight:600; line-height:1.5;">' + greetingText + '</p></td></tr>' +
+    '<tr><td style="padding:24px 32px 16px;"><p style="margin:0; color:' + text + '; font-size:15px; font-weight:600; line-height:1.5; word-spacing:-0.5px;">' + greetingText + '</p></td></tr>' +
 
     // Body
     '<tr><td style="padding:0 32px 8px;">' + bodyHtml + '</td></tr>' +
