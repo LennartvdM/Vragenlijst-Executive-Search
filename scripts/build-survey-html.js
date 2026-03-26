@@ -352,7 +352,7 @@ ${renderNavItems()}
       </div>
       <div class="content-scrollable" id="contentScrollable">
         <div class="print-header">
-          <h1>Monitoring Executive Search Code 2025</h1>
+          <h1>Monitoring Executive Search Code 2023</h1>
           <p id="printHeaderOrg"></p>
           <p id="printHeaderDate"></p>
         </div>
@@ -360,14 +360,14 @@ ${renderNavItems()}
 ${SURVEY_STEPS.map(renderStep).join('\n')}
 
       <!-- Review Step -->
-      <div class="step" data-step="14">
+      <div class="step" data-step="9">
         <h1>Controleer uw antwoorden</h1>
         <p class="subtitle">Controleer hieronder uw antwoorden voordat u verzendt.</p>
         <div id="reviewContent"></div>
       </div>
 
       <!-- Success Step -->
-      <div class="step" data-step="15">
+      <div class="step" data-step="10">
         <div class="success-content">
           <div class="success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
