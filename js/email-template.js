@@ -180,15 +180,15 @@
     const socialYoutube = esc(s.socialYoutube || '');
 
     // Build body paragraphs
-    const pStyle = `margin:0 0 16px; color:${C.text}; font-size:15px; line-height:1.65;`;
+    const pStyle = `margin:0 0 16px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`;
     const bodyHtml = textToHtml(bodyRaw, pStyle);
 
     // Build deadline/contact HTML with mailto link
-    const deadlineContactHtml = textToHtml(deadlineContactRaw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65;`)
+    const deadlineContactHtml = textToHtml(deadlineContactRaw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65; word-spacing:-0.5px;`)
       .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build closing paragraphs
-    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65;`);
+    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`);
 
     // Build address lines
     const addressHtml = esc(addressRaw).replace(/\n/g, '<br>');
@@ -212,7 +212,7 @@
     // Section 2 (optional)
     let section2Html = '';
     if (section2Heading) {
-      const s2BodyHtml = textToHtml(section2Raw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65;`);
+      const s2BodyHtml = textToHtml(section2Raw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65; word-spacing:-0.5px;`);
       section2Html = `
                       <!-- Divider -->
                       <tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ${C.border}; font-size:0;">&nbsp;</td></tr></table></td></tr>
@@ -232,7 +232,7 @@
     // Section 3 (optional)
     let section3Html = '';
     if (section3Heading) {
-      const s3BodyHtml = textToHtml(section3Raw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65;`);
+      const s3BodyHtml = textToHtml(section3Raw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65; word-spacing:-0.5px;`);
       const imageHtml = section3ImageUrl
         ? `<tr><td style="padding:0 32px 16px;"><img src="${section3ImageUrl}" alt="" style="max-width:100%; height:auto; border-radius:8px; display:block;" /></td></tr>`
         : '';
@@ -330,7 +330,7 @@
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.terracotta}; border-radius:12px 12px 0 0;">
           <tr>
             <td style="padding:32px 32px 28px; text-align:center;">
-              <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.5px;">${senderName}</p>
+              <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.3px;">${senderName}</p>
               <h1 style="margin:0; color:${C.white}; font-size:26px; font-weight:700; line-height:1.3; letter-spacing:-0.3px;">
                 ${heading}
               </h1>
@@ -347,7 +347,7 @@
                       <!-- Greeting -->
                       <tr>
                         <td style="padding:24px 32px 16px;">
-                          <p style="margin:0; color:${C.text}; font-size:15px; font-weight:600; line-height:1.5;">
+                          <p style="margin:0; color:${C.text}; font-size:15px; font-weight:600; line-height:1.5; word-spacing:-0.5px;">
                             ${greetingText}
                           </p>
                         </td>
