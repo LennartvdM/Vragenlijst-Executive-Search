@@ -35,27 +35,43 @@ function handleSendEmail(params) {
     var to = params.to;
     var naam = params.naam || '';
     var code = params.code || '';
-    var subject = params.subject || 'Monitoring Cultureel Talent naar de Top 2026';
+    var subject = params.subject || 'Monitor Executive Search \u2014 Talent naar de Top';
     var surveyUrl = params.surveyUrl || '';
-    var previewUrl = params.previewUrl || '';
     var deadline = params.deadline || '';
     var contactPerson = params.contactPerson || '';
     var contactEmail = params.contactEmail || '';
-    var senderName = params.senderName || 'Commissie Monitoring Talent naar de Top';
+    var contactPhone = params.contactPhone || '';
+    var senderName = params.senderName || 'Talent naar de Top';
 
-    // Editable mail text fields (with defaults matching original template)
+    // Editable mail text fields (with defaults matching the newsletter template)
     var textFields = {
-      heading: params.heading || 'Monitoring Cultureel Talent naar de Top 2026',
-      introText: params.introText || 'Geachte {naam}, wij vragen u de monitoring in te vullen v\u00f3\u00f3r {deadline}.',
-      codeLabel: params.codeLabel || 'Uw toegangscode',
-      ctaText: params.ctaText || 'Ga naar de vragenlijst \u2192',
-      previewLinkText: params.previewLinkText || 'Bekijk inkijkexemplaar \u2192',
-      praktischHeading: params.praktischHeading || 'Praktisch',
-      checklistItems: params.checklistItems || 'Duurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nHoud uw personeelscijfers bij de hand\nVoortgang gekoppeld aan uw apparaat, niet aan uw code',
-      privacyText: params.privacyText || 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.',
-      contactText: params.contactText || 'Vragen? {contactPerson} via {contactEmail}',
+      heading: params.heading || 'Monitor Executive Search',
+      greeting: params.greeting || 'Beste {naam}',
+      bodyText: params.bodyText || '',
+      ctaText: params.ctaText || 'Naar de vragenlijst',
+      ctaNote: params.ctaNote || '',
+      deadlineContactText: params.deadlineContactText || 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
+      section2Heading: params.section2Heading || '',
+      section2Text: params.section2Text || '',
+      section3Heading: params.section3Heading || '',
+      section3ImageUrl: params.section3ImageUrl || '',
+      section3Text: params.section3Text || '',
       closingText: params.closingText || 'Met vriendelijke groet,',
-      footerText: params.footerText || 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.'
+      signer1Name: params.signer1Name || '',
+      signer1Title: params.signer1Title || '',
+      signer2Name: params.signer2Name || '',
+      signer2Title: params.signer2Title || '',
+      address: params.address || 'Sandbergplein 24\n1181 ZX Amstelveen\nNederland',
+      phone: params.phone || '',
+      website: params.website || 'www.talentnaardetop.nl',
+      footerText: params.footerText || 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
+      webVersionUrl: params.webVersionUrl || '',
+      unsubscribeUrl: params.unsubscribeUrl || '',
+      profileUrl: params.profileUrl || '',
+      privacyUrl: params.privacyUrl || '',
+      socialTwitter: params.socialTwitter || '',
+      socialLinkedin: params.socialLinkedin || '',
+      socialYoutube: params.socialYoutube || ''
     };
 
     if (!to) {
@@ -63,13 +79,12 @@ function handleSendEmail(params) {
     }
 
     // The surveyUrl is already personalized with ?code= by the Email CMS client.
-    // If not, append the code as a fallback.
     var personalSurveyUrl = surveyUrl;
     if (surveyUrl && code && surveyUrl.indexOf('code=') === -1) {
       personalSurveyUrl = surveyUrl + (surveyUrl.indexOf('?') >= 0 ? '&' : '?') + 'code=' + encodeURIComponent(code);
     }
 
-    var htmlBody = buildEmailHtml(naam, code, subject, personalSurveyUrl, previewUrl, deadline, contactPerson, contactEmail, senderName, textFields);
+    var htmlBody = buildEmailHtml(naam, code, subject, personalSurveyUrl, deadline, contactPerson, contactEmail, contactPhone, senderName, textFields);
 
     MailApp.sendEmail({
       to: to,
@@ -95,145 +110,227 @@ function replaceTextPlaceholders(text, vars) {
     .replace(/\{deadline\}/g, vars.deadline)
     .replace(/\{contactPerson\}/g, vars.contactPerson)
     .replace(/\{contactEmail\}/g, vars.contactEmail)
+    .replace(/\{contactPhone\}/g, vars.contactPhone)
     .replace(/\{code\}/g, vars.code);
 }
 
 /**
- * Build the HTML email body
- * @param {Object} [textFields] - Optional editable text field overrides
+ * Convert newline-separated text to HTML paragraphs.
+ * Double newline = new <p>, single newline = <br>.
  */
-function buildEmailHtml(naam, code, subject, surveyUrl, previewUrl, deadline, contactPerson, contactEmail, senderName, textFields) {
+function textToHtmlGas(text, style) {
+  if (!text) return '';
+  var paragraphs = text.split(/\n\n+/);
+  var result = '';
+  for (var i = 0; i < paragraphs.length; i++) {
+    var p = paragraphs[i].replace(/^\s+|\s+$/g, '');
+    if (p) {
+      result += '<p style="' + style + '">' + escHtml(p).replace(/\n/g, '<br>') + '</p>\n';
+    }
+  }
+  return result;
+}
+
+/**
+ * Build the HTML email body — Newsletter-style layout for Executive Search Monitor
+ */
+function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson, contactEmail, contactPhone, senderName, textFields) {
   var tf = textFields || {};
-  var vars = { naam: escHtml(naam), deadline: escHtml(deadline), contactPerson: escHtml(contactPerson), contactEmail: escHtml(contactEmail), code: escHtml(code) };
+  var vars = {
+    naam: escHtml(naam),
+    deadline: escHtml(deadline),
+    contactPerson: escHtml(contactPerson),
+    contactEmail: escHtml(contactEmail),
+    contactPhone: escHtml(contactPhone),
+    code: escHtml(code)
+  };
 
-  var heading = escHtml(tf.heading || 'Monitoring Cultureel Talent naar de Top 2026');
-  var introText = escHtml(replaceTextPlaceholders(tf.introText || 'Geachte {naam}, wij vragen u de monitoring in te vullen v\u00f3\u00f3r {deadline}.', vars));
-  var codeLabel = escHtml(tf.codeLabel || 'Uw toegangscode');
-  var ctaText = escHtml(tf.ctaText || 'Ga naar de vragenlijst \u2192');
-  var previewLinkText = escHtml(tf.previewLinkText || 'Bekijk inkijkexemplaar \u2192');
-  var praktischHeading = escHtml(tf.praktischHeading || 'Praktisch');
-  var privacyText = escHtml(tf.privacyText || 'Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.');
-  var closingText = escHtml(tf.closingText || 'Met vriendelijke groet,');
-  var footerText = escHtml(tf.footerText || 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.');
+  // Colors
+  var terracotta = '#c4785a';
+  var sand = '#f5f0eb';
+  var white = '#ffffff';
+  var text = '#333333';
+  var textLight = '#666666';
+  var textMuted = '#999999';
+  var border = '#e0d6cc';
+  var footerBg = '#f8f4f0';
 
-  // Build contact HTML with mailto link
-  var contactRaw = tf.contactText || 'Vragen? {contactPerson} via {contactEmail}';
-  var contactResolved = replaceTextPlaceholders(contactRaw, vars);
-  var contactHtml = escHtml(contactResolved).replace(escHtml(vars.contactEmail), '<a href="mailto:' + escHtml(contactEmail) + '" style="color:#111162;font-weight:500;text-decoration:none;">' + escHtml(contactEmail) + '</a>');
+  // Resolve text fields
+  var heading = escHtml(tf.heading || 'Monitor Executive Search');
+  var greetingText = escHtml(replaceTextPlaceholders(tf.greeting || 'Beste {naam}', vars));
+  var bodyRaw = replaceTextPlaceholders(tf.bodyText || '', vars);
+  var ctaText = escHtml(tf.ctaText || 'Naar de vragenlijst');
+  var ctaNote = escHtml(tf.ctaNote || '');
+  var deadlineContactRaw = replaceTextPlaceholders(tf.deadlineContactText || '', vars);
+  var section2Heading = escHtml(tf.section2Heading || '');
+  var section2Raw = replaceTextPlaceholders(tf.section2Text || '', vars);
+  var section3Heading = escHtml(tf.section3Heading || '');
+  var section3ImageUrl = escHtml(tf.section3ImageUrl || '');
+  var section3Raw = replaceTextPlaceholders(tf.section3Text || '', vars);
+  var closingRaw = replaceTextPlaceholders(tf.closingText || 'Met vriendelijke groet,', vars);
+  var signer1Name = escHtml(tf.signer1Name || '');
+  var signer1Title = escHtml(tf.signer1Title || '');
+  var signer2Name = escHtml(tf.signer2Name || '');
+  var signer2Title = escHtml(tf.signer2Title || '');
+  var addressRaw = tf.address || '';
+  var phone = escHtml(tf.phone || '');
+  var website = escHtml(tf.website || 'www.talentnaardetop.nl');
+  var footerText = escHtml(tf.footerText || '');
+  var webVersionUrl = escHtml(tf.webVersionUrl || '');
+  var unsubscribeUrl = escHtml(tf.unsubscribeUrl || '');
+  var profileUrl = escHtml(tf.profileUrl || '');
+  var privacyUrl = escHtml(tf.privacyUrl || '');
 
-  // Build checklist rows
-  var checklistRaw = tf.checklistItems || 'Duurt 20\u201330 minuten, u kunt tussendoor stoppen\nU kunt meerdere keren verzenden, de laatste versie telt\nHoud uw personeelscijfers bij de hand\nVoortgang gekoppeld aan uw apparaat, niet aan uw code';
-  var checklistLines = checklistRaw.split('\n');
-  var filteredLines = [];
-  for (var i = 0; i < checklistLines.length; i++) {
-    var line = checklistLines[i].replace(/^\s+|\s+$/g, '');
-    if (line) filteredLines.push(line);
+  var pStyle = 'margin:0 0 16px; color:' + text + '; font-size:15px; line-height:1.65;';
+  var bodyHtml = textToHtmlGas(bodyRaw, pStyle);
+  var deadlineContactHtml = textToHtmlGas(deadlineContactRaw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65;');
+  if (vars.contactEmail) {
+    deadlineContactHtml = deadlineContactHtml.replace(
+      vars.contactEmail,
+      '<a href="mailto:' + vars.contactEmail + '" style="color:' + terracotta + '; text-decoration:none;">' + vars.contactEmail + '</a>'
+    );
   }
-  var checklistHtml = '';
-  for (var j = 0; j < filteredLines.length; j++) {
-    var padding = (j === filteredLines.length - 1) ? '3px 28px 16px 46px' : '3px 28px 3px 46px';
-    checklistHtml += '<tr><td style="padding:' + padding + ';color:#3c3c5d;font-size:13px;line-height:1.6;"><span style="color:#111162;font-weight:700;margin-left:-18px;margin-right:8px;">&#10003;</span>' + escHtml(filteredLines[j]) + '</td></tr>';
+  var closingHtml = textToHtmlGas(closingRaw, 'margin:0 0 4px; color:' + text + '; font-size:15px; line-height:1.65;');
+  var addressHtml = escHtml(addressRaw).replace(/\n/g, '<br>');
+
+  // Pre-header
+  var preheaderHtml = '';
+  if (webVersionUrl || unsubscribeUrl) {
+    var links = [];
+    if (webVersionUrl) links.push('<a href="' + webVersionUrl + '" style="color:' + textMuted + '; text-decoration:underline;">Webversie</a>');
+    if (unsubscribeUrl) links.push('<a href="' + unsubscribeUrl + '" style="color:' + textMuted + '; text-decoration:underline;">Afmelden</a>');
+    preheaderHtml = '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;"><tr><td style="padding:12px 0; text-align:center; font-size:12px; color:' + textMuted + ';">' + links.join('&nbsp;&nbsp;|&nbsp;&nbsp;') + '</td></tr></table>';
   }
+
+  // Section 2
+  var section2Html = '';
+  if (section2Heading) {
+    var s2Body = textToHtmlGas(section2Raw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65;');
+    section2Html = '<tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ' + border + '; font-size:0;">&nbsp;</td></tr></table></td></tr>' +
+      '<tr><td style="padding:24px 32px 0;"><h2 style="margin:0 0 12px; color:' + text + '; font-size:18px; font-weight:600; line-height:1.4;">' + section2Heading + '</h2></td></tr>' +
+      '<tr><td style="padding:0 32px 16px;">' + s2Body + '</td></tr>';
+  }
+
+  // Section 3
+  var section3Html = '';
+  if (section3Heading) {
+    var s3Body = textToHtmlGas(section3Raw, 'margin:0 0 16px; color:' + text + '; font-size:14px; line-height:1.65;');
+    var imgHtml = section3ImageUrl ? '<tr><td style="padding:0 32px 16px;"><img src="' + section3ImageUrl + '" alt="" style="max-width:100%; height:auto; border-radius:8px; display:block;" /></td></tr>' : '';
+    section3Html = '<tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ' + border + '; font-size:0;">&nbsp;</td></tr></table></td></tr>' +
+      '<tr><td style="padding:24px 32px 0;"><h2 style="margin:0 0 12px; color:' + text + '; font-size:18px; font-weight:600; line-height:1.4;">' + section3Heading + '</h2></td></tr>' +
+      imgHtml +
+      '<tr><td style="padding:0 32px 16px;">' + s3Body + '</td></tr>';
+  }
+
+  // CTA note
+  var ctaNoteHtml = ctaNote ? '<tr><td style="padding:4px 32px 16px;" align="center"><p style="margin:0; color:' + textLight + '; font-size:13px; font-style:italic;">' + ctaNote + '</p></td></tr>' : '';
+
+  // Signatures
+  var signatureHtml = '';
+  if (signer1Name || signer2Name) {
+    var s1 = signer1Name ? '<td style="vertical-align:top; padding-right:24px;"><p style="margin:0; color:' + text + '; font-size:14px; font-weight:600;">' + signer1Name + '</p>' + (signer1Title ? '<p style="margin:2px 0 0; color:' + textLight + '; font-size:13px;">' + signer1Title + '</p>' : '') + '</td>' : '';
+    var s2 = signer2Name ? '<td style="vertical-align:top;"><p style="margin:0; color:' + text + '; font-size:14px; font-weight:600;">' + signer2Name + '</p>' + (signer2Title ? '<p style="margin:2px 0 0; color:' + textLight + '; font-size:13px;">' + signer2Title + '</p>' : '') + '</td>' : '';
+    signatureHtml = '<tr><td style="padding:8px 32px 24px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr>' + s1 + s2 + '</tr></table></td></tr>';
+  }
+
+  // Social links
+  var socialHtml = '';
+  var socialItems = [];
+  if (tf.socialTwitter) socialItems.push('<a href="' + escHtml(tf.socialTwitter) + '" style="display:inline-block; margin:0 6px; color:' + terracotta + '; text-decoration:none; font-size:13px; font-weight:500;">t</a>');
+  if (tf.socialLinkedin) socialItems.push('<a href="' + escHtml(tf.socialLinkedin) + '" style="display:inline-block; margin:0 6px; color:' + terracotta + '; text-decoration:none; font-size:13px; font-weight:500;">in</a>');
+  if (tf.socialYoutube) socialItems.push('<a href="' + escHtml(tf.socialYoutube) + '" style="display:inline-block; margin:0 6px; color:' + terracotta + '; text-decoration:none; font-size:13px; font-weight:500;">yt</a>');
+  if (socialItems.length > 0) {
+    socialHtml = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:8px 0 0; text-align:center;">' + socialItems.join('') + '</td></tr></table>';
+  }
+
+  // Footer links
+  var footerLinksHtml = '';
+  var fLinks = [];
+  if (unsubscribeUrl) fLinks.push('<a href="' + unsubscribeUrl + '" style="color:' + textMuted + '; text-decoration:underline;">Afmelden</a>');
+  if (profileUrl) fLinks.push('<a href="' + profileUrl + '" style="color:' + textMuted + '; text-decoration:underline;">Profiel wijzigen</a>');
+  if (fLinks.length > 0) {
+    footerLinksHtml = '<tr><td style="padding:12px 0 0; text-align:center; font-size:12px;">' + fLinks.join('&nbsp;&nbsp;&nbsp;') + '</td></tr>';
+  }
+
+  // Copyright
+  var year = new Date().getFullYear();
+  var copyrightHtml = '<p style="margin:0; color:' + textMuted + '; font-size:11px;">\u00A9' + year + ' ' + escHtml(senderName);
+  if (privacyUrl) copyrightHtml += '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="' + privacyUrl + '" style="color:' + textMuted + '; text-decoration:underline;">Privacy</a>';
+  copyrightHtml += '</p>';
 
   return '<!DOCTYPE html>' +
     '<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
     '<title>' + escHtml(subject) + '</title>' +
     '<style>body,table,td{margin:0;padding:0}body{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;display:block}</style>' +
     '</head>' +
-    '<body style="margin:0;padding:0;background-color:#f3ece2;font-family:\'Inter\',\'Segoe UI\',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3ece2;">' +
-    '<tr><td align="center" style="padding:40px 20px;">' +
+    '<body style="margin:0;padding:0;background-color:' + sand + ';font-family:\'Inter\',\'Segoe UI\',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:' + sand + ';">' +
+    '<tr><td align="center" style="padding:20px 16px 40px;">' +
 
-    // .container outline stroke
-    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:#fafbfc;border-radius:18px;box-shadow:0 8px 32px rgba(8,9,30,0.15),0 2px 8px rgba(8,9,30,0.1);">' +
-    '<tr><td style="padding:6px;">' +
+    // Pre-header
+    preheaderHtml +
 
-    // .container inner — sidebar + content
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px;overflow:hidden;">' +
-    '<tr>' +
+    // Header
+    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:' + terracotta + '; border-radius:12px 12px 0 0;">' +
+    '<tr><td style="padding:32px 32px 28px; text-align:center;">' +
+    '<p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.5px;">' + escHtml(senderName) + '</p>' +
+    '<h1 style="margin:0; color:' + white + '; font-size:26px; font-weight:700; line-height:1.3; letter-spacing:-0.3px;">' + heading + '</h1>' +
+    '</td></tr></table>' +
 
-    // .index sidebar strip (decorative)
-    '<td width="48" style="width:48px;background:linear-gradient(180deg,rgba(140,174,244,0.2) 0%,rgba(225,233,244,0.35) 100%);vertical-align:top;border-radius:12px 0 0 12px;">&nbsp;</td>' +
+    // Content area
+    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:' + white + ';">' +
+    '<tr><td style="height:8px;"></td></tr>' +
 
-    // .content area
-    '<td style="background-color:#fafbfc;vertical-align:top;border-radius:0 12px 12px 0;">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
+    // Greeting
+    '<tr><td style="padding:24px 32px 16px;"><p style="margin:0; color:' + text + '; font-size:15px; font-weight:600; line-height:1.5;">' + greetingText + '</p></td></tr>' +
 
-    // Progress dots
-    '<tr><td style="padding:20px 28px 0;font-size:0;line-height:0;">' +
-    '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#111162;margin-right:4px;">&nbsp;</span>' +
-    '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span>' +
-    '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span>' +
-    '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;margin-right:4px;">&nbsp;</span>' +
-    '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#adbcd2;">&nbsp;</span>' +
-    '</td></tr>' +
+    // Body
+    '<tr><td style="padding:0 32px 8px;">' + bodyHtml + '</td></tr>' +
 
-    // h1 heading
-    '<tr><td style="padding:20px 28px 8px;">' +
-    '<h1 style="margin:0;color:#1d1d30;font-family:\'Inter\',\'Segoe UI\',Helvetica,Arial,sans-serif;font-size:24px;font-weight:600;line-height:1.3;letter-spacing:-0.3px;">' + heading + '</h1>' +
-    '</td></tr>' +
-
-    // Subtitle / intro
-    '<tr><td style="padding:0 28px 24px;">' +
-    '<p style="margin:0;color:#7a7a96;font-size:15px;line-height:1.55;letter-spacing:0.01em;">' + introText + '</p>' +
-    '</td></tr>' +
-
-    // Code box — .option-card.selected
-    '<tr><td style="padding:0 28px 24px;">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
-    '<td style="border:2px solid #111162;border-radius:10px;background-color:#f1f4f8;padding:20px;text-align:center;box-shadow:0 4px 16px rgba(17,17,98,0.15);">' +
-    '<p style="margin:0 0 6px;color:#7a7a96;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1px;">' + codeLabel + '</p>' +
-    '<p style="margin:0;color:#111162;font-size:26px;font-weight:700;letter-spacing:5px;font-family:\'SF Mono\',\'Fira Code\',\'Courier New\',monospace;">' + escHtml(code) + '</p>' +
-    '</td></tr></table></td></tr>' +
-
-    // CTA — .btn-primary
-    '<tr><td style="padding:0 28px 8px;" align="center">' +
+    // CTA button
+    '<tr><td style="padding:8px 32px 8px;" align="center">' +
     '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
-    '<td style="background:linear-gradient(135deg,#8caef4 0%,#111162 100%);border-radius:10px;box-shadow:0 4px 12px rgba(17,17,98,0.3);">' +
-    '<a href="' + escHtml(surveyUrl) + '" target="_blank" style="display:inline-block;padding:12px 28px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;">' + ctaText + '</a>' +
+    '<td style="background-color:' + terracotta + '; border-radius:6px;">' +
+    '<a href="' + escHtml(surveyUrl) + '" target="_blank" style="display:inline-block;padding:12px 32px;color:' + white + ';text-decoration:none;font-size:15px;font-weight:600;">' + ctaText + '</a>' +
     '</td></tr></table></td></tr>' +
 
-    // Preview link
-    '<tr><td style="padding:0 28px 24px;" align="center">' +
-    '<a href="' + escHtml(previewUrl) + '" target="_blank" style="color:#3c3c5d;font-size:12px;text-decoration:none;opacity:0.7;">' + previewLinkText + '</a>' +
-    '</td></tr>' +
+    ctaNoteHtml +
 
-    // Divider
-    '<tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4;font-size:0;">&nbsp;</td></tr></table></td></tr>' +
+    '<tr><td style="height:8px;"></td></tr>' +
 
-    // Praktisch heading
-    '<tr><td style="padding:20px 28px 10px;"><p style="margin:0;color:#1d1d30;font-size:14px;font-weight:600;">' + praktischHeading + '</p></td></tr>' +
+    // Deadline/contact
+    '<tr><td style="padding:8px 32px 24px;">' + deadlineContactHtml + '</td></tr>' +
 
-    // Checklist items (dynamic)
-    checklistHtml +
-
-    // Privacy — .info-block
-    '<tr><td style="padding:0 28px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>' +
-    '<td style="background:linear-gradient(135deg,#f1f4f8 0%,#e1e9f4 100%);border-left:3px solid #111162;border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:#3c3c5d;line-height:1.6;">' +
-    privacyText +
-    '</td></tr></table></td></tr>' +
-
-    // Contact
-    '<tr><td style="padding:0 28px 16px;"><p style="margin:0;color:#7a7a96;font-size:12px;line-height:1.6;">' + contactHtml + '</p></td></tr>' +
-
-    // Divider
-    '<tr><td style="padding:0 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e1e9f4;font-size:0;">&nbsp;</td></tr></table></td></tr>' +
+    section2Html +
+    section3Html +
 
     // Closing
-    '<tr><td style="padding:16px 28px 24px;">' +
-    '<p style="margin:0 0 4px;color:#3c3c5d;font-size:13px;line-height:1.6;">' + closingText + '</p>' +
-    '<p style="margin:0;color:#1d1d30;font-size:13px;font-weight:600;line-height:1.6;">' + escHtml(senderName) + '</p>' +
-    '</td></tr>' +
+    '<tr><td style="padding:16px 32px 8px;">' + closingHtml + '</td></tr>' +
 
-    '</table></td>' + // content area
+    signatureHtml +
 
-    '</tr></table>' + // sidebar + content
-    '</td></tr></table>' + // outline stroke
+    '</table>' +
 
-    // Footer outside card
-    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;"><tr><td style="padding:16px 20px;text-align:center;">' +
-    '<p style="margin:0;color:#7a7a96;font-size:11px;line-height:1.5;">' + footerText + '</p>' +
+    // Footer
+    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:' + footerBg + '; border-radius:0 0 12px 12px; border-top:1px solid ' + border + ';">' +
+    '<tr><td style="padding:24px 32px; text-align:center;">' +
+    '<p style="margin:0 0 4px; color:' + terracotta + '; font-size:15px; font-weight:700;">' + escHtml(senderName) + '</p>' +
+    socialHtml +
+    '<p style="margin:12px 0 0; color:' + textLight + '; font-size:12px; line-height:1.6;">' + addressHtml + '</p>' +
+    (phone ? '<p style="margin:4px 0 0; color:' + textLight + '; font-size:12px;">' + phone + '</p>' : '') +
+    '<p style="margin:4px 0 0; font-size:12px;">' +
+    (vars.contactEmail ? '<a href="mailto:' + vars.contactEmail + '" style="color:' + terracotta + '; text-decoration:none;">' + vars.contactEmail + '</a>' : '') +
+    (vars.contactEmail && website ? '&nbsp;&nbsp;' : '') +
+    (website ? '<a href="https://' + website + '" style="color:' + terracotta + '; text-decoration:none;">' + website + '</a>' : '') +
+    '</p>' +
     '</td></tr></table>' +
+
+    // Bottom footer
+    '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">' +
+    footerLinksHtml +
+    '<tr><td style="padding:12px 20px 0; text-align:center;">' + copyrightHtml + '</td></tr>' +
+    '<tr><td style="padding:8px 20px; text-align:center;"><p style="margin:0; color:' + textMuted + '; font-size:11px; line-height:1.5;">' + footerText + '</p></td></tr>' +
+    '</table>' +
 
     '</td></tr></table></body></html>';
 }

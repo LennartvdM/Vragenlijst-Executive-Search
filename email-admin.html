@@ -57,7 +57,7 @@
           </svg>
         </div>
         <h1>Email CMS</h1>
-        <p class="ea-subtitle">Monitoring Cultureel Talent naar de Top 2026</p>
+        <p class="ea-subtitle">Monitor Executive Search — Talent naar de Top</p>
         <a href="/m9v2-email-handmatig" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:13px;transition:color 0.15s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">
           Handmatig versturen (zonder DNS)
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -77,23 +77,23 @@
         <div class="ea-grid">
           <div class="ea-field ea-full">
             <label for="setting-subject">Onderwerp</label>
-            <input type="text" id="setting-subject" value="Monitoring Cultureel Talent naar de Top 2026">
+            <input type="text" id="setting-subject" value="Monitor Executive Search — Talent naar de Top">
           </div>
           <div class="ea-field">
             <label for="setting-surveyUrl">URL vragenlijst</label>
-            <input type="url" id="setting-surveyUrl" placeholder="https://monitorcultuur.nl/">
+            <input type="url" id="setting-surveyUrl" placeholder="https://...">
           </div>
           <div class="ea-field">
-            <label for="setting-previewUrl">URL inkijkexemplaar</label>
-            <input type="url" id="setting-previewUrl" placeholder="https://monitorcultuur.nl/inkijkexemplaar">
+            <label for="setting-webVersionUrl">URL webversie</label>
+            <input type="url" id="setting-webVersionUrl" placeholder="https://...">
           </div>
           <div class="ea-field">
             <label for="setting-deadline">Deadline</label>
-            <input type="text" id="setting-deadline" placeholder="bijv. 1 april 2026">
+            <input type="text" id="setting-deadline" placeholder="bijv. donderdag 4 april 2025">
           </div>
           <div class="ea-field">
             <label for="setting-senderName">Afzendernaam</label>
-            <input type="text" id="setting-senderName" value="Commissie Monitoring Talent naar de Top">
+            <input type="text" id="setting-senderName" value="Talent naar de Top">
           </div>
           <div class="ea-field">
             <label for="setting-contactPerson">Contactpersoon</label>
@@ -101,7 +101,11 @@
           </div>
           <div class="ea-field">
             <label for="setting-contactEmail">Contact e-mail</label>
-            <input type="text" inputmode="email" id="setting-contactEmail" placeholder="dirk.hamaker@talentnaardetop.nl" autocomplete="one-time-code">
+            <input type="text" inputmode="email" id="setting-contactEmail" placeholder="ellen.stoop@talentnaardetop.nl" autocomplete="one-time-code">
+          </div>
+          <div class="ea-field">
+            <label for="setting-contactPhone">Contact telefoon</label>
+            <input type="text" id="setting-contactPhone" placeholder="+31 (0)6 12 34 56 78">
           </div>
         </div>
       </div>
@@ -121,54 +125,122 @@
           <button class="ea-preset-btn active" data-action="loadPreset" data-preset="uitnodiging">Uitnodiging</button>
           <button class="ea-preset-btn" data-action="loadPreset" data-preset="reset">Reset</button>
         </div>
-        <p class="ea-field-hint ea-section-hint">Pas de tekst van de e-mail aan. Gebruik <code>{naam}</code>, <code>{deadline}</code>, <code>{contactPerson}</code>, <code>{contactEmail}</code> en <code>{code}</code> als tijdelijke aanduidingen.</p>
+        <p class="ea-field-hint ea-section-hint">Pas de tekst van de e-mail aan. Gebruik <code>{naam}</code>, <code>{deadline}</code>, <code>{contactPerson}</code>, <code>{contactEmail}</code>, <code>{contactPhone}</code> en <code>{code}</code> als tijdelijke aanduidingen.</p>
         <div class="ea-grid">
           <div class="ea-field ea-full">
             <label for="setting-heading">Koptekst</label>
-            <input type="text" id="setting-heading" value="Monitoring Cultureel Talent naar de Top 2026">
+            <input type="text" id="setting-heading" value="Monitor Executive Search">
           </div>
           <div class="ea-field ea-full">
-            <label for="setting-introText">Inleidende tekst</label>
-            <input type="text" id="setting-introText" value="Geachte {naam}, wij vragen u de monitoring in te vullen vóór {deadline}.">
+            <label for="setting-greeting">Aanhef</label>
+            <input type="text" id="setting-greeting" value="Beste {naam}">
           </div>
-          <div class="ea-field">
-            <label for="setting-codeLabel">Label toegangscode</label>
-            <input type="text" id="setting-codeLabel" value="Uw toegangscode">
+          <div class="ea-field ea-full">
+            <label for="setting-bodyText">Hoofdtekst <span class="ea-label-hint">(alinea's scheiden met lege regel)</span></label>
+            <textarea id="setting-bodyText" rows="10">Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.
+
+Wat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn 'koploper' en u levert daar een zeer belangrijke bijdrage aan.
+
+Wij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.
+
+Via de button hieronder komt u bij de vragenlijst.
+Wij vragen u deze in één keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.</textarea>
           </div>
           <div class="ea-field">
             <label for="setting-ctaText">Knoptekst</label>
-            <input type="text" id="setting-ctaText" value="Ga naar de vragenlijst →">
+            <input type="text" id="setting-ctaText" value="Naar de vragenlijst">
           </div>
           <div class="ea-field">
-            <label for="setting-previewLinkText">Inkijkexemplaar-link</label>
-            <input type="text" id="setting-previewLinkText" value="Bekijk inkijkexemplaar →">
-          </div>
-          <div class="ea-field">
-            <label for="setting-praktischHeading">Sectiekop praktisch</label>
-            <input type="text" id="setting-praktischHeading" value="Praktisch">
+            <label for="setting-ctaNote">Opmerking onder knop</label>
+            <input type="text" id="setting-ctaNote" placeholder="bijv. vragenlijst is opnieuw bruikbaar">
           </div>
           <div class="ea-field ea-full">
-            <label for="setting-checklistItems">Checklistitems <span class="ea-label-hint">(één item per regel)</span></label>
-            <textarea id="setting-checklistItems" rows="4">Duurt 20–30 minuten, u kunt tussendoor stoppen
-U kunt meerdere keren verzenden, de laatste versie telt
-Houd uw personeelscijfers bij de hand
-Voortgang gekoppeld aan uw apparaat, niet aan uw code</textarea>
+            <label for="setting-deadlineContactText">Deadline &amp; contacttekst</label>
+            <textarea id="setting-deadlineContactText" rows="2">U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.</textarea>
           </div>
           <div class="ea-field ea-full">
-            <label for="setting-privacyText">Privacytekst</label>
-            <textarea id="setting-privacyText" rows="2">Uw antwoorden worden lokaal in uw browser opgeslagen. Op een ander apparaat begint u opnieuw. Wist u uw browsergegevens, dan zijn conceptantwoorden weg.</textarea>
+            <label for="setting-section2Heading">Sectie 2 — koptekst <span class="ea-label-hint">(leeg = verborgen)</span></label>
+            <input type="text" id="setting-section2Heading" value="Wat gebeurt er met de resultaten?">
           </div>
           <div class="ea-field ea-full">
-            <label for="setting-contactText">Contacttekst</label>
-            <input type="text" id="setting-contactText" value="Vragen? {contactPerson} via {contactEmail}">
+            <label for="setting-section2Text">Sectie 2 — tekst</label>
+            <textarea id="setting-section2Text" rows="4">De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.</textarea>
           </div>
-          <div class="ea-field">
+          <div class="ea-field ea-full">
+            <label for="setting-section3Heading">Sectie 3 — koptekst <span class="ea-label-hint">(leeg = verborgen)</span></label>
+            <input type="text" id="setting-section3Heading" value="Topvrouw van het Jaar">
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-section3ImageUrl">Sectie 3 — afbeelding URL <span class="ea-label-hint">(optioneel)</span></label>
+            <input type="url" id="setting-section3ImageUrl" placeholder="https://...">
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-section3Text">Sectie 3 — tekst</label>
+            <textarea id="setting-section3Text" rows="3">Tot slot nog een belangrijke vraag aan u. Eerder ontving u van ons een email met suggesties over de topvrouw van het jaar. Onze vraag aan u: Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor deze award? Wij stellen uw input zeer op prijs.</textarea>
+          </div>
+          <div class="ea-field ea-full">
             <label for="setting-closingText">Afsluiting</label>
-            <input type="text" id="setting-closingText" value="Met vriendelijke groet,">
+            <textarea id="setting-closingText" rows="3">Wij wensen u veel succes met het invullen van de vragenlijst en kijken uit naar uw resultaten. Alvast hartelijk dank voor uw medewerking.
+
+Met vriendelijke groet,</textarea>
+          </div>
+          <div class="ea-field">
+            <label for="setting-signer1Name">Ondertekenaar 1 — naam</label>
+            <input type="text" id="setting-signer1Name" placeholder="bijv. Ara Heuvel">
+          </div>
+          <div class="ea-field">
+            <label for="setting-signer1Title">Ondertekenaar 1 — functie</label>
+            <input type="text" id="setting-signer1Title" placeholder="bijv. Directeur Talent naar de Top">
+          </div>
+          <div class="ea-field">
+            <label for="setting-signer2Name">Ondertekenaar 2 — naam</label>
+            <input type="text" id="setting-signer2Name" placeholder="bijv. Dirk Hamaker">
+          </div>
+          <div class="ea-field">
+            <label for="setting-signer2Title">Ondertekenaar 2 — functie</label>
+            <input type="text" id="setting-signer2Title" placeholder="bijv. Sr. Adviseur">
+          </div>
+          <div class="ea-field ea-full">
+            <label for="setting-address">Adres <span class="ea-label-hint">(regels scheiden met enter)</span></label>
+            <textarea id="setting-address" rows="3">Sandbergplein 24
+1181 ZX Amstelveen
+Nederland</textarea>
+          </div>
+          <div class="ea-field">
+            <label for="setting-phone">Telefoon organisatie</label>
+            <input type="text" id="setting-phone" placeholder="bijv. 0683562954">
+          </div>
+          <div class="ea-field">
+            <label for="setting-website">Website</label>
+            <input type="text" id="setting-website" value="www.talentnaardetop.nl">
+          </div>
+          <div class="ea-field">
+            <label for="setting-socialTwitter">Twitter/X URL</label>
+            <input type="url" id="setting-socialTwitter" placeholder="https://twitter.com/...">
+          </div>
+          <div class="ea-field">
+            <label for="setting-socialLinkedin">LinkedIn URL</label>
+            <input type="url" id="setting-socialLinkedin" placeholder="https://linkedin.com/...">
+          </div>
+          <div class="ea-field">
+            <label for="setting-socialYoutube">YouTube URL</label>
+            <input type="url" id="setting-socialYoutube" placeholder="https://youtube.com/...">
           </div>
           <div class="ea-field ea-full">
             <label for="setting-footerText">Voettekst</label>
-            <input type="text" id="setting-footerText" value="U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitoring Cultureel Talent naar de Top 2026.">
+            <input type="text" id="setting-footerText" value="U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.">
+          </div>
+          <div class="ea-field">
+            <label for="setting-unsubscribeUrl">URL afmelden</label>
+            <input type="url" id="setting-unsubscribeUrl" placeholder="https://...">
+          </div>
+          <div class="ea-field">
+            <label for="setting-profileUrl">URL profiel wijzigen</label>
+            <input type="url" id="setting-profileUrl" placeholder="https://...">
+          </div>
+          <div class="ea-field">
+            <label for="setting-privacyUrl">URL privacybeleid</label>
+            <input type="url" id="setting-privacyUrl" placeholder="https://...">
           </div>
         </div>
       </div>
