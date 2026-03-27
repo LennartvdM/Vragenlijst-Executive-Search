@@ -85,7 +85,7 @@
 
   const UITNODIGING_V2_DEFAULTS = {
     subject: 'Monitor Executive Search \u2014 Talent naar de Top',
-    senderName: 'Talent naar de Top',
+    senderName: 'Commissie Monitoring Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
     bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Dat kan alleen met uw input \u2014 en die is dus onmisbaar.\n\nWe vragen u de Monitor Executive Search over {jaar} in te vullen. Dat kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in \u2014 uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? [Bekijk het overzicht.]({inkijkUrl})',
