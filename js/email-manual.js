@@ -103,20 +103,27 @@
     }
   }
 
+  const SETTINGS_VERSION = 2;
+
   function loadSettings() {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-      if (!data) return { ...DEFAULT_SETTINGS };
+      if (!data) return { ...DEFAULT_SETTINGS, _v: SETTINGS_VERSION };
       const saved = JSON.parse(data);
+      // Clear stale settings from older versions
+      if (!saved._v || saved._v < SETTINGS_VERSION) {
+        localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+        return { ...DEFAULT_SETTINGS, _v: SETTINGS_VERSION };
+      }
       // Don't let empty saved values override non-empty defaults
-      const merged = { ...DEFAULT_SETTINGS };
+      const merged = { ...DEFAULT_SETTINGS, _v: SETTINGS_VERSION };
       for (const key of Object.keys(saved)) {
         if (saved[key] !== '' && saved[key] !== undefined) {
           merged[key] = saved[key];
         }
       }
       return merged;
-    } catch { return { ...DEFAULT_SETTINGS }; }
+    } catch { return { ...DEFAULT_SETTINGS, _v: SETTINGS_VERSION }; }
   }
 
   // ---------------------------------------------------------------------------

@@ -61,10 +61,10 @@
     deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
     section2Heading: 'Wat gebeurt er met de resultaten?',
     section2Text: 'De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.',
-    section3Heading: 'Topvrouw van het Jaar',
+    section3Heading: '',
     section3ImageUrl: '',
-    section3Text: 'Tot slot nog een belangrijke vraag aan u. Eerder ontving u van ons een email met suggesties over de topvrouw van het jaar. Onze vraag aan u: Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor deze award? Wij stellen uw input zeer op prijs.',
-    closingText: 'Wij wensen u veel succes met het invullen van de vragenlijst en kijken uit naar uw resultaten. Alvast hartelijk dank voor uw medewerking.\n\nMet vriendelijke groet,',
+    section3Text: '',
+    closingText: 'Hartelijke groet,',
     signer1Name: '',
     signer1Title: '',
     signer2Name: '',
@@ -407,6 +407,22 @@
         ${preheaderHtml}
 
         <!-- Header -->
+        <!--[if mso]>
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
+          <tr>
+            <td>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:600px;v-text-anchor:middle;" arcsize="3%" fillcolor="${C.primary}" strokecolor="${C.primary}">
+                <w:anchorlock/>
+                <center style="padding:32px 32px 28px;">
+                  <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.3px; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${senderName}</p>
+                  <h1 style="margin:0; color:#ffffff; font-size:26px; font-weight:700; line-height:1.3; letter-spacing:-0.3px; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${heading}</h1>
+                </center>
+              </v:roundrect>
+            </td>
+          </tr>
+        </table>
+        <![endif]-->
+        <!--[if !mso]><!-->
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.primary}; border-radius:12px 12px 0 0;">
           <tr>
             <td style="padding:32px 32px 28px; text-align:center;">
@@ -417,6 +433,7 @@
             </td>
           </tr>
         </table>
+        <!--<![endif]-->
 
         <!-- Content area -->
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.white};">
