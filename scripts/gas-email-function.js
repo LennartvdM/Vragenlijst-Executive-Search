@@ -127,7 +127,7 @@ function textToHtmlGas(text, style) {
   for (var i = 0; i < paragraphs.length; i++) {
     var p = paragraphs[i].replace(/^\s+|\s+$/g, '');
     if (p) {
-      result += '<p style="' + style + '">' + escHtml(p).replace(/\n/g, '<br>') + '</p>\n';
+      result += '<p style="' + style + '">' + escHtml(p).replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>\n';
     }
   }
   return result;

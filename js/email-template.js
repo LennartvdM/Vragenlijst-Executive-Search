@@ -36,7 +36,8 @@
     if (!text) return '';
     const paragraphs = text.split(/\n\n+/);
     return paragraphs.map(p => {
-      const lines = esc(p.trim()).replace(/\n/g, '<br>');
+      const lines = esc(p.trim()).replace(/\n/g, '<br>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       return `<p style="${style}">${lines}</p>`;
     }).join('\n');
   }
@@ -82,7 +83,7 @@
     senderName: 'Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\nWat vragen we? Via onderstaande button komt u bij de vragenlijst. Uw antwoorden worden automatisch opgeslagen, dus u kunt de vragenlijst op elk gewenst moment onderbreken en later verder gaan. U kunt de vragenlijst ook opnieuw invullen \u2014 uw laatst ingevoerde antwoorden tellen.\n\nWilt u de vragen vooraf inzien? Klik hier voor het overzicht.',
+    bodyText: 'Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\n**Wat vragen we?**\nVia onderstaande button komt u bij de vragenlijst. Uw antwoorden worden automatisch opgeslagen, dus u kunt de vragenlijst op elk gewenst moment onderbreken en later verder gaan. U kunt de vragenlijst ook opnieuw invullen \u2014 uw laatst ingevoerde antwoorden tellen.\n\nWilt u de vragen vooraf inzien? Klik hier voor het overzicht.',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'Invullen kan tot en met {deadline}. Bij vragen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
