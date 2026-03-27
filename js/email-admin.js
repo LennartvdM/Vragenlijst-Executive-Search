@@ -25,6 +25,7 @@
     surveyUrl: 'https://monitorcultuur.nl/',
     webVersionUrl: '',
     deadline: '',
+    jaar: '',
     senderName: 'Talent naar de Top',
     contactPerson: '',
     contactEmail: '',
@@ -123,6 +124,7 @@
   function replaceTextPlaceholders(text, vars) {
     return text
       .replace(/\{naam\}/g, vars.naam)
+      .replace(/\{jaar\}/g, vars.jaar)
       .replace(/\{deadline\}/g, vars.deadline)
       .replace(/\{contactPerson\}/g, vars.contactPerson)
       .replace(/\{contactEmail\}/g, vars.contactEmail)
@@ -346,6 +348,7 @@
         ? settings.surveyUrl + (settings.surveyUrl.includes('?') ? '&' : '?') + 'code=' + encodeURIComponent(recipient.code)
         : '',
       deadline: settings.deadline || '',
+      jaar: settings.jaar || '',
       contactPerson: settings.contactPerson || '',
       contactEmail: settings.contactEmail || '',
       contactPhone: settings.contactPhone || '',
@@ -652,7 +655,7 @@
   // ---------------------------------------------------------------------------
 
   const ALL_SETTING_FIELDS = [
-    'subject', 'surveyUrl', 'webVersionUrl', 'deadline', 'senderName', 'contactPerson', 'contactEmail', 'contactPhone',
+    'subject', 'surveyUrl', 'webVersionUrl', 'deadline', 'jaar', 'senderName', 'contactPerson', 'contactEmail', 'contactPhone',
     'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
     'deadlineContactText', 'section2Heading', 'section2Text',
     'section3Heading', 'section3ImageUrl', 'section3Text',
