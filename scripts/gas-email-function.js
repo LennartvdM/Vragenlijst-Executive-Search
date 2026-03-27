@@ -38,6 +38,7 @@ function handleSendEmail(params) {
     var subject = params.subject || 'Monitor Executive Search \u2014 Talent naar de Top';
     var surveyUrl = params.surveyUrl || '';
     var deadline = params.deadline || '';
+    var jaar = params.jaar || '';
     var contactPerson = params.contactPerson || '';
     var contactEmail = params.contactEmail || '';
     var contactPhone = params.contactPhone || '';
@@ -84,7 +85,7 @@ function handleSendEmail(params) {
       personalSurveyUrl = surveyUrl + (surveyUrl.indexOf('?') >= 0 ? '&' : '?') + 'code=' + encodeURIComponent(code);
     }
 
-    var htmlBody = buildEmailHtml(naam, code, subject, personalSurveyUrl, deadline, contactPerson, contactEmail, contactPhone, senderName, textFields);
+    var htmlBody = buildEmailHtml(naam, code, subject, personalSurveyUrl, deadline, jaar, contactPerson, contactEmail, contactPhone, senderName, textFields);
 
     MailApp.sendEmail({
       to: to,
@@ -107,6 +108,7 @@ function handleSendEmail(params) {
 function replaceTextPlaceholders(text, vars) {
   return text
     .replace(/\{naam\}/g, vars.naam)
+    .replace(/\{jaar\}/g, vars.jaar)
     .replace(/\{deadline\}/g, vars.deadline)
     .replace(/\{contactPerson\}/g, vars.contactPerson)
     .replace(/\{contactEmail\}/g, vars.contactEmail)
@@ -134,10 +136,11 @@ function textToHtmlGas(text, style) {
 /**
  * Build the HTML email body — Newsletter-style layout for Executive Search Monitor
  */
-function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson, contactEmail, contactPhone, senderName, textFields) {
+function buildEmailHtml(naam, code, subject, surveyUrl, deadline, jaar, contactPerson, contactEmail, contactPhone, senderName, textFields) {
   var tf = textFields || {};
   var vars = {
     naam: escHtml(naam),
+    jaar: escHtml(jaar),
     deadline: escHtml(deadline),
     contactPerson: escHtml(contactPerson),
     contactEmail: escHtml(contactEmail),

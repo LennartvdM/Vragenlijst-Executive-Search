@@ -28,6 +28,7 @@
     surveyUrl: 'https://monitorcultuur.nl/',
     webVersionUrl: '',
     deadline: '',
+    jaar: '',
     senderName: 'Talent naar de Top',
     contactPerson: '',
     contactEmail: '',
@@ -61,7 +62,7 @@
   };
 
   const ALL_SETTING_FIELDS = [
-    'subject', 'surveyUrl', 'webVersionUrl', 'deadline',
+    'subject', 'surveyUrl', 'webVersionUrl', 'deadline', 'jaar',
     'senderName', 'contactPerson', 'contactEmail', 'contactPhone'
   ];
 

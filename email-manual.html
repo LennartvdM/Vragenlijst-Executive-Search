@@ -458,6 +458,10 @@
             <input type="text" id="setting-deadline" placeholder="bijv. donderdag 4 april 2025">
           </div>
           <div class="ea-field">
+            <label for="setting-jaar">Jaar <span class="ea-label-hint">(voor {jaar} placeholder)</span></label>
+            <input type="text" id="setting-jaar" placeholder="bijv. 2025">
+          </div>
+          <div class="ea-field">
             <label for="setting-senderName">Afzendernaam</label>
             <input type="text" id="setting-senderName" value="Talent naar de Top">
           </div>
@@ -494,6 +498,7 @@
     <div class="ea-preset-bar em-preset-bar-standalone">
       <span class="ea-preset-label">Template:</span>
       <button class="ea-preset-btn active" data-action="loadPreset" data-preset="uitnodiging">Uitnodiging</button>
+      <button class="ea-preset-btn" data-action="loadPreset" data-preset="uitnodiging-v2">Uitnodiging (nieuw)</button>
       <button class="ea-preset-btn" data-action="loadPreset" data-preset="reset">Reset</button>
     </div>
 

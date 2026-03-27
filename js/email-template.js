@@ -20,6 +20,7 @@
   function replaceTextPlaceholders(text, vars) {
     return text
       .replace(/\{naam\}/g, vars.naam)
+      .replace(/\{jaar\}/g, vars.jaar)
       .replace(/\{deadline\}/g, vars.deadline)
       .replace(/\{contactPerson\}/g, vars.contactPerson)
       .replace(/\{contactEmail\}/g, vars.contactEmail)
@@ -76,6 +77,38 @@
     privacyUrl: ''
   };
 
+  const UITNODIGING_V2_DEFAULTS = {
+    subject: 'Monitor Executive Search \u2014 Talent naar de Top',
+    senderName: 'Talent naar de Top',
+    heading: 'Monitor Executive Search',
+    greeting: 'Beste {naam}',
+    bodyText: 'Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\nWat vragen we? Via onderstaande button komt u bij de vragenlijst. Uw antwoorden worden automatisch opgeslagen, dus u kunt de vragenlijst op elk gewenst moment onderbreken en later verder gaan. U kunt de vragenlijst ook opnieuw invullen \u2014 uw laatst ingevoerde antwoorden tellen.\n\nWilt u de vragen vooraf inzien? Klik hier voor het overzicht.',
+    ctaText: 'Naar de vragenlijst',
+    ctaNote: '',
+    deadlineContactText: 'Invullen kan tot en met {deadline}. Bij vragen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
+    section2Heading: 'Wat gebeurt er met de resultaten?',
+    section2Text: 'De Commissie Monitoring beoordeelt de resultaten en stelt een algemene rapportage op over de voortgang van alle deelnemende bureaus. U ontvangt deze rapportage na afloop. Uw individuele gegevens worden strikt vertrouwelijk behandeld en niet herleidbaar gedeeld.',
+    section3Heading: 'Topvrouw van het Jaar',
+    section3ImageUrl: '',
+    section3Text: 'Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor de award Topvrouw van het Jaar? U kunt uw suggestie meegeven in de vragenlijst.',
+    closingText: 'Alvast hartelijk dank voor uw medewerking.\n\nMet vriendelijke groet,',
+    signer1Name: '',
+    signer1Title: '',
+    signer2Name: '',
+    signer2Title: '',
+    address: 'Sandbergplein 24\n1181 ZX Amstelveen',
+    phone: '',
+    website: 'talentnaardetop.nl',
+    socialTwitter: '',
+    socialLinkedin: '',
+    socialYoutube: '',
+    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
+    webVersionUrl: '',
+    unsubscribeUrl: '',
+    profileUrl: '',
+    privacyUrl: ''
+  };
+
   const RESET_DEFAULTS = {
     subject: 'Uw vragenlijst is gereset \u2014 Monitor Executive Search',
     senderName: 'Talent naar de Top',
@@ -110,6 +143,7 @@
 
   const TEMPLATE_PRESETS = {
     uitnodiging: { label: 'Uitnodiging', defaults: DEFAULTS },
+    'uitnodiging-v2': { label: 'Uitnodiging (nieuw)', defaults: UITNODIGING_V2_DEFAULTS },
     reset: { label: 'Reset', defaults: RESET_DEFAULTS }
   };
 
@@ -147,8 +181,9 @@
     const contactEmail = esc(s.contactEmail || '[email]');
     const contactPhone = esc(s.contactPhone || '[telefoon]');
     const senderName = esc(s.senderName || DEFAULTS.senderName);
+    const jaar = esc(s.jaar || '[jaar]');
 
-    const vars = { naam, deadline, contactPerson, contactEmail, contactPhone, code };
+    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code };
 
     // Resolve all text fields with placeholders
     const heading = esc(s.heading || DEFAULTS.heading);
@@ -468,8 +503,9 @@
     const contactEmail = s.contactEmail || '[email]';
     const contactPhone = s.contactPhone || '[telefoon]';
     const senderName = s.senderName || DEFAULTS.senderName;
+    const jaar = s.jaar || '[jaar]';
 
-    const vars = { naam, deadline, contactPerson, contactEmail, contactPhone, code: rawCode };
+    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code: rawCode };
 
     const greeting = replaceTextPlaceholders(s.greeting || DEFAULTS.greeting, vars);
     const bodyText = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars);
@@ -637,6 +673,7 @@
     buildPlainText: buildPlainText,
     buildEml: buildEml,
     DEFAULTS: DEFAULTS,
+    UITNODIGING_V2_DEFAULTS: UITNODIGING_V2_DEFAULTS,
     RESET_DEFAULTS: RESET_DEFAULTS,
     TEMPLATE_PRESETS: TEMPLATE_PRESETS
   };
