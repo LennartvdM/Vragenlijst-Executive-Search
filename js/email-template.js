@@ -52,39 +52,6 @@
 
   const DEFAULTS = {
     subject: 'Monitor Executive Search \u2014 Talent naar de Top',
-    senderName: 'Talent naar de Top',
-    heading: 'Monitor Executive Search',
-    greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? [Klik hier voor het overzicht.]({inkijkUrl})',
-    ctaText: 'Naar de vragenlijst',
-    ctaNote: '',
-    deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
-    section2Heading: 'Wat gebeurt er met de resultaten?',
-    section2Text: 'De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.',
-    section3Heading: '',
-    section3ImageUrl: '',
-    section3Text: '',
-    closingText: 'Hartelijke groet,',
-    signer1Name: '',
-    signer1Title: '',
-    signer2Name: '',
-    signer2Title: '',
-    address: 'Sandbergplein 24\n1181 ZX Amstelveen\nNederland',
-    phone: '',
-    website: 'www.talentnaardetop.nl',
-    socialTwitter: '',
-    socialLinkedin: '',
-    socialInstagram: '',
-    socialYoutube: '',
-    footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
-    webVersionUrl: '',
-    unsubscribeUrl: '',
-    profileUrl: '',
-    privacyUrl: ''
-  };
-
-  const UITNODIGING_V2_DEFAULTS = {
-    subject: 'Monitor Executive Search \u2014 Talent naar de Top',
     senderName: 'Commissie Monitoring Talent naar de Top',
     deadline: '28 april',
     jaar: '2025',
@@ -155,7 +122,6 @@
 
   const TEMPLATE_PRESETS = {
     uitnodiging: { label: 'Uitnodiging', defaults: DEFAULTS },
-    'uitnodiging-v2': { label: 'Uitnodiging (nieuw)', defaults: UITNODIGING_V2_DEFAULTS },
     reset: { label: 'Reset', defaults: RESET_DEFAULTS }
   };
 
@@ -754,7 +720,6 @@
     buildPlainText: buildPlainText,
     buildEml: buildEml,
     DEFAULTS: DEFAULTS,
-    UITNODIGING_V2_DEFAULTS: UITNODIGING_V2_DEFAULTS,
     RESET_DEFAULTS: RESET_DEFAULTS,
     TEMPLATE_PRESETS: TEMPLATE_PRESETS
   };
