@@ -36,7 +36,7 @@
    */
   function textToHtml(text, style, linkColor) {
     if (!text) return '';
-    const lc = linkColor || C.terracotta;
+    const lc = linkColor || C.primary;
     const paragraphs = text.split(/\n\n+/);
     return paragraphs.map(p => {
       const lines = esc(p.trim()).replace(/\n/g, '<br>');
@@ -159,8 +159,8 @@
   // ---------------------------------------------------------------------------
 
   const C = {
-    terracotta: '#111162',
-    terracottaDark: '#07072f',
+    primary: '#111162',
+    primaryDark: '#07072f',
     sand: '#e1e9f4',
     white: '#ffffff',
     text: '#1d1d30',
@@ -231,11 +231,11 @@
 
     // Build deadline/contact HTML with mailto link
     const deadlineContactHtml = textToHtml(deadlineContactRaw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65; word-spacing:-0.5px;`)
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build closing paragraphs
     const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`)
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build address lines
     const addressHtml = esc(addressRaw).replace(/\n/g, '<br>');
@@ -327,7 +327,7 @@
     // Social links (styled text pills — Outlook-safe, no images/SVG needed)
     let socialHtml = '';
     const socialLinks = [];
-    const pillStyle = `display:inline-block; margin:0 4px; padding:4px 12px; color:${C.terracotta}; text-decoration:none; font-size:12px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; border:1px solid ${C.border}; border-radius:14px; line-height:1.4;`;
+    const pillStyle = `display:inline-block; margin:0 4px; padding:4px 12px; color:${C.primary}; text-decoration:none; font-size:12px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; border:1px solid ${C.border}; border-radius:14px; line-height:1.4;`;
     if (socialTwitter) socialLinks.push(`<a href="${socialTwitter}" style="${pillStyle}">X</a>`);
     if (socialLinkedin) socialLinks.push(`<a href="${socialLinkedin}" style="${pillStyle}">LinkedIn</a>`);
     if (socialInstagram) socialLinks.push(`<a href="${socialInstagram}" style="${pillStyle}">Instagram</a>`);
@@ -376,7 +376,7 @@
         ${preheaderHtml}
 
         <!-- Header -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.terracotta}; border-radius:12px 12px 0 0;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.primary}; border-radius:12px 12px 0 0;">
           <tr>
             <td style="padding:32px 32px 28px; text-align:center;">
               <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.3px;">${senderName}</p>
@@ -413,7 +413,7 @@
                       <tr>
                         <td style="padding:8px 32px 8px;" align="center">
                           <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:44px;v-text-anchor:middle;width:240px;" arcsize="14%" strokecolor="${C.terracotta}" fillcolor="${C.terracotta}">
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:44px;v-text-anchor:middle;width:240px;" arcsize="14%" strokecolor="${C.primary}" fillcolor="${C.primary}">
                             <w:anchorlock/>
                             <center style="color:#ffffff;font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">${ctaText}</center>
                           </v:roundrect>
@@ -421,7 +421,7 @@
                           <!--[if !mso]><!-->
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
-                              <td style="background-color:${C.terracotta}; border-radius:6px;">
+                              <td style="background-color:${C.primary}; border-radius:6px;">
                                 <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 32px; color:${C.white}; text-decoration:none; font-size:15px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
                               </td>
                             </tr>
@@ -461,16 +461,16 @@
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.footerBg}; border-radius:0 0 12px 12px; border-top:1px solid ${C.border};">
           <tr>
             <td style="padding:24px 32px; text-align:center;">
-              <p style="margin:0 0 4px; color:${C.terracotta}; font-size:15px; font-weight:700;">${senderName}</p>
+              <p style="margin:0 0 4px; color:${C.primary}; font-size:15px; font-weight:700;">${senderName}</p>
               ${socialHtml ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${socialHtml}</table>` : ''}
               <p style="margin:12px 0 0; color:${C.textLight}; font-size:12px; line-height:1.6;">
                 ${addressHtml}
               </p>
               ${phone ? `<p style="margin:4px 0 0; color:${C.textLight}; font-size:12px;">${phone}</p>` : ''}
               <p style="margin:4px 0 0; font-size:12px;">
-                ${contactEmail ? `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>` : ''}
+                ${contactEmail ? `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>` : ''}
                 ${contactEmail && website ? '&nbsp;&nbsp;' : ''}
-                ${website ? `<a href="https://${website}" style="color:${C.terracotta}; text-decoration:none;">${website}</a>` : ''}
+                ${website ? `<a href="https://${website}" style="color:${C.primary}; text-decoration:none;">${website}</a>` : ''}
               </p>
             </td>
           </tr>
