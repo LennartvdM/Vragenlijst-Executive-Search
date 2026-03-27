@@ -34,8 +34,6 @@
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
     bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
-    section1Heading: '',
-    section1Text: '',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
@@ -358,8 +356,7 @@
     };
     // Add all text fields
     const textFieldKeys = [
-      'heading', 'greeting', 'bodyText', 'section1Heading', 'section1Text',
-      'ctaText', 'ctaNote',
+      'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
       'deadlineContactText', 'section2Heading', 'section2Text',
       'section3Heading', 'section3ImageUrl', 'section3Text',
       'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
@@ -659,8 +656,7 @@
 
   const ALL_SETTING_FIELDS = [
     'subject', 'surveyUrl', 'webVersionUrl', 'deadline', 'jaar', 'senderName', 'contactPerson', 'contactEmail', 'contactPhone',
-    'heading', 'greeting', 'bodyText', 'section1Heading', 'section1Text',
-    'ctaText', 'ctaNote',
+    'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
     'deadlineContactText', 'section2Heading', 'section2Text',
     'section3Heading', 'section3ImageUrl', 'section3Text',
     'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
@@ -690,8 +686,7 @@
     const preset = presets[presetKey].defaults;
     // Only overwrite text fields, preserve connection settings (URLs, deadline, contact, sender)
     const textFields = [
-      'subject', 'heading', 'greeting', 'bodyText', 'section1Heading', 'section1Text',
-      'ctaText', 'ctaNote',
+      'subject', 'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
       'deadlineContactText', 'section2Heading', 'section2Text',
       'section3Heading', 'section3ImageUrl', 'section3Text',
       'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
