@@ -83,16 +83,16 @@
     senderName: 'Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\n**Wat vragen we?**\nVia onderstaande button komt u bij de vragenlijst. Uw antwoorden worden automatisch opgeslagen, dus u kunt de vragenlijst op elk gewenst moment onderbreken en later verder gaan. U kunt de vragenlijst ook opnieuw invullen \u2014 uw laatst ingevoerde antwoorden tellen.\n\nWilt u de vragen vooraf inzien? Klik hier voor het overzicht.',
+    bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Dat kan alleen met uw input \u2014 en die is dus onmisbaar.\n\nWe vragen u de Monitor Executive Search over {jaar} in te vullen. Dat kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in \u2014 uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? Bekijk het overzicht.',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
-    deadlineContactText: 'Invullen kan tot en met {deadline}. Bij vragen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
-    section2Heading: 'Wat gebeurt er met de resultaten?',
-    section2Text: 'De Commissie Monitoring beoordeelt de resultaten en stelt een algemene rapportage op over de voortgang van alle deelnemende bureaus. U ontvangt deze rapportage na afloop. Uw individuele gegevens worden strikt vertrouwelijk behandeld en niet herleidbaar gedeeld.',
+    deadlineContactText: 'Invullen kan tot en met **{deadline}**.',
+    section2Heading: 'Wat levert het op?',
+    section2Text: 'Na afloop ontvangt u een rapportage waarin u ziet hoe de sector als geheel presteert. Uw individuele gegevens worden uiteraard niet gedeeld \u2014 alleen de totaalresultaten.',
     section3Heading: 'Topvrouw van het Jaar',
     section3ImageUrl: '',
-    section3Text: 'Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor de award Topvrouw van het Jaar? U kunt uw suggestie meegeven in de vragenlijst.',
-    closingText: 'Alvast hartelijk dank voor uw medewerking.\n\nMet vriendelijke groet,',
+    section3Text: 'We vragen u ook dit jaar weer om een vrouwelijke bestuurder te nomineren voor de award Topvrouw van het Jaar. U vindt deze vraag aan het eind van de vragenlijst.',
+    closingText: 'Vragen? Neem contact op met {contactPerson} via {contactPhone} of {contactEmail}.\n\nHartelijke groet,',
     signer1Name: '',
     signer1Title: '',
     signer2Name: '',
@@ -224,7 +224,8 @@
       .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build closing paragraphs
-    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`);
+    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`)
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build address lines
     const addressHtml = esc(addressRaw).replace(/\n/g, '<br>');
