@@ -51,6 +51,8 @@
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
     bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
+    section1Heading: '',
+    section1Text: '',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
@@ -82,7 +84,9 @@
     senderName: 'Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\nWat vragen we? Via onderstaande button komt u bij de vragenlijst. Uw antwoorden worden automatisch opgeslagen, dus u kunt de vragenlijst op elk gewenst moment onderbreken en later verder gaan. U kunt de vragenlijst ook opnieuw invullen \u2014 uw laatst ingevoerde antwoorden tellen.\n\nWilt u de vragen vooraf inzien? Klik hier voor het overzicht.',
+    bodyText: 'Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.',
+    section1Heading: 'Wat vragen we?',
+    section1Text: 'Via onderstaande button komt u bij de vragenlijst. Uw antwoorden worden automatisch opgeslagen, dus u kunt de vragenlijst op elk gewenst moment onderbreken en later verder gaan. U kunt de vragenlijst ook opnieuw invullen \u2014 uw laatst ingevoerde antwoorden tellen.\n\nWilt u de vragen vooraf inzien? Klik hier voor het overzicht.',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'Invullen kan tot en met {deadline}. Bij vragen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
@@ -115,6 +119,8 @@
     heading: 'Uw vragenlijst is gereset',
     greeting: 'Beste {naam}',
     bodyText: 'Uw eerdere inzending voor de Monitor Executive Search is gereset. U kunt de vragenlijst opnieuw invullen v\u00f3\u00f3r {deadline}.',
+    section1Heading: '',
+    section1Text: '',
     ctaText: 'Vragenlijst opnieuw invullen',
     ctaNote: '',
     deadlineContactText: 'Bij vragen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
@@ -192,6 +198,8 @@
     const ctaText = esc(s.ctaText || DEFAULTS.ctaText);
     const ctaNote = esc(s.ctaNote || '');
     const deadlineContactRaw = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars);
+    const section1Heading = esc(s.section1Heading || '');
+    const section1Raw = replaceTextPlaceholders(s.section1Text || '', vars);
     const section2Heading = esc(s.section2Heading || '');
     const section2Raw = replaceTextPlaceholders(s.section2Text || '', vars);
     const section3Heading = esc(s.section3Heading || '');
@@ -284,6 +292,24 @@
                       <tr>
                         <td style="padding:0 32px 16px;">
                           ${s3BodyHtml}
+                        </td>
+                      </tr>`;
+    }
+
+    // Section 1 (optional, between body and CTA)
+    let section1Html = '';
+    if (section1Heading) {
+      const s1BodyHtml = textToHtml(section1Raw, `margin:0 0 16px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`);
+      section1Html = `
+                      <!-- Section 1 -->
+                      <tr>
+                        <td style="padding:0 32px 0;">
+                          <h2 style="margin:0 0 12px; color:${C.text}; font-size:18px; font-weight:600; line-height:1.4;">${section1Heading}</h2>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:0 32px 8px;">
+                          ${s1BodyHtml}
                         </td>
                       </tr>`;
     }
@@ -394,6 +420,8 @@
                           ${bodyHtml}
                         </td>
                       </tr>
+
+                      ${section1Html}
 
                       <!-- CTA button -->
                       <tr>
@@ -514,6 +542,14 @@
 
     let text = greeting + '\n\n';
     text += bodyText + '\n\n';
+
+    // Section 1 (before CTA)
+    const s1h = s.section1Heading || '';
+    if (s1h) {
+      text += s1h + '\n\n';
+      text += replaceTextPlaceholders(s.section1Text || '', vars) + '\n\n';
+    }
+
     if (surveyUrl) {
       text += (s.ctaText || DEFAULTS.ctaText) + ': ' + surveyUrl + '\n';
       if (s.ctaNote) text += s.ctaNote + '\n';
