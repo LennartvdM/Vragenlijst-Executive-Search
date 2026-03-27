@@ -42,11 +42,11 @@
     section3Heading: '',
     section3ImageUrl: '',
     section3Text: '',
-    closingText: 'Hartelijke groet,',
-    signer1Name: 'Ara Heuvel',
-    signer1Title: 'Directeur Talent naar de Top',
-    signer2Name: 'Dirk Hamaker',
-    signer2Title: 'Sr. Adviseur',
+    closingText: '',
+    signer1Name: '',
+    signer1Title: '',
+    signer2Name: '',
+    signer2Title: '',
     address: 'Sandbergplein 24\n1181 ZX Amstelveen',
     phone: '',
     website: 'talentnaardetop.nl',
@@ -101,7 +101,7 @@
     }
   }
 
-  const SETTINGS_VERSION = 4;
+  const SETTINGS_VERSION = 5;
 
   function loadSettings() {
     try {
