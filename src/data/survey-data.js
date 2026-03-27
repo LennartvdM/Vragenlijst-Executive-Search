@@ -1,6 +1,6 @@
 /**
  * Survey questions and structure data
- * Monitoring Executive Search Code 2023
+ * Monitoring Executive Search Code 2025
  * The HTML is generated from this data, reducing 1300+ lines to ~300 lines
  */
 
@@ -10,7 +10,7 @@ export const SURVEY_STEPS = [
     title: 'Welkom',
     type: 'welcome',
     content: {
-      heading: 'Monitoring Executive Search Code 2023',
+      heading: 'Monitoring Executive Search Code 2025',
       intro: 'Welkom bij de monitoring tool. In de volgende stappen vragen we naar uw gegevens over executive search en diversiteit.'
     },
     fields: [
@@ -214,7 +214,7 @@ export const SURVEY_STEPS = [
     title: 'Ondertekenen',
     sectionNum: '8',
     subtitle: 'Ondertekening',
-    introText: 'Wij verzoeken u de monitorgegevens 2023 te ondertekenen.',
+    introText: 'Wij verzoeken u de monitorgegevens 2025 te ondertekenen.',
     fields: [
       { type: 'date', name: 'datum', label: 'Datum' },
       { type: 'text', name: 'ondertekenaar', label: 'Naam ondertekenaar' },
