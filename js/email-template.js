@@ -25,20 +25,24 @@
       .replace(/\{contactPerson\}/g, vars.contactPerson)
       .replace(/\{contactEmail\}/g, vars.contactEmail)
       .replace(/\{contactPhone\}/g, vars.contactPhone)
-      .replace(/\{code\}/g, vars.code);
+      .replace(/\{code\}/g, vars.code)
+      .replace(/\{surveyUrl\}/g, vars.surveyUrl || '')
+      .replace(/\{inkijkUrl\}/g, vars.inkijkUrl || '');
   }
 
   /**
    * Convert newline-separated text to HTML paragraphs.
    * Double newline = new <p>, single newline = <br>.
    */
-  function textToHtml(text, style) {
+  function textToHtml(text, style, linkColor) {
     if (!text) return '';
+    const lc = linkColor || C.primary;
     const paragraphs = text.split(/\n\n+/);
     return paragraphs.map(p => {
       const lines = esc(p.trim()).replace(/\n/g, '<br>');
       const bold = lines.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      return `<p style="${style}">${bold}</p>`;
+      const linked = bold.replace(/\[(.+?)\]\((.+?)\)/g, `<a href="$2" style="color:${lc}; text-decoration:underline;">$1</a>`);
+      return `<p style="${style}">${linked}</p>`;
     }).join('\n');
   }
 
@@ -51,7 +55,7 @@
     senderName: 'Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
+    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? [Klik hier voor het overzicht.]({inkijkUrl})',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
@@ -70,6 +74,7 @@
     website: 'www.talentnaardetop.nl',
     socialTwitter: '',
     socialLinkedin: '',
+    socialInstagram: '',
     socialYoutube: '',
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
     webVersionUrl: '',
@@ -80,10 +85,10 @@
 
   const UITNODIGING_V2_DEFAULTS = {
     subject: 'Monitor Executive Search \u2014 Talent naar de Top',
-    senderName: 'Talent naar de Top',
+    senderName: 'Commissie Monitoring Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Dat kan alleen met uw input \u2014 en die is dus onmisbaar.\n\nWe vragen u de Monitor Executive Search over {jaar} in te vullen. Dat kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in \u2014 uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? Bekijk het overzicht.',
+    bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Dat kan alleen met uw input \u2014 en die is dus onmisbaar.\n\nWe vragen u de Monitor Executive Search over {jaar} in te vullen. Dat kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in \u2014 uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? [Bekijk het overzicht.]({inkijkUrl})',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'Invullen kan tot en met **{deadline}**.',
@@ -93,15 +98,16 @@
     section3ImageUrl: '',
     section3Text: 'We vragen u ook dit jaar weer om een vrouwelijke bestuurder te nomineren voor de award Topvrouw van het Jaar. U vindt deze vraag aan het eind van de vragenlijst.',
     closingText: 'Vragen? Neem contact op met {contactPerson} via {contactPhone} of {contactEmail}.\n\nHartelijke groet,',
-    signer1Name: '',
-    signer1Title: '',
-    signer2Name: '',
-    signer2Title: '',
+    signer1Name: 'Ara Heuvel',
+    signer1Title: 'Directeur Talent naar de Top',
+    signer2Name: 'Dirk Hamaker',
+    signer2Title: 'Sr. Adviseur',
     address: 'Sandbergplein 24\n1181 ZX Amstelveen',
     phone: '',
     website: 'talentnaardetop.nl',
     socialTwitter: '',
-    socialLinkedin: '',
+    socialLinkedin: 'https://linkedin.com/company/talentnaardetop',
+    socialInstagram: 'https://instagram.com/talentnaardetop',
     socialYoutube: '',
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
     webVersionUrl: '',
@@ -153,8 +159,8 @@
   // ---------------------------------------------------------------------------
 
   const C = {
-    terracotta: '#111162',
-    terracottaDark: '#07072f',
+    primary: '#111162',
+    primaryDark: '#07072f',
     sand: '#e1e9f4',
     white: '#ffffff',
     text: '#1d1d30',
@@ -183,8 +189,11 @@
     const contactPhone = esc(s.contactPhone || '[telefoon]');
     const senderName = esc(s.senderName || DEFAULTS.senderName);
     const jaar = esc(s.jaar || '[jaar]');
+    const inkijkUrl = baseSurveyUrl !== '#'
+      ? esc(baseSurveyUrl.replace(/\/?$/, '/inkijkexemplaar'))
+      : '#';
 
-    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code };
+    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code, surveyUrl, inkijkUrl };
 
     // Resolve all text fields with placeholders
     const heading = esc(s.heading || DEFAULTS.heading);
@@ -213,6 +222,7 @@
     const privacyUrl = esc(s.privacyUrl || '');
     const socialTwitter = esc(s.socialTwitter || '');
     const socialLinkedin = esc(s.socialLinkedin || '');
+    const socialInstagram = esc(s.socialInstagram || '');
     const socialYoutube = esc(s.socialYoutube || '');
 
     // Build body paragraphs
@@ -221,11 +231,11 @@
 
     // Build deadline/contact HTML with mailto link
     const deadlineContactHtml = textToHtml(deadlineContactRaw, `margin:0 0 16px; color:${C.text}; font-size:14px; line-height:1.65; word-spacing:-0.5px;`)
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build closing paragraphs
     const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`)
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>`);
+      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build address lines
     const addressHtml = esc(addressRaw).replace(/\n/g, '<br>');
@@ -314,12 +324,14 @@
                       </tr>`;
     }
 
-    // Social links
+    // Social links (styled text pills — Outlook-safe, no images/SVG needed)
     let socialHtml = '';
     const socialLinks = [];
-    if (socialTwitter) socialLinks.push(`<a href="${socialTwitter}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">t</a>`);
-    if (socialLinkedin) socialLinks.push(`<a href="${socialLinkedin}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">in</a>`);
-    if (socialYoutube) socialLinks.push(`<a href="${socialYoutube}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">yt</a>`);
+    const pillStyle = `display:inline-block; margin:0 4px; padding:4px 12px; color:${C.primary}; text-decoration:none; font-size:12px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif; border:1px solid ${C.border}; border-radius:14px; line-height:1.4;`;
+    if (socialTwitter) socialLinks.push(`<a href="${socialTwitter}" style="${pillStyle}">X</a>`);
+    if (socialLinkedin) socialLinks.push(`<a href="${socialLinkedin}" style="${pillStyle}">LinkedIn</a>`);
+    if (socialInstagram) socialLinks.push(`<a href="${socialInstagram}" style="${pillStyle}">Instagram</a>`);
+    if (socialYoutube) socialLinks.push(`<a href="${socialYoutube}" style="${pillStyle}">YouTube</a>`);
     if (socialLinks.length > 0) {
       socialHtml = `<tr><td style="padding:8px 0 0; text-align:center;">${socialLinks.join('')}</td></tr>`;
     }
@@ -364,7 +376,7 @@
         ${preheaderHtml}
 
         <!-- Header -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.terracotta}; border-radius:12px 12px 0 0;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.primary}; border-radius:12px 12px 0 0;">
           <tr>
             <td style="padding:32px 32px 28px; text-align:center;">
               <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.3px;">${senderName}</p>
@@ -401,7 +413,7 @@
                       <tr>
                         <td style="padding:8px 32px 8px;" align="center">
                           <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:44px;v-text-anchor:middle;width:240px;" arcsize="14%" strokecolor="${C.terracotta}" fillcolor="${C.terracotta}">
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${surveyUrl}" style="height:44px;v-text-anchor:middle;width:240px;" arcsize="14%" strokecolor="${C.primary}" fillcolor="${C.primary}">
                             <w:anchorlock/>
                             <center style="color:#ffffff;font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">${ctaText}</center>
                           </v:roundrect>
@@ -409,7 +421,7 @@
                           <!--[if !mso]><!-->
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
-                              <td style="background-color:${C.terracotta}; border-radius:6px;">
+                              <td style="background-color:${C.primary}; border-radius:6px;">
                                 <a href="${surveyUrl}" target="_blank" style="display:inline-block; padding:12px 32px; color:${C.white}; text-decoration:none; font-size:15px; font-weight:600; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${ctaText}</a>
                               </td>
                             </tr>
@@ -449,16 +461,16 @@
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.footerBg}; border-radius:0 0 12px 12px; border-top:1px solid ${C.border};">
           <tr>
             <td style="padding:24px 32px; text-align:center;">
-              <p style="margin:0 0 4px; color:${C.terracotta}; font-size:15px; font-weight:700;">${senderName}</p>
+              <p style="margin:0 0 4px; color:${C.primary}; font-size:15px; font-weight:700;">${senderName}</p>
               ${socialHtml ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${socialHtml}</table>` : ''}
               <p style="margin:12px 0 0; color:${C.textLight}; font-size:12px; line-height:1.6;">
                 ${addressHtml}
               </p>
               ${phone ? `<p style="margin:4px 0 0; color:${C.textLight}; font-size:12px;">${phone}</p>` : ''}
               <p style="margin:4px 0 0; font-size:12px;">
-                ${contactEmail ? `<a href="mailto:${contactEmail}" style="color:${C.terracotta}; text-decoration:none;">${contactEmail}</a>` : ''}
+                ${contactEmail ? `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>` : ''}
                 ${contactEmail && website ? '&nbsp;&nbsp;' : ''}
-                ${website ? `<a href="https://${website}" style="color:${C.terracotta}; text-decoration:none;">${website}</a>` : ''}
+                ${website ? `<a href="https://${website}" style="color:${C.primary}; text-decoration:none;">${website}</a>` : ''}
               </p>
             </td>
           </tr>
@@ -507,12 +519,21 @@
     const senderName = s.senderName || DEFAULTS.senderName;
     const jaar = s.jaar || '[jaar]';
 
-    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code: rawCode };
+    const inkijkUrl = baseSurveyUrl
+      ? baseSurveyUrl.replace(/\/?$/, '/inkijkexemplaar')
+      : '';
+    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code: rawCode, surveyUrl, inkijkUrl };
 
     const greeting = replaceTextPlaceholders(s.greeting || DEFAULTS.greeting, vars);
-    const bodyText = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars);
-    const closingText = replaceTextPlaceholders(s.closingText || DEFAULTS.closingText, vars);
-    const deadlineContactText = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars);
+    const bodyText = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars)
+      .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)')
+      .replace(/\*\*(.+?)\*\*/g, '$1');
+    const closingText = replaceTextPlaceholders(s.closingText || DEFAULTS.closingText, vars)
+      .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)')
+      .replace(/\*\*(.+?)\*\*/g, '$1');
+    const deadlineContactText = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars)
+      .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)')
+      .replace(/\*\*(.+?)\*\*/g, '$1');
 
     let text = greeting + '\n\n';
     text += bodyText + '\n\n';

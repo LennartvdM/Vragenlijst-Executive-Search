@@ -22,14 +22,14 @@
 
   const DEFAULT_SETTINGS = {
     subject: 'Monitor Executive Search \u2014 Talent naar de Top',
-    surveyUrl: 'https://monitorcultuur.nl/',
+    surveyUrl: 'https://monitortalent.nl/',
     webVersionUrl: '',
-    deadline: '',
-    jaar: '',
-    senderName: 'Talent naar de Top',
-    contactPerson: '',
-    contactEmail: '',
-    contactPhone: '',
+    deadline: 'woensdag 30 april 2026',
+    jaar: '2025',
+    senderName: 'Commissie Monitoring Talent naar de Top',
+    contactPerson: 'Ellen Stoop',
+    contactEmail: 'ellen.stoop@talentnaardetop.nl',
+    contactPhone: '+31 (0)6 45 75 23 13',
     // Editable mail text fields
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
@@ -52,6 +52,7 @@
     website: 'www.talentnaardetop.nl',
     socialTwitter: '',
     socialLinkedin: '',
+    socialInstagram: '',
     socialYoutube: '',
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
     unsubscribeUrl: '',
@@ -362,7 +363,7 @@
       'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
       'address', 'phone', 'website', 'footerText',
       'webVersionUrl', 'unsubscribeUrl', 'profileUrl', 'privacyUrl',
-      'socialTwitter', 'socialLinkedin', 'socialYoutube'
+      'socialTwitter', 'socialLinkedin', 'socialInstagram', 'socialYoutube'
     ];
     for (const key of textFieldKeys) {
       paramObj[key] = settings[key] || DEFAULT_SETTINGS[key] || '';
@@ -660,7 +661,7 @@
     'deadlineContactText', 'section2Heading', 'section2Text',
     'section3Heading', 'section3ImageUrl', 'section3Text',
     'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
-    'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialYoutube',
+    'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialInstagram', 'socialYoutube',
     'footerText', 'unsubscribeUrl', 'profileUrl', 'privacyUrl'
   ];
 
@@ -690,7 +691,7 @@
       'deadlineContactText', 'section2Heading', 'section2Text',
       'section3Heading', 'section3ImageUrl', 'section3Text',
       'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
-      'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialYoutube',
+      'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialInstagram', 'socialYoutube',
       'footerText', 'unsubscribeUrl', 'profileUrl', 'privacyUrl'
     ];
     for (const field of textFields) {
