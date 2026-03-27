@@ -70,6 +70,7 @@
     website: 'www.talentnaardetop.nl',
     socialTwitter: '',
     socialLinkedin: '',
+    socialInstagram: '',
     socialYoutube: '',
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
     webVersionUrl: '',
@@ -101,7 +102,8 @@
     phone: '',
     website: 'talentnaardetop.nl',
     socialTwitter: '',
-    socialLinkedin: '',
+    socialLinkedin: 'https://linkedin.com/company/talentnaardetop',
+    socialInstagram: 'https://instagram.com/talentnaardetop',
     socialYoutube: '',
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
     webVersionUrl: '',
@@ -213,6 +215,7 @@
     const privacyUrl = esc(s.privacyUrl || '');
     const socialTwitter = esc(s.socialTwitter || '');
     const socialLinkedin = esc(s.socialLinkedin || '');
+    const socialInstagram = esc(s.socialInstagram || '');
     const socialYoutube = esc(s.socialYoutube || '');
 
     // Build body paragraphs
@@ -319,6 +322,7 @@
     const socialLinks = [];
     if (socialTwitter) socialLinks.push(`<a href="${socialTwitter}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">t</a>`);
     if (socialLinkedin) socialLinks.push(`<a href="${socialLinkedin}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">in</a>`);
+    if (socialInstagram) socialLinks.push(`<a href="${socialInstagram}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">ig</a>`);
     if (socialYoutube) socialLinks.push(`<a href="${socialYoutube}" style="display:inline-block; margin:0 6px; color:${C.terracotta}; text-decoration:none; font-size:13px; font-weight:500;">yt</a>`);
     if (socialLinks.length > 0) {
       socialHtml = `<tr><td style="padding:8px 0 0; text-align:center;">${socialLinks.join('')}</td></tr>`;
