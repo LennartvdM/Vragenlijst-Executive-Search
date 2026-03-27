@@ -1,5 +1,5 @@
 /**
- * Shared Email Template Builder — Monitor Executive Search
+ * Shared Email Template Builder — Monitor Executive Search 2026
  *
  * Exposes window.EmailTemplate with buildEmailHtml(), buildPlainText(), buildEml().
  * Used by both email-admin.js and email-manual.js.
