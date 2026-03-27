@@ -118,15 +118,15 @@
   // ---------------------------------------------------------------------------
 
   const C = {
-    terracotta: '#c4785a',
-    terracottaDark: '#a8624a',
-    sand: '#f5f0eb',
+    terracotta: '#111162',
+    terracottaDark: '#07072f',
+    sand: '#e1e9f4',
     white: '#ffffff',
-    text: '#333333',
-    textLight: '#666666',
-    textMuted: '#999999',
-    border: '#e0d6cc',
-    footerBg: '#f8f4f0'
+    text: '#1d1d30',
+    textLight: '#3c3c5d',
+    textMuted: '#7a7a96',
+    border: '#c5d6f8',
+    footerBg: '#f1f4f8'
   };
 
   // ---------------------------------------------------------------------------
