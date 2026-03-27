@@ -106,7 +106,16 @@
   function loadSettings() {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-      return data ? { ...DEFAULT_SETTINGS, ...JSON.parse(data) } : { ...DEFAULT_SETTINGS };
+      if (!data) return { ...DEFAULT_SETTINGS };
+      const saved = JSON.parse(data);
+      // Don't let empty saved values override non-empty defaults
+      const merged = { ...DEFAULT_SETTINGS };
+      for (const key of Object.keys(saved)) {
+        if (saved[key] !== '' && saved[key] !== undefined) {
+          merged[key] = saved[key];
+        }
+      }
+      return merged;
     } catch { return { ...DEFAULT_SETTINGS }; }
   }
 
