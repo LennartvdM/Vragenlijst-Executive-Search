@@ -127,7 +127,6 @@
         <div class="ea-preset-bar">
           <span class="ea-preset-label">Template:</span>
           <button class="ea-preset-btn active" data-action="loadPreset" data-preset="uitnodiging">Uitnodiging</button>
-          <button class="ea-preset-btn" data-action="loadPreset" data-preset="uitnodiging-v2">Uitnodiging (nieuw)</button>
           <button class="ea-preset-btn" data-action="loadPreset" data-preset="reset">Reset</button>
         </div>
         <p class="ea-field-hint ea-section-hint">Pas de tekst van de e-mail aan. Gebruik <code>{naam}</code>, <code>{jaar}</code>, <code>{deadline}</code>, <code>{contactPerson}</code>, <code>{contactEmail}</code>, <code>{contactPhone}</code> en <code>{code}</code> als tijdelijke aanduidingen.</p>
@@ -142,14 +141,11 @@
           </div>
           <div class="ea-field ea-full">
             <label for="setting-bodyText">Hoofdtekst <span class="ea-label-hint">(alinea's scheiden met lege regel)</span></label>
-            <textarea id="setting-bodyText" rows="10">Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.
+            <textarea id="setting-bodyText" rows="10">Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.
 
-Wat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn 'koploper' en u levert daar een zeer belangrijke bijdrage aan.
+De vragenlijst is ingekort en vernieuwd. Invullen kost ongeveer 15–20 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in. Uw laatst ingevulde antwoorden tellen.
 
-Wij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.
-
-Via de button hieronder komt u bij de vragenlijst.
-Wij vragen u deze in één keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.</textarea>
+Wilt u de vragen vooraf bekijken? [Bekijk het overzicht.]({inkijkUrl})</textarea>
           </div>
           <div class="ea-field">
             <label for="setting-ctaText">Knoptekst</label>
@@ -161,15 +157,15 @@ Wij vragen u deze in één keer volledig in te vullen. Uw antwoorden worden niet
           </div>
           <div class="ea-field ea-full">
             <label for="setting-deadlineContactText">Deadline &amp; contacttekst</label>
-            <textarea id="setting-deadlineContactText" rows="2">U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.</textarea>
+            <textarea id="setting-deadlineContactText" rows="2">Invullen kan tot en met **{deadline}**. Uw input is zeer waardevol en wij zien de resultaten graag tegemoet, alvast dank.</textarea>
           </div>
           <div class="ea-field ea-full">
             <label for="setting-section2Heading">Sectie 2 — koptekst <span class="ea-label-hint">(leeg = verborgen)</span></label>
-            <input type="text" id="setting-section2Heading" value="Wat gebeurt er met de resultaten?">
+            <input type="text" id="setting-section2Heading" value="Wat levert het op?">
           </div>
           <div class="ea-field ea-full">
             <label for="setting-section2Text">Sectie 2 — tekst</label>
-            <textarea id="setting-section2Text" rows="4">De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.</textarea>
+            <textarea id="setting-section2Text" rows="4">Na afloop wordt er een rapportage gemaakt met de resultaten van alle Code-ondertekenaars, waarin te zien is hoe de sector als geheel presteert. Uw individuele gegevens worden uiteraard niet gedeeld, alleen de totaalresultaten.</textarea>
           </div>
           <div class="ea-field ea-full">
             <label for="setting-section3Heading">Sectie 3 — koptekst <span class="ea-label-hint">(leeg = verborgen)</span></label>
@@ -185,25 +181,23 @@ Wij vragen u deze in één keer volledig in te vullen. Uw antwoorden worden niet
           </div>
           <div class="ea-field ea-full">
             <label for="setting-closingText">Afsluiting</label>
-            <textarea id="setting-closingText" rows="3">Wij wensen u veel succes met het invullen van de vragenlijst en kijken uit naar uw resultaten. Alvast hartelijk dank voor uw medewerking.
-
-Met vriendelijke groet,</textarea>
+            <textarea id="setting-closingText" rows="3">Hartelijke groet,</textarea>
           </div>
           <div class="ea-field">
             <label for="setting-signer1Name">Ondertekenaar 1 — naam</label>
-            <input type="text" id="setting-signer1Name" placeholder="bijv. Ara Heuvel">
+            <input type="text" id="setting-signer1Name" value="Ara Heuvel">
           </div>
           <div class="ea-field">
             <label for="setting-signer1Title">Ondertekenaar 1 — functie</label>
-            <input type="text" id="setting-signer1Title" placeholder="bijv. Directeur Talent naar de Top">
+            <input type="text" id="setting-signer1Title" value="Directeur Talent naar de Top">
           </div>
           <div class="ea-field">
             <label for="setting-signer2Name">Ondertekenaar 2 — naam</label>
-            <input type="text" id="setting-signer2Name" placeholder="bijv. Dirk Hamaker">
+            <input type="text" id="setting-signer2Name" value="Dirk Hamaker">
           </div>
           <div class="ea-field">
             <label for="setting-signer2Title">Ondertekenaar 2 — functie</label>
-            <input type="text" id="setting-signer2Title" placeholder="bijv. Sr. Adviseur">
+            <input type="text" id="setting-signer2Title" value="Sr. Adviseur">
           </div>
           <div class="ea-field ea-full">
             <label for="setting-address">Adres <span class="ea-label-hint">(regels scheiden met enter)</span></label>

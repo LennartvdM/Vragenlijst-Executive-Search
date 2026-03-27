@@ -33,26 +33,26 @@
     // Editable mail text fields
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
+    bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\nDe vragenlijst is ingekort en vernieuwd. Invullen kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in. Uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? [Bekijk het overzicht.]({inkijkUrl})',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
-    deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
-    section2Heading: 'Wat gebeurt er met de resultaten?',
-    section2Text: 'De Commissie Monitoring Talent naar de Top, die ook verantwoordelijk is voor de jaarlijkse monitoring van Charterondertekenaars, zal de resultaten beoordelen. Vervolgens ontvangt u een algemene rapportage waaruit de voortgang blijkt o.b.v. de resultaten van de executive search bureaus die zich bij ons hebben aangesloten. Uw gegevens worden uiteraard strikt vertrouwelijk behandeld. In de rapportage worden alleen de algemene resultaten gedeeld.',
-    section3Heading: 'Topvrouw van het Jaar',
+    deadlineContactText: 'Invullen kan tot en met **{deadline}**. Uw input is zeer waardevol en wij zien de resultaten graag tegemoet, alvast dank.',
+    section2Heading: 'Wat levert het op?',
+    section2Text: 'Na afloop wordt er een rapportage gemaakt met de resultaten van alle Code-ondertekenaars, waarin te zien is hoe de sector als geheel presteert. Uw individuele gegevens worden uiteraard niet gedeeld, alleen de totaalresultaten.',
+    section3Heading: '',
     section3ImageUrl: '',
-    section3Text: 'Tot slot nog een belangrijke vraag aan u. Eerder ontving u van ons een email met suggesties over de topvrouw van het jaar. Onze vraag aan u: Welke vrouwelijke bestuurder zou volgens u in aanmerking moeten komen voor deze award? Wij stellen uw input zeer op prijs.',
-    closingText: 'Wij wensen u veel succes met het invullen van de vragenlijst en kijken uit naar uw resultaten. Alvast hartelijk dank voor uw medewerking.\n\nMet vriendelijke groet,',
-    signer1Name: '',
-    signer1Title: '',
-    signer2Name: '',
-    signer2Title: '',
-    address: 'Sandbergplein 24\n1181 ZX Amstelveen\nNederland',
+    section3Text: '',
+    closingText: 'Hartelijke groet,',
+    signer1Name: 'Ara Heuvel',
+    signer1Title: 'Directeur Talent naar de Top',
+    signer2Name: 'Dirk Hamaker',
+    signer2Title: 'Sr. Adviseur',
+    address: 'Sandbergplein 24\n1181 ZX Amstelveen',
     phone: '',
-    website: 'www.talentnaardetop.nl',
+    website: 'talentnaardetop.nl',
     socialTwitter: '',
-    socialLinkedin: '',
-    socialInstagram: '',
+    socialLinkedin: 'https://linkedin.com/company/talentnaardetop',
+    socialInstagram: 'https://instagram.com/talentnaardetop',
     socialYoutube: '',
     footerText: 'U ontvangt deze e-mail omdat uw organisatie deelneemt aan de Monitor Executive Search.',
     unsubscribeUrl: '',
@@ -101,7 +101,7 @@
     }
   }
 
-  const SETTINGS_VERSION = 2;
+  const SETTINGS_VERSION = 3;
 
   function loadSettings() {
     try {
