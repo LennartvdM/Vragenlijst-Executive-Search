@@ -134,12 +134,17 @@
     if (!presets || !presets[presetKey]) return;
 
     const preset = presets[presetKey].defaults;
-    const textFields = [
-      'subject', 'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
+    const presetFields = [
+      'subject', 'senderName', 'deadline', 'jaar',
+      'contactPerson', 'contactEmail', 'contactPhone',
+      'heading', 'greeting', 'bodyText', 'ctaText', 'ctaNote',
       'deadlineContactText', 'section2Heading', 'section2Text',
-      'section3Heading', 'section3Text', 'closingText', 'footerText'
+      'section3Heading', 'section3ImageUrl', 'section3Text',
+      'closingText', 'signer1Name', 'signer1Title', 'signer2Name', 'signer2Title',
+      'address', 'phone', 'website', 'socialTwitter', 'socialLinkedin', 'socialInstagram', 'socialYoutube',
+      'footerText', 'unsubscribeUrl', 'profileUrl', 'privacyUrl'
     ];
-    for (const field of textFields) {
+    for (const field of presetFields) {
       if (preset[field] !== undefined) {
         settings[field] = preset[field];
       }
