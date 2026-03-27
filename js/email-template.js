@@ -102,7 +102,7 @@
     section3Heading: '',
     section3ImageUrl: '',
     section3Text: '',
-    closingText: 'Vragen? Neem contact op met {contactPerson} via {contactPhone} of {contactEmail}.\n\nHartelijke groet,',
+    closingText: 'Hartelijke groet,',
     signer1Name: 'Ara Heuvel',
     signer1Title: 'Directeur Talent naar de Top',
     signer2Name: 'Dirk Hamaker',
@@ -239,8 +239,34 @@
       .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>`);
 
     // Build closing paragraphs
-    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`)
-      .replace(esc(contactEmail), `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none;">${contactEmail}</a>`);
+    const closingHtml = textToHtml(closingRaw, `margin:0 0 4px; color:${C.text}; font-size:15px; line-height:1.65; word-spacing:-0.5px;`);
+
+    // Build contact card (only if contactPerson is set)
+    let contactCardHtml = '';
+    if (contactPerson && contactPerson !== '[contactpersoon]') {
+      const phonePart = contactPhone && contactPhone !== '[telefoon]'
+        ? `<a href="tel:${contactPhone.replace(/\s/g, '')}" style="color:${C.primary}; text-decoration:none; font-weight:500;">${contactPhone}</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;`
+        : '';
+      const emailPart = contactEmail && contactEmail !== '[email]'
+        ? `<a href="mailto:${contactEmail}" style="color:${C.primary}; text-decoration:none; font-weight:500;">${contactEmail}</a>`
+        : '';
+      contactCardHtml = `
+                      <!-- Contact card -->
+                      <tr><td style="padding:0 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ${C.border}; font-size:0;">&nbsp;</td></tr></table></td></tr>
+                      <tr>
+                        <td style="padding:20px 32px;">
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${C.sand}; border-radius:8px;">
+                            <tr>
+                              <td style="padding:16px 20px;">
+                                <p style="margin:0 0 4px; color:${C.text}; font-size:14px; font-weight:600;">Vragen?</p>
+                                <p style="margin:0; color:${C.text}; font-size:13px; line-height:1.6;">Neem contact op met ${contactPerson}</p>
+                                <p style="margin:4px 0 0; font-size:13px; line-height:1.6;">${phonePart}${emailPart}</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>`;
+    }
 
     // Build address lines
     const addressHtml = esc(addressRaw).replace(/\n/g, '<br>');
@@ -450,6 +476,8 @@
                       ${section2Html}
                       ${section3Html}
 
+                      ${contactCardHtml}
+
                       <!-- Closing -->
                       <tr>
                         <td style="padding:16px 32px 8px;">
@@ -563,6 +591,14 @@
       text += '---\n\n';
       text += s3h + '\n\n';
       text += replaceTextPlaceholders(s.section3Text || '', vars) + '\n\n';
+    }
+
+    // Contact block
+    if (s.contactPerson) {
+      text += 'Vragen? Neem contact op met ' + (s.contactPerson || '') + '\n';
+      if (s.contactPhone) text += s.contactPhone + ' · ';
+      if (s.contactEmail) text += s.contactEmail;
+      text += '\n\n';
     }
 
     text += closingText + '\n';
