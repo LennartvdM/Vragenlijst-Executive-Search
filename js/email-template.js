@@ -25,20 +25,24 @@
       .replace(/\{contactPerson\}/g, vars.contactPerson)
       .replace(/\{contactEmail\}/g, vars.contactEmail)
       .replace(/\{contactPhone\}/g, vars.contactPhone)
-      .replace(/\{code\}/g, vars.code);
+      .replace(/\{code\}/g, vars.code)
+      .replace(/\{surveyUrl\}/g, vars.surveyUrl || '')
+      .replace(/\{inkijkUrl\}/g, vars.inkijkUrl || '');
   }
 
   /**
    * Convert newline-separated text to HTML paragraphs.
    * Double newline = new <p>, single newline = <br>.
    */
-  function textToHtml(text, style) {
+  function textToHtml(text, style, linkColor) {
     if (!text) return '';
+    const lc = linkColor || C.terracotta;
     const paragraphs = text.split(/\n\n+/);
     return paragraphs.map(p => {
       const lines = esc(p.trim()).replace(/\n/g, '<br>');
       const bold = lines.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      return `<p style="${style}">${bold}</p>`;
+      const linked = bold.replace(/\[(.+?)\]\((.+?)\)/g, `<a href="$2" style="color:${lc}; text-decoration:underline;">$1</a>`);
+      return `<p style="${style}">${linked}</p>`;
     }).join('\n');
   }
 
@@ -51,7 +55,7 @@
     senderName: 'Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? Klik hier voor het overzicht.',
+    bodyText: 'Als ondertekenaar van de Executive Search Code zet u zich samen met Talent naar de Top in voor meer diversiteit in de (sub)top van organisaties.\n\nWat representatie van vrouwen in de top betreft heeft de effectiviteit van het Charter Talent naar de Top zich al bewezen. Charterondertekenaars zijn \'koploper\' en u levert daar een zeer belangrijke bijdrage aan.\n\nWij zijn benieuwd naar uw resultaten van het afgelopen kalenderjaar. Daarom nodigen wij u graag uit om de Executive Search Monitor over 2024 in te vullen.\n\nVia de button hieronder komt u bij de vragenlijst.\nWij vragen u deze in \u00e9\u00e9n keer volledig in te vullen. Uw antwoorden worden niet opgeslagen als u tussentijds stopt. Wilt u de vragen eerst inzien ter voorbereiding? [Klik hier voor het overzicht.]({inkijkUrl})',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'U kunt de vragenlijst invullen tot en met {deadline}. Bij vragen of problemen met het invullen kunt u contact opnemen met {contactPerson} via {contactPhone} of {contactEmail}.',
@@ -84,7 +88,7 @@
     senderName: 'Talent naar de Top',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
-    bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Dat kan alleen met uw input \u2014 en die is dus onmisbaar.\n\nWe vragen u de Monitor Executive Search over {jaar} in te vullen. Dat kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in \u2014 uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? Bekijk het overzicht.',
+    bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Dat kan alleen met uw input \u2014 en die is dus onmisbaar.\n\nWe vragen u de Monitor Executive Search over {jaar} in te vullen. Dat kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in \u2014 uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? [Bekijk het overzicht.]({inkijkUrl})',
     ctaText: 'Naar de vragenlijst',
     ctaNote: '',
     deadlineContactText: 'Invullen kan tot en met **{deadline}**.',
@@ -185,8 +189,11 @@
     const contactPhone = esc(s.contactPhone || '[telefoon]');
     const senderName = esc(s.senderName || DEFAULTS.senderName);
     const jaar = esc(s.jaar || '[jaar]');
+    const inkijkUrl = baseSurveyUrl !== '#'
+      ? esc(baseSurveyUrl.replace(/\/?$/, '/inkijkexemplaar'))
+      : '#';
 
-    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code };
+    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code, surveyUrl, inkijkUrl };
 
     // Resolve all text fields with placeholders
     const heading = esc(s.heading || DEFAULTS.heading);
@@ -511,12 +518,21 @@
     const senderName = s.senderName || DEFAULTS.senderName;
     const jaar = s.jaar || '[jaar]';
 
-    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code: rawCode };
+    const inkijkUrl = baseSurveyUrl
+      ? baseSurveyUrl.replace(/\/?$/, '/inkijkexemplaar')
+      : '';
+    const vars = { naam, jaar, deadline, contactPerson, contactEmail, contactPhone, code: rawCode, surveyUrl, inkijkUrl };
 
     const greeting = replaceTextPlaceholders(s.greeting || DEFAULTS.greeting, vars);
-    const bodyText = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars);
-    const closingText = replaceTextPlaceholders(s.closingText || DEFAULTS.closingText, vars);
-    const deadlineContactText = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars);
+    const bodyText = replaceTextPlaceholders(s.bodyText || DEFAULTS.bodyText, vars)
+      .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)')
+      .replace(/\*\*(.+?)\*\*/g, '$1');
+    const closingText = replaceTextPlaceholders(s.closingText || DEFAULTS.closingText, vars)
+      .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)')
+      .replace(/\*\*(.+?)\*\*/g, '$1');
+    const deadlineContactText = replaceTextPlaceholders(s.deadlineContactText || DEFAULTS.deadlineContactText, vars)
+      .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)')
+      .replace(/\*\*(.+?)\*\*/g, '$1');
 
     let text = greeting + '\n\n';
     text += bodyText + '\n\n';
