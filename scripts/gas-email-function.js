@@ -146,14 +146,14 @@ function buildEmailHtml(naam, code, subject, surveyUrl, deadline, contactPerson,
   };
 
   // Colors
-  var terracotta = '#c4785a';
-  var sand = '#f5f0eb';
+  var terracotta = '#111162';
+  var sand = '#e1e9f4';
   var white = '#ffffff';
-  var text = '#333333';
-  var textLight = '#666666';
-  var textMuted = '#999999';
-  var border = '#e0d6cc';
-  var footerBg = '#f8f4f0';
+  var text = '#1d1d30';
+  var textLight = '#3c3c5d';
+  var textMuted = '#7a7a96';
+  var border = '#c5d6f8';
+  var footerBg = '#f1f4f8';
 
   // Resolve text fields
   var heading = escHtml(tf.heading || 'Monitor Executive Search');
