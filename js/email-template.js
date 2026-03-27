@@ -86,6 +86,11 @@
   const UITNODIGING_V2_DEFAULTS = {
     subject: 'Monitor Executive Search \u2014 Talent naar de Top',
     senderName: 'Commissie Monitoring Talent naar de Top',
+    deadline: '28 april',
+    jaar: '2025',
+    contactPerson: 'Ellen Stoop',
+    contactEmail: 'ellen.stoop@talentnaardetop.nl',
+    contactPhone: '06 83562954',
     heading: 'Monitor Executive Search',
     greeting: 'Beste {naam}',
     bodyText: 'Elk jaar brengen we in kaart hoe het staat met diversiteit in executive search. Als ondertekenaar van de Executive Search Code nodigen wij u uit om de Monitor Executive Search over {jaar} in te vullen.\n\nDe vragenlijst is ingekort en vernieuwd. Invullen kost ongeveer 15\u201320 minuten. Uw antwoorden worden automatisch opgeslagen, dus u kunt gerust tussendoor stoppen en later verder gaan. Mocht u achteraf iets willen wijzigen, dan vult u de vragenlijst gewoon opnieuw in. Uw laatst ingevulde antwoorden tellen.\n\nWilt u de vragen vooraf bekijken? [Bekijk het overzicht.]({inkijkUrl})',
