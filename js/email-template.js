@@ -407,6 +407,22 @@
         ${preheaderHtml}
 
         <!-- Header -->
+        <!--[if mso]>
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
+          <tr>
+            <td>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:600px;v-text-anchor:middle;" arcsize="3%" fillcolor="${C.primary}" strokecolor="${C.primary}">
+                <w:anchorlock/>
+                <center style="padding:32px 32px 28px;">
+                  <p style="margin:0 0 4px; color:rgba(255,255,255,0.85); font-size:14px; font-weight:500; letter-spacing:0.3px; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${senderName}</p>
+                  <h1 style="margin:0; color:#ffffff; font-size:26px; font-weight:700; line-height:1.3; letter-spacing:-0.3px; font-family:'Inter','Segoe UI',Helvetica,Arial,sans-serif;">${heading}</h1>
+                </center>
+              </v:roundrect>
+            </td>
+          </tr>
+        </table>
+        <![endif]-->
+        <!--[if !mso]><!-->
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.primary}; border-radius:12px 12px 0 0;">
           <tr>
             <td style="padding:32px 32px 28px; text-align:center;">
@@ -417,6 +433,7 @@
             </td>
           </tr>
         </table>
+        <!--<![endif]-->
 
         <!-- Content area -->
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:${C.white};">
