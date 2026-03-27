@@ -104,7 +104,7 @@
     }
   }
 
-  const SETTINGS_VERSION = 3;
+  const SETTINGS_VERSION = 4;
 
   function loadSettings() {
     try {
